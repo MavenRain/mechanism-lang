@@ -37,3 +37,80 @@ digest of the repository file is still
 value dev/DENOMINATORS.sha256 records.
 
 No mutant survived.
+
+## Stage A (2026-09-07)
+
+The final control suite has 55 cases and prints `LEVELS-OK`.  Each mutant
+is an independent source copy under
+`/Users/oobi/Documents/gpt1/mechanism-m0a-mutations`, excluding Git,
+build and gate scratch directories.  Exactly one OCaml source file
+differs from the final control in each copy.  Every mutant builds through
+`zsh dev/dunecho.sh build` with exit 0, then runs its own
+`_build/default/test/levels.exe` and exits 1 at the behavioral refusal
+listed below.  A compile error is never treated as a killed mutant.
+
+| id | mutation | failing test and diagnostic | result |
+| --- | --- | --- | --- |
+| A-M1 | Change `Rules_lvl.imax` from `Level.imax` to `Level.max`. | `point-former-preserves-prop-impredicativity: expected level 0, got 1` | killed |
+| A-M2 | Replace the zero/positive branch recursion in `Level_eq.decide` with recursion over the positive case only. | `imax-symbolic-right-is-not-max: zero branch of imax was discarded`, and, measured in the review replay below, the checker case `scheme-refuses-imax-with-zero-branch-deleted: expected mismatch refusal` | killed |
+| A-M3 | Replace `Check.scope` with `Ok c`, retaining the direct Univ rule guard but bypassing the raw-field scope pass. | `ignored-section-shape-refuses-free-level: expected universe refusal` | killed |
+
+A-M1 initially survived the 53-case suite because the algebra checks
+called Level.imax directly.  Two real checker tests were then added:
+inference of `(P : Prop) -> P` at Prop, and a universally checked Pi
+into a closed proposition.  All three mutants were rebuilt and rerun
+against the final 55-case test file.  A-M1's initial survival is recorded
+as a discovered test gap, not as a passing mutation check.
+
+The first attempted build command supplied a target to dunecho, which
+accepts only a mode.  Those commands exited 124 with usage output; all
+actual builds used the supported command above.  The initial attempt
+logs and first behavioral run remain under `first-run/` in the scratch
+evidence directory.
+
+The mutation runner compared SHA-256 manifests of all 62 final-source
+OCaml implementation/interface files before and after the final run.
+Both manifest files hash
+`fe7d603f997262d6d0deb70d72bc1ff51ec1d68b6628f7d91f7d826ab30ea10c`.
+No final-source path changed during mutation testing.  The final
+test/levels.ml hash is
+`b97414312b920a85dc1251e54a3ef9aceff02229948766593fbd19f0bf407172`.
+The scratch directory holds report.json, exact mutation diffs and
+separate build/test logs for every mutant.
+
+All three final mutants were killed.  The known trusted-line gate failure
+is documented separately in M0-BUILD-LOG.md.
+
+## Stage A review round 1 (2026-09-07)
+
+The review round replayed A-M2 and ran two controls of its own.  Each
+run changed one file of the repository, built it with
+`zsh dev/dunecho.sh build`, ran `_build/default/test/levels.exe`, then
+restored the file.  `git diff` showed no change in the restored file
+after each run.  The captured outputs are under
+`/Users/oobi/Documents/mechanism-lang-a-review/probes/fix/`.
+
+| id | mutation | observation | result |
+| --- | --- | --- | --- |
+| A-M2 replay | The A-M2 mutation of `Level_eq.decide`, rerun against the runner that now runs every case. | `imax-symbolic-right-is-not-max`, `le-imax-case-split`, and the checker case `scheme-refuses-imax-with-zero-branch-deleted: expected mismatch refusal` | killed |
+| R1-C1 | `Poly.instantiate` adds a second entry under `as_name ^ "Pending"` beside the instance. | `failed-instances-preserve-environments: the failed instance leaked an entry into the next environment` | killed |
+| R1-C2 | `Level_var.offset` back at its pre-fix test `Z.equal amount Z.zero`. | probe L1-1 printed `negative in_scope 0 = false` and `negative equals itself = false` | caught by the probe |
+
+A-M2 replay.  The suite printed 52 PASS lines and three FAIL lines, then
+exited 1.  Two failures are algebra cases and the third is a checker
+case.  `scheme-refuses-imax-with-zero-branch-deleted` checks a 2-arity
+scheme, so the Stage A observation of the plan, that a polymorphic
+target fails to check, is now measured.  Before this round the runner
+stopped at the first failing case, so only the first algebra diagnostic
+was visible.
+
+R1-C1.  With the same mutation in place and the new count assertion
+removed, the suite printed `LEVELS-OK` at exit 0.  The new assertion is
+the one check that kills this mutation.
+
+R1-C2.  The probe under `probes/fix/L1-1` calls the builder with a
+negative amount.  Before the fix the readers refused the result, as the
+row above records.  After the fix the probe prints
+`negative offset gives one back = true`, `negative in_scope 0 = true`
+and `negative equals itself = true`.  No suite case observes this,
+because lib/level.mli exposes no offset function.

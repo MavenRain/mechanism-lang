@@ -1,7 +1,9 @@
 #!/bin/zsh
 # dev/gates.sh
-# The M0 gate battery: the Stage 0 legs of plan section 9, in the order
-# the plan writes them (M0-PLAN.md:143 and :173).  Example:
+# The M0 gate battery: the Stage 0 and A legs of plan section 9, in the order
+# the plan writes them (M0-PLAN.md:143 and :173), plus the LEVELS,
+# SUITE-SURFACE and SUITE-WASM suites of mechanism-lang itself, which run
+# beside SUITE-KERNEL and belong to no row of section 9.  Example:
 #   zsh /Users/oobi/Documents/mechanism-lang/dev/gates.sh
 #
 # Each leg prints one PASS or FAIL line.  A FAIL adds the leg's captured
@@ -172,21 +174,6 @@ leg () {
   return 1
 }
 
-# note TIER NAME CMD...
-#   An informational leg.  Its verdict line goes to the MEASURE block
-#   and it never sets the failure flag.  A note becomes a leg at the
-#   stage that makes it hard.
-note () {
-  local tier=$1
-  local name=$2
-  shift 2
-  local out
-  out=$(gate_timed $tier $name "$@")
-  print -r -- "NOTE $name (informational at Stage 0)" >> $MEASURE_FILE
-  print -r -- "$out" >> $MEASURE_FILE
-  return 0
-}
-
 # The legs, in the order of plan section 9.  BUILD ends the run when it
 # fails, because every later leg reads the build it makes.
 if ! leg SLOW BUILD '0 errors, 0 warnings' zsh $ROOT/dev/dunecho.sh build; then
@@ -199,17 +186,25 @@ fi
 
 leg FAST PIN SELF zsh $SELF --leg pin
 leg MED PIN-DELTA '^PIN-DELTA OK$' zsh $ROOT/dev/pin-delta.sh
-leg MED DENOMINATORS SELF zsh $SELF --leg denominators
+leg FAST R0-COUNT '^R0-COUNT OK$' zsh $ROOT/dev/r0-count.sh
+leg FAST R0-AUDIT '^R0-AUDIT OK$' zsh $ROOT/dev/r0-audit.sh $ROOT
 
-# TRUSTED-LINES is informational at Stage 0 and it becomes a hard leg at
-# Stage A, where the D3 overlay first counts against the kernel budget
-# (M0-PLAN.md:174).
-note FAST TRUSTED-LINES zsh $ROOT/dev/trusted-lines.sh $ROOT
+# Each executable below links mechanism's rebuilt kernel, surface and
+# backend.  The pinned fixture files remain the input corpus, while the
+# WASM suite writes its artifacts outside the vendor checkout.
+leg SUITE SUITE-KERNEL '^SUITE-KERNEL OK$' \
+  $ROOT/_build/default/test/main.exe $ROOT/vendor/kanon/test
+leg FAST LEVELS '^LEVELS-OK$' $ROOT/_build/default/test/levels.exe
+leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
+leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
+  $ROOT/_build/default/test/wasm.exe $ROOT/vendor/kanon/test $ROOT/.gatework/wasm-suite
+leg FAST TRUSTED-LINES '^TRUSTED-LINES kernel=[0-9]+/[0-9]+ encoder=[0-9]+/[0-9]+ OK$' \
+  zsh $ROOT/dev/trusted-lines.sh $ROOT
+leg MED DENOMINATORS SELF zsh $SELF --leg denominators
 
 # The legs of plan section 9 that later stages add.  Each one lands with
 # the stage named beside it, so this file grows by edit and never by
 # rewrite.
-#   Stage A: R0-COUNT, R0-AUDIT, SUITE-KERNEL, TRUSTED-LINES as a leg.
 #   Stage B: IMPORT-GRAMMAR, CORPUS-UAT, PARITY-COUNTS.
 #   Stage C: AXIOMS.
 #   Stage D: PRELUDE-CHECKED, M0-TIME.

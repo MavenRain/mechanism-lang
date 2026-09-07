@@ -29,9 +29,20 @@ of the names that mechanism-lang refuses to map.
 `zsh dev/gates.sh` runs the battery.  Each leg prints one PASS or FAIL
 line under a watchdog tier, then the script prints the MEASURE block and
 GATES-OK or GATES-FAIL.  A tier is a hang ceiling and never a
-performance budget.  Stage 0 runs BUILD, PIN, PIN-DELTA and
-DENOMINATORS, with TRUSTED-LINES informational.  Later stages add the
-remaining legs of the plan.
+performance budget.  Stage A adds universe-level tests and runs the
+inherited suites against the recompiled overlay.  R0 counts, active
+trusted sources and the pin delta are checked by the same battery.
+The importer and prelude mapping gates arrive in later M0 stages.
+
+Stage A's implementation passes its behavioral suites.  Acceptance is
+pending the trusted-kernel limit ruling: the active kernel has 4,140
+lines against the unchanged 3,000-line bound, so TRUSTED-LINES fails.
+See `dev/M0-BUILD-LOG.md` for the validation record.
+
+The Stage A driver inherits check, axioms, emit, run and spec-count.
+Prenex templates are available through the OCaml Poly API; import syntax
+for them arrives with the lean4export reader.  A template is checked
+universally and every explicit closed specialization is rechecked.
 
 `zsh dev/dunecho.sh build` is the only way a dune verb runs in this
 repository.  The runner puts the zxcaml-p1 opam switch first on PATH and

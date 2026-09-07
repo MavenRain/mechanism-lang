@@ -1,0 +1,25 @@
+; Unchanged pinned modules are compiled into the same library as the
+; physical D3 overlays.  No mechanism consumer links kanon_kernel.
+(library
+ (name mechanism_kernel)
+ (libraries zarith))
+
+(copy_files ../vendor/kanon/lib/bignum.ml)
+(copy_files ../vendor/kanon/lib/budget.ml)
+(copy_files ../vendor/kanon/lib/budget.mli)
+(copy_files ../vendor/kanon/lib/erase.ml)
+(copy_files ../vendor/kanon/lib/error.ml)
+(copy_files ../vendor/kanon/lib/eterm.ml)
+(copy_files ../vendor/kanon/lib/eval.ml)
+(copy_files ../vendor/kanon/lib/global.ml)
+(copy_files ../vendor/kanon/lib/literal.ml)
+(copy_files ../vendor/kanon/lib/order.ml)
+(copy_files ../vendor/kanon/lib/positivity.ml)
+(copy_files ../vendor/kanon/lib/pp.ml)
+(copy_files ../vendor/kanon/lib/prim.ml)
+(copy_files ../vendor/kanon/lib/quantity.ml)
+(copy_files ../vendor/kanon/lib/shape.ml)
+(copy_files ../vendor/kanon/lib/spec_count.ml)
+(copy_files ../vendor/kanon/lib/term.ml)
+(copy_files ../vendor/kanon/lib/totality.ml)
+(copy_files ../vendor/kanon/lib/value.ml)

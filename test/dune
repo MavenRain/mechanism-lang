@@ -1,0 +1,16 @@
+; These are copies of the pin's suites linked only to mechanism's
+; libraries.  The gate passes the pinned fixture directory explicitly.
+(executables
+ (names main wasm sl_surface)
+ (modules Main Wasm Sl_surface Sys_io Kanon_kernel Kanon_surface Kanon_wasm)
+ (libraries mechanism_kernel mechanism_surface mechanism_wasm))
+
+(executable
+ (name levels)
+ (modules Levels)
+ (libraries mechanism_kernel mechanism_surface))
+
+(copy_files ../vendor/kanon/test/main.ml)
+(copy_files ../vendor/kanon/test/wasm.ml)
+(copy_files ../vendor/kanon/test/sl_surface.ml)
+(copy_files ../vendor/kanon/test/sys_io.ml)

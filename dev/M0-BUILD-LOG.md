@@ -173,3 +173,119 @@ commit is one command:
 ```
 git -C /Users/oobi/Documents/mechanism-lang commit -s -m 'M0 Stage 0: repository, vendored kanon, bench and denominators'
 ```
+
+## Stage A implementation (2026-09-07)
+
+Entry HEAD is 71f47449f943f54efb819a7bbaba175b3eb08703.  The canonical
+repository was clean.  Work was built and reviewed in
+`/Users/oobi/Documents/gpt1/mechanism-m0-stage-a`, then installed with
+baseline and copy hashes checked.  The vendor pin, frozen denominators
+and all watchdog tiers are unchanged.  No commit is made.
+
+### Implementation and review
+
+The overlay implements the five semantic level forms with compact,
+arbitrary-precision successor offsets.  Equality and ordering split each
+variable into zero and positive cases and compare unbounded normal
+forms.  These are exact decisions, with checking-budget polls throughout
+comparison.  No finite set of numeric samples is used as the oracle.
+
+The checker admits universe variables only under a declared global
+template arity.  A raw-term scope pass also checks fields that a typing
+rule can ignore.  Templates stay in a separate, abstract Poly catalog;
+each explicit closed specialization is rechecked before Global insertion.
+Family universe declarations remain closed at this stage.  Term and shape
+constructors are unchanged.  The integration decisions are recorded in
+`M0-STAGE-A.md` and SPEC.md.
+
+Dune recompiles unchanged pinned modules alongside the physical overlays.
+The inherited tests link the mechanism libraries and read the pinned
+fixtures.  The driver carries the pinned commands through a separate
+entry point, and its Node and Wasmtime helpers are unchanged copies.
+
+Independent review found two defects before validation: ignored shape
+fields could retain free universe variables, and symbolic comparison
+could run past its caller's budget.  Both were fixed with regressions.
+Conversion now also preserves budget exhaustion during its proposition
+probe.  A second read-only review found no further concrete defect in
+the scope, conversion or specialization boundaries.
+
+### Validation status
+
+The final kernel count is 4,140 lines, counting each active trusted
+implementation once and every additional local kernel source/interface.
+The encoder remains 246 lines.  The original kernel bound remains 3,000
+and the encoder bound remains 900.  TRUSTED-LINES is now a hard gate and
+fails.  S0-F1 / D-A-1 is unresolved: a 4,200-line kernel limit was proposed
+to the user, but no ruling has been received.  This is a staged
+implementation with a known failing gate, not a Stage A acceptance.
+
+The working-copy build reports `OK build: 0 errors, 0 warnings`.  The
+inherited kernel, surface and WASM suites pass, as do R0 count and dispatch
+checks, pin verification and frozen-denominator verification.
+
+An initial PIN-DELTA driver count used a stdin diff, whose repeated-line
+alignment differed from the script's regular-file diff.  The ledger was
+corrected to the script's measured 14 lines.  A subsequent battery's
+PIN-DELTA leg overlapped a second invocation and lost their shared scratch
+directory.  An isolated rerun passed all six rows: check 66, conv 51,
+rules 47, level implementation 49, level interface 17 and driver 14.
+The failed attempts are not counted as passing battery runs.
+
+Mutation testing initially exposed missing coverage of Rules_lvl.imax:
+the algebra tests exercised Level.imax directly.  Checker-level
+impredicativity tests were added before the mutation checks were repeated.
+The mutation log records both the initial survivor and final results.
+
+### Canonical validation and staging
+
+The installed 39 files matched their recorded source hashes.  A separate
+read-only verification confirmed exactly the expected changed/untracked
+paths, unchanged repository HEAD and a clean vendor worktree at the pin.
+The final canonical battery ran with no overlapping gate invocation:
+
+| leg | result | measured ms |
+| --- | --- | --- |
+| BUILD | PASS, zero errors and warnings | 2626.722 |
+| PIN | PASS, all three pins equal the frozen SHA | 66.949 |
+| PIN-DELTA | PASS, all six overlays | 441.734 |
+| R0-COUNT | PASS | 650.112 |
+| R0-AUDIT | PASS, effective compiled source | 108.931 |
+| SUITE-KERNEL | PASS | 684.625 |
+| LEVELS | PASS, 55 cases | 464.362 |
+| SUITE-SURFACE | PASS | 268.604 |
+| SUITE-WASM | PASS | 4802.691 |
+| TRUSTED-LINES | FAIL, kernel 4140/3000, encoder 246/900 | 43.704 |
+| DENOMINATORS | PASS | 42.776 |
+
+The battery exits 1 and prints `GATES-FAIL`, solely for the unchanged
+kernel bound.  All three final mutations compile and are killed by the
+behavioral suite.  No failed attempt or unmet bound is reported green.
+The evidence log was then updated and all 39 changed files staged in the
+canonical repository, with no unstaged changes and no commit.
+
+## Stage A review (2026-09-07)
+
+Findings kept, all fixed.
+
+- L1-1 (low), lib/level_var.ml.  offset built a Succ past the
+  positive-offset invariant.
+- L4-2 (low), test/levels.ml.  The unchanged-environment assertion of
+  failed-instances-preserve-environments was vacuous.
+- L3-3 (low), test/levels.ml.  The level suite stopped at the first
+  failing case, so run could not show the A-M2 checker observation.
+- L4-1 (low), test/levels.ml.  Bare integer division on staged
+  non-vendored lines.
+- L3-1 (low), dev/PIN-DELTA.md.  Four new dune overlays shadowed pinned
+  build files with no PIN-DELTA row.
+- L3-4 (low), dev/gates.sh.  The battery header named three legs that
+  are not legs of plan section 9.
+- L3-2 (low), dev/M0-BUILD-LOG.md.  One space after a sentence, 43
+  authored hits in eight files.
+
+Fixes: lib/level_var.ml; test/levels.ml; dev/PIN-DELTA.md; dev/gates.sh;
+dev/M0-BUILD-LOG.md; dev/MUTATION-LOG.md; dev/trusted-lines.sh;
+README.md; dev/r0-audit.sh; dev/r0-count.sh; lib/dune; test/dune.
+
+Gate verdict BOUND-ONLY, kernel 4140, encoder 246.  TRUSTED-LINES stays
+red until the user rules D-A-1.
