@@ -87,3 +87,67 @@ This corrects Stage 0's double-counting of replaced files.  The complete
 overlay sources and their differences remain visible in PIN-DELTA.md.
 The template catalog is outside the kernel: every specialization is
 rechecked, just as inherited surface elaboration is rechecked.
+
+## Lean export import foundation
+
+The source format is lean4export NDJSON 3.1.0.  The first record must be
+metadata with that format version.  Names and levels have an implicit
+zero entry.  Expressions have no implicit entry.  Every referenced table
+entry must already exist, including references in deferred values and
+recursor rules.  The reader checks record fields and their JSON types,
+enumerations, duplicate keys and duplicate table IDs.  In an inductive
+group the reader also checks that each constructor is the one its inductive
+type lists at that index, and that a recursor rule whose constructor
+belongs to the group has that constructor's field count.  A rule of a
+nested inductive names a constructor of an earlier group.  Such a name
+stays a reference check only.
+Index fields must fit a nonnegative OCaml integer.  Natural literals remain
+decimal strings and retain arbitrary precision.  JSON nesting is limited
+to 512.  Semantic and lowering traversals limit depth to 1,024; lowering
+also limits node visits to 100,000 and supplies a default kernel budget of
+100,000 polls.  Exhaustion is an explicit error, never a successful type.
+
+All eight named declaration kinds contribute to the count table: axiom,
+definition, theorem, opaque, quotient, inductive type, constructor and
+recursor.  The UAT denominator distinguishes 2,477 referenced external
+constants from 2,543 declared external constants and 3,202 declarations.
+The in-house prefixes are UnifiedAggregation, ArrowCat and CompCatTheory,
+matching the frozen corpus census.  A declaration is never omitted because
+its type lacks a mapping.
+
+Translation first resolves a shared source-type DAG.  It validates closed
+term scope, prenex universe scope and constant universe arity at each
+declaration type.  Named parameters retain their per-declaration order.
+Applications retain both children; projections retain their type name,
+field index and structure; metadata retains its data object.
+Structural name identities are canonicalized independently of their
+display text.  Numeric components and string components remain distinct.
+The artifact includes the raw name table and the source parameter IDs.
+
+Translate.lower_type takes checked globals and an explicit resolver.
+The resolver receives the exact universe arguments.  Each returned term
+must infer in the supplied globals without local term binders.  Application
+domains come from kernel inference, and the final result must check as a
+type.  The importer installs no source signature as an unchecked global.
+Lean binderInfo is retained separately from quantity.  Lowering uses the
+unrestricted quantity and checks in erased type mode; it does not infer
+erasure from implicitness.
+
+The CLI starts with the kernel's initial globals and no prelude mappings.
+KERNEL_TYPE records successful type checking, not source-to-target parity.
+Missing mappings remain DEFERRED.  Projection lowering and String type
+expressions are explicit refusals.  The complete kernel-type translation
+required by the Stage B plan therefore remains open with the prelude
+integration.  diff-parity currently reports counts and these statuses;
+Stage D owns NAME_AND_TYPE comparisons and the NEVER ledger.
+An import command returns success when it produces the complete report,
+even if a row reports KERNEL_ERROR.  That status stays in the published
+table.  Grammar or scope errors fail the command before publication.
+
+types.ndjson is a versioned intermediate artifact, not executable input.
+The manifest declares that mappings and values have not been checked.
+Output is prepared in a sibling temporary directory and published only
+after all files have been written.  The output path may end with a path
+separator.  The temporary directory comes from the parent directory and
+the last component, so it stays a sibling.  Existing output is refused.  A narrow
+import/io.ml boundary converts named host file errors into Result errors.

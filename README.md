@@ -32,17 +32,46 @@ GATES-OK or GATES-FAIL.  A tier is a hang ceiling and never a
 performance budget.  Stage A adds universe-level tests and runs the
 inherited suites against the recompiled overlay.  R0 counts, active
 trusted sources and the pin delta are checked by the same battery.
-The importer and prelude mapping gates arrive in later M0 stages.
+The import foundation adds grammar, corpus, count and CLI gates.
+The prelude mapping gate remains due in a later M0 stage.
 
 Stage A's implementation passes its behavioral suites.  Acceptance is
 pending the trusted-kernel limit ruling: the active kernel has 4,140
 lines against the unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 
-The Stage A driver inherits check, axioms, emit, run and spec-count.
-Prenex templates are available through the OCaml Poly API; import syntax
-for them arrives with the lean4export reader.  A template is checked
-universally and every explicit closed specialization is rechecked.
+The driver inherits check, axioms, emit, run and spec-count.
+Prenex templates are available through the OCaml Poly API.  The importer
+retains their universe arguments for checked resolver integration.
+A template is checked universally and every explicit closed specialization
+is rechecked.
+
+## Importing Lean types
+
+Build the driver, then run:
+
+```sh
+_build/default/bin/mech.exe import path/to/uat.export --out imported-types
+_build/default/bin/mech.exe diff-parity --export path/to/uat.export
+```
+
+The reader accepts lean4export format 3.1.0 and checks every record and
+table reference.  It retains all declaration types, including constructors
+and recursors.  The output directory must be new.  It contains a manifest,
+a shared type table in types.ndjson and a summary.  Shared nodes retain
+universe arguments and binder scope without expanding repeated subterms.
+
+The report distinguishes a scoped source type from a kernel-checked type.
+KERNEL_TYPE means the type lowered and checked with the available globals.
+DEFERRED means a checked prelude mapping is still needed.  UNSUPPORTED and
+KERNEL_ERROR retain their declaration and reason.  No status claims
+NAME_AND_TYPE parity, and no NEVER ledger is applied yet.
+
+This delivers the Stage B import foundation.  The full planned Stage B
+kernel-type table remains incomplete: imported constants need checked
+prelude mappings, and projections need their checked representation.
+The library exposes Translate.lower_type with an explicit resolver for
+that integration.  Values remain scheduled for M1.
 
 `zsh dev/dunecho.sh build` is the only way a dune verb runs in this
 repository.  The runner puts the zxcaml-p1 opam switch first on PATH and

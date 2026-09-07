@@ -289,3 +289,138 @@ README.md; dev/r0-audit.sh; dev/r0-count.sh; lib/dune; test/dune.
 
 Gate verdict BOUND-ONLY, kernel 4140, encoder 246.  TRUSTED-LINES stays
 red until the user rules D-A-1.
+
+## Stage B import foundation (2026-09-07)
+
+Base adf30859a0d2d75e0bb4938b19a0e89218211ae0.  The user requested
+continued development and staging of all changes.  The canonical tree was
+clean.  Work used the isolated copy documented in dev/M0-STAGE-B.md, with
+parallel reader and translator builders, separate regression tests, review,
+fixes and isolated mutation checks.  No commit was made.
+
+Delivered: a strict OCaml lean4export 3.1.0 reader, four typed tables,
+shared scoped type translation, checked lowering through an explicit
+resolver, the import CLI, intermediate artifacts and count reports.
+The raw UAT export is read independently by the OCaml importer and by the
+frozen corpus validator.  No dependency was installed or source corpus
+regenerated.  Unix is the standard-library dependency for file output.
+
+Scope result: the import foundation is validated; full Stage B remains
+incomplete.  The plan requires every translated kernel type, but source
+constant references need checked prelude mappings that have not yet been
+built.  Installing those signatures as unchecked globals would silently
+introduce postulates, so the implementation retains them as DEFERRED.
+Projection lowering also needs the checked prelude representation.
+Stage C supplies the prelude, and Stage D establishes mapping equivalence.
+A successful lower_type call proves only that its result is a kernel type
+under the supplied mapping.  It does not prove source-to-target parity.
+
+The 3,202 declaration types resolve into 38,644 shared expression nodes.
+All declarations remain in the output: 100 have KERNEL_TYPE and 3,102 have
+DEFERRED with a named reason.  This corpus run has zero UNSUPPORTED and
+zero KERNEL_ERROR rows.  NEVER remains zero because no ledger is applied.
+No NAME_AND_TYPE claim or parity percentage is printed.
+
+| Kind | Declared | Kernel types | Deferred |
+| --- | ---: | ---: | ---: |
+| axiom | 3 | 0 | 3 |
+| def | 1176 | 23 | 1153 |
+| thm | 1649 | 0 | 1649 |
+| opaque | 1 | 0 | 1 |
+| quot | 4 | 1 | 3 |
+| inductive | 112 | 76 | 36 |
+| constructor | 143 | 0 | 143 |
+| recursor | 114 | 0 | 114 |
+
+Frozen census: 219,778 lines, 17,759 emitted names, 146 emitted levels,
+198,927 expressions, 3,017 distinct const-node identities, 2,477 referenced
+external constants and 2,543 declared external constants.  The export SHA
+is f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354.
+The source axioms are Classical.choice, Quot.sound and propext.
+
+The five roots absent from the 3,202 declarations, as required by plan N3:
+CompCatTheory.Category.«term_≫_», CompCatTheory.Category.«term𝟙»,
+CompCatTheory.Functor.«term_⋙_», CompCatTheory.«term_⟹_» and
+CompCatTheory.«term_⥤_».  They remain visible here and are not used to
+change the denominator.
+
+Validation: build passed with zero errors and warnings.  The 120 reader
+cases plus the full frozen corpus, 28 type/lowering cases and 12 CLI cases
+passed.  The CLI suite also invokes the independent JSON artifact checker
+on its own fixture.  That gated run covers the fixture output only.  The
+fixture carries an implicit lambda binder, a forall binder, a nondependent
+let, a projection, a metadata node and a universe parameter, so each
+per-kind branch of the checker runs in the gate.  A separate by-hand run
+applied the same checker to the complete UAT output, comparing reachable
+source type nodes, universe graphs, raw names, declaration order and
+parameters.  Its evidence is the independent output check recorded below.
+The version and forward-name mutations were killed; see MUTATION-LOG.md.
+
+The last full battery had 14 passing legs and one inherited failure:
+TRUSTED-LINES kernel=4140/3000 encoder=246/900.  No kernel source, encoder,
+pin, trusted-line limit or watchdog tier changed.  The new type translation
+is outside the kernel line budget; source correspondence remains a separate
+trust obligation, as the plan states.
+
+Selected informational measurements, in milliseconds, from the final full
+battery: BUILD 1776.181, IMPORT-GRAMMAR 1469.614, IMPORT-CLI 180.796,
+CORPUS-UAT 5520.692, PARITY-COUNTS 1131.559.  These include host noise and
+concurrent isolated mutation work.  They are not R3 performance claims.
+The later addition of the artifact check to the CLI suite passed its own
+scoped rerun.  It changes no compiler source or gate tier.
+
+Review fixes: census sets now use canonical structural identities, raw
+names are retained in artifacts, display strings are injective across
+numeric/string/quoted names, aliases share universe binders, and lowering
+has finite node-work and kernel budgets.  A depth-25 shared Pi DAG that
+would otherwise expand exponentially now reports budget exhaustion.
+Output errors use one named stdlib exception boundary returning Result.
+
+Stage B review fix: the reader checks that an inductive group agrees with
+itself.  Each constructor must be the one its inductive type lists at that
+index, and a recursor rule of a constructor of the group must carry that
+constructor's field count.  A rule of a nested inductive names a
+constructor of an earlier group.  Such a name stays a reference check only,
+and the frozen corpus holds such rules.  Four reader negatives cover the
+new refusals,
+so the reader suite prints 120 cases.
+
+Stage B review fix: `mech import --out` accepts an output path that ends
+with a path separator.  Before the fix the staging directory landed inside
+the missing output directory and the command refused with ENOENT.  The
+staging directory now comes from the parent directory and the last
+component.  The published artifacts are byte-identical to the run without
+the separator, and one CLI case covers the spelling.
+
+Evidence retained under /Users/oobi/Documents/gpt1:
+full battery .kanon-exec/run-Z0Ve02; UAT output mechanism-m0b-uat-types;
+independent output check .kanon-exec/run-4HT5Zz; mutation artifacts under
+mechanism-m0b-mutations.  The installation manifest records source and
+canonical baseline hashes, and staging verifies every resulting index blob.
+
+## Stage B review (2026-09-07)
+
+Review round 1 kept seven findings and fixed all seven.
+
+- L1-2 (medium) dev/import-gates.sh:39.  PARITY-COUNTS pinned only the
+  declared= column, so a total status regression stayed green.
+- L4-3 (medium) test/import_cli.py:55.  The independent artifact checker
+  ran on a two-node-kind fixture only, so most of the writer was uncovered.
+- L2-1 (low) import/io.ml:12.  `mech import --out DIR/` failed and
+  published nothing, because staging landed inside the missing directory.
+- L1-3 (low) import/decls.ml:157.  Recursor rules and constructors were
+  reference-checked only, so an inconsistent inductive group was accepted.
+- L2-6 (low) dev/gates.sh:202.  The IMPORT-CLI oracle accepted any case
+  count, so a deleted CLI test block still passed the leg.
+- L3-1 (low) test/import_cli.py:41.  Both staged Python tests were
+  assert-only with no explicit exit code, against the house rule.
+- L1-5 (low) import/ndjson.mli:5.  One space after a sentence in four new
+  interface comment lines, against the two-space house rule.
+
+Fixes: dev/import-gates.sh, test/import_cli.py, import/io.ml,
+import/decls.ml, dev/gates.sh, test/import_output.py, import/ndjson.mli,
+import/export.mli, test/import.ml, SPEC.md, dev/M0-STAGE-B.md,
+dev/MUTATION-LOG.md.
+
+Gate verdict: BOUND-ONLY.  Kernel 4140/3000, encoder 246/900.  The
+TRUSTED-LINES leg stays red until the user rules D-A-1.

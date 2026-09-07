@@ -114,3 +114,54 @@ row above records.  After the fix the probe prints
 `negative offset gives one back = true`, `negative in_scope 0 = true`
 and `negative equals itself = true`.  No suite case observes this,
 because lib/level.mli exposes no offset function.
+
+## Stage B import foundation (2026-09-07)
+
+Each mutant was built in a separate scratch copy with no change to the
+live tree.  Both builds passed with zero errors and warnings, so each
+failure below is a behavioral test observation.
+
+| ID | Mutation | Observation | Result |
+| --- | --- | --- | --- |
+| B-M1 | Extend parse_metadata to accept format 3.2.0. | test/import.exe exits 1; version-3.2.0 reports malformed input was accepted. | killed |
+| B-M2 | Let references accept missing name indices. | test/import.exe exits 1; 13 forward-name negatives report malformed input was accepted. | killed |
+
+B-M2 failing cases: level-param-forward, const-forward-name,
+lambda-forward-name, projection-forward-name,
+declaration-level-parameter-forward, definition-all-forward,
+theorem-all-forward, opaque-all-forward, inductive-all-forward,
+inductive-ctors-forward, constructor-induct-forward,
+recursor-all-forward and recursor-rule-ctor-forward.  These include names
+in values and declaration metadata that type lowering does not consume.
+
+The copies are /Users/oobi/Documents/gpt1/mechanism-m0b-mutations/b-m1 and
+b-m2.  Their test artifacts are .kanon-exec/run-6Re25C and
+.kanon-exec/run-k5m95o, respectively.  Each copy's export.ml differs from
+the live source by its one intentional condition only.
+
+## Stage B review mutants (2026-09-07)
+
+The review round replayed two mutants that the staged legs did not kill.
+Each mutant was built in one scratch copy outside the repository, with no
+change to the live tree.  Both builds passed with zero errors and zero
+warnings.  Each row records the observation after the matching fix.
+
+| ID | Mutation | Observation | Result |
+| --- | --- | --- | --- |
+| B-M3 | Swap the DEFERRED and UNSUPPORTED columns of the PARITY-KIND row in import/report.ml. | dev/import-gates.sh counts exits 1 and prints no PARITY-COUNTS OK line. | killed |
+| B-M4 | Map every Lean binderInfo to "default" in import/report.ml. | test/import_output.py exits 1 at its binderInfo comparison; test/import_cli.py exits 1. | killed |
+
+The same round added the inductive group consistency check of
+import/decls.ml.  That check refuses the constructor-induct-forward
+negative before the name reference check.  A replay of B-M2 against the
+current reader therefore cannot report that one negative as accepted.  The
+B-M2 row records the observation of the build round, against the reader of
+that round.
+
+Before the fixes both review mutants were green.  B-M3 passed because the oracle
+of dev/import-gates.sh stopped at the declared= column.  B-M4 passed
+because the gated fixture of test/import_cli.py held no binder node.  The
+copy is probes/fix/L4-3/mutant under the review directory
+/Users/oobi/Documents/mechanism-lang-b-review, reused for both runs.  The
+control transcripts are probes/fix/L1-2/control.txt and
+probes/fix/L4-3/control.txt under that same review directory.

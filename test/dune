@@ -10,6 +10,16 @@
  (modules Levels)
  (libraries mechanism_kernel mechanism_surface))
 
+(executable
+ (name import)
+ (modules Import)
+ (libraries mechanism_import))
+
+(executable
+ (name import_types)
+ (modules Import_types)
+ (libraries mechanism_import mechanism_kernel))
+
 (copy_files ../vendor/kanon/test/main.ml)
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)

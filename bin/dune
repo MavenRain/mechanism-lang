@@ -1,5 +1,5 @@
 (executable
  (name mech)
- (libraries mechanism_kernel mechanism_surface mechanism_wasm))
+ (libraries mechanism_kernel mechanism_surface mechanism_wasm mechanism_import))
 
 (copy_files ../vendor/kanon/bin/host.ml)
