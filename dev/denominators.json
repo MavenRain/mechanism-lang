@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-07",
+  "kanon_pin": "936a43a92dd59a04698648f24fa5ae94cdb532df",
+  "ocamlopt_ms_per_kloc": {
+    "value": 1641.6,
+    "median_ms": 8157.104,
+    "min_ms": 5949.238,
+    "max_ms": 14355.273,
+    "runs": 5,
+    "lines": 4969,
+    "source": "kanon dev/denominators.json",
+    "quality": "NOISY",
+    "binding": true,
+    "note": "Carried from the kanon pin without change.  The spread from 5,949 ms to 14,355 ms over five runs is the reason for the NOISY mark.  The mark is part of the row and no agent removes it."
+  },
+  "ocamlopt_ms_per_kloc_remeasure": {
+    "date": "2026-09-07",
+    "value": 231.863,
+    "median_ms": 1441.031,
+    "min_ms": 1295.708,
+    "max_ms": 1536.366,
+    "runs": 5,
+    "lines": 6215,
+    "files": 24,
+    "corpus": "the vendored kanon lib/*.ml and lib/*.mli at 936a43a92dd59a04698648f24fa5ae94cdb532df, 24 files and 6,215 lines by wc -l",
+    "command": "zsh /Users/oobi/Documents/mechanism-lang/dev/bench.sh ocamlopt_remeasure 'rm -rf /private/tmp/claude-501/-Users-oobi-Documents-claude4/0c2b51e5-60d5-46cb-b020-ae52f441e18e/scratchpad/stage0/remeasure/kanon/_build && zsh /private/tmp/claude-501/-Users-oobi-Documents-claude4/0c2b51e5-60d5-46cb-b020-ae52f441e18e/scratchpad/stage0/remeasure/kanon/dev/dunecho.sh build'",
+    "binding": false,
+    "note": "Informational and dated.  The R3 gate binds at M1 against this row and not against the carried ocamlopt_ms_per_kloc row.  value is median_ms divided by lines over 1000.  S0-D7: the timed pair of the brief is a clean followed by a build of ./vendor/kanon/lib through dev/dunecho.sh, and neither half is reachable through that runner.  dunecho takes one MODE and no path, so it refuses a directory argument, and it holds no clean mode.  In the repository the vendored directory is also outside the default alias, so a root build compiles no vendored file until an overlay depends on it.  The measured pair is therefore a removal of _build followed by a build through the same runner script, taken over a copy of the vendored lib tree that holds lib/, dune-project, dune and dev/dunecho.sh only, so that the build compiles the named corpus and nothing else.  The copy is its own dune workspace root.  Stage A repeats the measurement inside the repository, where the D3 overlay makes the vendored library a build dependency."
+  },
+  "kanon_check_ms_per_kloc": {
+    "value": 43,
+    "source": "verdict probe 3",
+    "note": "349 lines in 0.030 s, 396 lines in 0.017 s",
+    "binding": false
+  },
+  "uat_export_sha256": "f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354",
+  "lean_warm_uat_ms": {
+    "value": 6383,
+    "source": "verdict probes 11 and 12",
+    "binding": false,
+    "bound": "lower",
+    "note": "A lower bound.  The warm Lean figure omits the cold elaboration of the closure."
+  },
+  "lean_warm_auction_ms": {
+    "value": 5846,
+    "source": "verdict probes 11 and 12",
+    "binding": false,
+    "bound": "lower",
+    "note": "A lower bound.  The warm Lean figure omits the cold elaboration of the closure."
+  },
+  "host": {
+    "arch": "arm64",
+    "ncpu": 12,
+    "macos": "26.4",
+    "note": "sysctl denied in sandbox"
+  },
+  "ocaml_version": "5.2.1",
+  "dune_version": "3.24.2",
+  "versions_read": "2026-09-07",
+  "method": "Every number carries its date and its source.  kanon_pin is the sha in PIN, read by git -C /Users/oobi/Documents/mechanism-lang/vendor/kanon rev-parse HEAD and by git -C /Users/oobi/Documents/mechanism-lang ls-files -s vendor/kanon.  ocamlopt_ms_per_kloc is copied from the kanon pin file /Users/oobi/Documents/mechanism-lang-kanon-pin/dev/denominators.json with its five fields and its NOISY mark, and it is not re-derived.  ocamlopt_ms_per_kloc_remeasure is measured on 2026-09-07 by zsh dev/bench.sh, which runs the command once untimed as a warm-up, then five timed runs of /bin/zsh -f -c CMD under /opt/homebrew/bin/python3 -P with time.perf_counter_ns around subprocess.run and stdin, stdout and stderr on /dev/null, and prints median, min and max in milliseconds.  The timed command removes _build with rm -rf and then runs zsh dev/dunecho.sh build, the runner that puts /Users/oobi/.opam/zxcaml-p1/bin first on PATH, takes its root from its own path and execs /Users/oobi/.local/bin/dunecho.  The corpus is the vendored kanon lib/*.ml and lib/*.mli at the pin, counted by wc -l as 6,215 lines over 24 files, and value is median_ms divided by 6.215.  kanon_check_ms_per_kloc, uat_export_sha256, lean_warm_uat_ms and lean_warm_auction_ms are copied from the design verdict probes named in each row and none of them is re-derived here.  Host facts come from uname -m, getconf _NPROCESSORS_ONLN and sw_vers -productVersion, because sysctl is denied in the agent sandbox.  ocaml_version comes from ocamlopt -version and dune_version from dune --version, both read from the zxcaml-p1 switch on 2026-09-07 and both reported by dev/dunecho.sh at build time.  dev/DENOMINATORS.sha256 holds the digest of this file, written by shasum -a 256 denominators.json from inside dev/, and the DENOMINATORS gate leg checks it.  A re-measurement is a new dated file and never an overwrite of this one."
+}

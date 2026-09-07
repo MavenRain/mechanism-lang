@@ -1,0 +1,3 @@
+[submodule "vendor/kanon"]
+	path = vendor/kanon
+	url = /Users/oobi/Documents/kanon

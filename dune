@@ -1,0 +1,16 @@
+; D-M0-1 and tally dune:1.  vendor/ holds the kanon submodule at PIN.
+; mechanism-lang builds the vendored tree, so dune treats it as vendored
+; code and not as data.
+
+(vendored_dirs vendor)
+
+; S0-D2.  Every warning is an error, in every directory of this
+; repository.  The block lands at Stage 0, so the BUILD leg reads 0
+; errors and 0 warnings from the first stage on.  dune relaxes the
+; warning set inside a vendored directory, so the vendored kanon tree
+; builds under its own flags.
+
+(env
+ (_
+  (flags
+   (:standard -warn-error +a))))
