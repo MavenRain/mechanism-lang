@@ -1,0 +1,6 @@
+-- The runtime witness field fails the frozen subsingleton criterion.
+-- Even this equality restricted to proof endpoints has no large J.
+def badProofEqLarge : Type 0 :=
+  case (mechProofRefl MechTrue mechTrivial) as self
+    in MechProofEq left right return Type 0 with
+  | mechProofReflCtor witness => MechNat

@@ -1,10 +1,9 @@
-; The local Kanon_kernel module binds the unchanged surface source to
-; mechanism's kernel rather than the separately built vendored library.
+; The local Kanon_kernel module binds the copied parser and the local
+; elaborator overlay to mechanism's kernel.
 (library
  (name mechanism_surface)
  (libraries mechanism_kernel))
 
-(copy_files ../vendor/kanon/surface/elab.ml)
 (copy_files ../vendor/kanon/surface/lexer.ml)
 (copy_files ../vendor/kanon/surface/parser.ml)
 (copy_files ../vendor/kanon/surface/syntax.ml)

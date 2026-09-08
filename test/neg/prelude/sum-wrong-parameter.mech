@@ -1,0 +1,2 @@
+-- The field type comes from this sum's first parameter.
+def badSumParameter : MechSum MechNat MechUnit := mechInl mechTrue

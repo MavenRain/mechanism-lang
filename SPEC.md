@@ -151,3 +151,28 @@ after all files have been written.  The output path may end with a path
 separator.  The temporary directory comes from the parent directory and
 the last component, so it stays a sibling.  Existing output is refused.  A narrow
 import/io.ml boundary converts named host file errors into Result errors.
+## Stage C prelude foundation
+
+The prelude's data families and eliminators are ordinary checked source.
+The AXIOMS gate starts from an empty global environment and rejects every
+postulate and primitive entry.  The inherited driver's initial Nat axiom
+is therefore outside the checked prelude's dependency environment.
+Parameterized constructors use expected family parameters in the surface
+elaborator.  The constructor record comes from the family the expected type
+names, so a constructor name that two families declare resolves inside the
+expected family, as the kernel introduction rule resolves it.  Dependent
+field types use those parameters and earlier fields; result indices come
+from the constructor declaration and actual fields.
+The kernel rechecks the resulting terms without any new rule.
+
+The first data universe is supported by these source declarations.
+MechProofEq relates proofs of a proposition and has a Prop-valued dependent
+eliminator.  It is not generic equality of data.  Generic Eq at Prop is
+blocked by the kernel's index and constructor universe bounds.  Its two
+failed declaration encodings are retained as negative fixtures.
+
+Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
+names a candidate, not checked source-type parity.  The inventory preserves
+all referenced external constants, including ratified NEVER rows and names
+used only in values.  Stage D must recompute NAME_AND_TYPE from the export
+and checked prelude.  No new R0 former, rule or primitive is introduced.

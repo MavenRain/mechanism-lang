@@ -1,0 +1,90 @@
+-- Checked data at the first data universe.  No declaration uses the
+-- driver's initial Nat axiom or its literal primitives.
+
+mu MechNat : Type 0 with
+| mechZero : MechNat
+| mechSucc : MechNat -> MechNat
+
+mu MechBool : Type 0 with
+| mechFalse : MechBool
+| mechTrue : MechBool
+
+mu MechUnit : Type 0 with
+| mechUnit : MechUnit
+
+mu MechEmpty : Type 0 with
+
+mu MechFalse : Prop with
+
+mu MechTrue : Prop with
+| mechTrivial : MechTrue
+
+mu MechSum (0 A : Type 0) (0 B : Type 0) : Type 0 with
+| mechInl : A -> MechSum A B
+| mechInr : B -> MechSum A B
+
+mu MechDecidable (0 P : Prop) : Type 0 with
+| mechIsFalse : (0 refute : P -> MechFalse) -> MechDecidable P
+| mechIsTrue : (0 proof : P) -> MechDecidable P
+
+def MechPi : (0 A : Type 0) -> (0 B : A -> Type 0) -> Type 0 :=
+  fun (0 A : Type 0) (0 B : A -> Type 0) => (x : A) -> B x
+
+def MechSigma : (0 A : Type 0) -> (0 B : A -> Type 0) -> Type 0 :=
+  fun (0 A : Type 0) (0 B : A -> Type 0) => (x : A) * B x
+
+def mechBoolRec : (0 A : Type 0) -> A -> A -> MechBool -> A :=
+  fun (0 A : Type 0) (no : A) (yes : A) (b : MechBool) =>
+    case b as self in MechBool return A with
+    | mechFalse => no
+    | mechTrue => yes
+
+def mechEmptyElim : (0 A : Type 0) -> MechEmpty -> A :=
+  fun (0 A : Type 0) (e : MechEmpty) =>
+    case e as self in MechEmpty return A with
+
+def mechFalseElim : (0 A : Type 0) -> MechFalse -> A :=
+  fun (0 A : Type 0) (e : MechFalse) =>
+    case e as self in MechFalse return A with
+
+def mechSumRec : (0 A : Type 0) -> (0 B : Type 0) ->
+    (0 C : Type 0) -> (A -> C) -> (B -> C) -> MechSum A B -> C :=
+  fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0)
+    (left : A -> C) (right : B -> C) (s : MechSum A B) =>
+      case s as self in MechSum return C with
+      | mechInl a => left a
+      | mechInr b => right b
+
+def rec mechNatRec : (0 P : MechNat -> Type 0) -> P mechZero ->
+    ((n : MechNat) -> P n -> P (mechSucc n)) -> (n : MechNat) -> P n :=
+  fun (0 P : MechNat -> Type 0) (zero : P mechZero)
+    (step : (n : MechNat) -> P n -> P (mechSucc n)) (n : MechNat) =>
+      case n as self in MechNat return P self with
+      | mechZero => zero
+      | mechSucc previous => step previous (mechNatRec P zero step previous)
+
+def mechDecidableBool : (0 P : Prop) -> MechDecidable P -> MechBool :=
+  fun (0 P : Prop) (d : MechDecidable P) =>
+    case d as self in MechDecidable return MechBool with
+    | mechIsFalse 0 refute => mechFalse
+    | mechIsTrue 0 proof => mechTrue
+
+-- This family compares proofs of one proposition.  The frozen checker
+-- refuses the data-valued indices needed for general equality at Prop.
+-- MechProofEq is a checked eliminator exercise, not the Lean Eq target.
+mu MechProofEq (0 A : Prop) : (0 x : A) -> (0 y : A) -> Prop with
+| mechProofReflCtor : (x : A) -> MechProofEq A x x
+
+def mechProofRefl : (0 A : Prop) -> (x : A) -> MechProofEq A x x :=
+  fun (0 A : Prop) (x : A) => mechProofReflCtor x
+
+def mechProofJ : (0 A : Prop) ->
+    (0 P : (0 x : A) -> (0 y : A) -> (0 e : MechProofEq A x y) -> Prop) ->
+    ((x : A) -> P x x (mechProofRefl A x)) ->
+    (0 x : A) -> (0 y : A) -> (e : MechProofEq A x y) -> P x y e :=
+  fun (0 A : Prop)
+    (0 P : (0 x : A) -> (0 y : A) -> (0 e : MechProofEq A x y) -> Prop)
+    (reflCase : (x : A) -> P x x (mechProofRefl A x))
+    (0 x : A) (0 y : A) (e : MechProofEq A x y) =>
+      case e as self in MechProofEq left right return P left right self with
+      | mechProofReflCtor witness => reflCase witness

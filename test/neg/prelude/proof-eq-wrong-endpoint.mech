@@ -1,0 +1,3 @@
+-- A Bool value is not a proof of the equality's carrier proposition.
+def badProofEqEndpoint : MechProofEq MechTrue mechTrivial mechTrue :=
+  mechProofRefl MechTrue mechTrivial

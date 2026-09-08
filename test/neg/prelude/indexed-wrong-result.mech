@@ -1,0 +1,5 @@
+mu PreludeBadIndex (0 A : Type 0) : (0 x : A) -> Type 0 with
+| preludeBadIndex : (x : A) -> PreludeBadIndex A x
+
+-- Result indices come from constructor fields, not the expected index.
+def badIndex : PreludeBadIndex MechBool mechTrue := preludeBadIndex mechFalse

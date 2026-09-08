@@ -1,0 +1,2 @@
+-- An expected family type does not permit partial constructors.
+def badSumMissing : MechSum MechNat MechUnit := mechInl

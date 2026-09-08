@@ -1,6 +1,6 @@
 #!/bin/zsh
 # dev/gates.sh
-# The M0 gate battery: the Stage 0, A and B legs of plan section 9, in the order
+# The M0 gate battery: the Stage 0, A, B and C legs of plan section 9, in the order
 # the plan writes them (M0-PLAN.md:143 and :173), plus the LEVELS,
 # SUITE-SURFACE and SUITE-WASM suites of mechanism-lang itself, which run
 # beside SUITE-KERNEL and belong to no row of section 9.  Example:
@@ -203,6 +203,11 @@ leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
   python3 -P $ROOT/test/import_cli.py $ROOT/_build/default/bin/mech.exe
 leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
 leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
+leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_build/default/test/prelude.exe $ROOT
+leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
+  python3 -P $ROOT/dev/prelude-gates.py axioms
+leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \
+  python3 -P $ROOT/dev/prelude-gates.py mapping
 leg FAST TRUSTED-LINES '^TRUSTED-LINES kernel=[0-9]+/[0-9]+ encoder=[0-9]+/[0-9]+ OK$' \
   zsh $ROOT/dev/trusted-lines.sh $ROOT
 leg MED DENOMINATORS SELF zsh $SELF --leg denominators
@@ -210,7 +215,6 @@ leg MED DENOMINATORS SELF zsh $SELF --leg denominators
 # The legs of plan section 9 that later stages add.  Each one lands with
 # the stage named beside it, so this file grows by edit and never by
 # rewrite.
-#   Stage C: AXIOMS.
 #   Stage D: PRELUDE-CHECKED, M0-TIME.
 #   Stage E: AUCTION-EXPORT, HOUSE.
 

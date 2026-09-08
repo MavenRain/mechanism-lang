@@ -1,0 +1,9 @@
+mu PreludeBadDependent (0 A : Type 0) (0 B : A -> Type 0) : Type 0 with
+| preludeBadPack : (x : A) -> B x -> PreludeBadDependent A B
+
+-- The first field chooses MechNat for the second field, so Unit fails.
+def badDependent : PreludeBadDependent MechBool
+    (fun (b : MechBool) =>
+      case b as self in MechBool return Type 0 with
+      | mechFalse => MechUnit
+      | mechTrue => MechNat) := preludeBadPack mechTrue mechUnit

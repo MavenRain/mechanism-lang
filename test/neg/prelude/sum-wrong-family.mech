@@ -1,0 +1,2 @@
+-- Expected constructor parameters cannot come from a different family.
+def badSumFamily : MechDecidable MechTrue := mechInl mechTrivial

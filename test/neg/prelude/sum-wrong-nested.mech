@@ -1,0 +1,3 @@
+-- Expected types pass through both constructor applications.
+def badSumNested : MechSum (MechSum MechNat MechUnit) MechBool :=
+  mechInl (mechInl mechTrue)

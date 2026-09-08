@@ -1,0 +1,1 @@
+mismatch: the constructor preludeBadIndex of PreludeBadIndex gives the index (In SMu MechBool [] (ACtor mechFalse) []) and the type asks for (In SMu MechBool [] (ACtor mechTrue) [])

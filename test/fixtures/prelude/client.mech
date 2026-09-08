@@ -1,0 +1,96 @@
+-- The harness checks this file after prelude/init.mech in an empty
+-- global environment.  Every value is built from checked constructors.
+
+def clientOne : MechNat := mechSucc mechZero
+def clientTwo : MechNat := mechSucc clientOne
+
+def clientNatCopy : MechNat :=
+  mechNatRec (fun (n : MechNat) => MechNat) mechZero
+    (fun (n : MechNat) (previous : MechNat) => mechSucc previous) clientTwo
+
+def clientBoolChoice : MechNat :=
+  mechBoolRec MechNat mechZero clientOne mechTrue
+def clientBoolFalseChoice : MechNat :=
+  mechBoolRec MechNat clientOne clientTwo mechFalse
+
+def clientLeft : MechSum MechNat MechUnit := mechInl clientOne
+def clientRight : MechSum MechNat MechUnit := mechInr mechUnit
+def clientNested : MechSum (MechSum MechNat MechUnit) MechBool :=
+  mechInl (mechInl clientOne)
+
+def clientSumChoice : MechNat :=
+  mechSumRec MechNat MechUnit MechNat
+    (fun (n : MechNat) => n) (fun (u : MechUnit) => mechZero) clientLeft
+def clientSumRightChoice : MechNat :=
+  mechSumRec MechNat MechUnit MechNat
+    (fun (n : MechNat) => n) (fun (u : MechUnit) => clientTwo) clientRight
+
+def clientPi : MechPi MechNat (fun (n : MechNat) => MechNat) :=
+  fun (n : MechNat) => n
+
+def clientSigma : MechSigma MechNat (fun (n : MechNat) => MechNat) :=
+  (clientOne, clientTwo)
+
+def clientDecideTrue : MechDecidable MechTrue := mechIsTrue mechTrivial
+def clientDecideFalse : MechDecidable MechFalse :=
+  mechIsFalse (fun (impossible : MechFalse) => impossible)
+def clientDecisionTrue : MechBool := mechDecidableBool MechTrue clientDecideTrue
+def clientDecisionFalse : MechBool := mechDecidableBool MechFalse clientDecideFalse
+
+def clientProofRefl : MechProofEq MechTrue mechTrivial mechTrivial :=
+  mechProofRefl MechTrue mechTrivial
+
+def clientProofJ : MechProofEq MechTrue mechTrivial mechTrivial :=
+  mechProofJ MechTrue
+    (fun (0 x : MechTrue) (0 y : MechTrue)
+      (0 e : MechProofEq MechTrue x y) => MechProofEq MechTrue y x)
+    (fun (x : MechTrue) => mechProofRefl MechTrue x)
+    mechTrivial mechTrivial clientProofRefl
+
+-- This constructor's second field depends on its first field and on
+-- both family parameters.  Its first field selects the Nat branch.
+mu PreludeDependent (0 A : Type 0) (0 B : A -> Type 0) : Type 0 with
+| preludePack : (x : A) -> B x -> PreludeDependent A B
+
+def ClientBoolFibre : MechBool -> Type 0 :=
+  fun (b : MechBool) =>
+    case b as self in MechBool return Type 0 with
+    | mechFalse => MechUnit
+    | mechTrue => MechNat
+
+def clientDependent : PreludeDependent MechBool ClientBoolFibre :=
+  preludePack mechTrue clientOne
+
+def clientDependentSigma : MechSigma MechBool ClientBoolFibre :=
+  case clientDependent as self in PreludeDependent
+    return MechSigma MechBool ClientBoolFibre with
+  | preludePack b value => (b, value)
+
+mu PreludeIndexed (0 A : Type 0) : (0 x : A) -> Type 0 with
+| preludeIndexed : (x : A) -> PreludeIndexed A x
+
+def clientIndexed : PreludeIndexed MechBool mechTrue := preludeIndexed mechTrue
+
+-- Singleton indices make these declarations computation checks.
+mu PreludeOne : (0 n : MechNat) -> Type 0 with
+| preludeOne : PreludeOne (mechSucc mechZero)
+
+mu PreludeTwo : (0 n : MechNat) -> Type 0 with
+| preludeTwo : PreludeTwo (mechSucc (mechSucc mechZero))
+
+mu PreludeTrue : (0 b : MechBool) -> Type 0 with
+| preludeTrue : PreludeTrue mechTrue
+
+mu PreludeFalse : (0 b : MechBool) -> Type 0 with
+| preludeFalse : PreludeFalse mechFalse
+
+def clientNatComputes : PreludeTwo clientNatCopy := preludeTwo
+def clientBoolComputes : PreludeOne clientBoolChoice := preludeOne
+def clientBoolFalseComputes : PreludeOne clientBoolFalseChoice := preludeOne
+def clientSumComputes : PreludeOne clientSumChoice := preludeOne
+def clientSumRightComputes : PreludeTwo clientSumRightChoice := preludeTwo
+def clientPiComputes : PreludeOne (clientPi clientOne) := preludeOne
+def clientSigmaFirstComputes : PreludeOne clientSigma.1 := preludeOne
+def clientSigmaSecondComputes : PreludeTwo clientSigma.2 := preludeTwo
+def clientTrueComputes : PreludeTrue clientDecisionTrue := preludeTrue
+def clientFalseComputes : PreludeFalse clientDecisionFalse := preludeFalse

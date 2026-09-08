@@ -1,0 +1,4 @@
+-- The recursor step must return a natural number at this motive.
+def badNatStep : MechNat :=
+  mechNatRec (fun (n : MechNat) => MechNat) mechZero
+    (fun (n : MechNat) (previous : MechNat) => mechTrue) mechZero

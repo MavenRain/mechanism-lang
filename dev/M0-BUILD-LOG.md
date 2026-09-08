@@ -424,3 +424,101 @@ dev/MUTATION-LOG.md.
 
 Gate verdict: BOUND-ONLY.  Kernel 4140/3000, encoder 246/900.  The
 TRUSTED-LINES leg stays red until the user rules D-A-1.
+## Stage C foundation (2026-09-07)
+
+Base: 77eda36.  Workflow: separate prelude and mapping builders, an
+independent equality feasibility check, source review of the inventory,
+axiom gates and constructor overlay, then integration and full validation.
+The build copy is `/Users/oobi/Documents/gpt16/mechanism-lang`.
+This increment is ready to stage.  Stage C and PRELUDE-CHECKED remain open.
+
+Delivered: nine SMu families and ten definitions in prelude/init.mech,
+checked from Global.empty with zero axioms and zero primitives.  The
+surface overlay now propagates expected family parameters into constructor
+fields, including dependent and nested fields.  Constructor result indices
+are computed from their declaration and values, never taken on trust from
+the expected result.  All terms still pass through the unchanged kernel.
+
+The inventory records 2,477 referenced external names, 2,543 declared
+external names and 3,017 referenced names in total.  Its verdicts are
+NAME_ONLY 12, UNMAPPED 2,280 and NEVER 185.  The exact Lean.Omega exception
+rows remain in the denominator.  Both TSVs reproduce byte for byte from
+the CLI.  No NAME_AND_TYPE judgment is claimed.
+
+Validation: BUILD has zero errors and zero warnings.  All 28 prelude cases
+and 14 mapping cases pass.  Positive clients check computation through
+singleton indices, not only function types.  Thirteen negative files
+require specific diagnostic prefixes.  AXIOMS rejects both an added
+postulate and the replacement of the Unit family by postulates.  The old
+Stage B driver rejects the new prelude at the parameterized constructor,
+confirming that the new source reaches the fixed surface path.
+
+The full battery has 17 PASS legs and one FAIL: TRUSTED-LINES, unchanged
+at kernel=4140/3000 and encoder=246/900.  PIN, PIN-DELTA, R0, kernel,
+levels, surface, WASM, import, corpus and denominators pass.  No bound,
+watchdog tier, frozen denominator or vendored source changed.
+
+| New leg | Tier | Elapsed ms | Exit |
+| --- | --- | --- | --- |
+| PRELUDE | FAST | 347.758 | 0 |
+| AXIOMS | FAST | 106.783 | 0 |
+| MAP-INVENTORY | MED | 1770.504 | 0 |
+
+Full gate capture: `/Users/oobi/Documents/gpt16/.kanon-exec/run-Rw7Kuk`.
+Old-driver control: `/Users/oobi/Documents/gpt16/.kanon-exec/run-eoLViJ`.
+Independent review found no semantic defect.  Its stale surface comment
+was fixed, and PIN-DELTA recorded the 79-line diff output of that round.
+
+Remaining work: the kernel refuses data-valued indices in Prop families,
+so generic Eq cannot be declared as the plan assumes.  Moving an endpoint
+to a field is also refused.  The checked MechProofEq and its dependent J
+are restricted to proof endpoints.  Relaxing arbitrary constructor fields
+would interact unsafely with proof irrelevance and the erased-field
+large-elimination criterion; this increment changes neither rule.
+Generic Eq/J/cast, universe-polymorphic families, the category targets,
+and source-type mapping judgments remain incomplete.  The trusted-line
+bound decision also remains pending.
+
+Stage C review fix round (2026-09-08).  The surface elaborator now reads
+the constructor record from the family its expected type names, the way
+the kernel introduction rule reads it.  A constructor name that a later
+family declares again no longer refuses well-typed source, and the arity,
+the field telescope and the result indices come from the expected family.
+The name scan stays as the fallback when no expected type is available.
+Two prelude cases were added.  One checks a second family that declares
+mechInl beside MechSum.  One requires every NAME_ONLY target of
+map/prelude.map.tsv to name a checked prelude declaration.  The
+empty-environment case now measures Global.empty, the hidden-builtin case
+pins its diagnostic, and the indexed-wrong-result expectation holds the
+whole measured message.  MAP-INVENTORY compares the CLI output with the
+bytes of the checked-in TSV, so a line-ending edit no longer passes and an
+ASCII locale no longer fails a correct repository.  The prelude suite
+prints 28 PASS lines and PRELUDE-OK families=9 definitions=10 axioms=0
+primitives=0.  PIN-DELTA records the measured surface/elab.ml diff of 116
+lines.
+
+## Stage C review (2026-09-08)
+
+Seven findings kept and fixed.  L1-1 high, surface/elab.ml: elab_ctor_ref
+resolved a constructor by a global name scan and rejected well-typed
+prelude uses when a later family declared the same name.  L3-1 medium,
+dev/prelude-gates.py: no leg tied a NAME_ONLY target to prelude/init.mech.
+L2-1 low, dev/prelude-gates.py: MAP-INVENTORY compared newline-normalised
+text.  L4-4 low, test/neg/prelude/indexed-wrong-result.err: the C-M4
+expectation stopped before the computed index.  L4-3 low, test/prelude.ml:
+the empty-environment case was tautological.  L4-2 low, test/prelude.ml:
+reject-hidden-builtin passed on any error.  L4-5 low, dev/MUTATION-LOG.md:
+the Stage C row set documented a control for only two of three legs.
+
+Fixes: surface/elab.ml (expected_family, ctor_in, elab_ctor_ref);
+test/prelude.ml (map-name-only-targets, empty-environment,
+reject-hidden-builtin cases); dev/prelude-gates.py (run_bytes,
+byte-compare mapping); test/neg/prelude/indexed-wrong-result.err (full
+message); dev/MUTATION-LOG.md (restored Result column); SPEC.md,
+dev/PIN-DELTA.md and map/README.md (matching prose and the measured
+surface/elab.ml diff of 116 lines).
+
+Gate verdict BOUND-ONLY: seventeen legs PASS except TRUSTED-LINES, kernel
+count 4140 of the 4200 allowed, encoder count 246 of the 900 allowed.
+TRUSTED-LINES stays red at kernel=4140/3000 and encoder=246/900 until the
+user rules D-A-1.

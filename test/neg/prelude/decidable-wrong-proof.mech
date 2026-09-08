@@ -1,0 +1,2 @@
+-- The true branch needs a proof of exactly the parameter proposition.
+def badDecision : MechDecidable MechFalse := mechIsTrue mechTrivial

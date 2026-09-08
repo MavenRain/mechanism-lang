@@ -165,3 +165,36 @@ copy is probes/fix/L4-3/mutant under the review directory
 /Users/oobi/Documents/mechanism-lang-b-review, reused for both runs.  The
 control transcripts are probes/fix/L1-2/control.txt and
 probes/fix/L4-3/control.txt under that same review directory.
+## Stage C foundation (2026-09-07)
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-M1 | Replace MechUnit and its constructor with postulates in a temporary copy | AXIOMS rejects `prelude postulate: MechUnit` | killed |
+| C-M1-extra | Append CounterfeitInit as a postulate | Empty-environment audit rejects the exact added name | killed |
+| C-M2-restricted | Give MechProofEq a Type-valued motive | PRELUDE requires the subsingleton large-elimination refusal | killed |
+| C-M3-control | Check the new prelude with the unchanged Stage B driver | Exit 1: mechProofReflCtor needs an expected type | control |
+| C-M4 | Give a parameterized constructor a false result index | PRELUDE rejects the index computed from its field | killed |
+| C-M5 | Use wrong family parameters, nested fields or dependent fields | PRELUDE rejects each file with its specific diagnostic prefix | killed |
+| C-M6 | Widen omega_reflection of import/mapping.ml to the prefix `Lean.Omega` | test/mapping.exe fails only-exact-public-omega-namespace-is-never and tsv-schema-is-stable, prints MAPPING-FAIL and exits 1; the MAP-INVENTORY mode of dev/prelude-gates.py exits 1 | killed |
+| C-M7 | Keep the name-scan constructor record in elab_ctor_ref of surface/elab.ml | test/prelude.exe fails duplicate-constructor-name with `mismatch: the constructor mechInl expects family AltSum` and exits 1 | killed |
+
+C-M1 is executed inside dev/prelude-gates.py on each AXIOMS run.  C-M2,
+C-M4 and C-M5 are negative source fixtures, executed on each PRELUDE run.
+C-M3 is a previous-implementation control, with capture at
+`/Users/oobi/Documents/gpt16/.kanon-exec/run-eoLViJ`.
+C-M6 and C-M7 were replayed by the review fix round of 2026-09-08, one
+mutant for each new implementation file, in one scratch copy of the
+repository outside the tree.  The copy is
+`/Users/oobi/Documents/mechanism-lang-c-review/probes/fix/mutants/copy`,
+each build passed with zero errors and zero warnings, and the transcripts
+are `probes/fix/L4-5/c-m6.txt` and `probes/fix/L4-5/c-m7.txt` under
+`/Users/oobi/Documents/mechanism-lang-c-review`.  The same C-M7 build
+refuses the three duplicate-name probes of `probes/fix/L1-1`, which the
+fixed elaborator accepts.
+The full final battery is captured at
+`/Users/oobi/Documents/gpt16/.kanon-exec/run-Rw7Kuk`.
+
+The plan's generic Eq large-elimination mutation remains blocked at the
+declaration step.  eq-data-index and eq-constructor-field require the two
+universe-bound refusals.  C-M2-restricted covers only the proof-endpoint
+family and does not discharge the generic Eq obligation.

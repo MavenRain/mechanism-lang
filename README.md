@@ -73,6 +73,30 @@ prelude mappings, and projections need their checked representation.
 The library exposes Translate.lower_type with an explicit resolver for
 that integration.  Values remain scheduled for M1.
 
+## Checked prelude foundation
+
+`prelude/init.mech` declares the data foundation and its recursors.
+The PRELUDE and AXIOMS gates check it from an empty kernel environment,
+so it cannot silently use the driver's initial Nat axiom.  Parameterized
+constructors use their expected family type to determine parameters.
+
+The external-name inventory is reproducible:
+
+```sh
+_build/default/bin/mech.exe map-inventory --export path/to/uat.export
+_build/default/bin/mech.exe map-inventory --export path/to/uat.export --never
+```
+
+These commands print `map/prelude.map.tsv` and `map/NEVER.tsv` respectively
+when given the frozen UAT export.  NAME_ONLY records a candidate target;
+Stage D must still compare its type with the source type.  Unavailable
+features remain UNMAPPED unless an exact ratified NEVER exception applies.
+
+Stage C remains open.  Generic data equality at Prop is blocked by the
+pinned checker's index and constructor universe bounds.  MechProofEq is
+restricted to proofs of a proposition and does not map Lean Eq.
+See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
+
 `zsh dev/dunecho.sh build` is the only way a dune verb runs in this
 repository.  The runner puts the zxcaml-p1 opam switch first on PATH and
 it takes the root from its own path.

@@ -18,6 +18,14 @@ driver initialization.
 Unchanged modules are copied by Dune into the mechanism libraries.
 Namespace shims and new level helpers have no counterpart at the pin.
 
+Stage C overlays the surface elaborator to use expected family parameters
+when constructing parameterized families.  The constructor record itself
+comes from the family the expected type names, as the kernel's
+introduction rule reads it, so a constructor name that two families
+declare resolves inside the expected family.  Constructor fields are
+elaborated under their dependent types, and result indices are computed
+from those fields.  The kernel and its declaration rules are unchanged.
+
 | file | expected |
 | --- | --- |
 | lib/check.ml | 66 |
@@ -26,3 +34,4 @@ Namespace shims and new level helpers have no counterpart at the pin.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
+| surface/elab.ml | 116 |

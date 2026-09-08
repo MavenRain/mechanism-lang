@@ -1,0 +1,4 @@
+-- Moving a data endpoint into a constructor field does not bypass
+-- the frozen checker's bound for Prop-valued families.
+mu MechEqFieldBlocked (0 A : Type 0) : Prop with
+| mechEqFieldBlockedIntro : A -> MechEqFieldBlocked A
