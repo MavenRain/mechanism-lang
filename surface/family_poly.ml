@@ -6,12 +6,16 @@ type scheme = {
   arity : int;
   family : Check.family_decl;
   ctors : Check.ctor_decl list;
+  members : Check.decl list;
 }
 
 type t = (string * scheme) list
 
 let empty : t = []
 let arity catalog name = Option.map (fun s -> s.arity) (List.assoc_opt name catalog)
+let members catalog name =
+  Option.map (fun s -> List.map (fun d -> d.Check.d_name) s.members)
+    (List.assoc_opt name catalog)
 
 let occupied globals catalog name =
   Option.is_some (Global.find name globals)
@@ -126,7 +130,27 @@ let unique_ctors budget family ctors =
   in
   loop [] ctors
 
-let declare ?(budget = Budget.unlimited) globals catalog ~arity
+let map_member budget level name (decl : Check.decl) =
+  let* () = poll budget in
+  let* () = match decl.d_kind with
+    | Check.Definition -> Ok ()
+    | Check.Postulate -> Error (Error.Not_yet "family schema members must be definitions") in
+  let* d_name = name decl.d_name in
+  let* d_ty = map_term budget level name decl.d_ty in
+  let* body = decl.d_body |> Option.to_result ~none:(Check.missing_body decl.d_name) in
+  let* body = map_term budget level name body in
+  Ok { decl with Check.d_name; d_ty; d_body = Some body }
+
+let check_members budget catalog ~arity globals declarations =
+  List.fold_left (fun acc (decl : Check.decl) ->
+    let* globals = acc in
+    let* () = poll budget in
+    if occupied globals catalog decl.d_name then Error (collision decl.d_name)
+    else
+      let* entry = Check.check_decl_at ~arity globals budget decl in
+      Ok (Global.add decl.d_name entry globals)) (Ok globals) declarations
+
+let declare ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity
     (family : Check.family_decl) ctors =
   if occupied globals catalog family.fam_name then Error (collision family.fam_name)
   else if arity < 0 then Error (Error.Universe "a universe parameter arity must be nonnegative")
@@ -139,7 +163,19 @@ let declare ?(budget = Budget.unlimited) globals catalog ~arity
     let level l = if Level.in_scope arity l then Ok l else Error scope_error in
     let* family, ctors = map_family budget level name family ctors in
     let* () = Check.check_family_scheme globals budget ~arity family ctors in
-    Ok ((family.fam_name, { arity; family; ctors }) :: catalog)
+    (* A member named like another template is a collision, not a reference. *)
+    let* () = List.find_opt (fun (d : Check.decl) -> List.mem_assoc d.d_name catalog) members
+      |> Option.fold ~none:(Ok ()) ~some:(fun (d : Check.decl) -> Error (collision d.d_name)) in
+    let* members = map_list (map_member budget level name) members in
+    let* () = match members with
+      | [] -> Ok ()
+      | _member :: _rest ->
+          let* provisional = Check.declare_family_at ~arity budget globals family in
+          let* symbolic = Check.define_ctors_at ~arity budget provisional
+            ~group:[family.fam_name] ~name:family.fam_name ctors in
+          let* _checked = check_members budget catalog ~arity symbolic members in
+          Ok () in
+    Ok ((family.fam_name, { arity; family; ctors; members }) :: catalog)
 
 let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog
@@ -154,7 +190,11 @@ let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_n
       Error (Error.Universe "universe arguments must be closed")
   | () ->
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
-      let rename n = Ok (if String.equal n name then as_name else n) in
+      let rename n = Ok (if String.equal n name then as_name
+        else if List.exists (fun d -> String.equal d.Check.d_name n) scheme.members
+          then as_name ^ "_" ^ n else n) in
       let* family, ctors = map_family budget level rename scheme.family scheme.ctors in
+      let* members = map_list (map_member budget level rename) scheme.members in
       let* provisional = Check.declare_family ~budget globals family in
-      Check.define_ctors ~budget provisional ~group:[as_name] ~name:as_name ctors
+      let* installed = Check.define_ctors ~budget provisional ~group:[as_name] ~name:as_name ctors in
+      check_members budget catalog ~arity:0 installed members

@@ -45,6 +45,16 @@
  (modules Mapping)
  (libraries mechanism_import))
 
+(executable
+ (name prelude_transport)
+ (modules Prelude_transport)
+ (libraries mechanism_kernel mechanism_surface mechanism_prelude mechanism_import))
+
+(executable
+ (name family_members)
+ (modules Family_members)
+ (libraries mechanism_kernel mechanism_surface))
+
 (copy_files ../vendor/kanon/test/main.ml)
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)

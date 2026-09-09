@@ -692,3 +692,133 @@ Fixes.
 Gates.  Verdict BOUND-ONLY.  Kernel 4182/3000, encoder 246/900.  Kernel is at or below the recommended 4,200 and encoder at or below 900.  All 21 other legs PASS; only TRUSTED-LINES is red.
 
 TRUSTED-LINES stays red until the user rules D-A-1, the trusted-line bounds.  The programmatic-only template scope is a plan question awaiting a user ruling.
+
+## Stage C polymorphic library transport and cast (2026-09-09)
+
+Base: 43ce94821f9b0229a6b4d562960f2157fc76b9ca.  The user requested
+continued development and staging of all changes.  The canonical tree was
+clean at entry.  Development and validation ran in
+`/Users/oobi/Documents/gpt1/mechanism-m0-c-transport`.
+
+Family_poly now accepts definition members under a shared universe scope.
+It checks them in order under the symbolic family and prior definitions,
+then stores their syntax in the catalog.  Closed specialization renames
+family and member references, substitutes every universe occurrence and
+rechecks each member before publishing the immutable updated environment.
+Postulates, missing bodies, collisions, invalid scopes and unbound
+references are refused.  No kernel or backend source changes.
+
+The separate prelude Equality catalog supplies MechEq with `refl` and
+`transport` at independent carrier and motive Sort levels, and MechTypeEq
+with `refl` and `cast` at a Type level.  Each catalog checks from
+Global.empty.  The original family catalog and monomorphic source prelude
+retain their interfaces.  See `dev/M0-STAGE-C-TRANSPORT.md`.
+
+Validation of the final implementation:
+
+- BUILD: zero errors and zero warnings through dev/dunecho.sh.
+- FAMILY-MEMBERS: 18 cases pass, including hidden level substitution,
+  ordered references, isolated instance names, refusal cases, budgets and
+  rechecking under changed globals.
+- PRELUDE-TRANSPORT: two templates, seven instances and four negatives
+  pass.  Indexed witnesses check cast and transport computation, including
+  a dependent motive.  The installed globals contain no axioms, primitives,
+  provisional families or builtin families.
+- Full battery: 23 PASS legs.  TRUSTED-LINES is the only failure at the
+  unchanged kernel 4182/3000 and encoder 246/900.  Both new gate legs pass;
+  inherited kernel, levels, surface, WASM, import, corpus, equality runtime,
+  axioms, mapping, R0, pin and denominator checks pass.
+- Five isolated mutation controls build cleanly and are killed.  Both
+  restored suites pass.  Exact controls are in dev/transport-mutations.py
+  and the run is recorded in dev/MUTATION-LOG.md.
+- Manual diff review found no concrete correctness defect or weakened
+  existing gate.  The lexical source audit has no source violation; its
+  sole candidate is the word `for` in an interface comment.  No authored
+  file contains an em-dash character.
+
+The final battery capture is
+`/Users/oobi/Documents/gpt1/.kanon-exec/run-3bmF89`.  A copy of its output,
+the source audit and integration fingerprints are retained in
+`/Users/oobi/Documents/gpt1/mechanism-transport-validation`.
+All build and gate commands cleared OPAM_SWITCH_PREFIX and
+CAML_LD_LIBRARY_PATH before selecting the repository's opam wrapper.
+
+No map verdict is promoted: NAME_ONLY remains 19, UNMAPPED 2273 and NEVER
+185 over the 2477-name denominator.  Textual universe binders, further
+polymorphic equality operations, category targets, source-type parity,
+the equality soundness obligations and the trusted-line ruling remain
+open.  This increment does not close Stage C or M0.
+
+Integration checks canonical HEAD and file fingerprints, copies the
+validated changes, stages all mechanism-lang changes and creates no commit.
+
+## Stage C transport review, fix round 1 (2026-09-09)
+
+The review of the polymorphic transport and cast slice kept seven findings.
+Two are medium and five are low.  All seven are fixed in this round.
+
+- L4-1, medium.  The two member budget cases of `test/family_members.ml`
+  admitted any extra poll, so a dropped poll on the member path survived.
+  Each case now measures the polls of the members-free run, then requires
+  the exact count of the same run with one member.
+- L2-1, medium.  `SPEC.md` called the polymorphic library cast outstanding
+  after this slice shipped it.  The sentence now records the checked
+  transport and cast and keeps textual universe binders and source-type
+  parity open.  `SPEC.md` is staged with the slice.
+- L1-1, low.  A member named like another template was refused with the
+  cross-reference diagnostic.  `Family_poly.declare` now refuses such a
+  member as a collision before it maps the member type and body.
+- L4-2, low.  The fourth negative of `test/prelude_transport.ml` was a
+  scope control chosen by a prefix test.  Every negative now carries its
+  own scope, and the scope control is named in the test and the documents.
+- L4-3, low.  The `wrongUniverse` negative used a proof of another
+  instance that the checker never reached.  It now uses its own instance,
+  and a new negative feeds a `TransportHigher` proof to `TransportData`.
+- L4-4, low.  The PRELUDE-TRANSPORT OK line printed literal counts.  It
+  now prints the measured template, instance and negative counts.
+- L4-5, low.  Two of the five fixture witnesses repeated the definitions
+  they were meant to force.  They are dropped, and a fixture comment names
+  the two type annotations that are the Type-level computation witnesses.
+
+Measured in this window: FAMILY-MEMBERS `cases=19`, PRELUDE-TRANSPORT
+`templates=2 instances=7 negatives=5`, FAMILY-POLY `cases=34`, PRELUDE-POLY
+`templates=2 instances=5 negatives=2`, PRELUDE `families=10 definitions=16
+axioms=0 primitives=0`, EQUALITY `cases=15`, `AXIOMS OK prelude=0 fixture=1
+hidden_builtins=0`, MAP-INVENTORY OK and EQUALITY-RUNTIME `cases=3 hosts=3
+mutation=1`.  The battery prints 23 PASS legs and one FAIL leg,
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900 FAIL`, so the verdict is
+BOUND-ONLY.  The mutation script reports killed 10, controls 10, with the
+five new C-TR rows of `dev/MUTATION-LOG.md`.  PIN-DELTA prints seven OK
+rows; no pinned overlay file changed.  Both map inventories reproduce byte
+for byte, so NAME_ONLY stays 19, UNMAPPED 2273 and NEVER 185 over the 2477
+name denominator.
+
+TRUSTED-LINES stays red until the user rules D-A-1.  No agent moved the
+bound or a tier.  The programmatic-only scope of the equality catalog is a
+plan question that awaits a user ruling.  No commit is created.
+
+## Stage C transport review (2026-09-09)
+
+Findings kept, all fixed: L4-1 medium test/family_members.ml (member budget
+poll controls); L2-1 medium SPEC.md (drops the stale outstanding-cast
+sentence); L1-1 low surface/family_poly.ml (refuses a member name that
+collides with a catalog key); L4-2 low test/prelude_transport.ml (names the
+fourth negative a scope control); L4-3 low test/prelude_transport.ml (adds a
+mixedInstance negative, fixes wrongUniverse); L4-4 low test/prelude_transport.ml
+(OK line prints measured lengths, not literal counts); L4-5 low
+test/fixtures/prelude/transport.mech (drops two redundant witnesses).
+
+Fix paths: test/family_members.ml, dev/transport-mutations.py,
+dev/MUTATION-LOG.md, dev/M0-STAGE-C-TRANSPORT.md, SPEC.md,
+surface/family_poly.ml, surface/family_poly.mli, prelude/README.md,
+test/prelude_transport.ml, test/fixtures/prelude/transport.mech.
+
+Gate verdict BOUND-ONLY.  TRUSTED-LINES kernel=4182/3000 encoder=246/900.
+FAMILY-MEMBERS cases=19.  PRELUDE-TRANSPORT templates=2 instances=7
+negatives=5.  Mutation controls killed 10 of 10.  Fix round 2 found no new
+defect; GATE-1 reproduced the same BOUND-ONLY result and is closed as
+verified, not fixed.
+
+TRUSTED-LINES stays red until the user rules D-A-1.  The programmatic-only
+catalog scope stays a plan question awaiting a user ruling.  No commit is
+created.

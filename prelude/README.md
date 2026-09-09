@@ -30,8 +30,8 @@ definitions alongside `mechRefl`.
 
 `test/fixtures/prelude/equality.mech` checks dependent transport, J
 computation, and a separate higher-carrier equality with a type-cast
-example.  The `.mech` declarations remain monomorphic.  A general
-polymorphic library cast remains open.  The precise negatives
+example.  The `.mech` declarations remain monomorphic.  The separate
+programmatic catalog below supplies polymorphic library cast.  The precise negatives
 keep unequal endpoints, relevant indices, erased endpoint use and data
 constructor fields outside the accepted language.
 
@@ -59,3 +59,14 @@ two carrier universes and mixed-universe sums to compute.  The test audits
 both global entries and families, rejecting axioms, primitives, provisional
 families and builtin families.  Textual universe binders and imported
 source-type parity are not supplied by this catalog.
+
+`equality.ml` supplies a separate catalog with checked member definitions.
+Its MechEq takes the carrier and motive Sort levels and includes `refl`
+and `transport`.  Its MechTypeEq takes one Type level and includes `refl`
+and `cast`.  Specialization installs each member with the instance name
+and an underscore as a prefix, then rechecks its type and body in order.
+The templates never enter ordinary globals.  PRELUDE-TRANSPORT checks
+seven instances, dependent computation witnesses, four rejection
+diagnostics, one scope control and the absence of trusted entries.  A
+member named like another template is refused as a collision.  Textual
+universe binders and source-type parity remain separate work.

@@ -179,7 +179,9 @@ All index binders remain at quantity zero; constructor fields retain their
 family-universe bound.  Large elimination still requires the existing
 subsingleton criterion.  The source prelude supplies monomorphic equality;
 the separate programmatic catalog supplies a polymorphic equality family.
-A universally checked polymorphic library cast remains outstanding.
+That catalog also supplies a universally checked polymorphic library
+transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Textual
+universe binders and checked source-type parity remain outstanding.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves

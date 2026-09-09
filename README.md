@@ -105,8 +105,15 @@ and each closed instance checks again before source clients can use it.
 PRELUDE-POLY checks casts and sums at multiple universes without postulates.
 See `dev/M0-STAGE-C-FAMILIES.md` for the API and validation scope.
 
-Stage C remains open.  Textual universe binders, polymorphic library cast,
-category targets and checked source-type parity remain outstanding.
+The catalog in `prelude/equality.ml` adds universally checked transport
+and type cast.  Family templates can carry ordered definitions, which
+specialize to fresh names and check again before entering ordinary globals.
+FAMILY-MEMBERS and PRELUDE-TRANSPORT test this path, including independent
+carrier and motive universes.  See `dev/M0-STAGE-C-TRANSPORT.md`.
+
+Stage C remains open.  Textual universe binders, further polymorphic
+equality operations, category targets and checked source-type parity remain
+outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

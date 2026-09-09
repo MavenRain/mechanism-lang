@@ -45,9 +45,11 @@ then checks source clients that use the instances through the existing
 surface elaborator.  Casts at two carrier universes and sums with unequal
 carrier universes compute through ordinary eliminators.
 
-This extends the existing OCaml template interface.  Textual universe
-binders, a universally checked library of polymorphic eliminators and cast,
-category targets, and importer resolver integration remain future work.
+This extends the existing OCaml template interface.  The subsequent
+member-definition increment supplies polymorphic transport and cast; see
+dev/M0-STAGE-C-TRANSPORT.md.  Textual universe binders, further polymorphic
+equality operations, category targets and importer resolver integration
+remain future work.
 The monomorphic `.mech` prelude and its NAME_ONLY inventory stay accurate
 at their written universes.  No NAME_AND_TYPE claim follows from this API.
 

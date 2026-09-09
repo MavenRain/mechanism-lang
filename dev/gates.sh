@@ -207,6 +207,9 @@ leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_build/default/test/prelude.exe $
 leg FAST EQUALITY '^EQUALITY-OK cases=' $ROOT/_build/default/test/equality.exe
 leg FAST FAMILY-POLY '^FAMILY-POLY-OK cases=' $ROOT/_build/default/test/family_poly.exe
 leg FAST PRELUDE-POLY '^PRELUDE-POLY-OK templates=' $ROOT/_build/default/test/prelude_poly.exe $ROOT
+leg FAST FAMILY-MEMBERS '^FAMILY-MEMBERS-OK cases=' $ROOT/_build/default/test/family_members.exe
+leg FAST PRELUDE-TRANSPORT '^PRELUDE-TRANSPORT-OK templates=' \
+  $ROOT/_build/default/test/prelude_transport.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \

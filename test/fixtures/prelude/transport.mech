@@ -1,0 +1,37 @@
+-- All operations below come from universally checked library members.
+def castOne : MechNat :=
+  CastData_cast MechNat MechNat (CastData_refl MechNat) (mechSucc mechZero)
+def castUniverse : Type 0 :=
+  CastTypes_cast (Type 0) (Type 0) (CastTypes_refl (Type 0)) MechNat
+-- The annotation is the computation witness: it forces castUniverse to
+-- convert to MechNat.
+def castHigherOne : castUniverse := mechSucc mechZero
+
+def transportOne : MechNat :=
+  TransportData_transport MechNat (fun (n : MechNat) => MechNat)
+    mechZero mechZero (TransportData_refl MechNat mechZero) (mechSucc mechZero)
+def transportType : Type 0 :=
+  TransportHigher_transport MechNat (fun (n : MechNat) => Type 0)
+    mechZero mechZero (TransportHigher_refl MechNat mechZero) MechNat
+-- The annotation is the computation witness: it forces transportType to
+-- convert to MechNat.
+def transportHigherOne : transportType := mechSucc mechZero
+def transportProof : MechTrue :=
+  TransportProof_transport MechTrue (fun (p : MechTrue) => MechTrue)
+    mechTrivial mechTrivial (TransportProof_refl MechTrue mechTrivial) mechTrivial
+def transportProofData : MechNat :=
+  TransportProofData_transport MechTrue (fun (p : MechTrue) => MechNat)
+    mechTrivial mechTrivial (TransportProofData_refl MechTrue mechTrivial) (mechSucc mechZero)
+def transportToProof : MechTrue :=
+  TransportToProof_transport MechNat (fun (n : MechNat) => MechTrue)
+    mechZero mechZero (TransportToProof_refl MechNat mechZero) mechTrivial
+
+mu TransportIsOne : (0 n : MechNat) -> Type 0 with
+| transportIsOne : TransportIsOne (mechSucc mechZero)
+def castComputes : TransportIsOne castOne := transportIsOne
+def transportComputes : TransportIsOne transportOne := transportIsOne
+def transportProofDataComputes : TransportIsOne transportProofData := transportIsOne
+def transportIndexed : TransportIsOne (mechSucc mechZero) :=
+  TransportData_transport MechNat (fun (n : MechNat) => TransportIsOne n)
+    (mechSucc mechZero) (mechSucc mechZero)
+    (TransportData_refl MechNat (mechSucc mechZero)) transportIsOne

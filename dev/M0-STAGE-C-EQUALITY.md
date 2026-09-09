@@ -42,8 +42,8 @@ The equality regression client separately checks a higher-carrier family
 and a type-cast example, establishing that the index exception is not
 limited to the first data universe.  Universe-polymorphic family
 templates now ship as the programmatic catalog of
-dev/M0-STAGE-C-FAMILIES.md.  A general prelude cast remains future
-work.
+dev/M0-STAGE-C-FAMILIES.md.  Polymorphic library transport and cast now
+ship through the member catalog in dev/M0-STAGE-C-TRANSPORT.md.
 
 Seven new external-name candidates cover Eq, Eq.refl, Eq.rec, Eq.ndrec,
 Eq.symm, Eq.trans and congrArg.  Their verdict remains NAME_ONLY.  Stage D

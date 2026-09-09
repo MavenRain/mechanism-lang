@@ -298,3 +298,56 @@ and `probes/fix/L4-3/control.txt` under
 `/Users/oobi/Documents/mechanism-lang-fam-review`.  After every mutant was
 restored, the same copy printed `FAMILY-POLY-OK cases=34` and
 `PRELUDE-POLY-OK templates=2 instances=5 negatives=2`.
+
+## Stage C polymorphic transport (2026-09-09)
+
+Run `python3 -I dev/transport-mutations.py NEW_WORK_DIRECTORY` from the
+repository root.  The script refuses an existing work directory, copies
+the source, and builds each isolated mutation with `dev/dunecho.sh`.
+A failed build never counts as a killed mutation.  Each selected test
+must exit 1 with its named diagnostic.  The primary source is untouched.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-TRANSPORT-M1 | Bypass member checking when the universe arity is positive | `definition-must-check` accepts an unbound body and fails its expected-refusal check | killed |
+| C-TRANSPORT-M2 | Preserve member names during specialization | The second instance collides with the first instance's unprefixed `witness` | killed |
+| C-TRANSPORT-M3 | Bypass member checking when the universe arity is zero | `closed-rechecking` accepts an incompatible replacement for the external `seed` and fails its expected-refusal check | killed |
+| C-TRANSPORT-M4 | Leave member levels unchanged during specialization | `hidden-level-specialization` fails with the closed checker's universe-scope error | killed |
+| C-TRANSPORT-M5 | Change the library cast client's payload from one to zero | The indexed computation witness reports a TransportIsOne constructor index mismatch | killed |
+
+The exact replacement strings, selected cases and required diagnostics
+are in `dev/transport-mutations.py`.  The final run is retained at
+`/Users/oobi/Documents/gpt1/mechanism-transport-controls-final`.
+`results.json` records all source and mutant hashes and reports 5/5
+controls killed.  All five builds had zero errors and zero warnings.
+After restoration, FAMILY-MEMBERS passed 18 cases and PRELUDE-TRANSPORT
+passed two templates, seven instances and four negatives.
+
+The first run counted only 4/5 because C-TRANSPORT-M4 expected the stored
+syntax comparison to fail.  The closed checker had already rejected the
+unsubstituted level with a scope error.  Its precise expected diagnostic
+was corrected in the control, then all five controls and both restored
+suites passed.  No implementation or acceptance gate was weakened.
+
+## Stage C transport review (2026-09-09)
+
+The fix round of the transport review added five controls to
+`dev/transport-mutations.py`, so one run now covers ten controls.  Run
+`python3 -I dev/transport-mutations.py NEW_WORK_DIRECTORY` from the
+repository root.  Each mutant builds cleanly first.  Each selected test
+must exit 1 with its named diagnostic.  The primary source is untouched.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-TR-M1 | Delete the budget poll at the head of `map_member` in `surface/family_poly.ml` | `declaration-member-budget` prints `member declaration polls 21, expected 22` | killed |
+| C-TR-M2 | Delete the budget poll inside the `check_members` fold of `surface/family_poly.ml` | `specialization-member-budget` prints `member specialization polls 17, expected 18` | killed |
+| C-TR-M3 | Delete the member name guard that `declare` runs before `map_member` | `member-template-collision` prints `wrong refusal: not yet: references between family schemas are not supported` | killed |
+| C-TR-M4 | Replace `TransportHigher_refl MechNat mechZero` in the mixed-instance negative by `TransportData_refl MechNat mechZero` | PRELUDE-TRANSPORT prints `expected refusal: mismatch: the term has type (Lan SMu TransportHigher` | killed |
+| C-TR-M5 | Check the unavailable-member negative in the installed scope instead of the template-free scope | PRELUDE-TRANSPORT prints `expected refusal: unbound: CastData_cast` | killed |
+
+The run of this round is
+`/Users/oobi/Documents/mechanism-lang-transport-review/probes/mutations-1`.
+`results.json` records every source and mutant hash and reports killed 10,
+controls 10.  All ten mutant builds had zero errors and zero warnings.
+After restoration, FAMILY-MEMBERS passed 19 cases and PRELUDE-TRANSPORT
+passed two templates, seven instances and five negatives.

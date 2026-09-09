@@ -41,9 +41,11 @@ MechProofEq.  That restricted family does not map Lean Eq or implement
 data transport.  The equality increment shipped generic Eq, its J and a
 data cast.  The family-template increment shipped the programmatic
 Family_poly templates and the MechEq and MechSum catalog; see
-dev/M0-STAGE-C-FAMILIES.md.  Textual universe binders, a polymorphic
-library cast, category targets and source-type parity remain work for the
-next increment.  A kernel change requires
+dev/M0-STAGE-C-FAMILIES.md.  The member-definition increment adds
+polymorphic library transport and cast; see dev/M0-STAGE-C-TRANSPORT.md.
+Textual universe binders, further polymorphic equality operations,
+category targets and source-type parity remain work for the next
+increment.  A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.
 
