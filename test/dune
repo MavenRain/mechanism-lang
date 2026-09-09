@@ -55,6 +55,11 @@
  (modules Family_members)
  (libraries mechanism_kernel mechanism_surface))
 
+(executable
+ (name prelude_equality_ops)
+ (modules Prelude_equality_ops)
+ (libraries mechanism_kernel mechanism_surface mechanism_prelude mechanism_import))
+
 (copy_files ../vendor/kanon/test/main.ml)
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)

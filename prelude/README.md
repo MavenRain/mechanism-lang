@@ -61,12 +61,22 @@ families and builtin families.  Textual universe binders and imported
 source-type parity are not supplied by this catalog.
 
 `equality.ml` supplies a separate catalog with checked member definitions.
-Its MechEq takes the carrier and motive Sort levels and includes `refl`
-and `transport`.  Its MechTypeEq takes one Type level and includes `refl`
-and `cast`.  Specialization installs each member with the instance name
+Its MechEq takes the carrier and motive Sort levels and includes `refl`,
+`transport`, `j`, `symm`, `trans` and `congr`.  Its MechTypeEq takes one
+Type level and includes `refl`, `cast`, `symm` and `trans`.
+Specialization installs each member with the instance name
 and an underscore as a prefix, then rechecks its type and body in order.
 The templates never enter ordinary globals.  PRELUDE-TRANSPORT checks
 seven instances, dependent computation witnesses, four rejection
 diagnostics, one scope control and the absence of trusted entries.  A
 member named like another template is refused as a collision.  Textual
 universe binders and source-type parity remain separate work.
+
+The `j` motive can depend on both the right endpoint and the proof,
+using erased binders for each.  Its carrier and motive Sort levels are
+independent, including Prop.  `congr` uses the same carrier Sort level
+for its domain and codomain.  The PRELUDE-EQUALITY-OPS gate checks ten
+universe instances, generic contracts with variable endpoints, eleven
+kernel normalization witnesses and eight misuse cases with accepted
+controls.  The fixture includes a motive indexed by its equality proof.
+See `dev/M0-STAGE-C-EQUALITY-OPS.md` for the operation signatures.

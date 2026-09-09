@@ -1,0 +1,78 @@
+-- Each equality proof below is consumed by a data, proof or type computation.
+def opsSymm : MechNat :=
+  OpsData_transport MechNat (fun (n : MechNat) => MechNat) mechZero mechZero
+    (OpsData_symm MechNat mechZero mechZero (OpsData_refl MechNat mechZero))
+    (mechSucc mechZero)
+def opsTrans : MechNat :=
+  OpsData_transport MechNat (fun (n : MechNat) => MechNat) mechZero mechZero
+    (OpsData_trans MechNat mechZero mechZero mechZero
+      (OpsData_refl MechNat mechZero) (OpsData_refl MechNat mechZero))
+    (mechSucc mechZero)
+def opsCongr : MechNat :=
+  OpsData_transport MechNat (fun (n : MechNat) => MechNat)
+    (mechSucc mechZero) (mechSucc mechZero)
+    (OpsData_congr MechNat MechNat (fun (n : MechNat) => mechSucc n)
+      mechZero mechZero (OpsData_refl MechNat mechZero))
+    (mechSucc mechZero)
+def opsJ : MechNat :=
+  OpsData_j MechNat mechZero
+    (fun (0 y : MechNat) (0 e : OpsData MechNat mechZero y) => MechNat)
+    (mechSucc mechZero) mechZero (OpsData_refl MechNat mechZero)
+
+-- The motive has both the endpoint and equality proof as indices.
+mu OpsFiber : (0 y : MechNat) -> (0 e : OpsData MechNat mechZero y) -> Type 0 with
+| opsFiber : OpsFiber mechZero (OpsData_refl MechNat mechZero)
+def opsDependentJ : (0 y : MechNat) -> (e : OpsData MechNat mechZero y) -> OpsFiber y e :=
+  fun (0 y : MechNat) (e : OpsData MechNat mechZero y) =>
+    OpsData_j MechNat mechZero
+      (fun (0 right : MechNat) (0 self : OpsData MechNat mechZero right) => OpsFiber right self)
+      opsFiber y e
+def opsDependent : OpsFiber mechZero (OpsData_refl MechNat mechZero) :=
+  opsDependentJ mechZero (OpsData_refl MechNat mechZero)
+
+def opsProofDataJ : MechNat :=
+  OpsProofData_j MechTrue mechTrivial
+    (fun (0 y : MechTrue) (0 e : OpsProofData MechTrue mechTrivial y) => MechNat)
+    (mechSucc mechZero) mechTrivial (OpsProofData_refl MechTrue mechTrivial)
+def opsToProofJ : MechTrue :=
+  OpsToProof_j MechNat mechZero
+    (fun (0 y : MechNat) (0 e : OpsToProof MechNat mechZero y) => MechTrue)
+    mechTrivial mechZero (OpsToProof_refl MechNat mechZero)
+def opsProofJ : MechTrue :=
+  OpsProof_j MechTrue mechTrivial
+    (fun (0 y : MechTrue) (0 e : OpsProof MechTrue mechTrivial y) => MechTrue)
+    mechTrivial mechTrivial (OpsProof_refl MechTrue mechTrivial)
+def opsHigherJ : Type 0 :=
+  OpsHigher_j MechNat mechZero
+    (fun (0 y : MechNat) (0 e : OpsHigher MechNat mechZero y) => Type 0)
+    MechNat mechZero (OpsHigher_refl MechNat mechZero)
+def opsHigherValue : opsHigherJ := mechSucc mechZero
+def opsTypesJ : Type 0 :=
+  OpsTypes_j (Type 0) MechNat
+    (fun (0 y : Type 0) (0 e : OpsTypes (Type 0) MechNat y) => Type 0)
+    MechNat MechNat (OpsTypes_refl (Type 0) MechNat)
+def opsTypesValue : opsTypesJ := mechSucc mechZero
+
+def opsCastSymm : MechNat :=
+  OpsCast_cast MechNat MechNat
+    (OpsCast_symm MechNat MechNat (OpsCast_refl MechNat)) (mechSucc mechZero)
+def opsCastTrans : MechNat :=
+  OpsCast_cast MechNat MechNat
+    (OpsCast_trans MechNat MechNat MechNat (OpsCast_refl MechNat) (OpsCast_refl MechNat))
+    (mechSucc mechZero)
+def opsCastTypes : Type 0 :=
+  OpsCastHigher_cast (Type 0) (Type 0)
+    (OpsCastHigher_trans (Type 0) (Type 0) (Type 0)
+      (OpsCastHigher_refl (Type 0))
+      (OpsCastHigher_symm (Type 0) (Type 0) (OpsCastHigher_refl (Type 0)))) MechNat
+def opsCastHigherValue : opsCastTypes := mechSucc mechZero
+
+mu OpsIsOne : (0 n : MechNat) -> Type 0 with
+| opsIsOne : OpsIsOne (mechSucc mechZero)
+def opsSymmComputes : OpsIsOne opsSymm := opsIsOne
+def opsTransComputes : OpsIsOne opsTrans := opsIsOne
+def opsCongrComputes : OpsIsOne opsCongr := opsIsOne
+def opsJComputes : OpsIsOne opsJ := opsIsOne
+def opsProofDataComputes : OpsIsOne opsProofDataJ := opsIsOne
+def opsCastSymmComputes : OpsIsOne opsCastSymm := opsIsOne
+def opsCastTransComputes : OpsIsOne opsCastTrans := opsIsOne

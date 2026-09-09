@@ -28,8 +28,8 @@ let refusal expected result = Result.fold result
 let suite root =
   let* catalog = kernel (Mechanism_prelude.Equality.catalog Global.empty) in
   let templates = [
-    "MechEq", 2, ["refl"; "transport"];
-    "MechTypeEq", 1, ["refl"; "cast"];
+    "MechEq", 2, ["refl"; "transport"; "j"; "symm"; "trans"; "congr"];
+    "MechTypeEq", 1, ["refl"; "cast"; "symm"; "trans"];
   ] in
   let* () = require "polymorphic equality inventory differs"
     (List.for_all (fun (name, arity, members) ->

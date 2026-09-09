@@ -111,9 +111,15 @@ specialize to fresh names and check again before entering ordinary globals.
 FAMILY-MEMBERS and PRELUDE-TRANSPORT test this path, including independent
 carrier and motive universes.  See `dev/M0-STAGE-C-TRANSPORT.md`.
 
-Stage C remains open.  Textual universe binders, further polymorphic
-equality operations, category targets and checked source-type parity remain
-outstanding.
+The equality catalog also provides dependent `j`, `symm`, `trans` and
+`congr`, plus symmetry and transitivity for type equality.  The
+PRELUDE-EQUALITY-OPS gate checks generic contracts, normalization and
+paired misuse cases.  Congruence has one shared carrier universe for its
+domain and codomain.  See `dev/M0-STAGE-C-EQUALITY-OPS.md`.
+
+Stage C remains open.  Textual universe binders, congruence between
+independent carrier universes, category targets and checked source-type
+parity remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

@@ -822,3 +822,81 @@ verified, not fixed.
 TRUSTED-LINES stays red until the user rules D-A-1.  The programmatic-only
 catalog scope stays a plan question awaiting a user ruling.  No commit is
 created.
+
+## Stage C polymorphic equality operations (2026-09-09)
+
+Base bd92df54f1f69417c3503fe39a6c5d1bc2888d71 was clean in the canonical
+repository.  The user requested continued development and staging of all
+changes.  The build copy is
+`/Users/oobi/Documents/kanon-inference/mechanism-lang-equality-ops`.
+The vendor checkout and gitlink remain at 936a43a.
+
+The Equality catalog adds MechEq members j, symm, trans and congr, and
+MechTypeEq members symm and trans.  All six definitions check under the
+existing symbolic family checker, then check again at specialization.
+Congruence has one shared carrier Sort level.  No kernel, surface,
+importer, mapping inventory, pin, trusted bound or watchdog tier changed.
+
+Validation commands use `env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH`
+with the repository's `dev/dunecho.sh` and `dev/gates.sh` runners, under
+kanon-wait and kanon-exec.  BUILD reports zero errors and zero warnings.
+PRELUDE-EQUALITY-OPS reports `instances=10 computations=11 negatives=8`.
+Every negative has an accepted counterpart in the same scope.  The
+normalization checks compare data constructors directly, independently
+of the indexed typing witnesses and proof conversion.
+
+The full battery in
+`/Users/oobi/Documents/kanon-inference/.kanon-exec/run-59ebLU` reports 24
+PASS legs and one FAIL leg:
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900 FAIL`.  Its exit is 1.
+PIN, PIN-DELTA, R0, kernel, levels, surface, WASM, import, corpus, parity,
+prelude, equality, family templates, members, transport, equality runtime,
+axioms, mapping inventory and denominators pass.  The new equality-ops
+leg took 90.566 ms in that run.  This is validation timing, not an R3
+performance claim.  Stage C and PRELUDE-CHECKED remain open.
+
+Nine isolated controls in `dev/equality-ops-mutations.py` all build with
+zero errors and zero warnings and fail with the expected diagnostic.
+The final run is
+`/Users/oobi/Documents/kanon-inference/mechanism-equality-ops-mutations-2`;
+its `results.json` reports passed true, killed 9, controls 9.  The
+restored suite passes all ten instances, eleven computations and eight
+negatives.  The first run rejected the J mutant with a quantity error
+instead of the anticipated mismatch; only that diagnostic expectation
+was corrected before the final run.  See `dev/MUTATION-LOG.md`.
+
+The final diff retains every existing gate and adds PRELUDE-EQUALITY-OPS.
+The transport inventory assertion now includes the six added members.
+The remaining Stage C work, the D-A-1 bound ruling and the
+programmatic-only catalog question are recorded in the slice document.
+Integration rechecks the canonical base and original files before
+applying and staging the validated diff.  No commit is created.
+
+## Stage C equality operations review (2026-09-09)
+
+Round 1 fixed L1-2 (EQ-3, the j-base negative pinned name resolution) in
+test/prelude_equality_ops.ml, L3-1 (EQ-2, no control on the J elimination
+motive) in dev/equality-ops-mutations.py and dev/M0-STAGE-C-EQUALITY-OPS.md,
+and L2-2 (the fixture header) in test/fixtures/prelude/equality-ops.mech.
+Round 2 fixed HV-1-1 and HV-1-2: the round 1 edits inside the earlier
+blocks of this log and of dev/MUTATION-LOG.md were restored to their
+staged text, and this block holds the corrections.
+
+Corrections to the block "Stage C polymorphic equality operations
+(2026-09-09)" above.  "Nine isolated controls" is now ten, because the
+review added C-OPS-M10.  The final mutation run is
+`/Users/oobi/Documents/mechanism-lang-eqops-review/probes/mutations-EQ-1`
+and its `results.json` reports passed true, killed 10, controls 10.
+"killed 9, controls 9" names the earlier run
+`/Users/oobi/Documents/kanon-inference/mechanism-equality-ops-mutations-2`
+only.  `computations=11` stays true, because no computation was added.
+
+Measured in the round 2 window: BUILD `OK build: 0 errors, 0 warnings`;
+`PRELUDE-EQUALITY-OPS-OK instances=10 computations=11 negatives=8`;
+`PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5`; the full
+battery reports 24 PASS legs, then `FAIL TRUSTED-LINES` with
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900 FAIL`, then GATES-FAIL.
+The gate verdict is BOUND-ONLY with kernel 4182 and encoder 246.
+TRUSTED-LINES stays red until the user rules D-A-1.  The
+programmatic-only catalog scope is a plan question awaiting a user
+ruling.  No commit is created.

@@ -6,6 +6,10 @@ This slice adds universally checked definitions to family templates and
 uses them for the prelude's polymorphic equality transport and type cast.
 Stage C and PRELUDE-CHECKED remain open.
 
+This document records the transport slice at its committed base.  The
+subsequent `dev/M0-STAGE-C-EQUALITY-OPS.md` increment extends this catalog
+with dependent J and equality composition.
+
 ## Family definitions
 
 `Family_poly.declare` accepts an optional `members` list.  Each member must

@@ -351,3 +351,55 @@ The run of this round is
 controls 10.  All ten mutant builds had zero errors and zero warnings.
 After restoration, FAMILY-MEMBERS passed 19 cases and PRELUDE-TRANSPORT
 passed two templates, seven instances and five negatives.
+
+## Stage C polymorphic equality operations (2026-09-09)
+
+Run `python3 -I dev/equality-ops-mutations.py NEW_WORK_DIRECTORY` from
+the repository root.  The script copies the source, builds each mutant,
+requires the selected diagnostic from PRELUDE-EQUALITY-OPS, and restores
+the original file in a finally block.  A compiler failure never counts
+as a killed control.  Exact replacements and hashes are stored in
+`results.json`, with one stdout and stderr capture per build and test.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-OPS-M1 | J returns y instead of its reflexivity case | quantity: erased binder y read at runtime |
+| C-OPS-M2 | Reverse the symmetry motive's endpoints | MechEq endpoint type mismatch |
+| C-OPS-M3 | Transitivity eliminates its first proof | MechEq endpoint type mismatch |
+| C-OPS-M4 | Congruence claims the mapped left endpoint twice | mapped endpoint type mismatch |
+| C-OPS-M5 | Reverse the type-symmetry motive's endpoints | MechTypeEq endpoint type mismatch |
+| C-OPS-M6 | Type transitivity returns reflexivity instead of the first proof | reflexivity index A where B is required |
+| C-OPS-M7 | Change the J fixture's returned natural from one to zero | OpsIsOne constructor index mismatch |
+| C-OPS-M8 | Replace the mixed-instance negative by its accepted control | expected refusal is missing |
+| C-OPS-M9 | Ask the normalizer oracle for a natural instead of the proof-indexed data constructor | wrong computation for opsJ |
+
+Final run:
+`/Users/oobi/Documents/kanon-inference/mechanism-equality-ops-mutations-2`.
+All nine mutants built with zero errors and zero warnings; all nine were
+killed.  The restored suite reports ten instances, eleven computations
+and eight negatives.  In the first run C-OPS-M1 was rejected by the
+quantity check before type comparison; the expected diagnostic was
+corrected to match that earlier guard.  No implementation or gate was
+weakened.
+
+## Stage C equality operations review (2026-09-09)
+
+The review round added one control to `dev/equality-ops-mutations.py`.
+It continues the C-OPS series of the block above.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-OPS-M10 | Swap the J motive's proof and endpoint arguments at prelude/equality.ml:68 | PRELUDE-EQUALITY-OPS prints mismatch: the term has type (Lan SMu MechEq [right] |
+
+C-OPS-M10 exists because C-OPS-M1 dies at the quantity guard before the
+J elimination typing runs.  Replay directory:
+`/Users/oobi/Documents/mechanism-lang-eqops-review/probes/mutations-EQ-1`.
+Its `results.json` reports passed true, killed 10, controls 10.  Its
+`C-OPS-M10.stdout` starts with `PRELUDE-EQUALITY-OPS-FAIL mismatch: the
+term has type (Lan SMu MechEq [right] (Sec SColl 2 [ => A;  => x])) and
+the expected type is A`.  Correction to the block above: its "Final run"
+and "All nine mutants ... all nine were killed" describe the earlier run
+`/Users/oobi/Documents/kanon-inference/mechanism-equality-ops-mutations-2`
+with nine controls.  The total after the review round is killed 10,
+controls 10.  Round 2 restored that block to its staged text after round
+1 had edited it in place.

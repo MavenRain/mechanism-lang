@@ -180,7 +180,9 @@ family-universe bound.  Large elimination still requires the existing
 subsingleton criterion.  The source prelude supplies monomorphic equality;
 the separate programmatic catalog supplies a polymorphic equality family.
 That catalog also supplies a universally checked polymorphic library
-transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Textual
+transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Dependent
+elimination and equality composition are recorded in
+dev/M0-STAGE-C-EQUALITY-OPS.md.  Textual
 universe binders and checked source-type parity remain outstanding.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
@@ -213,3 +215,12 @@ maximum carrier level respectively.  These are kernel-checked declarations,
 without postulates.  This catalog supports checked source clients through
 closed instances; it does not extend textual syntax or certify any mapping
 row's source-type parity.
+
+The separate Equality catalog includes MechEq members `refl`, `transport`,
+`j`, `symm`, `trans` and `congr`.  The carrier and motive Sort levels are
+independent.  The `j` motive binds the right endpoint and equality proof
+at quantity zero.  Congruence's domain and codomain share the carrier
+Sort level; it does not instantiate another equality template.  MechTypeEq
+includes `refl`, `cast`, `symm` and `trans` at one Type level.  All these
+members are ordinary checked definitions using the existing elimination
+rule.  Their templates and specialized instances add no trusted entries.
