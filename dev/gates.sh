@@ -204,6 +204,9 @@ leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
 leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
 leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
 leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_build/default/test/prelude.exe $ROOT
+leg FAST EQUALITY '^EQUALITY-OK cases=' $ROOT/_build/default/test/equality.exe
+leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
+  python3 -P $ROOT/test/equality_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

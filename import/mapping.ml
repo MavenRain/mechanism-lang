@@ -65,7 +65,10 @@ let foundation_targets source =
       "Unit", "MechUnit"; "Unit.unit", "mechUnit"; "Empty", "MechEmpty";
       "False", "MechFalse"; "Sum", "MechSum"; "Sum.inl", "mechInl";
       "Sum.inr", "mechInr"; "Decidable", "MechDecidable";
-      "Decidable.isFalse", "mechIsFalse"; "Decidable.isTrue", "mechIsTrue" ]
+      "Decidable.isFalse", "mechIsFalse"; "Decidable.isTrue", "mechIsTrue";
+      "Eq", "MechEq"; "Eq.refl", "mechRefl"; "Eq.rec", "mechJ";
+      "Eq.ndrec", "mechTransport"; "Eq.symm", "mechSymm";
+      "Eq.trans", "mechTrans"; "congrArg", "mechCongr" ]
 
 let map_tsv inventory =
   let lines = List.map (fun (row : row) -> String.concat "\t"

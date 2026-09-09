@@ -1,0 +1,29 @@
+-- The runtime gate prepends init.mech and compares all three exported
+-- answers with the kernel, Node, and wasmtime.  It mutates this payload
+-- to distinguish a working transport path from a fixed result oracle.
+def equalityRuntimePayload : Nat := 37
+
+def equalityRuntimeLiteral : Nat :=
+  mechTransport MechBool (fun (b : MechBool) => Nat)
+    mechTrue mechTrue (mechRefl MechBool mechTrue) equalityRuntimePayload
+
+-- A recursive constructor carries a runtime payload through transport.
+def equalityRuntimeMovedNat : MechNat :=
+  mechTransport MechBool (fun (b : MechBool) => MechNat)
+    mechFalse mechFalse (mechRefl MechBool mechFalse)
+    (mechSucc (mechSucc mechZero))
+
+def equalityRuntimeStruct : Nat :=
+  mechNatRec (fun (n : MechNat) => Nat) 0
+    (fun (n : MechNat) (previous : Nat) => natAdd 1 previous)
+    equalityRuntimeMovedNat
+
+-- The branch result is a closure whose environment contains captured.
+def equalityRuntimeCapture : Nat -> Nat -> Nat :=
+  fun (captured : Nat) =>
+    mechTransport MechBool (fun (b : MechBool) => Nat -> Nat)
+      mechTrue mechTrue (mechRefl MechBool mechTrue)
+      (fun (argument : Nat) => natAdd captured argument)
+
+def equalityRuntimeClosure : Nat :=
+  equalityRuntimeCapture equalityRuntimePayload 5

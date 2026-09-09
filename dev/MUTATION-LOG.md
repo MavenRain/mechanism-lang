@@ -194,7 +194,55 @@ fixed elaborator accepts.
 The full final battery is captured at
 `/Users/oobi/Documents/gpt16/.kanon-exec/run-Rw7Kuk`.
 
-The plan's generic Eq large-elimination mutation remains blocked at the
+At the foundation checkpoint, the generic Eq large-elimination mutation was blocked at the
 declaration step.  eq-data-index and eq-constructor-field require the two
 universe-bound refusals.  C-M2-restricted covers only the proof-endpoint
 family and does not discharge the generic Eq obligation.
+
+## Stage C data equality (2026-09-08)
+
+The equality increment replaces eq-data-index with checked positive
+equality declarations.  eq-constructor-field remains a rejection fixture;
+eq-multiple-large-elim separately rejects a two-constructor Prop family
+with a data-valued motive.  The field bound and large-elimination
+restrictions remain active.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-EQ-M1 | Run the new prelude with the committed foundation driver | Refuses the MechEq index y at universe 1 above family universe 0 | killed |
+| C-EQ-M2 | Change the runtime fixture payload from 37 to 41 | Literal and captured-closure results change from 37/42 to 41/46 on kernel, Node and Wasmtime; recursive payload still returns 2 | observed |
+| C-EQ-M3 | Apply the Prop index exception to every family | EQUALITY fails only type-index-above-bound, with 12 cases still passing | killed |
+| C-EQ-M4 | Exempt erased constructor fields from the family universe bound | EQUALITY fails only prop-erased-data-field, with 12 cases still passing | killed |
+
+C-EQ-M2 runs inside EQUALITY-RUNTIME on every battery invocation.  Its
+fixed expected results ensure runtime transport uses the payload and
+preserves captured values across erasure.
+
+C-EQ-M3 and C-EQ-M4 were built in an isolated scratch copy, each with
+zero errors and zero warnings.  Both targeted suites exited 1 on their
+named refusal oracle.  The scratch source was restored after the controls;
+the validated main copy was never mutated.  Full captures and the exact
+mutation definitions are recorded in
+`/Users/oobi/Documents/gpt2/mechanism-equality-evidence/SUMMARY.md`.
+
+## Stage C equality review, fix round 1 (2026-09-08)
+
+The review round adds one accepted-field case, one two-arm budget case and
+one source negative for the Type-family index bound.  Three kernel mutants
+replay in a scratch copy of the repository, each built alone with zero
+errors and zero warnings, with the source restored after each build.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-EQ-M5 | Refuse every constructor field at check.ml:483 | EQUALITY fails only data-field-at-bound, with 14 cases passing; the prelude no longer checks | killed |
+| C-EQ-M6 | Apply the Prop index exception to every family | EQUALITY fails type-index-above-bound and prop-index-skips-level-poll, with 13 cases passing; PRELUDE fails reject-eq-type-index | killed |
+| C-EQ-M7 | Remove the Prop index exception | EQUALITY fails the three Prop index cases and prop-index-skips-level-poll, with 11 cases passing | killed |
+
+C-EQ-M5 is the twin of C-EQ-M4.  C-EQ-M4 refuses erased fields alone and
+the accepted-field case did not exist, so a refusal of every field stayed
+invisible to EQUALITY.  C-EQ-M6 and C-EQ-M7 move the index exception in
+both directions and each one now fails the budget case.  The mutant
+driver and the three captures are `probes/fix/mutate.py`,
+`probes/fix/L4-2/c-m5.txt`, `probes/fix/L4-1/c-m6.txt` and
+`probes/fix/L4-1/c-m7.txt` under
+`/Users/oobi/Documents/mechanism-lang-eq-review`.

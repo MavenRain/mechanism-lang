@@ -24,13 +24,17 @@ targets stay UNMAPPED.  Stage D must recompute each type judgment.
 
 ## Equality blocker
 
+The foundation encountered the following blocker, resolved for data
+equality by the 2026-09-08 increment in `dev/M0-STAGE-C-EQUALITY.md`.
 The plan assumes that generic Eq is expressible as an indexed SMu at
-Prop without changing the kernel.  The current `Check.index_rules` requires
-an index's type universe to be at or below the family's universe.
-A data endpoint in `Eq (A : Type 0) (x : A) : A -> Prop` violates that
-bound.  Moving it to a constructor field hits `Check.check_ctor` instead.
-Both failures have checked negative fixtures.  These are implementation
-blockers, not extra NEVER exceptions.
+Prop without changing the kernel.  At the foundation checkpoint,
+`Check.index_rules` required an index's type universe to be at or below
+the family's universe.  A data endpoint in
+`Eq (A : Type 0) (x : A) : A -> Prop` violated that bound.  Moving it to
+a constructor field hits `Check.check_ctor` instead.  The
+constructor-field fixture remains a checked negative.  The data-index
+fixture was replaced by the checked positive equality declarations.
+These are implementation blockers, not extra NEVER exceptions.
 
 The source may provide equality between proofs in a proposition, named
 MechProofEq.  That restricted family does not map Lean Eq or implement

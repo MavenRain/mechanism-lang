@@ -106,11 +106,17 @@ let suite root =
       let* client = read (path "test/fixtures/prelude/client.mech") in
       let* final, _rows = checked globals client in
       no_postulates final);
+    "equality-client", (fun () ->
+      let* client = read (path "test/fixtures/prelude/equality.mech") in
+      let* final, _rows = checked globals client in
+      no_postulates final);
   ] @ List.map (fun name -> "family-" ^ name, fun () -> family name)
     [ "MechNat"; "MechBool"; "MechUnit"; "MechEmpty"; "MechFalse";
-      "MechSum"; "MechDecidable"; "MechTrue"; "MechProofEq" ]
+      "MechSum"; "MechDecidable"; "MechTrue"; "MechEq"; "MechProofEq" ]
     @ List.map (fun name -> "reject-" ^ name, fun () -> negative name)
-      [ "eq-data-index"; "eq-constructor-field"; "nat-wrong-constructor";
+      [ "eq-relevant-index"; "eq-erased-endpoint"; "eq-wrong-endpoint";
+        "eq-multiple-large-elim"; "eq-constructor-field"; "eq-type-index";
+        "nat-wrong-constructor";
         "nat-rec-wrong-step"; "proof-eq-large-elim"; "proof-eq-wrong-endpoint";
         "sum-missing-field"; "sum-wrong-parameter"; "sum-wrong-nested";
         "sum-wrong-family"; "decidable-wrong-proof"; "dependent-wrong-field";

@@ -1,0 +1,2 @@
+-- Proof irrelevance does not equate different endpoint types.
+def badEqEndpoint : MechEq MechBool mechTrue mechFalse := mechReflCtor

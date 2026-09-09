@@ -1,0 +1,3 @@
+-- The Prop universe exception does not make runtime indices admissible.
+mu MechEqRelevantIndex (0 A : Type 0) (0 x : A) : (y : A) -> Prop with
+| mechEqRelevantRefl : MechEqRelevantIndex A x x

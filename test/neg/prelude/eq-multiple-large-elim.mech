@@ -1,0 +1,11 @@
+-- Erased data endpoints do not permit large elimination when the
+-- proposition has two constructors.
+mu EqTwoWitnesses (0 x : MechBool) : (0 y : MechBool) -> Prop with
+| eqFirstWitness : EqTwoWitnesses x x
+| eqSecondWitness : EqTwoWitnesses x x
+
+def eqTwoWitnesses : EqTwoWitnesses mechTrue mechTrue := eqFirstWitness
+def badEqLarge : MechNat :=
+  case eqTwoWitnesses as self in EqTwoWitnesses right return MechNat with
+  | eqFirstWitness => mechZero
+  | eqSecondWitness => mechSucc mechZero

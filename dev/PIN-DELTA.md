@@ -24,11 +24,16 @@ comes from the family the expected type names, as the kernel's
 introduction rule reads it, so a constructor name that two families
 declare resolves inside the expected family.  Constructor fields are
 elaborated under their dependent types, and result indices are computed
-from those fields.  The kernel and its declaration rules are unchanged.
+from those fields.
+
+The Stage C equality increment also overlays the index check: Prop
+families permit erased data indices at any well-formed universe.  Data
+families retain their index bound.  Constructor fields, large elimination,
+proof irrelevance and erasure use their existing rules.
 
 | file | expected |
 | --- | --- |
-| lib/check.ml | 66 |
+| lib/check.ml | 83 |
 | lib/conv.ml | 51 |
 | lib/rules.ml | 47 |
 | lib/level.ml | 49 |

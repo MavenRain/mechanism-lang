@@ -522,3 +522,95 @@ Gate verdict BOUND-ONLY: seventeen legs PASS except TRUSTED-LINES, kernel
 count 4140 of the 4200 allowed, encoder count 246 of the 900 allowed.
 TRUSTED-LINES stays red at kernel=4140/3000 and encoder=246/900 until the
 user rules D-A-1.
+
+## Stage C data equality (2026-09-08)
+
+Base: 44ab7b9.  The prelude now defines MechEq over a Type 0 carrier,
+reflexivity, dependent J, transport, symmetry, transitivity and
+congruence.  The equality family fixes its left endpoint as an erased
+parameter and uses a nullary constructor.  The checker's Prop families
+now permit erased data indices; Type index bounds, constructor-field
+bounds, proof irrelevance and large elimination retain their separate
+rules.  No new primitive, postulate, shape or R0 rule was added.
+
+The prelude audit reports ten families and sixteen definitions, with
+zero axioms and primitives.  All 34 prelude cases and 15 raw equality
+cases pass.  Dependent clients check J and transport computation, a
+proof-dependent motive and a separate higher-carrier cast example.
+Precise negatives reject unequal endpoints, erased endpoint reads,
+runtime indices, data constructor fields, ineligible large elimination
+and a source index above a Type-valued family's universe.
+
+Runtime transport returns 37 for a literal, 2 for a recursive value and
+42 for a captured closure on the kernel, Node and Wasmtime.  Changing the
+transported payload from 37 to 41 changes the observed results to 41,
+2 and 46.  The eraser and emitter require no changes.  The previous
+foundation driver rejects the new prelude with the exact old index-bound
+diagnostic for MechEq, so the new positive case reaches the changed rule.
+
+The full battery has 19 PASS legs and one FAIL: TRUSTED-LINES at
+kernel=4145/3000 and encoder=246/900.  The active kernel grew by five
+lines.  PIN, PIN-DELTA, R0, kernel, levels, surface, WASM, import, corpus,
+prelude, equality, runtime, axioms, inventory and denominators pass.
+The kernel overlay's measured diff output is 83 lines.  The vendor pin,
+3,000/900 bounds, existing watchdog tiers and frozen denominators are
+unchanged.
+
+Two isolated implementation mutants confirm the raw equality gate's
+negative oracles: removing the Type-family index bound fails
+type-index-above-bound, and admitting erased data constructor fields
+fails prop-erased-data-field.  Each mutant builds cleanly and fails only
+its intended case, with the other twelve cases passing.  Details are in
+`dev/MUTATION-LOG.md`.
+
+| New leg | Tier | Elapsed ms | Exit |
+| --- | --- | --- | --- |
+| EQUALITY | FAST | 15.501 | 0 |
+| EQUALITY-RUNTIME | MED | 1001.398 | 0 |
+
+Gate capture: `/Users/oobi/Documents/gpt2/.kanon-exec/run-pBSEOX`.
+Prelude capture:
+`/Users/oobi/Documents/gpt2/mechanism-lang/.kanon-exec/run-CSFod2`.
+Baseline and integration manifest:
+`/Users/oobi/Documents/gpt2/mechanism-equality-evidence/`.
+
+Seven new mapping candidates bring NAME_ONLY to 19, UNMAPPED to 2,273
+and NEVER to 185, with the 2,477 denominator unchanged.  Stage C and
+PRELUDE-CHECKED remain open: universe-polymorphic families, general
+prelude cast, category targets and checked source-type parity still need
+implementation.  The trusted-line ruling remains pending.
+
+## Stage C equality review (2026-09-08)
+
+Two fix rounds.  Eight findings kept, all fixed.  No finding was refused.
+
+- L2-2 (medium), dev/M0-STAGE-C-EQUALITY.md.  Fix marks the M0 large
+  elimination as not a discharge of verdict D1.  The subsingleton proof
+  for Eq stays an M1 obligation.
+- L2-5 (low), dev/gates.sh.  Fix loosens the two frozen leg oracles at
+  lines 207 and 208 to a prefix match, so they no longer freeze a
+  test-case count.
+- L2-4 (low), dev/M0-BUILD-LOG.md, test/neg/prelude/eq-type-index.mech,
+  test/neg/prelude/eq-type-index.err, test/prelude.ml.  Fix removes the
+  unverifiable review sentence and adds a checked negative pair that pins
+  the surface path to Index_above_universe.
+- L4-2 (low), test/equality.ml.  Fix adds a data-field-at-bound case, so
+  the two constructor-field cases get an accepted-field control.
+- L4-1 (low), test/equality.ml.  Fix renames the case to
+  index-type-honors-budget and adds a counting-budget case that can fail
+  on the staged index_rules short circuit.
+- L2-3 (low), dev/M0-STAGE-C.md.  Fix rewords the stale blocker paragraph
+  to past tense and drops the eq-data-index reference.
+- HV-1-1 (low), test/neg/prelude/eq-type-index.mech.  Fix stages the new
+  fixture file, unchanged in content.
+- HV-1-2 (low), test/neg/prelude/eq-type-index.err.  Fix stages the new
+  error file, unchanged in content.
+
+Gate verdict BOUND-ONLY.  Kernel line count 4145 of the 4,200 ceiling.
+Encoder line count 246 of the 900 ceiling.  Nineteen legs PASS.
+
+The TRUSTED-LINES leg stays red until the user rules D-A-1 on the
+kernel and encoder bounds.
+
+The Check.index_rules change at lib/check.ml is a documented deviation
+from the M0 plan awaiting a user ruling.

@@ -35,9 +35,9 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-Stage A's implementation passes its behavioral suites.  Acceptance is
-pending the trusted-kernel limit ruling: the active kernel has 4,140
-lines against the unchanged 3,000-line bound, so TRUSTED-LINES fails.
+The implementation passes its behavioral suites.  Acceptance remains
+pending the trusted-kernel limit ruling: the active kernel exceeds the
+unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 
 The driver inherits check, axioms, emit, run and spec-count.
@@ -92,9 +92,16 @@ when given the frozen UAT export.  NAME_ONLY records a candidate target;
 Stage D must still compare its type with the source type.  Unavailable
 features remain UNMAPPED unless an exact ratified NEVER exception applies.
 
-Stage C remains open.  Generic data equality at Prop is blocked by the
-pinned checker's index and constructor universe bounds.  MechProofEq is
-restricted to proofs of a proposition and does not map Lean Eq.
+`MechEq` now supports equality over a carrier at `Type 0`, dependent J,
+transport, symmetry, transitivity and congruence without postulates.
+The checker permits erased data indices in Prop families while preserving
+its constructor-field and large-elimination restrictions.  The runtime
+gate compares transport on the kernel, Node and Wasmtime hosts.
+
+Stage C remains open.  Universe-polymorphic families, general type cast,
+category targets and checked source-type parity remain outstanding.
+The equality mapping candidates are NAME_ONLY at their stated universes.
+See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
 
 `zsh dev/dunecho.sh build` is the only way a dune verb runs in this

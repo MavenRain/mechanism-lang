@@ -1,0 +1,4 @@
+-- The Prop exception does not lift the index bound of a data family.
+-- A Type 0 family still refuses an index one universe above itself.
+mu MechEqTypeIndexBlocked (0 A : Type 0) : (0 B : Type 0) -> Type 0 with
+| mechEqTypeIndexRefl : MechEqTypeIndexBlocked A A

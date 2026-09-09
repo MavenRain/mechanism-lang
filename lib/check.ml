@@ -389,11 +389,13 @@ let check_telescope (c : ctx) (tele : Positivity.telescope) : (ctx, Error.t) res
       Ok (bind x q tyv c'))
     (Ok c) tele
 
-(** The two index rules of brief 3.4.  An index binder is at
+(** An index binder is at
     [Quantity.Zero], refused as [Index_not_zero] (pin check.ml:1819, A2),
-    which makes the Stage J erasure sound;  an index type is at or below
-    the declared level by [Level.le], refused as [Index_above_universe]
-    (pin check.ml:1820-1823, A5).  SG-M4 removes the first refusal. *)
+    which makes the Stage J erasure sound.  Data families retain the
+    predicative index bound (A5).  A Prop family may be indexed by data
+    from any universe, since indices are erased and supply no constructor
+    payload.  Constructor fields and large elimination retain their
+    separate restrictions.  SG-M4 removes the first refusal. *)
 let index_rules (c : ctx) (name : string) (level : Level.t)
     ((q, x, ty) : Quantity.t * string * Term.t) : (unit, Error.t) result =
   let* () =
@@ -406,7 +408,10 @@ let index_rules (c : ctx) (name : string) (level : Level.t)
               (Quantity.to_string q)))
   in
   let* l = infer_univ c ty in
-  let* below = Level.le_budget c.budget l level in
+  let* below =
+    if Level.always_zero level then Ok true
+    else Level.le_budget c.budget l level
+  in
   if below then Ok ()
   else
     Error

@@ -163,13 +163,22 @@ names, so a constructor name that two families declare resolves inside the
 expected family, as the kernel introduction rule resolves it.  Dependent
 field types use those parameters and earlier fields; result indices come
 from the constructor declaration and actual fields.
-The kernel rechecks the resulting terms without any new rule.
+The kernel rechecks the resulting terms.
 
 The first data universe is supported by these source declarations.
 MechProofEq relates proofs of a proposition and has a Prop-valued dependent
-eliminator.  It is not generic equality of data.  Generic Eq at Prop is
-blocked by the kernel's index and constructor universe bounds.  Its two
-failed declaration encodings are retained as negative fixtures.
+eliminator.  MechEq relates values of a carrier at Type 0.  The carrier and
+left endpoint are erased parameters, the right endpoint is an erased
+index, and reflexivity is a nullary constructor.  Its dependent J admits
+a Type 0 motive and derives transport; symmetry, transitivity and
+congruence are checked source definitions.
+
+An SMu family at Prop may have erased indices from any well-formed
+universe.  Type-valued families retain the existing index universe bound.
+All index binders remain at quantity zero; constructor fields retain their
+family-universe bound.  Large elimination still requires the existing
+subsingleton criterion.  The prelude supplies monomorphic equality;
+universe-polymorphic equality and general type cast remain outstanding.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves

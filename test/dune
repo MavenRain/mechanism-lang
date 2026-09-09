@@ -26,6 +26,11 @@
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
 (executable
+ (name equality)
+ (modules Equality)
+ (libraries mechanism_kernel))
+
+(executable
  (name mapping)
  (modules Mapping)
  (libraries mechanism_import))

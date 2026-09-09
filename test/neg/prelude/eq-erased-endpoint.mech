@@ -1,0 +1,5 @@
+-- A nullary reflexivity constructor cannot recover an erased endpoint.
+def badEqEndpoint : (0 x : MechNat) -> MechEq MechNat x x -> MechNat :=
+  fun (0 x : MechNat) (e : MechEq MechNat x x) =>
+    case e as self in MechEq right return MechNat with
+    | mechReflCtor => x

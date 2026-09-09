@@ -1,6 +1,6 @@
 # Checked foundations
 
-`init.mech` defines nine SMu families and ten functions without axioms or
+`init.mech` defines ten SMu families and sixteen functions without axioms or
 primitives.  The test harness checks it in `Global.empty`.  This prevents
 the driver's initial `Nat` axiom from supplying a hidden dependency.
 
@@ -19,12 +19,21 @@ Proof irrelevance already identifies its endpoints.  Its constructor has
 a runtime witness field, so the existing subsingleton check refuses
 large elimination.
 
-General indexed equality at `Prop` remains blocked.  The frozen checker
-requires each SMu index type to live at or below the family's universe.
-For a carrier `A : Type 0`, an endpoint `x : A` therefore cannot index a
-family at `Prop`.  Moving the endpoint into a constructor field also
-fails its universe bound.  The two `eq-*.mech` negatives preserve these
-diagnostics.  No equality postulate or cast bypasses either check.
+`MechEq` compares values of any carrier at `Type 0`.  It fixes the left
+endpoint as an erased parameter and the right endpoint as an erased
+index, with a nullary reflexivity constructor.  The checker now permits
+erased data indices in Prop families.  Constructor-field bounds and the
+subsingleton large-elimination criterion retain their existing behavior.
+`mechJ` has a Type 0 motive depending on the right endpoint and the proof;
+`mechTransport`, `mechSymm`, `mechTrans` and `mechCongr` are checked source
+definitions alongside `mechRefl`.
+
+`test/fixtures/prelude/equality.mech` checks dependent transport, J
+computation, and a separate higher-carrier equality with a type-cast
+example.  The library declarations remain monomorphic.  Polymorphic
+families and a general library cast remain open.  The precise negatives
+keep unequal endpoints, relevant indices, erased endpoint use and data
+constructor fields outside the accepted language.
 
 The source client in `test/fixtures/prelude/client.mech` checks after this
 file.  It constructs values, exercises dependent fields and nested
@@ -34,4 +43,4 @@ The harness also checks rejection diagnostics in `test/neg/prelude`.
 Parameterized constructors use the local surface elaborator overlay.
 The expected family type supplies its parameters.  Each field elaborates
 at its declared type under the parameters and preceding fields.  The
-unchanged kernel checks the complete constructor and its result indices.
+kernel checks the complete constructor and its result indices.

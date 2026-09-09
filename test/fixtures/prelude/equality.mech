@@ -1,0 +1,68 @@
+-- Every equality and payload below is built without postulates.
+def eqClientOne : MechNat := mechSucc mechZero
+def eqClientRefl : MechEq MechBool mechTrue mechTrue :=
+  mechRefl MechBool mechTrue
+
+def EqClientFibre : MechBool -> Type 0 :=
+  fun (b : MechBool) =>
+    case b as self in MechBool return Type 0 with
+    | mechFalse => MechUnit
+    | mechTrue => MechNat
+
+def eqClientTransportTrue : EqClientFibre mechTrue :=
+  mechTransport MechBool EqClientFibre mechTrue mechTrue
+    eqClientRefl eqClientOne
+def eqClientTransportFalse : EqClientFibre mechFalse :=
+  mechTransport MechBool EqClientFibre mechFalse mechFalse
+    (mechRefl MechBool mechFalse) mechUnit
+
+-- The J motive depends on both the endpoint and the equality proof.
+mu EqClientJResult : (0 b : MechBool) ->
+    (0 e : MechEq MechBool mechTrue b) -> Type 0 with
+| eqClientJResult : MechNat ->
+    EqClientJResult mechTrue (mechRefl MechBool mechTrue)
+
+def eqClientJ : EqClientJResult mechTrue eqClientRefl :=
+  mechJ MechBool mechTrue
+    (fun (0 b : MechBool) (0 e : MechEq MechBool mechTrue b) => EqClientJResult b e)
+    (eqClientJResult eqClientOne) mechTrue eqClientRefl
+
+def eqClientJValue : MechNat :=
+  case eqClientJ as self in EqClientJResult endpoint proof return MechNat with
+  | eqClientJResult value => value
+
+def eqClientSymm : MechEq MechBool mechTrue mechTrue :=
+  mechSymm MechBool mechTrue mechTrue eqClientRefl
+def eqClientTrans : MechEq MechBool mechTrue mechTrue :=
+  mechTrans MechBool mechTrue mechTrue mechTrue eqClientRefl eqClientSymm
+def eqClientCongr : MechEq MechNat eqClientOne eqClientOne :=
+  mechCongr MechBool MechNat
+    (fun (b : MechBool) => mechBoolRec MechNat mechZero eqClientOne b)
+    mechTrue mechTrue eqClientTrans
+
+-- A fixture-only equality between Type 0 types exercises an index
+-- one universe above MechEq's data endpoints and admits a checked cast.
+mu EqClientTypes (0 A : Type 0) : (0 B : Type 0) -> Prop with
+| eqClientTypesRefl : EqClientTypes A A
+
+def eqClientCast : (0 A : Type 0) -> (0 B : Type 0) -> EqClientTypes A B -> A -> B :=
+  fun (0 A : Type 0) (0 B : Type 0) (e : EqClientTypes A B) (value : A) =>
+    case e as self in EqClientTypes target return target with
+    | eqClientTypesRefl => value
+
+def eqClientCastValue : MechNat :=
+  eqClientCast MechNat MechNat eqClientTypesRefl eqClientOne
+
+-- Singleton data indices force definitional computation of payloads.
+mu EqClientOne : (0 n : MechNat) -> Type 0 with
+| eqClientIsOne : EqClientOne (mechSucc mechZero)
+mu EqClientUnit : (0 u : MechUnit) -> Type 0 with
+| eqClientIsUnit : EqClientUnit mechUnit
+
+def eqClientTransportTrueComputes : EqClientOne eqClientTransportTrue := eqClientIsOne
+def eqClientTransportFalseComputes : EqClientUnit eqClientTransportFalse := eqClientIsUnit
+def eqClientJComputes : EqClientOne eqClientJValue := eqClientIsOne
+def eqClientCastComputes : EqClientOne eqClientCastValue := eqClientIsOne
+def eqClientCongrComputes : EqClientOne
+    (mechTransport MechNat (fun (n : MechNat) => MechNat)
+      eqClientOne eqClientOne eqClientCongr eqClientOne) := eqClientIsOne

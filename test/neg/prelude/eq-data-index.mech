@@ -1,4 +1,0 @@
--- General equality at Prop needs an index at the carrier's universe.
--- The frozen SMu index bound rejects this declaration before its body.
-mu MechEqBlocked (0 A : Type 0) (0 x : A) : (0 y : A) -> Prop with
-| mechEqBlockedRefl : MechEqBlocked A x x

@@ -69,9 +69,52 @@ def mechDecidableBool : (0 P : Prop) -> MechDecidable P -> MechBool :=
     | mechIsFalse 0 refute => mechFalse
     | mechIsTrue 0 proof => mechTrue
 
--- This family compares proofs of one proposition.  The frozen checker
--- refuses the data-valued indices needed for general equality at Prop.
--- MechProofEq is a checked eliminator exercise, not the Lean Eq target.
+-- Equality keeps its endpoints erased and carries no constructor field.
+-- The singleton criterion therefore admits elimination into data.
+mu MechEq (0 A : Type 0) (0 x : A) : (0 y : A) -> Prop with
+| mechReflCtor : MechEq A x x
+
+def mechRefl : (0 A : Type 0) -> (0 x : A) -> MechEq A x x :=
+  fun (0 A : Type 0) (0 x : A) => mechReflCtor
+
+def mechJ : (0 A : Type 0) -> (0 x : A) ->
+    (0 P : (0 y : A) -> (0 e : MechEq A x y) -> Type 0) ->
+    P x (mechRefl A x) -> (0 y : A) -> (e : MechEq A x y) -> P y e :=
+  fun (0 A : Type 0) (0 x : A)
+    (0 P : (0 y : A) -> (0 e : MechEq A x y) -> Type 0)
+    (reflCase : P x (mechRefl A x)) (0 y : A) (e : MechEq A x y) =>
+      case e as self in MechEq right return P right self with
+      | mechReflCtor => reflCase
+
+def mechTransport : (0 A : Type 0) -> (0 B : A -> Type 0) ->
+    (0 x : A) -> (0 y : A) -> MechEq A x y -> B x -> B y :=
+  fun (0 A : Type 0) (0 B : A -> Type 0)
+    (0 x : A) (0 y : A) (e : MechEq A x y) (value : B x) =>
+      mechJ A x (fun (0 right : A) (0 proof : MechEq A x right) => B right)
+        value y e
+
+def mechSymm : (0 A : Type 0) -> (0 x : A) -> (0 y : A) ->
+    MechEq A x y -> MechEq A y x :=
+  fun (0 A : Type 0) (0 x : A) (0 y : A) (e : MechEq A x y) =>
+    case e as self in MechEq right return MechEq A right x with
+    | mechReflCtor => mechRefl A x
+
+def mechTrans : (0 A : Type 0) -> (0 x : A) -> (0 y : A) -> (0 z : A) ->
+    MechEq A x y -> MechEq A y z -> MechEq A x z :=
+  fun (0 A : Type 0) (0 x : A) (0 y : A) (0 z : A)
+    (first : MechEq A x y) (second : MechEq A y z) =>
+      case second as self in MechEq right return MechEq A x right with
+      | mechReflCtor => first
+
+def mechCongr : (0 A : Type 0) -> (0 B : Type 0) -> (0 f : A -> B) ->
+    (0 x : A) -> (0 y : A) -> MechEq A x y -> MechEq B (f x) (f y) :=
+  fun (0 A : Type 0) (0 B : Type 0) (0 f : A -> B)
+    (0 x : A) (0 y : A) (e : MechEq A x y) =>
+      case e as self in MechEq right return MechEq B (f x) (f right) with
+      | mechReflCtor => mechRefl B (f x)
+
+-- The older proof equality has a relevant constructor witness, so it
+-- remains an example whose elimination into data is rejected.
 mu MechProofEq (0 A : Prop) : (0 x : A) -> (0 y : A) -> Prop with
 | mechProofReflCtor : (x : A) -> MechProofEq A x x
 

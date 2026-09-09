@@ -14,6 +14,9 @@ the source type, and recompute parity.  Editing a TSV verdict supplies no
 evidence that a target has the corresponding type.  The foundation
 candidates name declarations in `prelude/init.mech`; polymorphic source
 declarations still need universally checked targets before parity can pass.
+The equality increment adds seven such candidates: Eq, Eq.refl, Eq.rec,
+Eq.ndrec, Eq.symm, Eq.trans and congrArg.  They name the checked data
+equality definitions at their explicit monomorphic universes.
 The prelude case `map-name-only-targets` of test/prelude.ml requires every
 NAME_ONLY target of `prelude.map.tsv` to name a checked prelude family, a
 checked definition or a constructor of a checked family.
@@ -31,7 +34,7 @@ The checked-in files use the UAT export at
 `f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354`.
 It contains 2,477 distinct referenced external constants, 2,543 declared
 external constants, and 3,017 total distinct referenced constants.
-The inventory currently has 12 NAME_ONLY candidates, 2,280 UNMAPPED rows,
+The inventory currently has 19 NAME_ONLY candidates, 2,273 UNMAPPED rows,
 and 185 NEVER rows.  It does not satisfy the PRELUDE-CHECKED exit gate.
 Declared but unreferenced constants do not become map rows.  Referenced
 constants in values do become rows even though value translation is M1.
