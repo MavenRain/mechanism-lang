@@ -205,6 +205,8 @@ leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
 leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
 leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_build/default/test/prelude.exe $ROOT
 leg FAST EQUALITY '^EQUALITY-OK cases=' $ROOT/_build/default/test/equality.exe
+leg FAST FAMILY-POLY '^FAMILY-POLY-OK cases=' $ROOT/_build/default/test/family_poly.exe
+leg FAST PRELUDE-POLY '^PRELUDE-POLY-OK templates=' $ROOT/_build/default/test/prelude_poly.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \

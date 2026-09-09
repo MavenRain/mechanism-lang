@@ -1,8 +1,8 @@
 open Kanon_kernel
 
 (** Universally checked prenex templates.  Their names do not resolve in
-    ordinary globals.  Family templates and references between templates
-    are left to the importer and prelude stages. *)
+    ordinary globals.  Family_poly handles individual recursive families;
+    references between templates remain future work. *)
 type t
 
 val empty : t

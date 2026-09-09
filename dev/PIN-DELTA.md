@@ -31,9 +31,15 @@ families permit erased data indices at any well-formed universe.  Data
 families retain their index bound.  Constructor fields, large elimination,
 proof irrelevance and erasure use their existing rules.
 
+The Stage C family-template increment factors declaration and constructor
+checking through contexts with a prenex universe arity.  The ordinary
+entry points retain arity zero, and the universal family judgment discards
+its temporary environment.  Empty families and constructors poll their
+check budget.  Family formation and elimination rules are unchanged.
+
 | file | expected |
 | --- | --- |
-| lib/check.ml | 83 |
+| lib/check.ml | 140 |
 | lib/conv.ml | 51 |
 | lib/rules.ml | 47 |
 | lib/level.ml | 49 |

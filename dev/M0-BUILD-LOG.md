@@ -614,3 +614,81 @@ kernel and encoder bounds.
 
 The Check.index_rules change at lib/check.ml is a documented deviation
 from the M0 plan awaiting a user ruling.
+
+## Stage C family templates (2026-09-08)
+
+Base: 0563da5.  The user requested continued development and staging.
+The build copy is `/Users/oobi/Documents/gpt6/mechanism-lang`; the canonical
+repository was clean at that commit before work began.
+
+Family_poly adds universally checked single-family templates and closed,
+renamed, rechecked instances.  Check.check_family_scheme shares the existing
+family and constructor rules under a prenex universe context and discards
+the symbolic environment.  Closed entry points retain their scope checks.
+Empty-family paths now poll budgets.  Kernel rules for indices, fields,
+positivity, large elimination and erasure remain unchanged.
+
+The programmatic prelude catalog supplies Eq at an arbitrary carrier Sort
+and Sum at two Type levels.  Five closed instances coexist with the source
+prelude and share its constructor names.  A source client checks equality,
+casts at two carrier universes and sums with unequal universes.  Indexed
+witnesses force the cast and sum results to compute.  Both entries and
+family records are audited for hidden trusted dependencies.
+
+Validation, with the ambient OPAM_SWITCH_PREFIX and CAML_LD_LIBRARY_PATH
+unset and all builds through dev/dunecho.sh:
+
+- Build: zero errors, zero warnings.
+- FAMILY-POLY: 34 cases pass, including symbolic counterexamples, recursive
+  metadata, scope, collisions, budgets, rollback and rechecking dependencies.
+- PRELUDE-POLY: two templates, five instances and two negative clients pass.
+- Full battery: 21 PASS legs; only TRUSTED-LINES fails.  Kernel 4182/3000,
+  encoder 246/900.  The base measured 4145/3000 and 246/900.
+- PIN-DELTA: check.ml measures 140 diff lines against the pin.  The other
+  overlay counts, vendor pin, R0 counts, census and denominators are unchanged.
+- Independent static review: no reportable defects or weakened gates.
+  Raw kernel helpers retain the existing trusted-environment convention;
+  the Family_poly interface publishes only closed, rechecked instances.
+- Five mutation controls were killed.  A surviving per-Term budget mutant
+  exposed a test gap, which was fixed and retested against the same mutant.
+  Mutation details are in dev/MUTATION-LOG.md.
+
+Captures under `/Users/oobi/Documents/gpt6/.kanon-exec/`:
+baseline `run-jeriKx`; full battery `run-KfzNx5`; prelude clients
+`run-XOTH7C`; final strengthened family suite and build `run-avVNFK`.
+The full battery preceded the final budget-test strengthening; the final
+targeted build and all 34 family cases passed after that test-only change.
+
+No mapping row is promoted: NAME_ONLY remains 19, UNMAPPED 2273 and NEVER
+185, over the frozen 2477-name denominator.  Stage C remains open for
+textual universe binders, polymorphic library eliminators and cast,
+category targets and source-type parity.  The trusted-line ruling and
+the previously recorded equality proof obligations remain pending.
+
+Integration checks the canonical base and original file contents, applies
+the validated patch to the worktree and index, and creates no commit.
+Build captures and mutation copies stay outside the staged source changes.
+
+## Stage C family templates review (2026-09-09)
+
+Findings kept, all verdict fixed.
+
+- L3-1 (medium), lib/check.ml:442.  The kernel arity scope guard had no gate leg and no mutation row.
+- L3-2 (medium), test/prelude_poly.ml:26.  The negative oracle pinned only the error constructor and closed with a catch-all arm.
+- L4-1 (low), test/prelude_poly.ml:54.  The cross-instance negative was over-determined and could not detect the named conversion.
+- L4-3 (low), test/family_poly.ml:283.  The hidden-free-level case did not isolate the ignored shape.
+- L2-2 (low), dev/M0-STAGE-C-EQUALITY.md:43.  The scope section still called universe-polymorphic family templates future work.
+- L2-1 (low), dev/M0-STAGE-C.md:41.  The remaining-work contract still said universe-polymorphic family templates were unshipped.
+- ND-1-1 (medium), dev/M0-BUILD-LOG.md:660.  New defect from the fixes: the block still said 33 family cases, not 34.
+
+Fixes.
+
+- test/family_poly.ml: new refusal case for a free header level; ignored-shape case now isolates the hidden Elim.
+- test/prelude_poly.ml: negative oracle rewritten as a prefix check on Error.to_string, catch-all arm removed; cross-instance client changed to a family-name-only mismatch.
+- dev/M0-STAGE-C-EQUALITY.md and dev/M0-STAGE-C.md: scope and remaining-work text updated to record the shipped templates.
+- dev/M0-BUILD-LOG.md:660: 33 corrected to 34.
+- dev/MUTATION-LOG.md: updated for the replayed mutation control.
+
+Gates.  Verdict BOUND-ONLY.  Kernel 4182/3000, encoder 246/900.  Kernel is at or below the recommended 4,200 and encoder at or below 900.  All 21 other legs PASS; only TRUSTED-LINES is red.
+
+TRUSTED-LINES stays red until the user rules D-A-1, the trusted-line bounds.  The programmatic-only template scope is a plan question awaiting a user ruling.

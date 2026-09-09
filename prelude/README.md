@@ -30,8 +30,8 @@ definitions alongside `mechRefl`.
 
 `test/fixtures/prelude/equality.mech` checks dependent transport, J
 computation, and a separate higher-carrier equality with a type-cast
-example.  The library declarations remain monomorphic.  Polymorphic
-families and a general library cast remain open.  The precise negatives
+example.  The `.mech` declarations remain monomorphic.  A general
+polymorphic library cast remains open.  The precise negatives
 keep unequal endpoints, relevant indices, erased endpoint use and data
 constructor fields outside the accepted language.
 
@@ -44,3 +44,18 @@ Parameterized constructors use the local surface elaborator overlay.
 The expected family type supplies its parameters.  Each field elaborates
 at its declared type under the parameters and preceding fields.  The
 kernel checks the complete constructor and its result indices.
+
+`families.ml` supplies a separate programmatic catalog of universally
+checked MechEq and MechSum templates through `Family_poly`.  MechEq takes
+the carrier's Sort level, including Prop.  MechSum takes two Type levels;
+the kernel levels of its carriers are their successors.  Closed instances
+have fresh names and are rechecked before entering ordinary globals.
+Constructor names are local to the expected family, so instances can share
+`mechReflCtor`, `mechInl` and `mechInr` with the monomorphic declarations.
+
+The PRELUDE-POLY gate installs five instances and checks
+`test/fixtures/prelude/polymorphic.mech`.  Indexed witnesses force casts at
+two carrier universes and mixed-universe sums to compute.  The test audits
+both global entries and families, rejecting axioms, primitives, provisional
+families and builtin families.  Textual universe binders and imported
+source-type parity are not supplied by this catalog.

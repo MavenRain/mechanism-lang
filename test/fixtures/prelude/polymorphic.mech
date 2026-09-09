@@ -1,0 +1,46 @@
+-- The harness installs five closed instances of two checked templates.
+-- Constructor names are shared with init.mech and among the instances.
+def polyDataProof : PolyEqData MechNat mechZero mechZero := mechReflCtor
+def polyTypeProof : PolyEqTypes (Type 0) MechNat MechNat := mechReflCtor
+def polyHigherProof : PolyEqHigher (Type 1) (Type 0) (Type 0) := mechReflCtor
+
+def polyCast : (0 A : Type 0) -> (0 B : Type 0) ->
+    PolyEqTypes (Type 0) A B -> A -> B :=
+  fun (0 A : Type 0) (0 B : Type 0)
+    (proof : PolyEqTypes (Type 0) A B) (value : A) =>
+      case proof as self in PolyEqTypes target return target with
+      | mechReflCtor => value
+
+def polyHigherCast : (0 A : Type 1) -> (0 B : Type 1) ->
+    PolyEqHigher (Type 1) A B -> A -> B :=
+  fun (0 A : Type 1) (0 B : Type 1)
+    (proof : PolyEqHigher (Type 1) A B) (value : A) =>
+      case proof as self in PolyEqHigher target return target with
+      | mechReflCtor => value
+
+def polyCastValue : MechNat :=
+  polyCast MechNat MechNat polyTypeProof (mechSucc mechZero)
+def polyHigherType : Type 0 :=
+  polyHigherCast (Type 0) (Type 0) polyHigherProof MechNat
+def polyHigherValue : polyHigherType := mechSucc mechZero
+
+def polyLowLeft : PolySumLow MechNat MechUnit := mechInl (mechSucc mechZero)
+def polyMixedLeft : PolySumMixed MechNat (Type 0) := mechInl (mechSucc mechZero)
+def polyMixedRight : PolySumMixed MechNat (Type 0) := mechInr MechNat
+def polySumValue : MechNat :=
+  case polyMixedLeft as self in PolySumMixed return MechNat with
+  | mechInl value => value
+  | mechInr A => mechZero
+def polySumType : Type 0 :=
+  case polyMixedRight as self in PolySumMixed return Type 0 with
+  | mechInl value => MechUnit
+  | mechInr A => A
+def polySumTypeValue : polySumType := mechSucc mechZero
+
+-- Indexed witnesses require the checker to observe the computed values.
+mu PolyIsOne : (0 n : MechNat) -> Type 0 with
+| polyIsOne : PolyIsOne (mechSucc mechZero)
+def polyCastComputes : PolyIsOne polyCastValue := polyIsOne
+def polyHigherComputes : PolyIsOne polyHigherValue := polyIsOne
+def polySumComputes : PolyIsOne polySumValue := polyIsOne
+def polySumTypeComputes : PolyIsOne polySumTypeValue := polyIsOne

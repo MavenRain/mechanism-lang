@@ -432,18 +432,24 @@ let check_index_telescope (c : ctx) (name : string) (level : Level.t)
 
 (** Declare one family.  The record enters the table at [Provisional]
     with no verdict, because no constructor is installed yet (A4). *)
-let declare_family ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
+let declare_family_at ~(arity : int) (budget : Budget.t) (globals : Global.t)
     (d : family_decl) : (Global.t, Error.t) result =
   let* () =
-    if Level.in_scope 0 d.fam_level then Ok ()
-    else Error (Error.Universe "family universe levels must be closed at M0 Stage A")
+    if Budget.exhausted budget then Error (Error.Budget_exhausted budget_msg)
+    else Ok ()
+  in
+  let* () =
+    if Level.in_scope arity d.fam_level then Ok ()
+    else if Int.equal arity 0 then
+      Error (Error.Universe "family universe levels must be closed at M0 Stage A")
+    else Error (Error.Universe "universe level is outside the global parameter scope")
   in
   let* () =
     if Option.is_some (Global.find_family d.fam_name globals) then
       Error (Error.Mismatch ("the family " ^ d.fam_name ^ " is already declared"))
     else Ok ()
   in
-  let c : ctx = make globals budget in
+  let c : ctx = make ~level_arity:arity globals budget in
   let* pctx = check_telescope c d.fam_params in
   let* _ictx = check_index_telescope pctx d.fam_name d.fam_level d.fam_indices in
   Ok
@@ -458,6 +464,9 @@ let declare_family ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
          f_positive = false;
        }
        globals)
+
+let declare_family ?(budget : Budget.t = Budget.unlimited) globals d =
+  declare_family_at ~arity:0 budget globals d
 
 (** A result parameter is the corresponding parameter variable under
     the constructor fields.  An annotation preserves that variable;
@@ -527,9 +536,13 @@ let check_ctor (c : ctx) (fam : Positivity.family) (group : string list)
 (** Install the constructors of one declared family (A4):  the verdict is
     computed once here and stored, formation reads it (rules.ml
     [mu_family], D-M1-2).  [group] is the mutual group.  SG-M1 mutates it. *)
-let define_ctors ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
+let define_ctors_at ~(arity : int) (budget : Budget.t) (globals : Global.t)
     ~(group : string list) ~(name : string) (cds : ctor_decl list) :
     (Global.t, Error.t) result =
+  let* () =
+    if Budget.exhausted budget then Error (Error.Budget_exhausted budget_msg)
+    else Ok ()
+  in
   let* fam =
     Global.find_family name globals
     |> Option.to_result ~none:(Error.Unbound ("the family " ^ name ^ " is not declared"))
@@ -540,12 +553,16 @@ let define_ctors ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
     | Positivity.Builtin | Positivity.Complete _ ->
         Error (Error.Mismatch ("the constructors of " ^ name ^ " are already installed"))
   in
-  let c : ctx = make globals budget in
+  let c : ctx = make ~level_arity:arity globals budget in
   let* pctx = check_telescope c fam.Positivity.f_params in
   let* ctors =
     List.fold_left
       (fun (acc : (Positivity.ctor list, Error.t) result) (cd : ctor_decl) ->
         let* rows = acc in
+        let* () =
+          if Budget.exhausted budget then Error (Error.Budget_exhausted budget_msg)
+          else Ok ()
+        in
         let* ct = check_ctor pctx fam group cd in
         Ok (rows @ [ ct ]))
       (Ok []) cds
@@ -560,6 +577,26 @@ let define_ctors ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
          f_positive = true;
        }
        globals)
+
+let define_ctors ?(budget : Budget.t = Budget.unlimited) globals ~group ~name cds =
+  define_ctors_at ~arity:0 budget globals ~group ~name cds
+
+(** Universally check one recursive family without returning its open entry.
+    A fixed Prop or Type result keeps index bounds and large elimination
+    independent of the later choice of universe arguments. *)
+let check_family_scheme globals budget ~arity (d : family_decl) cds :
+    (unit, Error.t) result =
+  if arity < 0 then Error (Error.Universe "a universe parameter arity must be nonnegative")
+  else
+    let* provisional = declare_family_at ~arity budget globals d in
+    let* () =
+      if Level.always_zero d.fam_level || Level.always_positive d.fam_level then Ok ()
+      else Error (Error.Universe
+        "a family schema must remain in Prop or Type for every universe substitution")
+    in
+    let* _checked = define_ctors_at ~arity budget provisional
+      ~group:[d.fam_name] ~name:d.fam_name cds in
+    Ok ()
 
 (** Entry points for one term, for a driver and for the suite. *)
 let infer_term ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)

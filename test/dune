@@ -31,6 +31,16 @@
  (libraries mechanism_kernel))
 
 (executable
+ (name family_poly)
+ (modules Family_poly)
+ (libraries mechanism_kernel mechanism_surface))
+
+(executable
+ (name prelude_poly)
+ (modules Prelude_poly)
+ (libraries mechanism_kernel mechanism_surface mechanism_prelude mechanism_import))
+
+(executable
  (name mapping)
  (modules Mapping)
  (libraries mechanism_import))

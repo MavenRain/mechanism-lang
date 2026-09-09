@@ -246,3 +246,55 @@ driver and the three captures are `probes/fix/mutate.py`,
 `probes/fix/L4-2/c-m5.txt`, `probes/fix/L4-1/c-m6.txt` and
 `probes/fix/L4-1/c-m7.txt` under
 `/Users/oobi/Documents/mechanism-lang-eq-review`.
+
+## Stage C family templates (2026-09-08)
+
+Controls ran in `/Users/oobi/Documents/gpt6/mechanism-family-mutations`.
+Each implementation mutant built with zero errors and zero warnings before
+the family suite ran.  The primary source copy was never mutated.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-FAM-M1 | Replace Family_poly's universal kernel judgment with Ok () | The universal field-bound counterfeit, mixed result sort and negative recursive field are accepted; their rejection tests fail | killed |
+| C-FAM-M2 | Make the instance rename callback return its input unchanged | Eq, Sum, recursive clients and retry checks fail to find the requested instance | killed |
+| C-FAM-M3 | Preserve motive.m_ind instead of applying the name callback | Stored recursive motive name stays stale; a dependency hidden in motive metadata escapes rejection | killed |
+| C-FAM-M4 | Remove map_term's entry budget poll | Increasing nested annotation depth adds no substitution budget; the strengthened budget case fails | killed |
+| C-FAM-M5 | Change the source client's cast payload from one to zero | PRELUDE-POLY rejects the indexed computation witness with a constructor index mismatch | killed |
+
+C-FAM-M4 initially survived because the earlier test counted shape,
+address and leg polls together with Term polls.  The corrected test varies
+only nested annotation depth and subtracts each input's measured closed
+kernel cost.  It observes growing substitution work without pinning an
+exact poll count.  The unmodified implementation passes every case;
+the same missing-Term-poll mutant now fails only that budget assertion.
+
+Captures under `/Users/oobi/Documents/gpt6/.kanon-exec/`: C-FAM-M1
+`run-dKwq9q`, C-FAM-M2 `run-utNFa6`, C-FAM-M3 `run-3IoMUA`, C-FAM-M4
+initial `run-OG5ily` and corrected `run-zuVLgF`, C-FAM-M5 `run-5Yo3Ut`.
+The final unmodified build and suite are `run-avVNFK`.  Scratch source
+files were restored to the validated primary source after the controls.
+
+## Stage C family-template review (2026-09-09)
+
+Controls ran in a copy of the primary source at
+`mechanism-lang-fam-review/probes/fix/copy`.  Each mutant built with zero
+errors and zero warnings before the suite ran.  The primary source was
+never mutated.
+
+| Control | Change | Observed result | Result |
+| --- | --- | --- | --- |
+| C-FAM-M6 | Weaken the kernel arity scope guard at lib/check.ml to accept every positive arity | FAMILY-POLY prints `FAIL family-poly kernel-scheme-refuses-a-free-header-level: expected refusal: universe: universe level is outside the global parameter scope` and exits 1 | killed |
+| C-FAM-M7 | Replace the endpoint negative client with a plain constructor mismatch | PRELUDE-POLY prints `PRELUDE-POLY-FAIL wrong refusal: mismatch: the constructor mechInl expects family MechSum` and exits 1 | killed |
+| C-FAM-M8 | Hold the free level of the ignored shape in scope | FAMILY-POLY prints `FAIL family-poly hidden-free-level-in-ignored-shape-is-refused: expected refusal: universe: universe level is outside the global parameter scope` and exits 1 | killed |
+
+C-FAM-M6 answers the kernel arity scope guard, which no earlier row and no
+gate leg observed.  C-FAM-M7 shows that the new PRELUDE-POLY oracle pins
+the refusal text and not the error constructor alone.  C-FAM-M8 shows that
+the ignored-shape case is not vacuous, because its visible head level is
+now in scope and only the hidden shape carries the free level.
+
+Captures are `probes/fix/L3-1/control.txt`, `probes/fix/L3-2/control.txt`
+and `probes/fix/L4-3/control.txt` under
+`/Users/oobi/Documents/mechanism-lang-fam-review`.  After every mutant was
+restored, the same copy printed `FAMILY-POLY-OK cases=34` and
+`PRELUDE-POLY-OK templates=2 instances=5 negatives=2`.

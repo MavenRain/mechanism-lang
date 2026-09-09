@@ -41,7 +41,9 @@ The prelude declarations are monomorphic at their written universes.
 The equality regression client separately checks a higher-carrier family
 and a type-cast example, establishing that the index exception is not
 limited to the first data universe.  Universe-polymorphic family
-templates and a general prelude cast remain future work.
+templates now ship as the programmatic catalog of
+dev/M0-STAGE-C-FAMILIES.md.  A general prelude cast remains future
+work.
 
 Seven new external-name candidates cover Eq, Eq.refl, Eq.rec, Eq.ndrec,
 Eq.symm, Eq.trans and congrArg.  Their verdict remains NAME_ONLY.  Stage D

@@ -1,0 +1,3 @@
+(library
+ (name mechanism_prelude)
+ (libraries mechanism_kernel mechanism_surface))

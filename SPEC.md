@@ -177,11 +177,37 @@ An SMu family at Prop may have erased indices from any well-formed
 universe.  Type-valued families retain the existing index universe bound.
 All index binders remain at quantity zero; constructor fields retain their
 family-universe bound.  Large elimination still requires the existing
-subsingleton criterion.  The prelude supplies monomorphic equality;
-universe-polymorphic equality and general type cast remain outstanding.
+subsingleton criterion.  The source prelude supplies monomorphic equality;
+the separate programmatic catalog supplies a polymorphic equality family.
+A universally checked polymorphic library cast remains outstanding.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves
 all referenced external constants, including ratified NEVER rows and names
 used only in values.  Stage D must recompute NAME_AND_TYPE from the export
 and checked prelude.  No new R0 former, rule or primitive is introduced.
+
+## Stage C family templates
+
+Family_poly stores universally checked single-family declarations outside
+Global.t.  Its kernel judgment checks the header and constructors under a
+prenex level scope and discards the temporary environment.  Ordinary family
+declaration and constructor entry points keep their closed level scope.
+The index, constructor-field and positivity rules are shared with those
+entry points, including Prop's erased data-index exception.
+
+A template result universe must be definitely zero or definitely positive.
+Templates whose result can alternate between Prop and Type, mutual
+templates and references between templates are not supported yet.
+Instantiation requires exactly the declared number of closed levels and a
+fresh name.  Every raw level occurrence and self-family reference is
+substituted, including eliminator motive metadata.  Closed instances are
+rechecked in the supplied globals, and a failed check publishes no entry.
+All new traversal paths and empty-family checks honor the supplied budget.
+
+The programmatic prelude catalog provides MechEq at an arbitrary carrier
+Sort and MechSum at two Type levels.  The result sorts are Prop and the
+maximum carrier level respectively.  These are kernel-checked declarations,
+without postulates.  This catalog supports checked source clients through
+closed instances; it does not extend textual syntax or certify any mapping
+row's source-type parity.

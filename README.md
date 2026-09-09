@@ -41,7 +41,8 @@ unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 
 The driver inherits check, axioms, emit, run and spec-count.
-Prenex templates are available through the OCaml Poly API.  The importer
+Prenex definitions use the OCaml Poly API; individual recursive families
+use Family_poly.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
 is rechecked.
@@ -98,7 +99,13 @@ The checker permits erased data indices in Prop families while preserving
 its constructor-field and large-elimination restrictions.  The runtime
 gate compares transport on the kernel, Node and Wasmtime hosts.
 
-Stage C remains open.  Universe-polymorphic families, general type cast,
+The programmatic prelude catalog in `prelude/families.ml` supplies
+universe-polymorphic Eq and Sum families.  Each template checks universally,
+and each closed instance checks again before source clients can use it.
+PRELUDE-POLY checks casts and sums at multiple universes without postulates.
+See `dev/M0-STAGE-C-FAMILIES.md` for the API and validation scope.
+
+Stage C remains open.  Textual universe binders, polymorphic library cast,
 category targets and checked source-type parity remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
