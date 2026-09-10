@@ -462,3 +462,56 @@ All ten mutants built with zero errors and zero warnings and were killed:
 `{"passed": true, "killed": 10, "controls": 10}`.  The restored suite
 passes.  The measurement replay of the same round is
 `/Users/oobi/Documents/mechanism-lang-dep-review/probes/mutations-DEP-2`.
+
+## Stage C independent-universe congruence (2026-09-09)
+
+Replay `python3 -I dev/congruence-mutations.py NEW_WORK_DIRECTORY`.
+Every control builds with zero errors and zero warnings before a test
+failure counts.  The script pins exact replacements and diagnostic prefixes,
+records source and mutant hashes, restores each file and checks both
+restored suites.  No mutation changes the working repository.
+
+| Control | Injected defect | Observed rejection |
+| --- | --- | --- |
+| C-CONG-M1 | Use domain universe for codomain B | Type u0 versus expected Type u1 |
+| C-CONG-M2 | Replace result's right endpoint with f x | Result equality at f y versus expected f x |
+| C-CONG-M3 | Leave companion family name unspecialized | Second instance collides with Second |
+| C-CONG-M4 | Skip symbolic group-member checking | Member-family collision incorrectly accepted |
+| C-CONG-M5 | Drop congruence catalog's caller budget | Exhausted-budget refusal missing |
+| C-CONG-M6 | Change upValue's result from one to zero | Wrong computation: upValue |
+| C-CONG-M7 | Replace mixed-instance negative with its accepted control | Wrong-instance refusal missing |
+
+Final replay: `/Users/oobi/Documents/gpt2/mechanism-congruence-mutations-2`.
+Result: `{"passed": true, "killed": 7, "controls": 7}`.  Restored outputs:
+`FAMILY-GROUPS-OK cases=21` and
+`PRELUDE-CONGRUENCE-OK instances=8 computations=4 negatives=4`.
+The first replay's C-CONG-M1 failed with a type mismatch rather than its
+initial universe-error oracle; the final replay pins the measured refusal.
+
+## Stage C family groups and congruence review (2026-09-09)
+
+The fix round of the review added two controls to
+`dev/congruence-mutations.py`, so one run now covers nine controls.
+The seven earlier controls keep their pinned diagnostics.
+
+| Control | Injected defect | Observed rejection |
+| --- | --- | --- |
+| C-CONG-M8 | Accept a template reference from a group member | Member type keeps the template name |
+| C-CONG-M9 | Drop the occupied check of the install fold | Companion collision incorrectly accepted |
+
+C-CONG-M8 rewrites the name closure of `declare_group` to `Ok n` and is
+killed by `FAMILY-GROUPS-FAIL member-template-reference: wrong refusal:
+unbound: the family Other is not declared`.  C-CONG-M9 removes the
+`occupied` test of the install fold of `instantiate` and is killed by
+`FAMILY-GROUPS-FAIL target-companion-collision-atomic: expected refusal:
+mismatch: the name One_Second is already declared`.  Both mutants build
+with zero errors and zero warnings.
+
+Replay: `/Users/oobi/Documents/mechanism-lang-cong-review/probes/mutations-CONG-1`.
+Result: `{"passed": true, "killed": 9, "controls": 9}`.  Restored outputs:
+`FAMILY-GROUPS-OK cases=22` and
+`PRELUDE-CONGRUENCE-OK instances=8 computations=4 negatives=5`.
+The block "Stage C independent-universe congruence (2026-09-09)" above
+reports killed 7, controls 7, `FAMILY-GROUPS-OK cases=21` and
+`negatives=4`.  Those numbers name the run of that round.  The totals
+after this round are killed 9, controls 9, cases 22 and negatives 5.

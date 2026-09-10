@@ -193,7 +193,7 @@ and checked prelude.  No new R0 former, rule or primitive is introduced.
 
 ## Stage C family templates
 
-Family_poly stores universally checked single-family declarations outside
+Family_poly stores universally checked family declarations outside
 Global.t.  Its kernel judgment checks the header and constructors under a
 prenex level scope and discards the temporary environment.  Ordinary family
 declaration and constructor entry points keep their closed level scope.
@@ -244,3 +244,35 @@ Lan at SPi, with Sec, In and Elim.  They add no kernel rule or primitive.
 Closed instances are transparent ordinary definitions rechecked by Poly;
 the templates do not reference one another or the monomorphic prelude.
 Textual universe binders and imported source-type parity remain open.
+
+## Stage C ordered family groups and congruence
+
+Family_poly.declare_group checks a nonempty list of families under one
+prenex universe scope.  A family may refer to earlier families in that
+group.  Forward references and mutual recursion between families remain
+unsupported.  All members check in order after all families.  The first
+family names the template; other families and members remain internal.
+The temporary symbolic globals never enter the caller's environment.
+
+Specialization renames the first family to the requested instance name N.
+Each companion family F becomes N_F, and each member m becomes N_m.
+Level substitution and renaming cover every raw term field, including
+constructor types and elimination motives.  Every family, constructor
+and member checks again in the supplied closed globals.  Collisions and
+failed checks return an error without publishing any part of the group.
+
+Congruence.catalog provides a two-Sort-level template named MechCongr.
+At [u; v], instance N is equality over Sort u, N_Result is equality over
+Sort v, and N_congr has the following signature (schematic Sort notation):
+
+```text
+(0 A : Sort u) -> (0 B : Sort v) -> (0 f : A -> B) ->
+(0 x : A) -> (0 y : A) -> N A x y -> N_Result B (f x) (f y)
+```
+
+Both equalities live in Prop.  The definition eliminates the domain proof
+and returns codomain reflexivity in the constructor branch.  Independent
+Sort levels include Prop in either position.  These nominal equality
+families are separate from Equality.catalog and its same-level congruence.
+No coercion between equality instances is supplied.  The extension changes
+no kernel rule, source syntax, vendor file or mapping verdict.

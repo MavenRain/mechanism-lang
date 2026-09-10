@@ -6,6 +6,7 @@ type scheme = {
   arity : int;
   family : Check.family_decl;
   ctors : Check.ctor_decl list;
+  companions : (Check.family_decl * Check.ctor_decl list) list;
   members : Check.decl list;
 }
 
@@ -175,7 +176,28 @@ let declare ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity
             ~group:[family.fam_name] ~name:family.fam_name ctors in
           let* _checked = check_members budget catalog ~arity symbolic members in
           Ok () in
-    Ok ((family.fam_name, { arity; family; ctors; members }) :: catalog)
+    Ok ((family.fam_name, { arity; family; ctors; companions = []; members }) :: catalog)
+
+let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity families =
+  match families with
+  | [] -> Error (Error.Mismatch "a family schema group must be nonempty")
+  | (family, ctors) :: companions ->
+      (* Ordered families may refer to predecessors, never to successors.
+         The symbolic environment is discarded after universal checking. *)
+      let* symbolic = List.fold_left (fun acc (family, ctors) ->
+        let* symbolic = acc in
+        let* _checked = declare ~budget symbolic catalog ~arity family ctors in
+        let* provisional = Check.declare_family_at ~arity budget symbolic family in
+        Check.define_ctors_at ~arity budget provisional
+          ~group:[family.Check.fam_name] ~name:family.fam_name ctors)
+        (Ok globals) families in
+      let name n = if List.mem_assoc n catalog then
+          Error (Error.Not_yet "references between family schemas are not supported")
+        else Ok n in
+      let level l = if Level.in_scope arity l then Ok l else Error scope_error in
+      let* members = map_list (map_member budget level name) members in
+      let* _checked = check_members budget catalog ~arity symbolic members in
+      Ok ((family.fam_name, { arity; family; ctors; companions; members }) :: catalog)
 
 let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog
@@ -190,11 +212,22 @@ let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_n
       Error (Error.Universe "universe arguments must be closed")
   | () ->
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
-      let rename n = Ok (if String.equal n name then as_name
-        else if List.exists (fun d -> String.equal d.Check.d_name n) scheme.members
-          then as_name ^ "_" ^ n else n) in
-      let* family, ctors = map_family budget level rename scheme.family scheme.ctors in
+      let rename n = Ok (match () with
+        | () when String.equal n name -> as_name
+        | () when List.exists (fun (f, _ctors) -> String.equal f.Check.fam_name n)
+            scheme.companions -> as_name ^ "_" ^ n
+        | () when List.exists (fun d -> String.equal d.Check.d_name n) scheme.members ->
+            as_name ^ "_" ^ n
+        | () -> n) in
+      let* families = map_list (fun (family, ctors) ->
+        map_family budget level rename family ctors)
+        ((scheme.family, scheme.ctors) :: scheme.companions) in
       let* members = map_list (map_member budget level rename) scheme.members in
-      let* provisional = Check.declare_family ~budget globals family in
-      let* installed = Check.define_ctors ~budget provisional ~group:[as_name] ~name:as_name ctors in
+      let* installed = List.fold_left (fun acc (family, ctors) ->
+        let* globals = acc in
+        if occupied globals catalog family.Check.fam_name then Error (collision family.fam_name)
+        else
+          let* provisional = Check.declare_family ~budget globals family in
+          Check.define_ctors ~budget provisional ~group:[family.fam_name]
+            ~name:family.fam_name ctors) (Ok globals) families in
       check_members budget catalog ~arity:0 installed members

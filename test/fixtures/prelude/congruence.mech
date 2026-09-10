@@ -1,0 +1,34 @@
+-- Congruence proofs are consumed by elimination into observable data.
+def sameRefl : Same MechNat mechZero mechZero := mechReflCtor
+def sameProof : Same_Result MechNat (mechSucc mechZero) (mechSucc mechZero) :=
+  Same_congr MechNat MechNat (fun (n : MechNat) => mechSucc n)
+    mechZero mechZero sameRefl
+def sameValue : MechNat :=
+  case sameProof as self in Same_Result right return MechNat with
+  | mechReflCtor => mechSucc mechZero
+
+def upRefl : Up MechNat mechZero mechZero := mechReflCtor
+def upProof : Up_Result (Type 0) MechNat MechNat :=
+  Up_congr MechNat (Type 0) (fun (n : MechNat) => MechNat)
+    mechZero mechZero upRefl
+def upValue : MechNat :=
+  case upProof as self in Up_Result right return MechNat with
+  | mechReflCtor => mechSucc mechZero
+
+def downRefl : Down (Type 0) MechNat MechNat := mechReflCtor
+def downProof : Down_Result MechNat (mechSucc mechZero) (mechSucc mechZero) :=
+  Down_congr (Type 0) MechNat (fun (A : Type 0) => mechSucc mechZero)
+    MechNat MechNat downRefl
+def downValue : MechNat :=
+  case downProof as self in Down_Result right return MechNat with
+  | mechReflCtor => mechSucc mechZero
+
+mu Witness : Prop with | witness : Witness
+def proofRefl : ProofData Witness witness witness := mechReflCtor
+def proofDataProof :
+    ProofData_Result MechNat (mechSucc mechZero) (mechSucc mechZero) :=
+  ProofData_congr Witness MechNat (fun (p : Witness) => mechSucc mechZero)
+    witness witness proofRefl
+def proofDataValue : MechNat :=
+  case proofDataProof as self in ProofData_Result right return MechNat with
+  | mechReflCtor => mechSucc mechZero

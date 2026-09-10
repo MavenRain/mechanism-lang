@@ -214,6 +214,10 @@ leg FAST PRELUDE-EQUALITY-OPS '^PRELUDE-EQUALITY-OPS-OK instances=' \
   $ROOT/_build/default/test/prelude_equality_ops.exe $ROOT
 leg FAST PRELUDE-DEPENDENT '^PRELUDE-DEPENDENT-OK templates=' \
   $ROOT/_build/default/test/prelude_dependent.exe $ROOT
+leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
+  $ROOT/_build/default/test/family_groups.exe
+leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
+  $ROOT/_build/default/test/prelude_congruence.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \

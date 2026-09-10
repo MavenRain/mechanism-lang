@@ -99,3 +99,18 @@ elimination.  The catalog checks from `Global.empty`, and the installed
 environment is audited for axioms, primitives and unchecked families.
 The catalog must also refuse an exhausted caller budget.  The reported
 specialization count is measured in the installed environment.
+
+`congruence.ml` supplies the MechCongr ordered family-group template.
+Its two parameters are independent domain and codomain Sort levels,
+including Prop.  Specializing under N installs equality N over the domain,
+equality N_Result over the codomain, and N_congr.  For a function f from
+A to B, N_congr takes N A x y and returns N_Result B (f x) (f y).
+These nominal families are separate from Equality.catalog instances.
+
+PRELUDE-CONGRUENCE checks eight specializations, generic contracts with
+distinct bound endpoints, four observable computations, five misuse cases
+with accepted controls, budget refusal and the absence of trusted entries.
+FAMILY-GROUPS covers ordered dependencies, companion universe substitution,
+name collisions, scope, closed rechecking, template references from a
+member, and a refusal after which the caller globals stay usable.  See
+`dev/M0-STAGE-C-CONGRUENCE.md` for the API and reproducible controls.

@@ -49,8 +49,9 @@ and transitivity; see dev/M0-STAGE-C-EQUALITY-OPS.md.
 The dependent-prelude increment adds polymorphic Pi and Sigma definitions,
 pair construction, projections and dependent elimination; see
 dev/M0-STAGE-C-DEPENDENT.md.
-Textual universe binders, congruence between independent carrier
-universes, category targets and source-type parity remain open.
+The congruence increment adds ordered family groups and congruence between
+independent carrier universes; see dev/M0-STAGE-C-CONGRUENCE.md.
+Textual universe binders, category targets and source-type parity remain open.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

@@ -41,8 +41,8 @@ unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 
 The driver inherits check, axioms, emit, run and spec-count.
-Prenex definitions use the OCaml Poly API; individual recursive families
-use Family_poly.  The importer
+Prenex definitions use the OCaml Poly API; recursive families and ordered
+family groups use Family_poly.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
 is rechecked.
@@ -122,9 +122,14 @@ PRELUDE-EQUALITY-OPS gate checks generic contracts, normalization and
 paired misuse cases.  Congruence has one shared carrier universe for its
 domain and codomain.  See `dev/M0-STAGE-C-EQUALITY-OPS.md`.
 
-Stage C remains open.  Textual universe binders, congruence between
-independent carrier universes, category targets and checked source-type
-parity remain outstanding.
+The `Congruence` catalog adds congruence between independent domain and
+codomain Sort levels, including Prop.  Its ordered family group specializes
+the domain equality, codomain equality and congruence definition together.
+FAMILY-GROUPS and PRELUDE-CONGRUENCE check this path.  See
+`dev/M0-STAGE-C-CONGRUENCE.md` for names, signatures and validation.
+
+Stage C remains open.  Textual universe binders, category targets and
+checked source-type parity remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

@@ -1,6 +1,6 @@
 open Kanon_kernel
 
-(** Universally checked templates for one recursive family. Templates stay
+(** Universally checked templates for recursive families. Templates stay
     outside ordinary globals and cannot refer to other templates. *)
 type t
 
@@ -16,6 +16,15 @@ val members : t -> string -> string list option
     named like a catalog template is refused as a collision. *)
 val declare : ?budget:Budget.t -> ?members:Check.decl list -> Global.t -> t -> arity:int ->
   Check.family_decl -> Check.ctor_decl list -> (t, Error.t) result
+
+(** A nonempty ordered group shares one universe scope. Each family may
+    refer to earlier families; mutual recursion and forward references are
+    refused. Members check after all families. The first family names the
+    template and specializes to [as_name]; subsequent families specialize
+    to [as_name ^ "_" ^ family_name]. All references are renamed together.
+    No symbolic entry escapes and specialization is atomic on failure. *)
+val declare_group : ?budget:Budget.t -> ?members:Check.decl list -> Global.t -> t ->
+  arity:int -> (Check.family_decl * Check.ctor_decl list) list -> (t, Error.t) result
 
 (** Specialize all universe occurrences and self references using exactly
     the declared number of closed levels. Recheck the closed family and

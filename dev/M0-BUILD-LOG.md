@@ -1020,3 +1020,113 @@ The fixes touch these paths:
 Gate verdict: BOUND-ONLY.  All other legs pass.  The counts are
 kernel=4182 and encoder=246.  The battery log is
 `/Users/oobi/Documents/mechanism-lang-dep-review/gates-DEP-1-items.log`.
+
+## Stage C independent-universe congruence (2026-09-09)
+
+Base: a67c035.  Added ordered Family_poly groups and Congruence.catalog.
+The group shares a universe scope, checks families and members in order,
+renames every internal reference, and rechecks closed instances atomically.
+The prelude maps domain equality to codomain equality at independent Sort
+levels, including Prop.  The kernel and pinned vendor sources are unchanged.
+
+Build copy: `/Users/oobi/Documents/gpt2/mechanism-congruence`.
+Validation uses `env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH` and the
+repository dunecho runner.  Final full battery artifact:
+`/Users/oobi/Documents/gpt2/mechanism-congruence/.kanon-exec/run-mP9fjB`.
+All behavioral legs pass, including FAMILY-GROUPS (21 cases) and
+PRELUDE-CONGRUENCE (8 instances, 4 computations, 4 paired negatives).
+The unchanged TRUSTED-LINES gate is the only failure: kernel=4182/3000,
+encoder=246/900.  No bound or acceptance condition was relaxed.
+
+Seven isolated mutation controls compiled cleanly and were killed by their
+pinned test failures.  Both restored suites passed.  Replay:
+`/Users/oobi/Documents/gpt2/mechanism-congruence-mutations-2/results.json`.
+The first replay rejected all seven mutants, but C-CONG-M1 expected a
+universe-error prefix instead of the observed type mismatch.  The final
+replay pins the measured diagnostic and reports 7/7 controls killed.
+
+The diff was inspected for companion and member collisions, symbolic name
+escape, raw level substitution, ordered dependencies and closed rechecking.
+Existing single-family and member suites pass.  Textual universe binders,
+category targets and source-type parity remain open.  Validated files are
+staged after checking the canonical base and contents; no commit is created.
+
+## Stage C family groups and congruence review (2026-09-09)
+
+Base: a67c035.  Review work directory:
+`/Users/oobi/Documents/mechanism-lang-cong-review`.
+The round changed only the suites, the mutation script and the prose.  No
+kernel, surface or backend source was touched, and no gate tier, bound or
+oracle moved.  The staged prose uses two spaces after each sentence.
+
+FAMILY-GROUPS gained the case `member-template-reference`, which pins the
+refusal of a member type that names another template.  PRELUDE-CONGRUENCE
+gained the negative `wrong-level`, which pins `mismatch: the term has type
+Type 2 and the expected type is Type 1` next to its accepted Up
+counterpart.  Every negative pin now carries the printed term and the
+printed expected type, so no pin is a prefix of another.  The two atomic
+failure cases require that the caller globals still accept a fresh
+instance after the refusal.  The budget refusal is pinned by the budget
+diagnostic instead of a catch-all arm.
+
+Validation uses dunecho with OPAM_SWITCH_PREFIX and CAML_LD_LIBRARY_PATH
+unset.  BUILD reports zero errors and zero warnings.  The suites report:
+
+```text
+FAMILY-GROUPS-OK cases=22
+PRELUDE-CONGRUENCE-OK instances=8 computations=4 negatives=5
+```
+
+The mutation script gained C-CONG-M8 (accept a template reference from a
+group member) and C-CONG-M9 (drop the occupied check of the install
+fold).  The replay
+`/Users/oobi/Documents/mechanism-lang-cong-review/probes/mutations-CONG-1`
+reports `{"passed": true, "killed": 9, "controls": 9}`.  The block "Stage C
+independent-universe congruence (2026-09-09)" above reports 21 cases, 4
+paired negatives and seven controls.  Those numbers name the run of that
+round.  The totals after this round are 22 cases, 5 negatives (four paired
+plus one wrong-level) and nine controls.  See dev/MUTATION-LOG.md.
+
+TRUSTED-LINES stays red until the user rules D-A-1: kernel=4182/3000,
+encoder=246/900.  The gitlink vendor/kanon 936a43a is unchanged.
+
+Review summary.  The review kept nine findings, and every one is fixed:
+L4-1 medium (the four negative oracles could not separate one misuse from
+another), L2-1 medium (one space after a sentence in the staged prose),
+L1-1 low (no control on the `declare_group` name closure), L3-2 low (no
+control on the install-fold occupied check), L4-3 low (no negative for a
+universe mismatch), L4-4 low (two vacuous "input changed" requires),
+L4-5 low (a catch-all arm on `Error.t`) and HV-1-1 low (the wrap width of
+`dev/M0-STAGE-C-CONGRUENCE.md`), and ND-1-1 medium (stale counts in this
+log, found after the first fix round).  Four findings are refuted: L4-2,
+L2-2, L2-4 and L1-2.  Three findings are dropped: L3-1 merges into L1-1,
+L2-3 merges into L4-4, and L1-3 is cut at the seven-finding cap.
+
+Two fix rounds ran.  Round 1 applied seven items and left three
+documentation leftovers.  Round 2 applied those three: the document half
+of L4-3, HV-1-1 and ND-1-1.  No kernel, surface or backend file changed
+in either round.
+
+The gate verdict is BOUND-ONLY at load `1:22  27 users, load averages:
+52.41 50.48 46.97`.  Every leg passes except TRUSTED-LINES, which reports
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900 FAIL`.  The TRUSTED-LINES
+leg stays red until the user rules D-A-1.  The replay of round 1 reports
+`{"passed": true, "killed": 9, "controls": 9}` for C-CONG-M1 to
+C-CONG-M9.  Round 2 changed documents only, so the replay was not rerun.
+
+PIN-DELTA passes, and the seven measured rows equal the expected column
+of `dev/PIN-DELTA.md` lines 42 to 48:
+
+```text
+lib/check.ml diff=140 expected=140 OK
+lib/conv.ml diff=51 expected=51 OK
+lib/rules.ml diff=47 expected=47 OK
+lib/level.ml diff=49 expected=49 OK
+lib/level.mli diff=17 expected=17 OK
+bin/kanon.ml diff=14 expected=14 OK
+surface/elab.ml diff=116 expected=116 OK
+```
+
+The staged total before this summary is 17 files changed, 841 insertions
+and 16 deletions.  The staged total after it is 17 files changed, 882
+insertions and 16 deletions.
