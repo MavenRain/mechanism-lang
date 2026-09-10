@@ -1,0 +1,7 @@
+poly (u) def identity : (0 A : Sort u) -> A -> A :=
+  fun (0 A : Sort u) (x : A) => x
+specialize identity (1) as runtimeIdentity
+
+def prenexRuntime : Nat := runtimeIdentity Nat 37
+def prenexClosure : Nat :=
+  (runtimeIdentity (Nat -> Nat) (fun (n : Nat) => natAdd n 5)) 7

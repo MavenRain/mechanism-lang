@@ -51,7 +51,9 @@ pair construction, projections and dependent elimination; see
 dev/M0-STAGE-C-DEPENDENT.md.
 The congruence increment adds ordered family groups and congruence between
 independent carrier universes; see dev/M0-STAGE-C-CONGRUENCE.md.
-Textual universe binders, category targets and source-type parity remain open.
+The textual-prenex increment adds universe binders and closed specialization
+for nonrecursive definitions; see dev/M0-STAGE-C-PRENEX.md.  Textual
+polymorphic families, category targets and source-type parity remain open.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

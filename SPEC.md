@@ -182,8 +182,8 @@ the separate programmatic catalog supplies a polymorphic equality family.
 That catalog also supplies a universally checked polymorphic library
 transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Dependent
 elimination and equality composition are recorded in
-dev/M0-STAGE-C-EQUALITY-OPS.md.  Textual
-universe binders and checked source-type parity remain outstanding.
+dev/M0-STAGE-C-EQUALITY-OPS.md.  Textual polymorphic families and checked
+source-type parity remain outstanding.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves
@@ -243,7 +243,8 @@ the step are unrestricted.  The declarations use the existing Ran and
 Lan at SPi, with Sec, In and Elim.  They add no kernel rule or primitive.
 Closed instances are transparent ordinary definitions rechecked by Poly;
 the templates do not reference one another or the monomorphic prelude.
-Textual universe binders and imported source-type parity remain open.
+Textual definition templates are supported as described below.  Imported
+source-type parity remains open.
 
 ## Stage C ordered family groups and congruence
 
@@ -276,3 +277,36 @@ Sort levels include Prop in either position.  These nominal equality
 families are separate from Equality.catalog and its same-level congruence.
 No coercion between equality instances is supplied.  The extension changes
 no kernel rule, source syntax, vendor file or mapping verdict.
+
+## Stage C textual prenex definitions
+
+`poly (u, v) def NAME : TYPE := BODY` binds a nonempty list of distinct
+universe names for one nonrecursive definition.  `Sort LEVEL` uses raw
+Sort levels, with zero denoting Prop and one denoting Type 0.  Level
+expressions are nonnegative numeric atoms, bound names, `(succ LEVEL)`,
+`(max LEVEL LEVEL)`, `(imax LEVEL LEVEL)` or parenthesized levels.
+Numeric atoms retain the inherited eighteen-digit and machine-int bounds.
+Universe names have a separate scope from term names.  The printer uses
+canonical binder names u0, u1 and so on and preserves level-expression
+structure.  Sort, poly and specialize are reserved words.
+
+The source elaborator uses the existing Poly API to check each template
+universally.  Templates last for one program check, stay outside globals
+and output rows, and cannot be used as bare terms.  References between
+templates remain unsupported.  Ordinary declarations cannot reuse their
+names within that check.
+
+`specialize NAME (LEVEL, LEVEL) as FRESH` supplies exactly the template's
+arity of closed levels.  The type and body are substituted and checked
+again before the resulting definition joins globals and output rows in
+source order.  The specialization shares the caller's check budget and
+rejects every occupied global, family, template or constructor name.  A
+template name is refused on the same four kinds.  A plain `def` keeps the
+inherited kernel allowance and can repeat a constructor name of an
+earlier family.  An error returns no partial environment.  Check, axioms, emit and run consume the resulting
+ordinary definitions.
+
+This syntax does not add polymorphic axioms, recursive definitions or
+family templates, implicit specialization, universe inference, a kernel
+rule or a mapping verdict.  PRENEX and PRENEX-RUNTIME test it; the grammar
+and validation scope are recorded in dev/M0-STAGE-C-PRENEX.md.

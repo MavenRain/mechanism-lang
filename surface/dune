@@ -1,10 +1,5 @@
-; The local Kanon_kernel module binds the copied parser and the local
-; elaborator overlay to mechanism's kernel.
+; The local Kanon_kernel module binds the surface overlays to mechanism's
+; kernel.  Poly and Universe are source-layer helpers.
 (library
  (name mechanism_surface)
  (libraries mechanism_kernel))
-
-(copy_files ../vendor/kanon/surface/lexer.ml)
-(copy_files ../vendor/kanon/surface/parser.ml)
-(copy_files ../vendor/kanon/surface/syntax.ml)
-(copy_files ../vendor/kanon/surface/token.ml)

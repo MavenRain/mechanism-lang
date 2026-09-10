@@ -37,6 +37,11 @@ entry points retain arity zero, and the universal family judgment discards
 its temporary environment.  Empty families and constructors poll their
 check budget.  Family formation and elimination rules are unchanged.
 
+The textual-prenex increment overlays the lexer, tokens, syntax and parser
+for Sort levels, definition binders and explicit specialization.  The
+elaborator carries a Poly catalog for one program check.  It uses the
+existing universal and closed judgments.  No kernel file changes here.
+
 | file | expected |
 | --- | --- |
 | lib/check.ml | 140 |
@@ -45,4 +50,8 @@ check budget.  Family formation and elimination rules are unchanged.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 116 |
+| surface/elab.ml | 198 |
+| surface/token.ml | 8 |
+| surface/lexer.ml | 4 |
+| surface/syntax.ml | 23 |
+| surface/parser.ml | 118 |

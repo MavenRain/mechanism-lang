@@ -70,7 +70,7 @@ The templates never enter ordinary globals.  PRELUDE-TRANSPORT checks
 seven instances, dependent computation witnesses, four rejection
 diagnostics, one scope control and the absence of trusted entries.  A
 member named like another template is refused as a collision.  Textual
-universe binders and source-type parity remain separate work.
+polymorphic families and source-type parity remain separate work.
 
 The `j` motive can depend on both the right endpoint and the proof,
 using erased binders for each.  Its carrier and motive Sort levels are

@@ -1,0 +1,43 @@
+-- Textual templates check universally and specialize to closed globals.
+mu Tiny : Type 0 with
+| tinyZero : Tiny
+| tinySucc (n : Tiny) : Tiny
+
+mu Truth : Prop with
+| truth : Truth
+
+poly (carrier) def identity : (0 A : Sort carrier) -> A -> A :=
+  fun (0 A : Sort carrier) (x : A) => x
+
+specialize identity (0) as proofIdentity
+specialize identity (1) as dataIdentity
+specialize identity ((succ 1)) as typeIdentity
+specialize identity ((max 0 1)) as againIdentity
+
+def dataValue : Tiny := dataIdentity Tiny (tinySucc tinyZero)
+def againValue : Tiny := againIdentity Tiny (tinySucc (tinySucc tinyZero))
+def proofValue : Truth := proofIdentity Truth truth
+def typeValue : Type 0 := typeIdentity (Type 0) Tiny
+
+poly (domain, codomain) def functionType :
+    (0 A : Sort domain) -> (0 B : A -> Sort codomain) ->
+    Sort (imax domain codomain) :=
+  fun (0 A : Sort domain) (0 B : A -> Sort codomain) => (x : A) -> B x
+
+specialize functionType (1, 0) as predicateType
+specialize functionType (1, 2) as higherType
+def predicateWitness : predicateType Tiny (fun (x : Tiny) => Truth) :=
+  fun (x : Tiny) => truth
+def higherWitness : higherType Tiny (fun (x : Tiny) => Type 0) :=
+  fun (x : Tiny) => Tiny
+
+poly (left, right) def joinedSort : Sort (succ (max left right)) :=
+  Sort (max right left)
+specialize joinedSort (0, 1) as joined
+def joinedWitness : joined := Tiny
+
+poly (u) def appliedIdentity : (0 A : Sort u) -> A -> A :=
+  fun (0 A : Sort u) (x : A) =>
+    ((fun (0 X : Sort u) (y : X) => y) : (0 X : Sort u) -> X -> X) A x
+specialize appliedIdentity (1) as applied
+def appliedValue : Tiny := applied Tiny (tinySucc tinyZero)

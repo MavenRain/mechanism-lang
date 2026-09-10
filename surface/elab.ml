@@ -101,7 +101,7 @@ let leg_expectations (c : Check.ctx) (expected : Value.t option) (n : int)
 let app_split (s : Syntax.t) : (Syntax.t * Syntax.t) option =
   match s with
   | Syntax.SApp (f, a) -> Some (f, a)
-  | Syntax.SVar _ | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SPrim _
+  | Syntax.SVar _ | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SSort _ | Syntax.SPrim _
   | Syntax.SUnit | Syntax.SAuto | Syntax.SPair (_, _) | Syntax.STuple _ | Syntax.SSum _
   | Syntax.SProd _ | Syntax.SProj (_, _) | Syntax.SInj (_, _, _) | Syntax.SAbsurd _
   | Syntax.SFun (_, _) | Syntax.SArrow (_, _) | Syntax.SStar (_, _)
@@ -112,7 +112,7 @@ let app_split (s : Syntax.t) : (Syntax.t * Syntax.t) option =
 let arrow_split (s : Syntax.t) : (Syntax.binder * Syntax.t) option =
   match s with
   | Syntax.SArrow (b, cod) -> Some (b, cod)
-  | Syntax.SVar _ | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SPrim _
+  | Syntax.SVar _ | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SSort _ | Syntax.SPrim _
   | Syntax.SUnit | Syntax.SAuto | Syntax.SPair (_, _) | Syntax.STuple _ | Syntax.SSum _
   | Syntax.SProd _ | Syntax.SProj (_, _) | Syntax.SInj (_, _, _) | Syntax.SAbsurd _
   | Syntax.SFun (_, _) | Syntax.SApp (_, _) | Syntax.SStar (_, _)
@@ -123,7 +123,7 @@ let arrow_split (s : Syntax.t) : (Syntax.binder * Syntax.t) option =
 let var_name (s : Syntax.t) : string option =
   match s with
   | Syntax.SVar x -> Some x
-  | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SPrim _ | Syntax.SUnit
+  | Syntax.SNat _ | Syntax.SProp | Syntax.SType _ | Syntax.SSort _ | Syntax.SPrim _ | Syntax.SUnit
   | Syntax.SAuto | Syntax.SPair (_, _) | Syntax.STuple _ | Syntax.SSum _
   | Syntax.SProd _ | Syntax.SProj (_, _) | Syntax.SInj (_, _, _) | Syntax.SAbsurd _
   | Syntax.SFun (_, _) | Syntax.SApp (_, _) | Syntax.SArrow (_, _) | Syntax.SStar (_, _)
@@ -227,6 +227,7 @@ let rec elab (c : Check.ctx) ~(expected : Value.t option) (s : Syntax.t) :
   | Syntax.SNat n -> Ok (Term.Lit (Literal.LInt n))
   | Syntax.SProp -> Ok (Term.Univ Level.zero)
   | Syntax.SType n -> univ_of_int (n + 1)
+  | Syntax.SSort u -> Result.map (fun u -> Term.Univ u) (Universe.lower u)
   | Syntax.SPrim p -> Ok (Term.Global (Syntax.prim_name p))
   | Syntax.SUnit -> Ok Rules.unit_val
   | Syntax.SAuto -> Ok Term.Auto
@@ -993,6 +994,8 @@ let elab_mu_group ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
     gives every checking position form its expectation. *)
 let elab_decl (c : Check.ctx) (d : Syntax.decl) : (Check.decl, Error.t) result =
   match d with
+  | Syntax.DPoly _ | Syntax.DSpecialize _ ->
+      Error (Error.Mismatch "a prenex declaration requires a program catalog")
   | Syntax.DDef (name, ty, body) ->
       let* ty' = elab c ~expected:None ty in
       let* tyv = eval_in c ty' in
@@ -1154,17 +1157,55 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
     (Global.t * (string * Global.entry) list, Error.t) result =
   List.fold_left
     (fun
-      (acc : (Global.t * (string * Global.entry) list, Error.t) result)
+      (acc : (Global.t * Poly.t * (string * Global.entry) list, Error.t) result)
       (d : Syntax.decl)
     ->
-      let* g, rows = acc in
+      let* g, catalog, rows = acc in
+      let names = match d with
+        | Syntax.DDef (name, _, _) | Syntax.DAxiom (name, _)
+        | Syntax.DPoly (_, name, _, _) | Syntax.DSpecialize (_, _, name) -> [name]
+        | Syntax.DMu fams -> List.map (fun fm -> fm.Syntax.fm_name) fams
+        | Syntax.DRec members -> List.map (fun m -> m.Syntax.rd_name) members in
+      (* SC-D6:  a constructor name occupies the flat namespace as its
+         family name does (vendor/kanon/lib/global.ml:1-5), so every
+         constructor of a mu group joins the reservation, and a template
+         or an instance that takes the name of a constructor already in
+         g is refused with the same text.  A plain def beside a
+         constructor keeps the inherited allowance of the kernel. *)
+      let names = names @ (match d with
+        | Syntax.DMu fams -> List.concat_map (fun fm ->
+            List.map (fun (fc : Syntax.fam_ctor) -> fc.Syntax.fc_name) fm.Syntax.fm_ctors) fams
+        | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DPoly _
+        | Syntax.DSpecialize _ | Syntax.DRec _ -> []) in
+      let* () = Rules.all_ok (List.map (fun name ->
+        if Option.is_some (Poly.arity catalog name) then
+          Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
+        else Ok ()) names) |> Result.map (fun _checks -> ()) in
+      let reserved_by_ctor = match d with
+        | Syntax.DPoly (_, name, _, _) | Syntax.DSpecialize (_, _, name) -> [name]
+        | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ -> [] in
+      let* () = Rules.all_ok (List.map (fun name ->
+        if Option.is_some (find_ctor name g) then
+          Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
+        else Ok ()) reserved_by_ctor) |> Result.map (fun _checks -> ()) in
       match d with
+      | Syntax.DPoly (arity, name, ty, body) ->
+          let* row = elab_decl (Check.make ~level_arity:arity g budget)
+            (Syntax.DDef (name, ty, body)) in
+          let* catalog = Poly.declare ~budget g catalog ~arity row in
+          Ok (g, catalog, rows)
+      | Syntax.DSpecialize (name, levels, as_name) ->
+          let* levels = Rules.all_ok (List.map Universe.lower levels) in
+          let* g, _term = Poly.instantiate ~budget g catalog ~name ~levels ~as_name in
+          let* entry = Global.find as_name g |> Option.to_result
+            ~none:(Error.Cannot_infer "specialization returned no global entry") in
+          Ok (g, catalog, (as_name, entry) :: rows)
       (* M1 Stage G:  a mu group moves the family table and adds no
          entry row, so the checked form and the erased form of a file
          that only declares families are both empty. *)
       | Syntax.DMu fams ->
           Result.map
-            (fun (g' : Global.t) -> (g', rows))
+            (fun (g' : Global.t) -> (g', catalog, rows))
             (elab_mu_group ~budget g fams)
       (* M1 Stage I, SI-D9:  the group is guarded before it is
          translated, and its members join the rows in declaration
@@ -1173,7 +1214,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
           Result.map
             (fun (((g' : Global.t), (out : (string * Global.entry) list)) :
                    Global.t * (string * Global.entry) list) ->
-              (g', List.rev_append out rows))
+              (g', catalog, List.rev_append out rows))
             (elab_rec_group ~budget g ms)
       | Syntax.DDef (_, _, _) | Syntax.DAxiom (_, _) ->
           let* row = elab_decl (Check.make g budget) d in
@@ -1184,11 +1225,11 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
                  ~none:
                    (Error.Cannot_infer "the checker answered no entry for a declaration")
           in
-          Ok (Global.add name entry g, (name, entry) :: rows))
-    (Ok (globals, []))
+          Ok (Global.add name entry g, catalog, (name, entry) :: rows))
+    (Ok (globals, Poly.empty, []))
     ds
   |> Result.map
-       (fun ((g : Global.t), (rows : (string * Global.entry) list)) ->
+        (fun ((g : Global.t), (_catalog : Poly.t), (rows : (string * Global.entry) list)) ->
          (g, List.rev rows))
 
 (** The entry rows alone, for a caller that reads no family. *)

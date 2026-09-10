@@ -195,6 +195,7 @@ leg FAST R0-AUDIT '^R0-AUDIT OK$' zsh $ROOT/dev/r0-audit.sh $ROOT
 leg SUITE SUITE-KERNEL '^SUITE-KERNEL OK$' \
   $ROOT/_build/default/test/main.exe $ROOT/vendor/kanon/test
 leg FAST LEVELS '^LEVELS-OK$' $ROOT/_build/default/test/levels.exe
+leg FAST PRENEX '^PRENEX-OK entries=' $ROOT/_build/default/test/prenex.exe $ROOT
 leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
   $ROOT/_build/default/test/wasm.exe $ROOT/vendor/kanon/test $ROOT/.gatework/wasm-suite
@@ -220,6 +221,8 @@ leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
+leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
+  python3 -P $ROOT/test/prenex_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

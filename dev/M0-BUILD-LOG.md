@@ -1130,3 +1130,111 @@ surface/elab.ml diff=116 expected=116 OK
 The staged total before this summary is 17 files changed, 841 insertions
 and 16 deletions.  The staged total after it is 17 files changed, 882
 insertions and 16 deletions.
+
+## Stage C textual prenex definitions (2026-09-10)
+
+Base: c9869ef, the committed congruence slice.  The canonical tree and
+index were clean before this increment.  Work and validation used
+`/Users/oobi/Documents/gpt11/mechanism-lang`.
+
+The source language now accepts `poly (u, v) def`, named Sort levels with
+succ, max and imax, and explicit closed `specialize` declarations.  The
+lexer, token, syntax and parser overlays retain the inherited grammar
+and add those forms.  The source elaborator carries an immutable Poly
+catalog for one program check.  It checks each template universally and
+rechecks each closed instance through the existing API.  Only closed
+instances become ordinary global entries and output rows.  No kernel,
+runtime, vendor or mapping file changes in this increment.
+
+PRENEX reports `entries=16 computations=4 negatives=25`.  It checks from
+Global.empty, audits entries, checks source-order output and confirms that
+templates stay outside globals.  Round-trips preserve the parsed tree,
+including a successor expression above the numeric-atom digit limit.
+The fixtures exercise Prop, data and type levels, independent universes,
+max, imax and annotated application during symbolic elaboration.
+
+PRENEX-RUNTIME reports `cases=2 hosts=3 mutation=1`.  The original value
+is 37 and its mutation is 41; the closure returns 12 in both variants.
+The kernel, Node and Wasmtime agree.  Each variant also passes check,
+axioms and emission.  The source mutation replay kills seven of seven
+controls with clean builds and a passing restored suite.  Details and
+the first replay's coverage repair are in dev/MUTATION-LOG.md.
+
+Baseline battery: `.kanon-exec/run-0Vzf8j` under the build copy.  It has
+27 PASS legs and only FAIL TRUSTED-LINES.  Final battery:
+`.kanon-exec/run-ZgcXMJ` under that same copy.  It has 29 PASS legs and
+only FAIL TRUSTED-LINES.  The final build has zero errors and warnings.
+Both batteries report `kernel=4182/3000 encoder=246/900` and exit 1.
+The existing D-A-1 bound ruling remains open.  No limit, watchdog tier
+or prior gate leg was removed or weakened.
+
+PIN remains 936a43a92dd59a04698648f24fa5ae94cdb532df.  PIN-DELTA passes
+with surface/elab.ml at 198 lines and the new token, lexer, syntax and
+parser overlays at 8, 4, 23 and 118 diff-output lines respectively.
+R0, inherited kernel, surface, WASM, importer, every prior prelude suite,
+axiom inventory, mapping inventory and denominators all pass.
+
+Textual polymorphic families, category targets, checked source-type
+parity and PRELUDE-CHECKED remain open.  Validated files are applied and
+staged only after rechecking the canonical HEAD and original contents.
+No commit is created.
+
+## Stage C textual prenex definitions review (2026-09-10)
+
+This block records the slice review of the increment above.  The review
+runs at ROOT on base c9869ef, over the same staged paths, and adds no
+new bound, tier or gate leg.
+
+The review found a reservation gap: a constructor name sat outside every
+occupancy check, so a template or an instance could take the name of a
+constructor and become unreachable.  The source elaborator now adds every
+constructor of a mu group to the program reservation, and refuses a
+template name or a specialization target that repeats a constructor of a
+family already in globals.  The refusal text `the name NAME is already
+declared` is unchanged.  PRENEX adds the negatives constructor-collision,
+constructor-template-collision and constructor-instance-collision.
+SPEC.md and dev/M0-STAGE-C-PRENEX.md now record that a plain `def` keeps
+the inherited kernel allowance and can repeat a constructor name, before
+or after the family.  That allowance is a property of the kernel at PIN,
+and this review does not change it.
+
+PRENEX reports `entries=16 computations=4 negatives=25` and
+PRENEX-RUNTIME reports `cases=2 hosts=3 mutation=1`.  The review replay
+in `mechanism-lang-prenex-review/probes/mutations-PRENEX-2b` reports
+`{"passed": true, "killed": 7, "controls": 7}`, with a restored suite of
+`PRENEX-OK entries=16 computations=4 negatives=25`.
+
+PIN-DELTA passes with every row at its recorded number, and PIN remains
+936a43a92dd59a04698648f24fa5ae94cdb532df.  R0, the inherited suites, the
+prelude suites, the axiom and mapping inventories and the three import
+modes all pass.  Both map inventories reproduce byte for byte.  The final
+battery keeps its PASS legs, and its only FAIL is TRUSTED-LINES with
+`kernel=4182/3000 encoder=246/900`, so the battery exits 1 and the D-A-1
+bound ruling remains open.  No commit is created.
+
+The review kept ten items, and all ten are fixed.  L1-1 (low) refuses the
+reserved universe names succ, max and imax in the universe binder list.
+L1-2 (low) reports a malformed `poly` or `specialize` declaration at its
+own keyword.  L1-4 (low) records that neither decl printer emits the text
+that the lexer reads back as one Unit token.  L2-1 (low) is the
+reservation gap above.  L3-4 (low) makes the C-PRENEX-M7 oracle the full
+measured refusal, not a prefix of it.  L4-2 (low) counts the refusal
+checks that run, in place of a hand-kept sum.  L4-3 (low) drops the
+computation row that held no specialized template.  ND-1-1 (medium) and
+ND-1-2 (medium) are the two log repairs, in dev/MUTATION-LOG.md and in
+this file.  GATE-1 (high) is the battery, which is red at the bound only.
+
+The fixes touch surface/parser.ml, surface/elab.ml, surface/syntax.ml,
+test/prenex.ml, test/fixtures/prelude/prenex.mech,
+dev/prenex-mutations.py, dev/PIN-DELTA.md, dev/MUTATION-LOG.md,
+dev/M0-STAGE-C-PRENEX.md, SPEC.md and dev/M0-BUILD-LOG.md.
+
+The review refutes L2-2, L3-3 and L3-5, and drops L1-3, L3-1, L3-2, L4-1
+and L4-4 at the seven item cap.
+
+The gate verdict is BOUND-ONLY.  The battery prints 29 PASS legs and one
+FAIL leg, `TRUSTED-LINES kernel=4182/3000 encoder=246/900`.  The kernel
+count is 4182 lines against a bound of 3000, and the encoder count is 246
+lines against a bound of 900.  No fix in this review moves a bound, a
+tier or a trusted line count.  The TRUSTED-LINES leg stays red until the
+user rules D-A-1.

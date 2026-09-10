@@ -515,3 +515,45 @@ The block "Stage C independent-universe congruence (2026-09-09)" above
 reports killed 7, controls 7, `FAMILY-GROUPS-OK cases=21` and
 `negatives=4`.  Those numbers name the run of that round.  The totals
 after this round are killed 9, controls 9, cases 22 and negatives 5.
+
+## Stage C textual prenex definitions (2026-09-10)
+
+`dev/prenex-mutations.py` builds each control in an isolated copy, checks
+the designated diagnostic, restores the source and checks the restored
+suite.  Build failures do not count as killed mutations.
+
+| Control | Mutation | Observed refusal after PRENEX-FAIL |
+| --- | --- | --- |
+| C-PRENEX-M1 | Resolve every universe binder to index zero | universe: the former lives at 0 and the expected universe is 1 |
+| C-PRENEX-M2 | Lower imax as max | universe: the former lives at imax(u0, u1) and the expected universe is max(u0, u1) |
+| C-PRENEX-M3 | Elaborate a template under universe arity zero | universe: universe level is outside the global parameter scope |
+| C-PRENEX-M4 | Replace an exhausted source-check budget with unlimited | budget: expected refusal |
+| C-PRENEX-M5 | Disable the program catalog's name reservation | template-collision: expected refusal |
+| C-PRENEX-M6 | Reverse specialization arguments | universe: the former lives at 1 and the expected universe is 0 |
+| C-PRENEX-M7 | Replace the one-valued data witness with zero | wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) []) |
+
+Replay: `/Users/oobi/Documents/gpt11/mechanism-prenex-mutations-2`.
+Result: `{"passed": true, "killed": 7, "controls": 7}`.  Every mutant
+built with zero errors and warnings.  The restored suite reports
+`PRENEX-OK entries=16 computations=4 negatives=25`.
+
+The first replay had three diagnostic-oracle mismatches and one surviving
+control.  M1, M2 and M6 reached universe refusals rather than mismatches.
+M3 showed that plain identity did not exercise the elaborator's scope
+check.  An annotated local function application now exercises that path.
+The second replay kills all seven controls.  The final M3 oracle was
+tightened against its retained output.  The only subsequent parser edit
+moved a comment; final gates recheck that source.
+
+PRENEX-RUNTIME also changes the literal payload from 37 to 41 and requires
+that answer on the kernel, Node and Wasmtime, while the closure answer
+remains 12 on every host.
+
+The review replay of 2026-09-10 uses
+`/Users/oobi/Documents/mechanism-lang-prenex-review/probes/mutations-PRENEX-2b`,
+after the constructor-reservation fix.  It reports
+`{"passed": true, "killed": 7, "controls": 7}`, and its baseline and
+restored suites both report
+`PRENEX-OK entries=16 computations=4 negatives=25`.  The seven controls
+are unchanged.  The C-PRENEX-M7 row above holds the full refusal that
+the review measured, in place of the earlier prefix.

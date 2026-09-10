@@ -41,8 +41,8 @@ unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 
 The driver inherits check, axioms, emit, run and spec-count.
-Prenex definitions use the OCaml Poly API; recursive families and ordered
-family groups use Family_poly.  The importer
+Prenex definitions use textual binders or the OCaml Poly API; recursive
+families and ordered family groups use Family_poly.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
 is rechecked.
@@ -128,7 +128,23 @@ the domain equality, codomain equality and congruence definition together.
 FAMILY-GROUPS and PRELUDE-CONGRUENCE check this path.  See
 `dev/M0-STAGE-C-CONGRUENCE.md` for names, signatures and validation.
 
-Stage C remains open.  Textual universe binders, category targets and
+Textual definition templates use named Sort levels and explicit closed
+specialization:
+
+```text
+poly (u) def identity : (0 A : Sort u) -> A -> A :=
+  fun (0 A : Sort u) (x : A) => x
+specialize identity (1) as dataIdentity
+```
+
+`Sort 0` is Prop and `Sort 1` is Type 0.  Levels also support `succ`,
+`max` and `imax`.  Templates check universally, stay outside ordinary
+globals, and last for one source check.  Each specialization checks again
+and becomes an ordinary definition for check, axioms, emit and run.
+PRENEX and PRENEX-RUNTIME cover this path.  See
+`dev/M0-STAGE-C-PRENEX.md` for grammar, limits and validation.
+
+Stage C remains open.  Textual polymorphic families, category targets and
 checked source-type parity remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
