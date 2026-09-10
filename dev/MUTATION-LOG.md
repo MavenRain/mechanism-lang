@@ -403,3 +403,62 @@ and "All nine mutants ... all nine were killed" describe the earlier run
 with nine controls.  The total after the review round is killed 10,
 controls 10.  Round 2 restored that block to its staged text after round
 1 had edited it in place.
+
+## Stage C dependent functions and pairs (2026-09-09)
+
+Run `python3 -I dev/dependent-mutations.py NEW_WORK_DIRECTORY` to replay
+these controls.  The script copies the source into a new external work
+directory, requires every mutant to compile cleanly, checks its exit code
+and diagnostic prefix, restores the changed file, and reruns the restored
+suite.  results.json records exact replacements and source/mutant hashes.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-DEP-M1 | Replace Pi's imax with max | symbolic former universe mismatch |
+| C-DEP-M2 | Drop the fiber universe from Sigma's result | symbolic former universe mismatch |
+| C-DEP-M3 | Return the second field from the first projection | dependent field type mismatch |
+| C-DEP-M4 | Return the first field from the second projection | dependent field type mismatch |
+| C-DEP-M5 | Pass the first field twice to the recursor step | step argument type mismatch |
+| C-DEP-M6 | Swap the pair constructor's point and fiber | point type mismatch |
+| C-DEP-M7 | Replace pairOne's second component with zero | wrong computation for pairSecond |
+| C-DEP-M8 | Replace the wrong-fiber negative with its accepted control | missing expected refusal |
+| C-DEP-M9 | Make the elimination motive refer to the outer pair | dependent branch type mismatch |
+
+Final replay:
+`/Users/oobi/Documents/gpt2/mechanism-dependent-mutations-2`.
+All nine mutants built with zero errors and zero warnings and were killed.
+The restored suite reports six templates, 29 instances, twelve computations
+and six negatives.  The first run observed the universe guard for M1 and M2
+instead of the anticipated mismatch guard; the two diagnostic expectations
+were corrected before the final replay.  No implementation changed.
+
+## Stage C dependent functions and pairs review (2026-09-09)
+
+The review round added one control to `dev/dependent-mutations.py` and
+pinned the exact measured line of five controls of the block above.  It
+continues the C-DEP series of that block.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-DEP-M3 | Replace the first projection by the second in mechSigmaFst | PRELUDE-DEPENDENT-FAIL mismatch: the term has type (Out SPi w point A (APt w x) B) and the expected type is A |
+| C-DEP-M4 | Take the first branch in mechSigmaSnd | PRELUDE-DEPENDENT-FAIL mismatch: the term has type A and the expected type is (Out SPi w point A (APt w x) B) |
+| C-DEP-M5 | Pass the first component to the recursor step payload | PRELUDE-DEPENDENT-FAIL mismatch: the term has type A and the expected type is (Out SPi w point A (APt w x) B) |
+| C-DEP-M6 | Swap the two components of the constructed pair | PRELUDE-DEPENDENT-FAIL mismatch: the term has type (Out SPi w point A (APt w x) B) and the expected type is A |
+| C-DEP-M9 | Make the elimination motive refer to the outer pair | PRELUDE-DEPENDENT-FAIL mismatch: the term has type (Out SPi w point (Lan SPi w point A (Out SPi w point A (APt w point) B)) (APt w (In SPi w point A (APt w x) [y])) P) |
+| C-DEP-M10 | Drop the caller budget in the Poly.declare fold at prelude/dependent.ml:78 | PRELUDE-DEPENDENT prints budget: ... |
+
+The five earlier controls shared the prefix `PRELUDE-DEPENDENT-FAIL
+mismatch:` before this round.  Each now pins its measured line.  C-DEP-M3
+and C-DEP-M6 print one and the same line, and C-DEP-M4 and C-DEP-M5 print
+one and the same line, so those two pairs stay indistinguishable from each
+other.  The pinned text is measured, not a description.
+
+C-DEP-M10 exists because no control observed the `?budget` thread of
+`Dependent.catalog`.  Its mutant builds cleanly and the suite refuses it.
+
+Replay directory:
+`/Users/oobi/Documents/mechanism-lang-dep-review/probes/mutations-DEP-3`.
+All ten mutants built with zero errors and zero warnings and were killed:
+`{"passed": true, "killed": 10, "controls": 10}`.  The restored suite
+passes.  The measurement replay of the same round is
+`/Users/oobi/Documents/mechanism-lang-dep-review/probes/mutations-DEP-2`.

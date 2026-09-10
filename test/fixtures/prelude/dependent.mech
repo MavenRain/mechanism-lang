@@ -1,0 +1,58 @@
+-- Different fields expose projection swaps and recursor payload mistakes.
+def unitValue : MechUnit := mechUnit
+def zeroValue : MechNat := mechZero
+def pairOne : SmallPair MechNat (fun (x : MechNat) => MechNat) :=
+  SmallMk MechNat (fun (x : MechNat) => MechNat) mechZero (mechSucc mechZero)
+def pairFirst : MechNat := SmallFst MechNat (fun (x : MechNat) => MechNat) pairOne
+def pairSecond : MechNat := SmallSnd MechNat (fun (x : MechNat) => MechNat) pairOne
+def pairRec : MechNat := SmallRec MechNat (fun (x : MechNat) => MechNat)
+  (fun (p : SmallPair MechNat (fun (x : MechNat) => MechNat)) => MechNat)
+  (fun (x : MechNat) (y : MechNat) => mechSucc y) pairOne
+
+-- The fiber changes with the first component.
+def DepFiber : MechBool -> Type 0 := fun (b : MechBool) =>
+  case b as self in MechBool return Type 0 with
+  | mechFalse => MechUnit
+  | mechTrue => MechNat
+def depPair : SmallPair MechBool DepFiber :=
+  SmallMk MechBool DepFiber mechTrue (mechSucc mechZero)
+def depSecond : MechNat := SmallSnd MechBool DepFiber depPair
+def depRec : MechNat := SmallRec MechBool DepFiber
+  (fun (p : SmallPair MechBool DepFiber) => DepFiber p.1)
+  (fun (x : MechBool) (y : DepFiber x) => y) depPair
+
+-- A pair of a type and a value of that type crosses carrier universes.
+def downPair : DownPair (Type 0) (fun (A : Type 0) => A) :=
+  DownMk (Type 0) (fun (A : Type 0) => A) MechNat (mechSucc mechZero)
+def downFirst : Type 0 := DownFst (Type 0) (fun (A : Type 0) => A) downPair
+def downSecond : downFirst := DownSnd (Type 0) (fun (A : Type 0) => A) downPair
+def downRec : MechTrue := DownRec (Type 0) (fun (A : Type 0) => A)
+  (fun (p : DownPair (Type 0) (fun (A : Type 0) => A)) => MechTrue)
+  (fun (A : Type 0) (x : A) => mechTrivial) downPair
+
+-- A type-valued second field and recursor retain their computed type.
+def upPair : UpPair MechBool (fun (b : MechBool) => Type 0) :=
+  UpMk MechBool (fun (b : MechBool) => Type 0) mechTrue MechNat
+def upSecond : Type 0 := UpSnd MechBool (fun (b : MechBool) => Type 0) upPair
+def upRec : Type 0 := UpRec MechBool (fun (b : MechBool) => Type 0)
+  (fun (p : UpPair MechBool (fun (b : MechBool) => Type 0)) => Type 0)
+  (fun (b : MechBool) (A : Type 0) => A) upPair
+def upValue : upRec := mechSucc mechZero
+
+def piFunction : SmallPi MechNat (fun (n : MechNat) => MechNat) :=
+  fun (n : MechNat) => mechSucc n
+def piValue : MechNat := piFunction mechZero
+def proofPi : DataProofPi MechNat (fun (n : MechNat) => MechTrue) :=
+  fun (n : MechNat) => mechTrivial
+def proofPiValue : MechTrue := proofPi mechZero
+
+-- These witnesses require type checking to observe the computed fields.
+mu DepIsOne : (0 n : MechNat) -> Type 0 with
+| depIsOne : DepIsOne (mechSucc mechZero)
+def depSecondComputes : DepIsOne depSecond := depIsOne
+def depRecComputes : DepIsOne depRec := depIsOne
+def downComputes : DepIsOne downSecond := depIsOne
+-- The second field of the Up pair is a type.  This witness checks the
+-- projection against a value, so the projection must compute to MechNat.
+def upComputes : UpSnd MechBool (fun (b : MechBool) => Type 0) upPair :=
+  mechSucc mechZero

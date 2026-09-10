@@ -224,3 +224,23 @@ Sort level; it does not instantiate another equality template.  MechTypeEq
 includes `refl`, `cast`, `symm` and `trans` at one Type level.  All these
 members are ordinary checked definitions using the existing elimination
 rule.  Their templates and specialized instances add no trusted entries.
+
+## Stage C dependent function and pair catalog
+
+Dependent.catalog supplies six universally checked Poly definitions.
+MechPi takes domain and codomain Sort levels u and v, including Prop,
+and returns Sort (imax u v).  MechSigma takes two Type levels u and v
+and returns Type (max u v).  Its fiber may depend on the first component.
+mechSigmaMk constructs a pair, mechSigmaFst returns its first component,
+and mechSigmaSnd returns a value of the fiber at that first component.
+These three operations take the same two Type levels as MechSigma.
+
+mechSigmaRec adds a third parameter, the motive's Sort level.  Its motive
+depends on the whole pair, and may return either proofs or data.  On a
+constructed pair it applies the supplied step to both components.
+All carrier and fiber type arguments are erased; pair components and
+the step are unrestricted.  The declarations use the existing Ran and
+Lan at SPi, with Sec, In and Elim.  They add no kernel rule or primitive.
+Closed instances are transparent ordinary definitions rechecked by Poly;
+the templates do not reference one another or the monomorphic prelude.
+Textual universe binders and imported source-type parity remain open.

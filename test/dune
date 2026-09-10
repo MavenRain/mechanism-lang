@@ -60,6 +60,11 @@
  (modules Prelude_equality_ops)
  (libraries mechanism_kernel mechanism_surface mechanism_prelude mechanism_import))
 
+(executable
+ (name prelude_dependent)
+ (modules Prelude_dependent)
+ (libraries mechanism_kernel mechanism_surface mechanism_prelude mechanism_import))
+
 (copy_files ../vendor/kanon/test/main.ml)
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)

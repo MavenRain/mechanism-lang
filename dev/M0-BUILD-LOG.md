@@ -900,3 +900,123 @@ The gate verdict is BOUND-ONLY with kernel 4182 and encoder 246.
 TRUSTED-LINES stays red until the user rules D-A-1.  The
 programmatic-only catalog scope is a plan question awaiting a user
 ruling.  No commit is created.
+
+## Stage C polymorphic dependent functions and pairs (2026-09-09)
+
+Base: d59008b.  Build copy:
+`/Users/oobi/Documents/gpt2/mechanism-dependent`.
+The canonical repository was clean at that commit before this work.
+The older equality build copy under gpt2/mechanism-lang was preserved.
+
+Added Dependent.catalog with six independent Poly templates: MechPi,
+MechSigma, mechSigmaMk, mechSigmaFst, mechSigmaSnd and mechSigmaRec.
+Pi uses independent Sort levels with imax; pairs use independent Type
+levels with max, and elimination has an independent motive Sort.
+The templates check from Global.empty and closed instances check again.
+No kernel source, rule, primitive or postulate was added.
+
+Validation uses dunecho with OPAM_SWITCH_PREFIX and CAML_LD_LIBRARY_PATH
+unset.  BUILD reports zero errors and zero warnings.  The new suite reports:
+
+```text
+PRELUDE-DEPENDENT-OK templates=6 instances=29 computations=12 negatives=6
+```
+
+Generic contracts check exact result universes, dependent fibers and a
+motive indexed by the whole pair.  Independent normal forms and indexed
+source witnesses check computation, and every negative has an accepted
+counterpart.  The environment audit rejects unexpected trusted entries.
+
+The full battery capture is
+`/Users/oobi/Documents/gpt2/.kanon-exec/run-vIdElZ`.
+It reports 25 PASS legs, including PRELUDE-DEPENDENT, and only the inherited
+TRUSTED-LINES failure: kernel=4182/3000, encoder=246/900.  GATES-FAIL is
+therefore expected.  The new leg took 27.973 ms, informational only.
+Counts, bounds, watchdog tiers, vendor pin, mapping verdicts and
+denominators are unchanged.
+
+All nine mutation controls compiled cleanly and were killed in
+`/Users/oobi/Documents/gpt2/mechanism-dependent-mutations-2`.
+Its results.json reports passed true with nine killed controls, and the
+restored suite passes.  The first run counted seven kills because M1 and
+M2 hit the universe guard instead of the anticipated mismatch guard.
+Only those diagnostic expectations were corrected; no implementation or
+behavioral gate was weakened.  See dev/MUTATION-LOG.md.
+
+The final diff adds PRELUDE-DEPENDENT and keeps every prior gate.
+Integration checks the canonical HEAD and original contents before copying
+and staging the validated files.  Stage C, source-type parity, the D-A-1
+ruling and the programmatic-only catalog plan question remain open.
+No commit is created.
+
+## Stage C dependent functions and pairs review (2026-09-09)
+
+Base: d59008b.  Review work directory:
+`/Users/oobi/Documents/mechanism-lang-dep-review`.
+The round changed only the suite, the fixture, the mutation script and the
+prose.  No kernel, surface or backend source was touched, and no gate
+tier, bound or oracle moved.
+
+PRELUDE-DEPENDENT now refuses an exhausted caller budget.  The suite calls
+`Dependent.catalog` with `Budget.of_poll (fun () -> true)` and pins
+`budget: the check budget is exhausted`.  The instances figure is measured
+in the installed environment as the sum of the entries each
+`Poly.instantiate` adds, and the suite refuses a figure that differs from
+the number of instantiations.
+
+The wrong-result negative became `wrong-pi-body`.  It checks an accepted
+Pi body and then an invalid one, so a MechPi instance carries a negative
+for the first time.  The wrong-domain, dependent-step and wrong-pi-body
+negatives pin the whole measured refusal, including the expected type, so
+no two of them accept the same line.  In the fixture the Up witness now
+checks a value against `UpSnd`, so that type-valued projection must
+compute to the carrier.
+
+Validation uses dunecho with OPAM_SWITCH_PREFIX and CAML_LD_LIBRARY_PATH
+unset.  BUILD reports zero errors and zero warnings.  The suite reports:
+
+```text
+PRELUDE-DEPENDENT-OK templates=6 instances=29 computations=12 negatives=6
+```
+
+The mutation script gained C-DEP-M10 for the budget thread, and five
+controls now pin their measured line instead of the shared mismatch
+prefix.  The replay
+`/Users/oobi/Documents/mechanism-lang-dep-review/probes/mutations-DEP-3`
+reports `{"passed": true, "killed": 10, "controls": 10}`.  The block above
+counts nine controls; ten is the count after this round.  See
+dev/MUTATION-LOG.md.
+
+TRUSTED-LINES stays red until the user rules D-A-1: kernel=4182/3000,
+encoder=246/900.  GATES-FAIL is therefore still expected, and every other
+leg passes.  No commit is created.
+
+Close record.  Six findings were kept and all six are fixed.  One is
+medium and five are low.
+
+- L4-1, medium, test/prelude_dependent.ml:69.  The wrong-result negative
+  was an ascription control, and no negative used MechPi.
+- L4-2, low, test/prelude_dependent.ml:64.  Three negatives pinned only
+  the "term has type" half of the refusal.
+- L3-1, low, dev/dependent-mutations.py:48.  Five controls pinned only
+  the generic mismatch prefix.
+- L1-1, low, test/prelude_dependent.ml:81.  No case and no control
+  observed the ?budget thread of Dependent.catalog.
+- L4-3, low, test/prelude_dependent.ml:153.  The templates figure of the
+  OK line was arithmetic over the test's own list.
+- L4-4, low, test/fixtures/prelude/dependent.mech:55.  The upComputes
+  witness pinned no computed field.
+
+The fixes touch these paths:
+
+- test/prelude_dependent.ml
+- test/fixtures/prelude/dependent.mech
+- dev/dependent-mutations.py
+- dev/MUTATION-LOG.md
+- dev/M0-STAGE-C-DEPENDENT.md
+- prelude/README.md
+- dev/M0-BUILD-LOG.md
+
+Gate verdict: BOUND-ONLY.  All other legs pass.  The counts are
+kernel=4182 and encoder=246.  The battery log is
+`/Users/oobi/Documents/mechanism-lang-dep-review/gates-DEP-1-items.log`.

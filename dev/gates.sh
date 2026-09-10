@@ -212,6 +212,8 @@ leg FAST PRELUDE-TRANSPORT '^PRELUDE-TRANSPORT-OK templates=' \
   $ROOT/_build/default/test/prelude_transport.exe $ROOT
 leg FAST PRELUDE-EQUALITY-OPS '^PRELUDE-EQUALITY-OPS-OK instances=' \
   $ROOT/_build/default/test/prelude_equality_ops.exe $ROOT
+leg FAST PRELUDE-DEPENDENT '^PRELUDE-DEPENDENT-OK templates=' \
+  $ROOT/_build/default/test/prelude_dependent.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \

@@ -46,6 +46,9 @@ polymorphic library transport and cast; see dev/M0-STAGE-C-TRANSPORT.md.
 The equality-operations increment adds dependent J, symmetry, transitivity
 and congruence within one carrier Sort level, plus type-equality symmetry
 and transitivity; see dev/M0-STAGE-C-EQUALITY-OPS.md.
+The dependent-prelude increment adds polymorphic Pi and Sigma definitions,
+pair construction, projections and dependent elimination; see
+dev/M0-STAGE-C-DEPENDENT.md.
 Textual universe binders, congruence between independent carrier
 universes, category targets and source-type parity remain open.
 A kernel change requires

@@ -47,6 +47,11 @@ retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
 is rechecked.
 
+The `Dependent` prelude catalog supplies polymorphic dependent functions
+and pairs, with pair construction, both projections and dependent
+elimination.  Its six definitions use the existing Poly API and kernel
+forms.  See `dev/M0-STAGE-C-DEPENDENT.md` for signatures and validation.
+
 ## Importing Lean types
 
 Build the driver, then run:

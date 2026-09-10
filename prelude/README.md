@@ -80,3 +80,22 @@ universe instances, generic contracts with variable endpoints, eleven
 kernel normalization witnesses and eight misuse cases with accepted
 controls.  The fixture includes a motive indexed by its equality proof.
 See `dev/M0-STAGE-C-EQUALITY-OPS.md` for the operation signatures.
+
+`dependent.ml` supplies a separate Poly catalog with six definitions:
+`MechPi`, `MechSigma`, `mechSigmaMk`, `mechSigmaFst`, `mechSigmaSnd` and
+`mechSigmaRec`.  Pi takes two Sort levels, including Prop.  The pair
+definitions take two Type levels, with a third motive Sort level for
+the recursor.  Fibers depend on the first component, and recursor motives
+depend on the whole pair.  Each definition can be instantiated separately
+under a fresh name because its body uses the existing kernel forms
+directly.  Equal specializations are transparent aliases of those forms.
+
+PRELUDE-DEPENDENT checks 29 specializations, generic contracts, twelve
+independent normal forms and six invalid uses with accepted controls.
+The source fixture `test/fixtures/prelude/dependent.mech` exercises a
+Boolean-dependent fiber, a pair containing a type and a value of that
+type, a type-valued second field, and proof-valued functions and
+elimination.  The catalog checks from `Global.empty`, and the installed
+environment is audited for axioms, primitives and unchecked families.
+The catalog must also refuse an exhausted caller budget.  The reported
+specialization count is measured in the installed environment.
