@@ -684,8 +684,10 @@ let parse_decl ts =
       let* decl, rest = P.parse_decl rest in
       (match decl with
       | Syntax.DDef (name, ty, body) -> Ok (Syntax.DPoly (List.length universes, name, ty, body), rest)
-      | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ | Syntax.DPoly _ | Syntax.DSpecialize _ ->
-          expected "a nonrecursive definition after universe binders" ts)
+      | Syntax.DMu [family] -> Ok (Syntax.DPolyMu (List.length universes, family), rest)
+      | Syntax.DAxiom _ | Syntax.DMu ([] | _ :: _ :: _) | Syntax.DRec _
+      | Syntax.DPoly _ | Syntax.DPolyMu _ | Syntax.DSpecialize _ ->
+          expected "a nonrecursive definition or single family after universe binders" ts)
   | { Token.kind = Token.KSpecialize; loc = _ }
     :: { Token.kind = Token.Ident name; loc = _ }
     :: { Token.kind = Token.LParen; loc = _ } :: rest ->

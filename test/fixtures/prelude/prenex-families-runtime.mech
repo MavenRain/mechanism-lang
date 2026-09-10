@@ -1,0 +1,17 @@
+poly (u) mu Box (0 A : Sort u) : Sort (succ u) with
+| box : A -> Box A
+specialize Box (1) as RuntimeBox
+def unbox : RuntimeBox Nat -> Nat := fun (b : RuntimeBox Nat) =>
+  match b as self in RuntimeBox return Nat with
+  | box (value : Nat) => value
+def familyPayload : Nat := unbox (box 37)
+
+poly (u) mu List (0 A : Sort (succ u)) : Sort (succ u) with
+| nil : List A
+| cons : A -> List A -> List A
+specialize List (0) as RuntimeList
+def rec total : RuntimeList Nat -> Nat := fun (xs : RuntimeList Nat) =>
+  match xs as self in RuntimeList return Nat with
+  | nil => 0
+  | cons (value : Nat) (rest : RuntimeList Nat) => natAdd value (total rest)
+def familyRecursive : Nat := total (cons 5 (cons 7 nil))

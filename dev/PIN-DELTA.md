@@ -42,6 +42,12 @@ for Sort levels, definition binders and explicit specialization.  The
 elaborator carries a Poly catalog for one program check.  It uses the
 existing universal and closed judgments.  No kernel file changes here.
 
+The textual-family increment adds a single-family template syntax node.
+The source catalog retains Family_poly templates, elaborates constructors
+under a temporary symbolic family and specializes through the existing
+closed family checker. Cross-catalog names and specialized constructor
+names are checked before the immutable program result is returned.
+
 | file | expected |
 | --- | --- |
 | lib/check.ml | 140 |
@@ -50,8 +56,8 @@ existing universal and closed judgments.  No kernel file changes here.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 198 |
+| surface/elab.ml | 254 |
 | surface/token.ml | 8 |
 | surface/lexer.ml | 4 |
-| surface/syntax.ml | 23 |
-| surface/parser.ml | 118 |
+| surface/syntax.ml | 27 |
+| surface/parser.ml | 119 |

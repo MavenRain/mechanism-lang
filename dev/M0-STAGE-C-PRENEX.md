@@ -59,9 +59,11 @@ kernel at PIN, it applies to a `def` before or after the family, and
 this increment does not change it.  A failed source check returns no
 partial environment.
 
-Only nonrecursive definition templates are supported.  Textual polymorphic
-axioms, recursive definitions, families and ordered family groups remain
-unsupported.  The programmatic Poly and Family_poly APIs remain available.
+This initial slice supported nonrecursive definition templates.
+The follow-up in M0-STAGE-C-PRENEX-FAMILIES.md adds single recursive
+family templates. Textual polymorphic axioms, recursive definitions,
+family members and ordered family groups remain unsupported.
+The programmatic Poly and Family_poly APIs remain available.
 There is no universe inference or implicit specialization.
 
 ## Validation
@@ -88,7 +90,7 @@ work directory.
 
 The gate battery retains every prior leg and adds PRENEX and
 PRENEX-RUNTIME.  The existing trusted-line limits remain 3,000 kernel lines
-and 900 encoder lines.  Textual polymorphic families, category targets,
+and 900 encoder lines. Textual family groups and members, category targets,
 checked source-type parity and the D-A-1 bound ruling remain open.
 
 Build copy: `/Users/oobi/Documents/gpt11/mechanism-lang`.

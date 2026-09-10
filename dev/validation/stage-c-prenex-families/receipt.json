@@ -1,0 +1,94 @@
+{
+  "recorded_at": "2026-09-10T19:12:37.179895+00:00",
+  "base": "f7f7c04402209824b0ab5730b673dfd14d15f049",
+  "checkout": "/Users/oobi/Documents/gpt5/mechanism-lang",
+  "command": [
+    "env",
+    "-u",
+    "OPAM_SWITCH_PREFIX",
+    "-u",
+    "CAML_LD_LIBRARY_PATH",
+    "zsh",
+    "dev/gates.sh"
+  ],
+  "exit_code": 1,
+  "verdict": "BOUND-ONLY",
+  "passed_legs": [
+    "BUILD",
+    "PIN",
+    "PIN-DELTA",
+    "R0-COUNT",
+    "R0-AUDIT",
+    "SUITE-KERNEL",
+    "LEVELS",
+    "PRENEX",
+    "PRENEX-FAMILIES",
+    "SUITE-SURFACE",
+    "SUITE-WASM",
+    "IMPORT-GRAMMAR",
+    "IMPORT-CLI",
+    "CORPUS-UAT",
+    "PARITY-COUNTS",
+    "PRELUDE",
+    "EQUALITY",
+    "FAMILY-POLY",
+    "PRELUDE-POLY",
+    "FAMILY-MEMBERS",
+    "PRELUDE-TRANSPORT",
+    "PRELUDE-EQUALITY-OPS",
+    "PRELUDE-DEPENDENT",
+    "FAMILY-GROUPS",
+    "PRELUDE-CONGRUENCE",
+    "EQUALITY-RUNTIME",
+    "PRENEX-RUNTIME",
+    "PRENEX-FAMILIES-RUNTIME",
+    "AXIOMS",
+    "MAP-INVENTORY",
+    "DENOMINATORS"
+  ],
+  "failed_legs": [
+    "TRUSTED-LINES"
+  ],
+  "trusted_lines": {
+    "kernel": 4182,
+    "kernel_bound": 3000,
+    "encoder": 246,
+    "encoder_bound": 900
+  },
+  "family_suite": {
+    "families": 13,
+    "entries": 18,
+    "computations": 5,
+    "negatives": 26
+  },
+  "family_runtime": {
+    "cases": 2,
+    "hosts": 3,
+    "payload_variants": 2
+  },
+  "family_mutations_killed": 7,
+  "definition_mutations_killed": 7,
+  "snapshot_note": "Implementation hashes match the final full gate and successful isolated controls. Build and mutation logs and these evidence files were completed afterward. No kernel limit was changed.",
+  "sha256": {
+    "surface/syntax.ml": "2d76e1d34c71dd36a0df1553f6a657e647575d02c6e3b692b8294ac9908d0771",
+    "surface/parser.ml": "f61152b6c3f1e9477d4f11c9a7382bce28e7148da4bb031b425a5ed233367769",
+    "surface/elab.ml": "75cd138ca220d8b50428cba07a95b6dd46710b2b4d43a6a1f03c4fcee9902db4",
+    "surface/poly.ml": "c348a71f303e73471e3bc6fa8e7e59ba8b6bc5cd2dc1aed2677107fd1a911a8d",
+    "surface/family_poly.ml": "71c5c8b6e7271e03e76a0397b743bf9f9b4e2fcd1f8864b64b320d389529696a",
+    "test/dune": "a8e17536b8098dc0c8a52c821ba0565036279c02bc23b96ec4b9ffcd4974157d",
+    "test/prenex.ml": "b0adeade96b1d6c840829f19119ffef8dde7e5424b73b33c67e409a68d2e3e4d",
+    "test/prenex_families.ml": "adcfbb98e0a0f6b7a4aff130a19ee2bf6034677283c80783f9d93c08f8cb5a1e",
+    "test/prenex_runtime.py": "6482f4c8f9feba4219a30d1366d8810e8e3322dfc308498c38350ffb4f814abd",
+    "dev/gates.sh": "510ad8dc23e8099a6038eb931fa2846bd1ae759a701f5b0508e0c11e17e0ccf7",
+    "dev/prenex-mutations.py": "285b52c0a62f20060b16302cbbca7b3fef5d8a336b90e68a53ea0af551e81285",
+    "dev/PIN-DELTA.md": "cff696aafecb8a654df352fb6d9592bf7140f0eb57f99ffd4c4e7de84157c712",
+    "test/fixtures/prelude/prenex-families.mech": "1b972856e5760a414d5f4e975f9cfd0510de7c5e180310368699632925dd94eb",
+    "test/fixtures/prelude/prenex-families-runtime.mech": "6d128bfb471850f520ecd029d37d07146790b4be0d26d0be1729daf4a10f9003"
+  },
+  "evidence_sha256": {
+    "definition-mutations.json": "993f25b7bd69681afc173f8348b3d3a183e74713807e9413186d422a8972d9c1",
+    "family-mutations.json": "99958168809b7aa6818cdf72f888ce203133627ad160c34d858f1b923a64a050",
+    "gates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gates.stdout": "4fd54ad98e7220124d7d6c540e1422aed92b3b599cd3a257c1e218fe24777e37"
+  }
+}

@@ -69,8 +69,10 @@ and an underscore as a prefix, then rechecks its type and body in order.
 The templates never enter ordinary globals.  PRELUDE-TRANSPORT checks
 seven instances, dependent computation witnesses, four rejection
 diagnostics, one scope control and the absence of trusted entries.  A
-member named like another template is refused as a collision.  Textual
-polymorphic families and source-type parity remain separate work.
+member named like another template is refused as a collision. Textual
+family templates now use the same API, as described in
+`dev/M0-STAGE-C-PRENEX-FAMILIES.md`. Textual member definitions and
+source-type parity remain separate work.
 
 The `j` motive can depend on both the right endpoint and the proof,
 using erased binders for each.  Its carrier and motive Sort levels are

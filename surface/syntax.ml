@@ -133,6 +133,7 @@ and t =
 
 type decl =
   | DPoly of int * string * t * t
+  | DPolyMu of int * fam
   | DSpecialize of string * Universe.t list * string
   | DDef of string * t * t
   | DAxiom of string * t
@@ -294,6 +295,9 @@ let decl_text (d : decl) : string =
       let names = List.init arity (fun i -> "u" ^ string_of_int i) in
       Printf.sprintf "poly (%s) def %s : %s := %s\n"
         (String.concat ", " names) name (at 0 ty) (at 0 body)
+  | DPolyMu (arity, family) ->
+      let names = List.init arity (fun i -> "u" ^ string_of_int i) in
+      "poly (" ^ String.concat ", " names ^ ") " ^ fam_text "mu" family
   | DSpecialize (name, levels, as_name) ->
       Printf.sprintf "specialize %s (%s) as %s\n" name
         (String.concat ", " (List.map Universe.text levels)) as_name

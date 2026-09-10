@@ -523,6 +523,121 @@ count 4140 of the 4200 allowed, encoder count 246 of the 900 allowed.
 TRUSTED-LINES stays red at kernel=4140/3000 and encoder=246/900 until the
 user rules D-A-1.
 
+## Stage C textual polymorphic families (2026-09-10)
+
+Base: f7f7c04. The source parser now accepts a single recursive family
+after poly universe binders. Its printer round-trips the full family
+syntax. The elaborator checks a temporary symbolic family through the
+existing Family_poly API, keeps it outside globals and installs only
+explicitly specialized closed instances. Definition and family templates
+share name reservations, including specialized constructor collisions.
+The kernel, vendor pin and programmatic catalogs retain their bytes.
+
+The new fixture checks from Global.empty and installs 13 families and
+18 definitions. Five independently specified normal forms cover data,
+types, recursive lists, sums and composition with a definition template.
+Thirty refusal checks cover scope, arity, malformed constructors,
+result-universe stability, collisions, budget and catalog lifetime.
+The runtime gate observes payload 37 and recursive-list sum 12 on the
+kernel, Node and Wasmtime; changing the payload to 41 changes only that
+answer on all three hosts. Axiom output stays empty.
+
+Final validation in /Users/oobi/Documents/gpt5/mechanism-lang:
+`env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH zsh dev/gates.sh`
+prints 31 PASS legs and only FAIL TRUSTED-LINES, kernel=4182/3000 and
+encoder=246/900. This is the inherited BOUND-ONLY result, with two added
+family legs. No bound or watchdog tier changed. All seven new family
+controls and all seven existing definition controls were killed; both
+restored suites passed. Details of the initial scope-coverage correction
+are in the appended mutation-log block.
+
+Captures, implementation hashes and both mutation reports are retained
+under dev/validation/stage-c-prenex-families/. The new slice document is
+dev/M0-STAGE-C-PRENEX-FAMILIES.md. Textual family groups and members,
+category targets, source-type parity and D-A-1 remain open. This does
+not claim Stage C or M0 acceptance.
+
+## Stage C textual polymorphic families review (2026-09-10)
+
+This block records the slice review of the increment above.  The review
+runs at ROOT on base f7f7c04, over the same staged paths, and adds no
+new bound, tier or gate leg.
+
+The review kept seven items, and all seven are fixed, together with the
+two log defects of the fix round.  L2-1 (low) restates the
+reservation and specialization rules of SPEC.md against the elaborator.
+L2-4 (low) takes the constructor reservation of a family template out
+of declaration order: the `names` fold no longer contributes the labels
+of a `DPolyMu` group, so a template that repeats a label is refused when
+the instance installs it.  L2-5 (low) refuses a family constructor
+whose label repeats the family name, with the text `the constructor X
+repeats the family name Y`.  L2-6 (low) refuses an instance
+constructor whose label repeats the specialized instance name.  L3-1
+(medium) pins the error kind of every negative through an exhaustive
+match over `Error.t`, the shape of test/prenex.ml.  L3-2 (medium) adds
+the negative late-family-template-collision.  L3-3 (medium) adds the budget
+negative specialize-budget, whose poll fires inside
+`Family_poly.instantiate`.  ND-1-1 (medium) and ND-1-2 (medium) are the
+two log repairs, in dev/MUTATION-LOG.md and in this file.
+
+The suite adds the negatives late-family-template-collision,
+self-named-constructor, instance-own-constructor and specialize-budget,
+and the controls C-PRENEX-FAM-M8, C-PRENEX-FAM-M9, C-PRENEX-FAM-M10 and
+C-PRENEX-FAM-M11.  The family replay now holds eleven controls, in place
+of the seven the block above records, and the suite runs 30 refusal
+checks, in place of 26.  The definition replay keeps its seven controls.
+All eleven family controls and all seven definition controls were
+killed, and both restored suites passed.
+
+The ladder of this review reports:
+
+```
+OK build: 0 errors, 0 warnings
+PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30
+PRENEX-OK entries=16 computations=4 negatives=25
+PRENEX-FAMILIES-RUNTIME OK cases=2 hosts=3 mutation=1
+PRENEX-RUNTIME OK cases=2 hosts=3 mutation=1
+TRUSTED-LINES kernel=4182/3000 encoder=246/900 FAIL
+```
+
+The family replay in
+`mechanism-lang-prenex-families-review/mutations-PFAM-2-families`
+reports `{"passed": true, "killed": 11, "controls": 11}`, and the
+definition replay in the sibling directory mutations-PFAM-2-defs reports
+`{"passed": true, "killed": 7, "controls": 7}`.
+
+PIN-DELTA passes with every row at its recorded number, surface/elab.ml
+at diff=254, and PIN remains
+936a43a92dd59a04698648f24fa5ae94cdb532df.  R0, the inherited suites, the
+prelude suites, the axiom and mapping inventories and the three import
+modes all pass.  Both map inventories reproduce byte for byte.
+
+The gate verdict is BOUND-ONLY.  The battery prints 31 PASS legs and one
+FAIL leg, `TRUSTED-LINES kernel=4182/3000 encoder=246/900`, so it exits
+1 and the D-A-1 bound ruling remains open.  The kernel count is 4182 of
+the 4200 allowed and the encoder count is 246 of the 900 allowed.  No
+bound, tier or watchdog moved.  No commit is created.
+
+The captures under dev/validation/stage-c-prenex-families/ record the
+sources of the increment above, before this review edited surface/elab.ml
+and test/prenex_families.ml.  They are not re-recorded here.
+
+The round-2 check agent died on an API 529 response.  A hand check then
+verified the seven kept items and the two round-1 log items on disk.  All
+nine were fixed.  The hand check found one new low defect, ND-2-1: this
+block stated the severity of every kept item as the inverse of the run
+record.  ND-2-1 is fixed here.  The hand check also carried PFAM-6, a
+documentation-only item: the grammar text did not state that a compound
+universe level keeps its own parentheses inside a specialize level list.
+That sentence is now in SPEC.md and in
+dev/M0-STAGE-C-PRENEX-FAMILIES.md.  No parser and no test changed for
+it.  The closing battery printed 31 PASS legs and the single FAIL leg
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900`, so the verdict stays
+BOUND-ONLY at exit 1.  The hand check replays reported families killed
+11/11 and definitions killed 7/7.  The suites printed
+`PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30`
+and `PRENEX-OK entries=16 computations=4 negatives=25`.
+
 ## Stage C data equality (2026-09-08)
 
 Base: 44ab7b9.  The prelude now defines MechEq over a Type 0 carrier,

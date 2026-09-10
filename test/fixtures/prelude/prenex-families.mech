@@ -1,0 +1,66 @@
+mu Tiny : Type 0 with
+| tinyZero : Tiny
+| tinySucc : Tiny -> Tiny
+mu Truth : Prop with
+| truth : Truth
+
+poly (u) mu Box (0 A : Sort u) : Sort (succ u) with
+| box : A -> Box A
+specialize Box (1) as DataBox
+specialize Box (2) as TypeBox
+specialize Box (0) as ProofBox
+specialize Box ((max 0 1)) as AgainBox
+
+def dataBox : DataBox Tiny := box (tinySucc tinyZero)
+def typeBox : TypeBox (Type 0) := box Tiny
+def proofBox : ProofBox Truth := box truth
+def againBox : AgainBox Tiny := box tinyZero
+def unbox : DataBox Tiny -> Tiny := fun (b : DataBox Tiny) =>
+  match b as self in DataBox return Tiny with
+| box (x : Tiny) => x
+def dataValue : Tiny := unbox dataBox
+def typeValue : Type 0 := match typeBox as self in TypeBox return Type 0 with
+| box (A : Type 0) => A
+
+poly (u) mu List (0 A : Sort (succ u)) : Sort (succ u) with
+| nil : List A
+| cons : A -> List A -> List A
+specialize List (0) as TinyList
+specialize List (1) as TypeList
+def items : TinyList Tiny := cons (tinySucc tinyZero) (cons tinyZero nil)
+def types : TypeList (Type 0) := cons Tiny nil
+def head : TinyList Tiny -> Tiny := fun (xs : TinyList Tiny) =>
+  match xs as self in TinyList return Tiny with
+| nil => tinyZero
+| cons (x : Tiny) (rest : TinyList Tiny) => x
+def listValue : Tiny := head items
+
+poly (u, v) mu Either (0 A : Sort (succ u)) (0 B : Sort (succ v))
+  : Sort (max (succ u) (succ v)) with
+| left : A -> Either A B
+| right : B -> Either A B
+specialize Either (0, 1) as Up
+specialize Either (1, 0) as Down
+def up : Up Tiny (Type 0) := right Tiny
+def down : Down (Type 0) Tiny := left Tiny
+def upType : Type 0 := match up as self in Up return Type 0 with
+| left (x : Tiny) => Tiny
+| right (A : Type 0) => A
+
+poly (u) mu Equal (0 A : Sort u) (0 x : A) : (0 y : A) -> Prop with
+| refl : Equal A x x
+specialize Equal (1) as DataEq
+specialize Equal (0) as ProofEq
+def dataRefl : DataEq Tiny tinyZero tinyZero := refl
+def proofRefl : ProofEq Truth truth truth := refl
+
+poly (u) def identity : (0 A : Sort u) -> A -> A :=
+  fun (0 A : Sort u) (x : A) => x
+specialize identity (2) as boxIdentity
+def boxValue : Tiny := unbox (boxIdentity (DataBox Tiny) dataBox)
+
+poly (u) mu Annotated
+  (0 A : (((fun (T : Sort (succ u)) => T) : Sort (succ u) -> Sort (succ u)) (Sort u)))
+  : Sort (succ u) with
+| annotated : A -> Annotated A
+specialize Annotated (1) as AnnotatedBox

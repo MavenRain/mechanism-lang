@@ -182,8 +182,8 @@ the separate programmatic catalog supplies a polymorphic equality family.
 That catalog also supplies a universally checked polymorphic library
 transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Dependent
 elimination and equality composition are recorded in
-dev/M0-STAGE-C-EQUALITY-OPS.md.  Textual polymorphic families and checked
-source-type parity remain outstanding.
+dev/M0-STAGE-C-EQUALITY-OPS.md. Textual family templates are supported
+below; textual family groups and checked source-type parity remain open.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves
@@ -297,16 +297,55 @@ templates remain unsupported.  Ordinary declarations cannot reuse their
 names within that check.
 
 `specialize NAME (LEVEL, LEVEL) as FRESH` supplies exactly the template's
-arity of closed levels.  The type and body are substituted and checked
-again before the resulting definition joins globals and output rows in
-source order.  The specialization shares the caller's check budget and
+arity of closed levels.  A compound level keeps its own parentheses
+inside that list, as in `specialize Box ((max 0 1)) as AgainBox`, because
+the outer parentheses delimit the argument list.  The type and body are
+substituted and checked again before the resulting definition joins
+globals and output rows in source order.  The specialization shares the
+caller's check budget and
 rejects every occupied global, family, template or constructor name.  A
 template name is refused on the same four kinds.  A plain `def` keeps the
 inherited kernel allowance and can repeat a constructor name of an
 earlier family.  An error returns no partial environment.  Check, axioms, emit and run consume the resulting
 ordinary definitions.
 
-This syntax does not add polymorphic axioms, recursive definitions or
-family templates, implicit specialization, universe inference, a kernel
+This definition syntax does not add polymorphic axioms, recursive
+definitions, implicit specialization, universe inference, a kernel
 rule or a mapping verdict.  PRENEX and PRENEX-RUNTIME test it; the grammar
 and validation scope are recorded in dev/M0-STAGE-C-PRENEX.md.
+
+## Stage C textual polymorphic families
+
+`poly (u, v) mu NAME ...` binds named Sort levels for one recursive
+family's parameter telescope, indices, result universe and constructors.
+The family body uses the ordinary mu grammar. Family groups, member
+definitions and references to other templates are not part of this syntax.
+The result universe must remain Prop or remain Type under every universe
+assignment, as required by the existing Family_poly API.
+
+The elaborator builds constructor self references in a temporary symbolic
+environment. Family_poly.declare universally checks the family and stores
+it in the source catalog. It enters neither global table nor output rows.
+`specialize NAME (LEVELS) as FRESH` dispatches by template kind and rechecks
+the closed family and constructors before installing it in the family
+table. Constructor labels retain their spelling; their expected family
+instance resolves them. Specialization adds no definition or axiom row.
+
+Definition and family template names share a reserved namespace for one
+source check.  A later declaration cannot reuse a template name or an
+instance name.  A mu group's own constructor labels join that check,
+because the group installs them at once.  A family template's constructor
+labels stay outside both catalogs until an instance installs them, so the
+verdict does not depend on the declaration order.  A specialized family's
+constructor labels are then checked against both template catalogs and
+against the instance name before the resulting globals can escape.  A
+constructor label equal to its own family name is refused at the template.
+Ordinary constructor/global name sharing retains the inherited kernel
+behavior.
+All stages share the caller's budget and return no environment on failure.
+
+PRENEX-FAMILIES checks syntax round-trips, installed inventories, isolation,
+normalization and precise refusals. PRENEX-FAMILIES-RUNTIME compares
+specialized-family payloads and recursive lists on all three hosts.
+See dev/M0-STAGE-C-PRENEX-FAMILIES.md. This adds no kernel rule, mapping
+verdict, universe inference or implicit specialization.

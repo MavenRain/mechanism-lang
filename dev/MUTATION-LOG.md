@@ -557,3 +557,76 @@ restored suites both report
 `PRENEX-OK entries=16 computations=4 negatives=25`.  The seven controls
 are unchanged.  The C-PRENEX-M7 row above holds the full refusal that
 the review measured, in place of the earlier prefix.
+
+## Stage C textual polymorphic families (2026-09-10)
+
+`python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY --families`
+replays seven isolated mutations. Every mutant builds without warnings
+and must fail PRENEX-FAMILIES with its recorded diagnostic:
+
+- C-PRENEX-FAM-M1 drops the elaborator's family-header universe scope.
+- C-PRENEX-FAM-M2 reverses explicit universe arguments at specialization.
+- C-PRENEX-FAM-M3 drops the family-template name reservation.
+- C-PRENEX-FAM-M4 discards the installed closed family environment.
+- C-PRENEX-FAM-M5 permits a specialized constructor to take a definition
+  template's name.
+- C-PRENEX-FAM-M6 discards the caller's family-check budget.
+- C-PRENEX-FAM-M7 changes the boxed data payload from one to zero.
+
+The first replay killed five of seven. M1 survived because direct Sort
+headers did not exercise elaborator scope checking. A computed parameter
+type now forces that check. The first version of this fixture lacked the
+function ascription required by the surface language; its replay stopped
+at the failing baseline, before mutation testing. The corrected fixture
+passes normally and kills M1. M2 already failed semantically, but the
+harness expected a mismatch instead of the observed universe error. Its
+oracle now pins the exact universe diagnostic.
+
+The final replay in mechanism-family-mutations-3 killed seven of seven;
+baseline and restored suites report 13 families, 18 entries, five
+computations and 26 negatives. The independent definition regression
+replay killed its existing seven controls and restored its 16 entries,
+four computations and 25 negatives. Both machine-readable reports are
+retained in dev/validation/stage-c-prenex-families/.
+
+PRENEX-FAMILIES-RUNTIME additionally changes the box payload from 37 to
+41 and requires that change on all three hosts while the recursive list
+sum remains 12. This is an observed execution check, not a type-only
+mutation.
+
+## Stage C textual polymorphic families review (2026-09-10)
+
+The review of 2026-09-10 adds four controls to the `--families` replay,
+which now replays eleven isolated mutations.  Each added mutant keeps
+the type of the expression it changes, builds without warnings, and must
+fail PRENEX-FAMILIES with its recorded diagnostic:
+
+- C-PRENEX-FAM-M8 makes the post-install label check ask the family
+  catalog for a name that no template holds, so a specialized
+  constructor could take a family template's name.  Its oracle is
+  `PRENEX-FAMILIES-FAIL late-family-template-collision: expected
+  refusal`.
+- C-PRENEX-FAM-M9 replaces the caller's budget at
+  `Family_poly.instantiate` with an unlimited budget.  Its oracle is
+  `PRENEX-FAMILIES-FAIL specialize-budget: expected refusal`.
+- C-PRENEX-FAM-M10 breaks the new refusal of a family constructor whose
+  label repeats the family name.  Its oracle is
+  `PRENEX-FAMILIES-FAIL self-named-constructor: expected refusal`.
+- C-PRENEX-FAM-M11 breaks the refusal of an instance constructor whose
+  label repeats the specialized instance name.  Its oracle is
+  `PRENEX-FAMILIES-FAIL instance-own-constructor: expected refusal`.
+
+The block above records the pre-review suite: seven controls and 26
+refusal checks.  Those numbers stay as measured then.  The suite of this
+review runs 30 refusal checks against eleven controls.
+
+The review replay in
+`mechanism-lang-prenex-families-review/mutations-PFAM-2-families`
+reports `{"passed": true, "killed": 11, "controls": 11}`, and its
+baseline and restored suites both report
+`PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30`.
+The definition replay in
+`mechanism-lang-prenex-families-review/mutations-PFAM-2-defs` reports
+`{"passed": true, "killed": 7, "controls": 7}` with
+`PRENEX-OK entries=16 computations=4 negatives=25`.  The seven family
+controls of the block above are unchanged.

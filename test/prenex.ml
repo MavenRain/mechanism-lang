@@ -58,13 +58,13 @@ let negatives = [
   "universal-check", "mismatch", "the term has type Type 1 and the expected type is Type (u0 + 1)",
   "poly (u) def p : Sort (succ u) := Sort u",
   "poly (u) def p : Sort (succ u) := Prop";
-  "no-poly-axiom", "parse", "expected a nonrecursive definition after universe binders",
+  "no-poly-axiom", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
   "poly (u) axiom p : Sort u";
-  "no-poly-family", "parse", "expected a nonrecursive definition after universe binders",
+  "no-poly-group", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
-  "poly (u) mu P : Prop with | p : P";
-  "no-poly-recursion", "parse", "expected a nonrecursive definition after universe binders",
+  "poly (u) mu P : Prop with | p : P and Q : Prop with | q : Q";
+  "no-poly-recursion", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
   "poly (u) def rec p : Sort (succ u) := Sort u";
   "reserved-universe-name", "parse", "reserved universe name max",

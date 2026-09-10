@@ -9,8 +9,9 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-if len(sys.argv) != 2:
-    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY")
+if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--families"):
+    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families]")
+FAMILIES = len(sys.argv) == 3
 WORK = Path(sys.argv[1]).resolve()
 if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
     raise SystemExit("the work directory must be new and outside the source repository")
@@ -37,7 +38,8 @@ def build(name):
 
 
 def suite(name):
-    return run(name, [str(COPY / "_build/default/test/prenex.exe"), str(COPY)])
+    executable = "prenex_families.exe" if FAMILIES else "prenex.exe"
+    return run(name, [str(COPY / "_build/default/test" / executable), str(COPY)])
 
 
 controls = [
@@ -66,6 +68,52 @@ controls = [
      "dataIdentity Tiny (tinySucc tinyZero)", "dataIdentity Tiny tinyZero",
      "PRENEX-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])"),
 ]
+
+if FAMILIES:
+    controls = [
+        ("C-PRENEX-FAM-M1", "surface/elab.ml",
+         "Check.make ~level_arity:arity globals budget", "Check.make ~level_arity:0 globals budget",
+         "PRENEX-FAMILIES-FAIL universe: universe level is outside the global parameter scope"),
+        ("C-PRENEX-FAM-M2", "surface/elab.ml",
+         "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+         "Family_poly.instantiate ~budget g families ~name ~levels:(List.rev levels) ~as_name",
+         "PRENEX-FAMILIES-FAIL universe: the former lives at 1 and the expected universe is 2"),
+        ("C-PRENEX-FAM-M3", "surface/elab.ml",
+         "else if Option.is_some (Family_poly.arity families name) then",
+         "else if Option.is_some (Family_poly.arity families name) && String.equal name \"\" then",
+         "PRENEX-FAMILIES-FAIL family-template-collision: expected refusal"),
+        ("C-PRENEX-FAM-M4", "surface/elab.ml",
+         "Ok (installed, catalog, families, rows)", "Ok (g, catalog, families, rows)",
+         "PRENEX-FAMILIES-FAIL unbound: DataBox"),
+        ("C-PRENEX-FAM-M5", "surface/elab.ml",
+         "Poly.arity catalog ctor.Positivity.c_name",
+         "Poly.arity catalog (ctor.Positivity.c_name ^ \":missing\")",
+         "PRENEX-FAMILIES-FAIL late-constructor-collision: expected refusal"),
+        ("C-PRENEX-FAM-M6", "surface/elab.ml",
+         "elab_family_template ~budget g families ~arity fm",
+         "elab_family_template ~budget:Budget.unlimited g families ~arity fm",
+         "PRENEX-FAMILIES-FAIL budget: expected refusal"),
+        ("C-PRENEX-FAM-M7", "test/fixtures/prelude/prenex-families.mech",
+         "def dataBox : DataBox Tiny := box (tinySucc tinyZero)",
+         "def dataBox : DataBox Tiny := box tinyZero",
+         "PRENEX-FAMILIES-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])"),
+        ("C-PRENEX-FAM-M8", "surface/elab.ml",
+         "Option.is_some (Family_poly.arity families ctor.Positivity.c_name)",
+         "Option.is_some (Family_poly.arity families (ctor.Positivity.c_name ^ \":missing\"))",
+         "PRENEX-FAMILIES-FAIL late-family-template-collision: expected refusal"),
+        ("C-PRENEX-FAM-M9", "surface/elab.ml",
+         "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+         "Family_poly.instantiate ~budget:Budget.unlimited g families ~name ~levels ~as_name",
+         "PRENEX-FAMILIES-FAIL specialize-budget: expected refusal"),
+        ("C-PRENEX-FAM-M10", "surface/elab.ml",
+         "String.equal fc.Syntax.fc_name fm.Syntax.fm_name",
+         "String.equal fc.Syntax.fc_name (fm.Syntax.fm_name ^ \":missing\")",
+         "PRENEX-FAMILIES-FAIL self-named-constructor: expected refusal"),
+        ("C-PRENEX-FAM-M11", "surface/elab.ml",
+         "String.equal ctor.Positivity.c_name as_name",
+         "String.equal ctor.Positivity.c_name (as_name ^ \":missing\")",
+         "PRENEX-FAMILIES-FAIL instance-own-constructor: expected refusal"),
+    ]
 
 build("baseline-build")
 if suite("baseline").returncode != 0:
