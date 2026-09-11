@@ -1,0 +1,5 @@
+DEPENDENT-CLOSURE-RUNTIME FAIL original/nonTailPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/nonTailPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/nonTailPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/nonTailPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL host_checks=4 failing_checks=4

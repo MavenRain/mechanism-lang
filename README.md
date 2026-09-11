@@ -179,8 +179,11 @@ instance checks again.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
 and morphism universes, identity, composition and all three category laws.
 The PRELUDE-CATEGORY gate checks four specializations from an empty
 environment. PRELUDE-CATEGORY-RUNTIME checks concrete record projections
-on the kernel, Node and Wasmtime. Generic category accessor calls currently
-trap on the WASM hosts; see `dev/M0-STAGE-C-CATEGORY.md` for the reproducer.
+on the kernel, Node and Wasmtime.  PRELUDE-CATEGORY-ACCESSORS checks
+generic accessor calls on the same hosts.  The WASM backend dispatches
+indirect calls by the stored closure arity, including calls whose source
+arguments all erase.  See `dev/M0-STAGE-C-CLOSURES.md` for the runtime
+contract and dependent-closure regressions.
 
 Stage C remains open. Functor, NatTrans, LeftKanExtension and checked
 source-type parity remain outstanding.

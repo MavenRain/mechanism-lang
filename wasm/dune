@@ -3,6 +3,4 @@
  (name mechanism_wasm)
  (libraries mechanism_kernel))
 
-(copy_files ../vendor/kanon/wasm/emit.ml)
 (copy_files ../vendor/kanon/wasm/gc_encode.ml)
-(copy_files ../vendor/kanon/wasm/link.ml)

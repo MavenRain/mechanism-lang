@@ -202,7 +202,7 @@ leg FAST PRENEX-GROUPS '^PRENEX-GROUPS-OK families=' \
   $ROOT/_build/default/test/prenex_groups.exe $ROOT
 leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
-  $ROOT/_build/default/test/wasm.exe $ROOT/vendor/kanon/test $ROOT/.gatework/wasm-suite
+  python3 -P $ROOT/dev/wasm-gates.py
 leg MED IMPORT-GRAMMAR '^IMPORT-OK$' zsh $ROOT/dev/import-gates.sh grammar
 leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
   python3 -P $ROOT/test/import_cli.py $ROOT/_build/default/bin/mech.exe
@@ -235,6 +235,12 @@ leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --groups
 leg MED PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --category
+leg MED PRELUDE-CATEGORY-ACCESSORS \
+  '^PRELUDE-CATEGORY-ACCESSORS OK cases=2 hosts=3 mutation=1$' \
+  python3 -P $ROOT/test/prenex_runtime.py --category-accessors
+leg MED DEPENDENT-CLOSURE-RUNTIME \
+  '^DEPENDENT-CLOSURE-RUNTIME OK cases=9 hosts=3 mutation=1$' \
+  python3 -P $ROOT/test/prenex_runtime.py --closures
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

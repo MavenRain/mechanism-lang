@@ -62,6 +62,8 @@ names are checked before the immutable program result is returned.
 | surface/lexer.ml | 5 |
 | surface/syntax.ml | 49 |
 | surface/parser.ml | 151 |
+| wasm/emit.ml | 27 |
+| wasm/link.ml | 61 |
 
 The textual group increment adds ordered family elaboration, member
 checking and complete instance reservation to the surface overlay.  The
@@ -76,3 +78,9 @@ The category increment reifies frozen elimination closures in an evaluator
 overlay, preserves a typed first projection in dependent projection motives,
 and compares constructor indices at their telescope types.  The corresponding
 pair eta motive uses the same typed projection.  No new kernel form is added.
+
+The dependent-closure increment overlays WASM linking and emission.
+Indirect calls use the arity stored in the closure.  Abstract nullary
+closures dispatch even when every source argument erases.  Direct global
+calls keep their declared signatures.  The kernel, erasure, encoder and
+vendored tree keep their existing sources.

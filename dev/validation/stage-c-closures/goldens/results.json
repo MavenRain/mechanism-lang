@@ -1,0 +1,14 @@
+{
+  "controls": [
+    {
+      "id": "C-CLOS-G1",
+      "killed": true
+    },
+    {
+      "id": "C-CLOS-G2",
+      "killed": true
+    }
+  ],
+  "restored": true,
+  "passed": true
+}

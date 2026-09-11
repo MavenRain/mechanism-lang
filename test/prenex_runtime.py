@@ -7,7 +7,8 @@ import tempfile
 
 GATES = {(): "PRENEX-RUNTIME", ("--families",): "PRENEX-FAMILIES-RUNTIME",
          ("--groups",): "PRENEX-GROUPS-RUNTIME", ("--category",): "PRELUDE-CATEGORY-RUNTIME",
-         ("--category-accessors",): "PRELUDE-CATEGORY-ACCESSORS"}
+         ("--category-accessors",): "PRELUDE-CATEGORY-ACCESSORS",
+         ("--closures",): "DEPENDENT-CLOSURE-RUNTIME"}
 
 
 def gate_name(arguments):
@@ -18,7 +19,8 @@ def gate_name(arguments):
 def main():
     if tuple(sys.argv[1:]) not in GATES:
         print("usage: python3 -P test/prenex_runtime.py "
-              "[--families|--groups|--category|--category-accessors]", file=sys.stderr)
+              "[--families|--groups|--category|--category-accessors|--closures]",
+              file=sys.stderr)
         return 64
 
     root = Path(__file__).resolve().parent.parent
@@ -45,11 +47,17 @@ def main():
         fixture += (root / "test/fixtures/prelude" / category_fixture).read_text()
         original = "def categoryInput : Nat := 37"
         replacement = "def categoryInput : Nat := 41"
+    closures = sys.argv[1:] == ["--closures"]
+    if closures:
+        fixture = (root / "test/fixtures/prelude/dependent-closure-runtime.mech").read_text()
+        original = "def closureInput : Nat := 37"
+        replacement = "def closureInput : Nat := 41"
     if fixture.count(original) != 1:
         print(f"{gate} FAIL mutation payload must occur exactly once")
         return 1
 
     failures = []
+    hosts = set()
 
     def invoke(label, arguments, expected=""):
         result = subprocess.run(list(map(str, arguments)), cwd=root,
@@ -69,15 +77,19 @@ def main():
         payload, other = "categoryPayload", "categoryOther"
     cases = [(payload, 37), (other, 12)]
     changed = [(payload, 41), (other, 12)]
-    if sys.argv[1:] == ["--category"]:
-        # The second category export composes the identity with a
-        # constant function, so its answer is 12 before and after the
-        # mutation. That export cannot observe the mutation. The
-        # mutation variant runs the payload export only, which is the
-        # export whose answer depends on the mutated definition. The
-        # accessor mode keeps both mutated exports, because its
-        # refusal count pins the open host boundary over the two
-        # exports.
+    if closures:
+        exports = ["nullaryPayload", "functionPayload", "capturedPayload",
+                   "aliasPayload", "partialPayload", "extraPayload",
+                   "exactPayload", "capturedMapPayload", "nonTailPayload"]
+        cases = [(name, 37) for name in exports]
+        changed = [(name, 41) for name in exports]
+    if category:
+        # Both category modes share a second export that composes the
+        # identity with a constant function, so its answer is 12 before
+        # and after the mutation. That export cannot observe the
+        # mutation. The mutation variant runs the payload export only,
+        # which is the export whose answer depends on the mutated
+        # definition.
         changed = [(payload, 41)]
     with tempfile.TemporaryDirectory(prefix="mechanism-prenex-") as directory:
         work = Path(directory)
@@ -105,16 +117,20 @@ def main():
                 if not invoke(f"{label}/emit", [executable, "emit", source,
                                                "-o", wasm, "--export", export]):
                     continue
-                invoke(f"{label}/node", ["node", root / "dev/run-node.mjs",
-                                        wasm, export], expected)
-                invoke(f"{label}/wasmtime", ["zsh", root / "dev/run-wasmtime.sh",
-                                            wasm, export], expected)
-                invoke(f"{label}/kernel", [executable, "run", source,
-                                           "--export", export, "--host", "kernel"], expected)
+                # The OK line reports the hosts that ran, never a
+                # literal, so a dropped host shows in the count.
+                host_runs = (
+                    ("node", ["node", root / "dev/run-node.mjs", wasm, export]),
+                    ("wasmtime", ["zsh", root / "dev/run-wasmtime.sh", wasm,
+                                  export]),
+                    ("kernel", [executable, "run", source, "--export", export,
+                                "--host", "kernel"]),
+                )
+                for host, arguments in host_runs:
+                    hosts.add(host)
+                    invoke(f"{label}/{host}", arguments, expected)
 
-    # A host trap and a kernel regression are separate outcomes. The
-    # accessor boundary is a host trap only, so a failing kernel-side
-    # invoke gets its own refusal line.
+    # A host failure and a kernel regression are separate outcomes.
     kernel_failures = [label for label in failures
                        if label.endswith(("/check", "/axioms", "/emit", "/kernel"))]
     if kernel_failures:
@@ -125,7 +141,7 @@ def main():
         print(f"{gate} FAIL host_checks={len(failures)} "
               f"failing_checks={len(failures)}")
         return 1
-    print(f"{gate} OK cases=2 hosts=3 mutation=1")
+    print(f"{gate} OK cases={len(cases)} hosts={len(hosts)} mutation=1")
     return 0
 
 

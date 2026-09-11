@@ -58,8 +58,9 @@ instances; see dev/M0-STAGE-C-PRENEX-FAMILIES.md.  The textual group
 increment adds ordered families and member definitions; see
 dev/M0-STAGE-C-PRENEX-GROUPS.md. The category increment adds checked
 category records and dependent-record kernel fixes; see
-dev/M0-STAGE-C-CATEGORY.md. Functor, NatTrans, LeftKanExtension and
-source-type parity remain open.
+dev/M0-STAGE-C-CATEGORY.md.  The dependent-closure increment adds WASM
+parity for generic category accessors; see dev/M0-STAGE-C-CLOSURES.md.
+Functor, NatTrans, LeftKanExtension and source-type parity remain open.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

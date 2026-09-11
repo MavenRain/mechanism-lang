@@ -1,0 +1,13 @@
+DEPENDENT-CLOSURE-RUNTIME FAIL original/partialPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/partialPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/extraPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/extraPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/capturedMapPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL original/capturedMapPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='37\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/partialPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/partialPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/extraPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/extraPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/capturedMapPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL mutation/capturedMapPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='41\n'
+DEPENDENT-CLOSURE-RUNTIME FAIL host_checks=12 failing_checks=12

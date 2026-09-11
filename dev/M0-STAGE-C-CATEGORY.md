@@ -99,7 +99,12 @@ rechecked with
 also runs against a copy of the recorded evidence directory outside
 the repository.
 
-## Remaining runtime boundary
+## Runtime boundary at the category checkpoint
+
+The 2026-09-11 dependent-closure increment resolves the boundary below.
+PRELUDE-CATEGORY-ACCESSORS now runs in the gate battery and passes on
+the kernel, Node and Wasmtime.  See `dev/M0-STAGE-C-CLOSURES.md`.
+The following text records the original category checkpoint.
 
 Generic category accessor calls check and compute in the kernel but trap
 on Node and Wasmtime with an illegal cast. Direct projections from a

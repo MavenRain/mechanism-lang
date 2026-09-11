@@ -419,8 +419,16 @@ starting from parameters and extending with each expected index. Existing
 eta and proof irrelevance apply through this conversion. No new former,
 schema constructor or elimination rule is introduced.
 
-Concrete category projections compute on the kernel and both WASM hosts.
-Generic category accessor functions currently trap with a WASM cast
-failure; their kernel computations pass. See `dev/M0-STAGE-C-CATEGORY.md`
-for the contracts, tests and reproducible host boundary. Functor, NatTrans,
-LeftKanExtension and checked source-type parity remain open.
+Concrete category projections and generic accessor calls compute on the
+kernel and both WASM hosts.  See `dev/M0-STAGE-C-CATEGORY.md` for the
+checked category contracts.
+
+Indirect WASM calls dispatch on the arity stored in the closure.  A
+dependent result can expose more parameters after specialization, so a
+function representation does not prove the exact code-pointer arity.
+An abstract nullary function dispatches with zero runtime arguments.
+The helper invokes a stored nullary closure or returns a partial
+application when its stored arity is positive.  That result has the
+generic value representation.  Known global calls retain their declared
+signatures.  See `dev/M0-STAGE-C-CLOSURES.md` for the runtime tests.
+Functor, NatTrans, LeftKanExtension and source-type parity remain open.

@@ -1,0 +1,38 @@
+{
+  "sources": {
+    "wasm/link.ml": "003d963fa26c4aa56d0009b7242a297d848988efc56e1a95d3d0d60299b850a2",
+    "wasm/emit.ml": "bf4420578d4311ad65ecafceff39767d26d673454805c229e59abe0628340cc9",
+    "wasm/dune": "3facdce7df3f5f1da0510248bd57501883ec440166d5a6bbbe272d2690e231cb",
+    "test/prenex_runtime.py": "92a0252a5b7026142bf8abca4aec9a6d6b3aa9f9cd87a258f36375ae92b33c16",
+    "test/fixtures/prelude/dependent-closure-runtime.mech": "d83411dd5bdbc43ad3b9c166fc70b2d151eb4ee6809aaa11d6a065c53e2ac828"
+  },
+  "controls": [
+    {
+      "id": "C-CLOS-M1",
+      "built": true,
+      "export": "partialPayload",
+      "killed": true
+    },
+    {
+      "id": "C-CLOS-M2",
+      "built": true,
+      "export": "nullaryPayload",
+      "killed": true
+    },
+    {
+      "id": "C-CLOS-M3",
+      "built": true,
+      "export": "nonTailPayload",
+      "killed": true
+    },
+    {
+      "id": "C-CLOS-M4",
+      "built": true,
+      "export": "nullaryPayload",
+      "killed": true
+    }
+  ],
+  "passed": true,
+  "baseline": true,
+  "restored": true
+}

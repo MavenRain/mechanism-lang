@@ -713,3 +713,29 @@ saved control outputs and the stricter verification are restaged in
 `dev/validation/stage-c-category/`, so `--verify` runs against a copy of
 that directory outside the repository. The mode writes its report into
 the work directory, so it never writes inside the repository.
+
+## 2026-09-11: dependent closure calls
+
+`dev/closure-mutations.py` replays four compiler controls in an isolated
+copy.  Each control builds without warnings and fails its designated
+export on Node and Wasmtime.  The kernel checks pass.  Baseline and
+restored suites pass with nine exports and two input values per export.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-CLOS-M1 | Use annotated arity for an indirect call | partialPayload traps on both WASM hosts |
+| C-CLOS-M2 | Drop nullary closure recognition | nullaryPayload traps on both WASM hosts |
+| C-CLOS-M3 | Give a nullary call the closure result representation | nonTailPayload traps on both WASM hosts |
+| C-CLOS-M4 | Skip emission of a call with no runtime arguments | nullaryPayload traps on both WASM hosts |
+
+`dev/wasm-golden-mutations.py` checks two gate controls in an isolated
+input tree against the current build.  The restored suite passes.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-CLOS-G1 | Append a comment to one local WAT golden | d06-closure-capture golden differs |
+| C-CLOS-G2 | Remove one local WAT overlay | Golden overlay inventory refuses |
+
+The replay reports and complete control outputs are stored in
+`dev/validation/stage-c-closures/`.  The generic category accessor
+probe now passes and is included in the ordinary gate battery.

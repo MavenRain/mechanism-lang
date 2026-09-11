@@ -1665,3 +1665,92 @@ The one red leg is TRUSTED-LINES, which the clean base also fails, so
 the verdict of the review is bound only. PIN remains
 936a43a92dd59a04698648f24fa5ae94cdb532df, and no kernel, encoder,
 bound, tier or mapping verdict changes.
+
+## Stage C dependent closure calls (2026-09-11)
+
+Base: f1482dc, checked categories.  The generic category accessor probe
+reproduced eight WASM host traps before this change.  The local WASM
+overlays dispatch indirect calls by stored closure arity and invoke
+abstract nullary closures when all source arguments erase.
+The checked category source and kernel have no changes.
+
+PRELUDE-CATEGORY-ACCESSORS now passes in the ordinary battery.
+DEPENDENT-CLOSURE-RUNTIME checks nine exports, each at two input
+values, on the kernel, Node and Wasmtime.  Four compiler controls build
+without warnings and fail their designated runtime exports on both
+WASM hosts.  Their kernel checks pass.  The baseline and restored
+suites pass.  A surviving result-representation control during test
+development led to the ninth case, a call used inside another call.
+
+Eight local WAT goldens account for the changed indirect dispatch.
+SUITE-WASM retains every pinned fixture, exact byte comparison,
+validation and kernel-to-Node result check.  The gate runner reads the
+suite output and refuses when an overlay fixture reports no emission
+line, so a skipped fixture cannot keep the leg green.  Two further
+controls reject an altered golden and a missing overlay; restoration
+passes.
+The vendor checkout and gitlink remain at 936a43a.  pin-delta.sh
+measures the overlay rows wasm/emit.ml diff=27 and wasm/link.ml
+diff=61.
+
+A head that already widened to the generic representation at arity zero
+stays out of scope.  dev/M0-STAGE-C-CLOSURES.md records that open
+boundary: such a call answers the closure reference, so a WASM host
+refuses it with an illegal cast while the kernel answers the payload.
+
+The final battery exits 1 with 37 PASS legs and only TRUSTED-LINES
+failing.  Its values remain kernel=4208/3000 and encoder=246/900.
+No acceptance bound, watchdog tier or mapping verdict changes.
+Saved gate output and control reports are in
+`dev/validation/stage-c-closures/`.
+
+| Leg | Tier | Elapsed ms | Exit |
+| --- | --- | --- | --- |
+| BUILD | SLOW | 1052.969 | 0 |
+| SUITE-KERNEL | SUITE | 643.617 | 0 |
+| SUITE-WASM | SUITE | 4652.136 | 0 |
+| PRELUDE-CATEGORY | FAST | 1839.665 | 0 |
+| PRELUDE-CATEGORY-RUNTIME | MED | 4125.248 | 0 |
+| PRELUDE-CATEGORY-ACCESSORS | MED | 5503.996 | 0 |
+| DEPENDENT-CLOSURE-RUNTIME | MED | 5999.857 | 0 |
+| TRUSTED-LINES | FAST | 35.887 | 1 |
+
+The source audit checks the changed OCaml forms.  SUITE-WASM checks the
+exact overlay inventory and a pinned original for each of the eight WAT
+overlays through dev/wasm-gates.py.  The final whitespace check passes.
+This increment closes the recorded generic-accessor runtime boundary.
+Functor, NatTrans, LeftKanExtension and source-type parity remain due.
+
+## Stage C dependent closure calls review (2026-09-11)
+
+Eleven findings were kept and all eleven are fixed, in two fix rounds.
+
+High: L2-1, the SUITE-WASM wrapper now proves that the eight overlays
+were compared (dev/wasm-gates.py, dev/M0-STAGE-C-CLOSURES.md).
+Medium: L1-1, a generic head at arity zero is recorded as an open
+boundary (dev/M0-STAGE-C-CLOSURES.md); L3-2, the replay build limit is
+300 s and a report is written on every exit (dev/closure-mutations.py);
+L2-2, both new leg oracles pin the case count and the OK line derives
+the host count (dev/gates.sh, test/prenex_runtime.py); L2-3, the
+accessors mutation variant drops the blind export
+(test/prenex_runtime.py).
+Low: L1-4, SCallRef is documented as the mutation target of control
+C-CLOS-M1 (wasm/link.ml, dev/PIN-DELTA.md); L4-1, the audit sentence
+names SUITE-WASM for the overlay provenance (dev/M0-BUILD-LOG.md);
+HV-1-1, one added prose line is rewrapped to 72 columns
+(dev/M0-BUILD-LOG.md).
+Medium, from the check of the fixes: ND-1-1 and ND-1-2, five source
+hashes and two source hashes again match the staged bytes
+(dev/validation/stage-c-closures/receipt.json,
+dev/validation/stage-c-closures/compiler/results.json); ND-1-3, the
+untracked dev/__pycache__ artifact of the replay is deleted.
+
+Two findings are refuted on the files.  L4-4 reads "payload" as the
+answer of each export, but it is the shared fixture input.  L4-5 adds
+the word "only", and the golden index shift is part of the dispatch
+change.  Twelve further findings are dropped on the seven-finding cap.
+
+The closing battery verdict is bound only: 37 PASS legs at load 17.36,
+with TRUSTED-LINES the one red leg at kernel=4208/3000 and
+encoder=246/900.  PIN-DELTA is OK and the gitlink stays at 936a43a.
+The TRUSTED-LINES leg stays red until the user rules D-A-1.

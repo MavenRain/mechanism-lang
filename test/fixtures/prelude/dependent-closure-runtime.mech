@@ -1,0 +1,29 @@
+def closureInput : Nat := 37
+def Packed : Type 1 := (0 A : Type 0) * ((0 n : Nat) -> A)
+def unpack : (p : Packed) -> p.1 := fun (p : Packed) => p.2 0
+def data : Packed := (Nat, fun (0 n : Nat) => closureInput)
+def nullaryPayload : Nat := unpack data
+def functionData : Packed :=
+  (Nat -> Nat, fun (0 n : Nat) (x : Nat) => x)
+def functionPayload : Nat := unpack functionData closureInput
+def makeData : Nat -> Packed :=
+  fun (x : Nat) => (Nat, fun (0 n : Nat) => x)
+def capturedPayload : Nat := unpack (makeData closureInput)
+def unpackAlias : (p : Packed) -> p.1 := unpack
+def aliasPayload : Nat := unpackAlias (makeData closureInput)
+def Mapped : Type 1 := (0 A : Type 0) * (Nat -> A)
+def applyMap : (p : Mapped) -> Nat -> p.1 :=
+  fun (p : Mapped) (n : Nat) => p.2 n
+def curried : Mapped :=
+  (Nat -> Nat, fun (x : Nat) (y : Nat) => x)
+def partialMap : Nat -> Nat := applyMap curried closureInput
+def partialPayload : Nat := partialMap 12
+def extraPayload : Nat := applyMap curried closureInput 12
+def ordinary : Mapped := (Nat, fun (n : Nat) => n)
+def exactPayload : Nat := applyMap ordinary closureInput
+def makeMap : Nat -> Mapped := fun (saved : Nat) =>
+  (Nat -> Nat, fun (x : Nat) (y : Nat) => saved)
+def capturedMapPayload : Nat := applyMap (makeMap closureInput) 12 19
+def consumePacked : (p : Packed) -> (p.1 -> Nat) -> Nat :=
+  fun (p : Packed) (f : p.1 -> Nat) => f (p.2 0)
+def nonTailPayload : Nat := consumePacked data (fun (n : Nat) => n)

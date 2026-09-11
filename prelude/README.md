@@ -142,8 +142,9 @@ library declares no axioms and has no automatic instance resolution.
 
 PRELUDE-CATEGORY checks four universe specializations, heterogeneous
 composition, generic law projections, pair and function eta, captured
-elimination quotation, exact refusals and the caller budget. Concrete
-record projections run on all three hosts. Generic category accessor
-functions remain subject to the WASM cast limitation documented in
-`dev/M0-STAGE-C-CATEGORY.md`. Functor, NatTrans, LeftKanExtension and
-source-type parity remain open.
+elimination quotation, exact refusals and the caller budget.  Concrete
+record projections and generic accessor calls run on all three hosts.
+PRELUDE-CATEGORY-ACCESSORS checks generic identity and composition.
+DEPENDENT-CLOSURE-RUNTIME checks dependent function results and calls
+whose source arguments all erase.  See `dev/M0-STAGE-C-CLOSURES.md`.
+Functor, NatTrans, LeftKanExtension and source-type parity remain open.
