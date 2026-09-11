@@ -195,6 +195,13 @@ See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
 repository.  The runner puts the zxcaml-p1 opam switch first on PATH and
 it takes the root from its own path.
 
+## Roadmap
+
+`ROADMAP.md` records the ratified milestones M0 to M3, the position of
+the repository, and the three port tracks.  The port of
+unified-aggregation-theory is Track 1.  Its ledger is
+`ports/unified-aggregation-theory/README.md`.
+
 ## Licence
 
 MIT OR Apache-2.0.  See LICENSE-MIT and LICENSE-APACHE.
