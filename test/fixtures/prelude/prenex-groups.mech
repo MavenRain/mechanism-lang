@@ -1,0 +1,44 @@
+mu Tiny : Type 0 with
+| zero : Tiny
+| next : Tiny -> Tiny
+mu Truth : Prop with
+| truth : Truth
+
+poly (u, v) mu Box (0 A : Sort u) : Sort (succ u) with
+| box : A -> Box A
+and Wrapped (0 A : Sort u) : Sort (succ (max u v)) with
+| wrap : Box A -> Wrapped A
+where
+def unbox : (0 A : Sort u) -> Box A -> A :=
+  fun (0 A : Sort u) (b : Box A) =>
+  match b as self in Box return A with | box (x : A) => x
+def pack : (0 A : Sort u) -> A -> Wrapped A :=
+  fun (0 A : Sort u) (x : A) => wrap (box x)
+def unpack : (0 A : Sort u) -> Wrapped A -> A :=
+  fun (0 A : Sort u) (w : Wrapped A) =>
+  match w as self in Wrapped return A with | wrap (b : Box A) => unbox A b
+def level : Sort (succ v) := Sort v
+end
+
+specialize Box (1, 2) as Data
+specialize Box (2, 1) as Types
+specialize Box (0, 1) as Proofs
+specialize Box (1, 2) as Again
+def dataValue : Tiny := Data_unpack Tiny (Data_pack Tiny (next zero))
+def typeValue : Type 0 := Types_unpack (Type 0) (Types_pack (Type 0) Tiny)
+def proofValue : Truth := Proofs_unpack Truth (Proofs_pack Truth truth)
+def againValue : Tiny := Again_unpack Tiny (Again_pack Tiny zero)
+
+poly (u) mu Single (0 A : Sort u) : Sort (succ u) with
+| single : A -> Single A
+where
+def make : (0 A : Sort u) -> A -> Single A :=
+  fun (0 A : Sort u) (x : A) => single x
+end
+specialize Single (1) as One
+def oneValue : One Tiny := One_make Tiny zero
+
+poly (u) mu First : Sort (succ u) with | first : First
+and Second : Sort (succ u) with | second : First -> Second
+specialize First (0) as Plain
+def plainValue : Plain_Second := second first

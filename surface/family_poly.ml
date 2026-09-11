@@ -18,6 +18,10 @@ let members catalog name =
   Option.map (fun s -> List.map (fun d -> d.Check.d_name) s.members)
     (List.assoc_opt name catalog)
 
+let companions catalog name =
+  Option.map (fun s -> List.map (fun (f, _ctors) -> f.Check.fam_name) s.companions)
+    (List.assoc_opt name catalog)
+
 let occupied globals catalog name =
   Option.is_some (Global.find name globals)
   || Option.is_some (Global.find_family name globals)

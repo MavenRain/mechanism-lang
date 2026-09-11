@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-PRENEX-M1",
+      "path": "surface/parser.ml",
+      "old": "Ok (Universe.Var index, rest)",
+      "new": "Ok (Universe.Var (Int.min index 0), rest)",
+      "source_sha256": "43568be04ba4df1061044b231fedeb89ff12a4d5032b43eff9138ad22baf1d46",
+      "mutant_sha256": "195e63da5e3af1e54aa09eba2d57fa8f7ee111b93146202745565e1e48c482b7",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL universe: the former lives at 0 and the expected universe is 1",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M2",
+      "path": "surface/universe.ml",
+      "old": "Ok (Level.imax u v)",
+      "new": "Ok (Level.max u v)",
+      "source_sha256": "cf20adccd3998eb1a3c634db33a29feb98d365037292c404de7c1c5f59ca3fd9",
+      "mutant_sha256": "4b0ffdde076565d646024516f798bde1224b78a9614bfac37eba79b8b3dfb978",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL universe: the former lives at imax(u0, u1) and the expected universe is max(u0, u1)",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M3",
+      "path": "surface/elab.ml",
+      "old": "Check.make ~level_arity:arity g budget",
+      "new": "Check.make ~level_arity:0 g budget",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "2dd545887facfb2eb1348f29174f10de6431116aa8741893a4f9862bc5361609",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL universe: universe level is outside the global parameter scope",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M4",
+      "path": "surface/elab.ml",
+      "old": "  elab_program_in ~budget globals ds",
+      "new": "  elab_program_in ~budget:(if Budget.exhausted budget then Budget.unlimited else budget) globals ds",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "26f5eb2cfe92ed6763498e683d2244caf12d2c3edb89946a177e04cfe8dbdab7",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M5",
+      "path": "surface/elab.ml",
+      "old": "if Option.is_some (Poly.arity catalog name) then",
+      "new": "if Option.is_some (Poly.arity catalog name) && String.equal name \"\" then",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "d9c7e4133f99bf5073712b1a106ebb07de183a286bc9dd9f7bbe25ce0b9d1ff8",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL template-collision: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M6",
+      "path": "surface/elab.ml",
+      "old": "Poly.instantiate ~budget g catalog ~name ~levels ~as_name",
+      "new": "Poly.instantiate ~budget g catalog ~name ~levels:(List.rev levels) ~as_name",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "d772c5324afe55a0059f20b05022c9fcf0fbcffc2c1c19a0cbe3fe55b8c03150",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL universe: the former lives at 1 and the expected universe is 0",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-M7",
+      "path": "test/fixtures/prelude/prenex.mech",
+      "old": "dataIdentity Tiny (tinySucc tinyZero)",
+      "new": "dataIdentity Tiny tinyZero",
+      "source_sha256": "2cca6b4db0a164bcb6ee2ec21f49bfbc51516ba19f692bf104d9a2ef75656b2a",
+      "mutant_sha256": "4319cf2d301ca6a3dfed2c71eb0dcf8d14d51e4de8ef11ee30f69ce373007965",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])",
+      "killed": true
+    }
+  ]
+}

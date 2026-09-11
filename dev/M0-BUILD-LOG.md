@@ -1353,3 +1353,108 @@ count is 4182 lines against a bound of 3000, and the encoder count is 246
 lines against a bound of 900.  No fix in this review moves a bound, a
 tier or a trusted line count.  The TRUSTED-LINES leg stays red until the
 user rules D-A-1.
+
+## 2026-09-10: textual ordered groups and members
+
+Base: d4dc0c4.  Build copy: /Users/oobi/Documents/gpt12/mechanism-lang.
+Canonical repository: /Users/oobi/Documents/mechanism-lang.  The source
+now accepts ordered `and` families and `where ... end` member definitions
+under one universe binder scope.  Specialization rechecks the complete
+group, checks all generated names against both catalogs and the instance
+name, and includes members in output order.
+No kernel, encoder, pin or mapping verdict changes.
+
+The build has zero errors and warnings.  PRENEX-GROUPS passes with
+13 families, 23 entries, seven normal forms and 36 precise refusals.
+The runtime test passes on the kernel, Node and Wasmtime, including the
+37-to-41 payload change and the unchanged 12 result.  Eleven group,
+eleven family and seven definition mutation controls pass.
+
+The initial integration run exposed the old PRENEX expectation that an
+ordered group must fail.  That row now checks the explicit mutual syntax,
+which remains unsupported.  The new suite supplies ordered-group positive
+clients.  One group mutation initially failed to match its designated
+diagnostic.  The full measured error was recorded, and the full group
+replay then passed.  No mutation was counted as killed by a build failure.
+
+The final full battery has 33 PASS legs and one FAIL leg:
+`TRUSTED-LINES kernel=4182/3000 encoder=246/900`.  The clean base has
+the same bound failure and 31 PASS legs.  The watchdog tiers and bound
+constants remain unchanged.  Stage C, category targets, source-type
+parity and the D-A-1 ruling remain open.  The diff review checked
+namespace reservation, declaration order, budget propagation, generated
+rows and the absence of changes to trusted sources or gate limits.
+
+See dev/M0-STAGE-C-PRENEX-GROUPS.md and
+dev/validation/stage-c-prenex-groups/ for the contract and retained evidence.
+
+## Stage C textual ordered groups review (2026-09-10)
+
+Base: d4dc0c4.  The round fixes seven findings of the staged increment.
+The specialize path now checks every installed constructor label against
+the family and definition names of the caller globals, and it keeps a
+name that the globals already hold as a constructor label, because one
+template installs its labels again at every instance.  The member reader
+of `surface/parser.ml` accepts `def rec` into its declaration arm, so a
+recursive member reports `expected a nonrecursive member definition`
+instead of naming `def` as unexpected.  The group elaborator drops a
+`Family_poly.declare` call whose result it discarded, because
+`Family_poly.declare_group` runs the same universal check; the group
+suite pins the cost against the same two families declared as separate
+templates.  The printer doc comment of `surface/syntax.ml` now scopes
+the round-trip invariant to the trees the parser builds, because a group
+with no companion and no member prints as a plain single family.  The
+runtime harness names the gate of the mode that ran when it aborts.
+
+PRENEX-GROUPS prints 13 families, 23 entries, seven normal forms and 39
+precise refusals.  Three refusals are new:  a later label equal to an
+earlier instance name, a later label equal to an earlier generated
+member name and a group companion named after an existing constructor.
+PRENEX-FAMILIES and PRENEX prints are unchanged at 30 and 25 refusals.
+The `--groups` mutation replay has thirteen controls.  The measured
+overlay rows move to surface/elab.ml 324, surface/syntax.ml 49 and
+surface/parser.ml 151 in dev/PIN-DELTA.md.  PIN remains
+936a43a92dd59a04698648f24fa5ae94cdb532df.  No kernel, encoder, bound,
+tier or mapping verdict changes.
+
+A second round answers the two items of the first check.  The 85 column
+line of dev/M0-STAGE-C-PRENEX-GROUPS.md is rewrapped into three lines of
+at most 72 columns, and no word changes.  The review increment gains its
+own receipt in dev/validation/stage-c-prenex-groups/receipt-review-1.json
+at base d4dc0c4, which records the baseline and gates verdicts, the
+mutation counts of 13 groups, 11 families and seven definitions, the
+group suite counts of 13 families, 23 entries, seven normal forms and 39
+refusals, the runtime hosts and payloads, the trusted line counts, 25
+source hashes taken from the index and eight evidence hashes over the
+sibling captures.  The receipt of the first increment is untouched.
+
+Three sentences of dev/M0-STAGE-C-PRENEX-GROUPS.md are corrected at the
+close.  One paragraph is rewrapped, the count of isolated controls moves
+from eleven to thirteen with a description of the two new controls, and
+the mutation total moves from 29 controls with 11 group controls to 31
+controls with 13 group controls.  The review raised 10 findings, kept and
+fixed seven of them, and dropped three:  one merged into the generated
+name finding, one merged into the recursive member finding and one cut at
+the finding cap as a doc comment style point.  The frozen TRUSTED-LINES
+bound is not a defect of this increment, because the clean base carries
+the same red.
+
+The close ladder repeats the suites, the three mutation replays and the
+full battery:
+
+    PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=39
+    PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30
+    PRENEX-OK entries=16 computations=4 negatives=25
+    PRENEX-GROUPS-RUNTIME OK cases=2 hosts=3 mutation=1
+    PRENEX-FAMILIES-RUNTIME OK cases=2 hosts=3 mutation=1
+    PRENEX-RUNTIME OK cases=2 hosts=3 mutation=1
+    replay groups rc 0 {"passed": true, "killed": 13, "controls": 13}
+    replay families rc 0 {"passed": true, "killed": 11, "controls": 11}
+    replay defs rc 0 {"passed": true, "killed": 7, "controls": 7}
+    battery PASS=33 FAIL TRUSTED-LINES  EXIT 1
+
+The one FAIL leg reads `TRUSTED-LINES kernel=4182/3000 encoder=246/900
+FAIL`, which is the bound the clean base also fails.  The verdict of the
+close is bound only.  PIN remains
+936a43a92dd59a04698648f24fa5ae94cdb532df, and no kernel, encoder, bound,
+tier or mapping verdict changes.

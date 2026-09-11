@@ -198,6 +198,8 @@ leg FAST LEVELS '^LEVELS-OK$' $ROOT/_build/default/test/levels.exe
 leg FAST PRENEX '^PRENEX-OK entries=' $ROOT/_build/default/test/prenex.exe $ROOT
 leg FAST PRENEX-FAMILIES '^PRENEX-FAMILIES-OK families=' \
   $ROOT/_build/default/test/prenex_families.exe $ROOT
+leg FAST PRENEX-GROUPS '^PRENEX-GROUPS-OK families=' \
+  $ROOT/_build/default/test/prenex_groups.exe $ROOT
 leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
   $ROOT/_build/default/test/wasm.exe $ROOT/vendor/kanon/test $ROOT/.gatework/wasm-suite
@@ -227,6 +229,8 @@ leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py
 leg MED PRENEX-FAMILIES-RUNTIME '^PRENEX-FAMILIES-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --families
+leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
+  python3 -P $ROOT/test/prenex_runtime.py --groups
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

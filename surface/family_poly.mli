@@ -7,6 +7,7 @@ type t
 val empty : t
 val arity : t -> string -> int option
 val members : t -> string -> string list option
+val companions : t -> string -> string list option
 
 (** The result universe must always be Prop or always be Type. Constructor
     names are unique within the family and retain their names in instances.

@@ -56,8 +56,17 @@ names are checked before the immutable program result is returned.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 254 |
-| surface/token.ml | 8 |
-| surface/lexer.ml | 4 |
-| surface/syntax.ml | 27 |
-| surface/parser.ml | 119 |
+| surface/elab.ml | 324 |
+| surface/token.ml | 10 |
+| surface/lexer.ml | 5 |
+| surface/syntax.ml | 49 |
+| surface/parser.ml | 151 |
+
+The textual group increment adds ordered family elaboration, member
+checking and complete instance reservation to the surface overlay.  The
+parser reads `and` companions and a `where ... end` member block under
+one universe scope.  The printer preserves both.  The review round of
+2026-09-10 completes the label check of an instance against the caller
+globals, names the refusal of a recursive member and drops one repeated
+family check.  No kernel, encoder or vendor source changes in this
+increment.

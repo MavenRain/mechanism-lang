@@ -61,9 +61,9 @@ let negatives = [
   "no-poly-axiom", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
   "poly (u) axiom p : Sort u";
-  "no-poly-group", "parse", "expected a nonrecursive definition or single family after universe binders",
+  "no-poly-mutual", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
-  "poly (u) mu P : Prop with | p : P and Q : Prop with | q : Q";
+  "poly (u) mutual mu P : Prop with | p : P mu Q : Prop with | q : Q end";
   "no-poly-recursion", "parse", "expected a nonrecursive definition or single family after universe binders",
   "poly (u) def p : Sort (succ u) := Sort u",
   "poly (u) def rec p : Sort (succ u) := Sort u";

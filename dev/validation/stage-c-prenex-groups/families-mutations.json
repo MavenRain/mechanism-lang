@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-PRENEX-FAM-M1",
+      "path": "surface/elab.ml",
+      "old": "Check.make ~level_arity:arity globals budget",
+      "new": "Check.make ~level_arity:0 globals budget",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "13a8231d079cfcb7f80011fd5b41c8090de3e7f2aa0081736909cf03ac38fe75",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL universe: universe level is outside the global parameter scope",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M2",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+      "new": "Family_poly.instantiate ~budget g families ~name ~levels:(List.rev levels) ~as_name",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "be10e1a7d93507d004c68fb1a927871a8457843b7aa76e1c94080ac1bf3ca476",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL universe: the former lives at 1 and the expected universe is 2",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M3",
+      "path": "surface/elab.ml",
+      "old": "else if Option.is_some (Family_poly.arity families name) then",
+      "new": "else if Option.is_some (Family_poly.arity families name) && String.equal name \"\" then",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "7a80e9e231fb8950ed5dd1ce3b95e8ae24f97690c6dd54852b080a46c52b730d",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL family-template-collision: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M4",
+      "path": "surface/elab.ml",
+      "old": "Ok (installed, catalog, families, rows)",
+      "new": "Ok (g, catalog, families, rows)",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "3038177145fbd95a3ce93bc16c66033a561d124a917c574b0e0641682167202f",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL unbound: DataBox",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M5",
+      "path": "surface/elab.ml",
+      "old": "Poly.arity catalog ctor.Positivity.c_name",
+      "new": "Poly.arity catalog (ctor.Positivity.c_name ^ \":missing\")",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "c52669de38df8759c4a4b9dded68938b34c2cd6629e27d9ab4fa44babdc01b7c",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL late-constructor-collision: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M6",
+      "path": "surface/elab.ml",
+      "old": "elab_family_template ~budget g families ~arity fm",
+      "new": "elab_family_template ~budget:Budget.unlimited g families ~arity fm",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "7dd0f0edd7ef243014057dff51e2336e9176ad987725c11c2c8c6138b27db7a1",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M7",
+      "path": "test/fixtures/prelude/prenex-families.mech",
+      "old": "def dataBox : DataBox Tiny := box (tinySucc tinyZero)",
+      "new": "def dataBox : DataBox Tiny := box tinyZero",
+      "source_sha256": "1b972856e5760a414d5f4e975f9cfd0510de7c5e180310368699632925dd94eb",
+      "mutant_sha256": "64c96b5aed6b07387bb9f6b32f834cbe82a154455460e5c96cf4a7b6d37be1b3",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M8",
+      "path": "surface/elab.ml",
+      "old": "Option.is_some (Family_poly.arity families ctor.Positivity.c_name)",
+      "new": "Option.is_some (Family_poly.arity families (ctor.Positivity.c_name ^ \":missing\"))",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "684ee0385c1d4baa155aaaac8775bff201c3af06a1dde1d40424d91775d03237",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL late-family-template-collision: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M9",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+      "new": "Family_poly.instantiate ~budget:Budget.unlimited g families ~name ~levels ~as_name",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "36a8827306210b4b7ea509bd81c27e87d40f0e023e1a6a41ca323f623a8b4fb1",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL specialize-budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M10",
+      "path": "surface/elab.ml",
+      "old": "String.equal fc.Syntax.fc_name fm.Syntax.fm_name",
+      "new": "String.equal fc.Syntax.fc_name (fm.Syntax.fm_name ^ \":missing\")",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "a04c107c1dc6ced8be979f956c205c6999c4845e4b74e83caf69664ac702e167",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL self-named-constructor: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-FAM-M11",
+      "path": "surface/elab.ml",
+      "old": "String.equal ctor.Positivity.c_name as_name",
+      "new": "String.equal ctor.Positivity.c_name (as_name ^ \":missing\")",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "a8f9f7789c69454fa3fb93f7373d5ed9eb6d5f94265858fc2682b89d87805542",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-FAMILIES-FAIL instance-own-constructor: expected refusal",
+      "killed": true
+    }
+  ]
+}

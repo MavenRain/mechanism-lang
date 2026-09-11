@@ -1,0 +1,97 @@
+{
+  "date": "2026-09-10",
+  "base": "d4dc0c48cdee63b9b7c3694302ecb931c0efd79f",
+  "workspace": "/Users/oobi/Documents/mechanism-lang",
+  "canonical": "/Users/oobi/Documents/mechanism-lang",
+  "increment": "stage-c-prenex-groups review, fix round 1",
+  "predecessor": "receipt.json",
+  "gate_results": {
+    "baseline": {
+      "exit_code": 1,
+      "pass": 33,
+      "fail": [
+        "FAIL TRUSTED-LINES"
+      ]
+    },
+    "gates": {
+      "exit_code": 1,
+      "pass": 33,
+      "fail": [
+        "FAIL TRUSTED-LINES"
+      ]
+    }
+  },
+  "mutations": {
+    "groups": 13,
+    "families": 11,
+    "definitions": 7
+  },
+  "group_suite": {
+    "families": 13,
+    "entries": 23,
+    "computations": 7,
+    "negatives": 39
+  },
+  "runtime": {
+    "hosts": [
+      "kernel",
+      "node",
+      "wasmtime"
+    ],
+    "payloads": [
+      37,
+      41
+    ],
+    "unchanged": 12
+  },
+  "trusted_lines": {
+    "kernel": 4182,
+    "kernel_bound": 3000,
+    "encoder": 246,
+    "encoder_bound": 900
+  },
+  "review": {
+    "diff_whitespace": "pass",
+    "added_convention_findings": 0,
+    "trusted_sources_changed": false,
+    "watchdog_tiers_changed": false,
+    "notes": "Fix round 1 of the review closed seven findings.  The specialize path checks installed constructor labels against the caller globals.  The member reader accepts def rec, so a recursive member gets the precise refusal.  The group suite grew from 36 to 39 negatives and the group replay from 11 to 13 controls."
+  },
+  "source_sha256": {
+    ".gitignore": "7f9100dafd1fabb6640d35e17b130b587ad4fd3625239a417cc5b73c15f1a155",
+    "README.md": "636239c65571e255b5019fb61f485d62972b539eabe92dadd080b0d3c9d73fef",
+    "SPEC.md": "7b175db05fa79846ac9811db025f0cc5a2884dd47ee915aac4e1ebd629ee245f",
+    "dev/M0-BUILD-LOG.md": "fce3d35213e12cf61ea4521b0ad1093e818b02c7565ec5a99d6c9993f5ae52ad",
+    "dev/M0-STAGE-C-PRENEX-GROUPS.md": "83a1dcdbbc9f8dcbe0b3f7120b260d7cb1d8467f4d83811669d3ad68b4341dc8",
+    "dev/M0-STAGE-C.md": "9955c7c0166a142893b56ab3a55f3c71a25565dd7a0eda43c0b25dbe794c438b",
+    "dev/MUTATION-LOG.md": "652a481fa2f35029e2caa964fe080c59cfeedef1513d32b9b92b3dc52e092208",
+    "dev/PIN-DELTA.md": "d8de0e1914f6e92d2649c1c359731ab0b16782a871d818a7558f6c048e1d4ce5",
+    "dev/gates.sh": "a5db4dce63d67414ba918d9dc266d1ec09500dc00950272f54f147ac573e8437",
+    "dev/prenex-mutations.py": "9ecd2bb8a1bbe81d281d35c7edae40ac53ac7a50a00fed7e205e4c1a7bbc5785",
+    "prelude/README.md": "1eecda9b30233e81506b4ac4ee99f640270fb80d6b949bbf63920abda95791a9",
+    "surface/elab.ml": "c410bc4c5135031e31ea47969a48aba70a02aafd99d0edd71af6f97748a7be50",
+    "surface/family_poly.ml": "a92d2e7587d7b0ac8cac3c321bcca088330b2b5d0435efdc58850f0673ac4fd4",
+    "surface/family_poly.mli": "f66234b959b630a391021c13efadd4c8685d052fd5f628b8bf5e92288c2c3d00",
+    "surface/lexer.ml": "0c6d7cfbf0f4e32d1488fbd79f566d3bf515b2ba72702032d41f8a595db33779",
+    "surface/parser.ml": "4ffcb917c1ecf6759212e85c3862ec53dda6290696e600e3327dd471695a3171",
+    "surface/syntax.ml": "eacbad391ca47d721943ad65ceca78a8de1c4be8b7c393c67298a5faa59b7e8a",
+    "surface/token.ml": "a9f14dff8d57ee1447abe8b56b4a5dd08bdfa72528795006275919f7e8a7d7f1",
+    "test/dune": "f4cca19c04ebf9966174d018d59e5df152eea15c3401ce690256d5c149da8296",
+    "test/fixtures/prelude/prenex-groups-runtime.mech": "f606c33dd14a6020202f741c9942a166c2d9f2fe6d7558af601d675d42b74e0d",
+    "test/fixtures/prelude/prenex-groups.mech": "ddea5ba9f84904f866bba575cd8491f359488c8575ee021eef9507b6f8ea7d57",
+    "test/prenex.ml": "3cd7ad89163967983d7d187152078ebb75c5af5d34fe62acb45c5c9ed2bd8ff1",
+    "test/prenex_families.ml": "0a10232cda8240bb556b35de3a14ba36eeffaea4cb2e3beb74f9fa8f011483ff",
+    "test/prenex_groups.ml": "9f03a939418d37f637bc2b81aaf7cc7164e26ce778be61155b9d3d96387a1118",
+    "test/prenex_runtime.py": "fe13a8dd64ad199cb5d6cee4d472b59debd8b72716cddd4f443d32cb89c60d88"
+  },
+  "evidence_sha256": {
+    "baseline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline.stdout": "89e8d43e0d625a94b091b88bcbedd5b620dd97050fdd7e1763b879ebe1e1df4d",
+    "definitions-mutations.json": "5ea1692919d5a22bae7b64a70a50ac51737ed3b61e81b205c965b630ea75d539",
+    "families-mutations.json": "93f6c0ac621953333a8014cf357605f190442755855ecbfbe7b78198bf536484",
+    "gates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gates.stdout": "4d1f640e3a2bce90478feee85a9b59f395081601cd81baf9df9ea0cb4afa946a",
+    "groups-mutations.json": "b383b4a43aa8e341fc05eabb367a88a0e4e30e384cda5ee4797b57b2fa0e9e8b",
+    "mutation-runs.json": "6cc113871540cab6c3e2a7dea1e679af759cc8ff8db31ffb8038b016477f2ba0"
+  }
+}

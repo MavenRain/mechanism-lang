@@ -46,6 +46,7 @@ let keywords : (string * Token.kind) list =
     ("Sort", Token.KSort);
     ("poly", Token.KPoly);
     ("specialize", Token.KSpecialize);
+    ("where", Token.KWhere);
     ("let", Token.KLet);
     ("in", Token.KIn);
     ("natAdd", Token.KNatAdd);

@@ -64,6 +64,7 @@ type kind =
   | KSort
   | KPoly
   | KSpecialize
+  | KWhere
   | KLet
   | KIn
   | KAuto
@@ -128,6 +129,7 @@ let describe (k : kind) : string =
   | KSort -> "'Sort'"
   | KPoly -> "'poly'"
   | KSpecialize -> "'specialize'"
+  | KWhere -> "'where'"
   | KLet -> "'let'"
   | KIn -> "'in'"
   | KAuto -> "'auto'"

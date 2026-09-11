@@ -42,8 +42,8 @@ See `dev/M0-BUILD-LOG.md` for the validation record.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
-or the OCaml Poly and Family_poly APIs. Ordered family groups use
-Family_poly. The importer
+or the OCaml Poly and Family_poly APIs.  Ordered family groups and their
+members also have source syntax.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
 is rechecked.
@@ -158,8 +158,25 @@ Constructor names stay local to their family and resolve using the
 expected instance type. PRENEX-FAMILIES and PRENEX-FAMILIES-RUNTIME cover
 this path. See `dev/M0-STAGE-C-PRENEX-FAMILIES.md`.
 
-Stage C remains open. Textual family groups and members, category targets and
-checked source-type parity remain outstanding.
+An ordered group uses `and` between families and an optional `where`
+block of nonrecursive definitions, closed by `end`:
+
+```text
+poly (u) mu First : Sort (succ u) with | first : First
+and Second : Sort (succ u) with | second : First -> Second
+where
+def witness : Second := second first
+end
+specialize First (0) as Data
+```
+
+This installs families `Data` and `Data_Second`, plus `Data_witness`.
+Families can refer to earlier families.  Members can refer to all group
+families and earlier members.  The group checks universally and each
+instance checks again.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
+
+Stage C remains open.  Category targets and checked source-type parity
+remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

@@ -182,8 +182,8 @@ the separate programmatic catalog supplies a polymorphic equality family.
 That catalog also supplies a universally checked polymorphic library
 transport and type cast, recorded in dev/M0-STAGE-C-TRANSPORT.md.  Dependent
 elimination and equality composition are recorded in
-dev/M0-STAGE-C-EQUALITY-OPS.md. Textual family templates are supported
-below; textual family groups and checked source-type parity remain open.
+dev/M0-STAGE-C-EQUALITY-OPS.md.  Textual family templates, ordered groups
+and members are supported below.  Checked source-type parity remains open.
 
 Mapping inventory verdicts are NAME_ONLY, UNMAPPED or NEVER.  NAME_ONLY
 names a candidate, not checked source-type parity.  The inventory preserves
@@ -318,8 +318,9 @@ and validation scope are recorded in dev/M0-STAGE-C-PRENEX.md.
 
 `poly (u, v) mu NAME ...` binds named Sort levels for one recursive
 family's parameter telescope, indices, result universe and constructors.
-The family body uses the ordinary mu grammar. Family groups, member
-definitions and references to other templates are not part of this syntax.
+The family body uses the ordinary mu grammar.  Ordered groups and member
+definitions extend this syntax as specified below.  References to other
+templates require an earlier explicit specialization.
 The result universe must remain Prop or remain Type under every universe
 assignment, as required by the existing Family_poly API.
 
@@ -329,7 +330,8 @@ it in the source catalog. It enters neither global table nor output rows.
 `specialize NAME (LEVELS) as FRESH` dispatches by template kind and rechecks
 the closed family and constructors before installing it in the family
 table. Constructor labels retain their spelling; their expected family
-instance resolves them. Specialization adds no definition or axiom row.
+instance resolves them.  A family with no members adds no definition or
+axiom row.
 
 Definition and family template names share a reserved namespace for one
 source check.  A later declaration cannot reuse a template name or an
@@ -338,8 +340,13 @@ because the group installs them at once.  A family template's constructor
 labels stay outside both catalogs until an instance installs them, so the
 verdict does not depend on the declaration order.  A specialized family's
 constructor labels are then checked against both template catalogs and
-against the instance name before the resulting globals can escape.  A
-constructor label equal to its own family name is refused at the template.
+against the instance name before the resulting globals can escape.  The
+labels also join the reservation of the caller globals:  a label cannot
+take the name of an earlier instance, of an earlier generated member or
+of another definition.  A name that the globals already hold as a
+constructor label stays available, because one template installs its
+labels again at every instance.  A constructor label equal to its own
+family name is refused at the template.
 Ordinary constructor/global name sharing retains the inherited kernel
 behavior.
 All stages share the caller's budget and return no environment on failure.
@@ -349,3 +356,48 @@ normalization and precise refusals. PRENEX-FAMILIES-RUNTIME compares
 specialized-family payloads and recursive lists on all three hosts.
 See dev/M0-STAGE-C-PRENEX-FAMILIES.md. This adds no kernel rule, mapping
 verdict, universe inference or implicit specialization.
+
+## Stage C textual ordered groups and members
+
+The source grammar extends the family template as follows:
+
+```text
+poly-family ::= 'poly' '(' universes ')' 'mu' family
+                ('and' family)* ('where' member+ 'end')?
+member      ::= 'def' NAME ':' term ':=' term
+```
+
+`where` is reserved.  Its definitions use the same universe binders as
+the families.  The block requires at least one definition and a closing
+`end`.  A member cannot be an axiom, recursive definition, nested template
+or specialization.  An explicit `poly (...) mutual ... end` is refused.
+
+Families check in order.  Each family can use itself and preceding
+families, but cannot use a later family.  After all families check, members
+check in order under that symbolic environment.  A member can use all
+group families and earlier members.  Members cannot refer to themselves
+or later members.  `Family_poly.declare_group` checks the complete schema
+universally before it enters the catalog.  Only the first family names
+the catalog entry.  All symbolic globals stay outside the caller's
+environment and output rows.
+
+`specialize FIRST (LEVELS) as FRESH` installs the first family as `FRESH`,
+each companion as `FRESH_NAME`, and each member as `FRESH_NAME`.  Family
+and member references are renamed together.  The closed instance checks
+again before any environment is returned.  Member definitions join the
+ordinary output rows in source order, so check, axioms, emit and run see
+them.  Generated names must be fresh against global entries, families,
+constructors and both template catalogs.  Every installed constructor
+label is checked against both catalogs and every generated name.
+
+Symbolic family and member names cannot reuse a name in either source
+catalog.  Member names also cannot reuse a symbolic constructor label.
+Constructor labels can repeat across families and resolve by expected
+family.  A failure returns no partial environment.  Declaration,
+specialization and rechecking share the caller's budget.
+
+PRENEX-GROUPS checks round-trips, exact inventories, normalization,
+isolation, member order and precise refusals.  PRENEX-GROUPS-RUNTIME checks
+member calls on the kernel, Node and Wasmtime, with a changed payload.
+See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.  Category targets and checked
+source-type parity remain open.

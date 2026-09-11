@@ -134,6 +134,7 @@ and t =
 type decl =
   | DPoly of int * string * t * t
   | DPolyMu of int * fam
+  | DPolyGroup of int * fam * fam list * rec_def list
   | DSpecialize of string * Universe.t list * string
   | DDef of string * t * t
   | DAxiom of string * t
@@ -298,6 +299,15 @@ let decl_text (d : decl) : string =
   | DPolyMu (arity, family) ->
       let names = List.init arity (fun i -> "u" ^ string_of_int i) in
       "poly (" ^ String.concat ", " names ^ ") " ^ fam_text "mu" family
+  | DPolyGroup (arity, family, companions, members) ->
+      let names = List.init arity (fun i -> "u" ^ string_of_int i) in
+      "poly (" ^ String.concat ", " names ^ ") " ^ fam_text "mu" family
+      ^ String.concat "" (List.map (fam_text "and") companions)
+      ^ (match members with
+        | [] -> ""
+        | _first :: _rest -> "where\n" ^ String.concat "" (List.map (fun m ->
+            Printf.sprintf "def %s : %s := %s\n" m.rd_name (at 0 m.rd_ty)
+              (at 0 m.rd_body)) members) ^ "end\n")
   | DSpecialize (name, levels, as_name) ->
       Printf.sprintf "specialize %s (%s) as %s\n" name
         (String.concat ", " (List.map Universe.text levels)) as_name
@@ -317,7 +327,11 @@ let decl_text (d : decl) : string =
                m.rd_name (at 0 m.rd_ty) (at 0 m.rd_body))
            ms)
 
-(** The printer of SA-D2:  its output re-parses to an equal tree.  An
-    empty tree prints as the empty text, which parses back to the empty
-    tree. *)
+(** The printer of SA-D2:  its output re-parses to an equal tree for
+    every tree the parser builds.  An empty tree prints as the empty
+    text, which parses back to the empty tree.  A group with no
+    companion and no member has no source text of its own:  it prints
+    as a plain single family and re-parses to DPolyMu.  The parser
+    never builds that node, because a group needs a companion or a
+    member block. *)
 let print (ds : decl list) : string = String.concat "" (List.map decl_text ds)

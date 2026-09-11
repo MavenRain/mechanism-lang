@@ -1,0 +1,297 @@
+{
+  "groups": {
+    "work_directory": "/Users/oobi/Documents/gpt12/mechanism-group-mutants-final",
+    "runs": {
+      "baseline-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "baseline": {
+        "stdout": "PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=36\n",
+        "stderr": ""
+      },
+      "restored-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "restored": {
+        "stdout": "PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=36\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M1": {
+        "stdout": "PRENEX-GROUPS-FAIL unbound: the family Box is not declared\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M2": {
+        "stdout": "PRENEX-GROUPS-FAIL unbound: unbox\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M3": {
+        "stdout": "PRENEX-GROUPS-FAIL member inventory or row order changed\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M4": {
+        "stdout": "PRENEX-GROUPS-FAIL companion-template-target: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M5-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M5": {
+        "stdout": "PRENEX-GROUPS-FAIL companion-constructor-target: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M6-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M6": {
+        "stdout": "PRENEX-GROUPS-FAIL generated-companion-label: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M7-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M7": {
+        "stdout": "PRENEX-GROUPS-FAIL companion-label-definition-template: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M8-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M8": {
+        "stdout": "PRENEX-GROUPS-FAIL declaration-budget: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M9-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M9": {
+        "stdout": "PRENEX-GROUPS-FAIL instance-budget: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M10-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M10": {
+        "stdout": "PRENEX-GROUPS-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor zero) [])\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M11-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-GROUP-M11": {
+        "stdout": "PRENEX-GROUPS-FAIL companion-definition-template: expected refusal\n",
+        "stderr": ""
+      }
+    }
+  },
+  "families": {
+    "work_directory": "/Users/oobi/Documents/gpt12/mechanism-family-replay",
+    "runs": {
+      "baseline-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "baseline": {
+        "stdout": "PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30\n",
+        "stderr": ""
+      },
+      "restored-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "restored": {
+        "stdout": "PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M1": {
+        "stdout": "PRENEX-FAMILIES-FAIL universe: universe level is outside the global parameter scope\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M2": {
+        "stdout": "PRENEX-FAMILIES-FAIL universe: the former lives at 1 and the expected universe is 2\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M3": {
+        "stdout": "PRENEX-FAMILIES-FAIL family-template-collision: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M4": {
+        "stdout": "PRENEX-FAMILIES-FAIL unbound: DataBox\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M5-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M5": {
+        "stdout": "PRENEX-FAMILIES-FAIL late-constructor-collision: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M6-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M6": {
+        "stdout": "PRENEX-FAMILIES-FAIL budget: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M7-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M7": {
+        "stdout": "PRENEX-FAMILIES-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M8-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M8": {
+        "stdout": "PRENEX-FAMILIES-FAIL late-family-template-collision: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M9-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M9": {
+        "stdout": "PRENEX-FAMILIES-FAIL specialize-budget: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M10-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M10": {
+        "stdout": "PRENEX-FAMILIES-FAIL self-named-constructor: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M11-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-FAM-M11": {
+        "stdout": "PRENEX-FAMILIES-FAIL instance-own-constructor: expected refusal\n",
+        "stderr": ""
+      }
+    }
+  },
+  "definitions": {
+    "work_directory": "/Users/oobi/Documents/gpt12/mechanism-definition-replay-final",
+    "runs": {
+      "baseline-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "baseline": {
+        "stdout": "PRENEX-OK entries=16 computations=4 negatives=25\n",
+        "stderr": ""
+      },
+      "restored-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "restored": {
+        "stdout": "PRENEX-OK entries=16 computations=4 negatives=25\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M1": {
+        "stdout": "PRENEX-FAIL universe: the former lives at 0 and the expected universe is 1\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M2": {
+        "stdout": "PRENEX-FAIL universe: the former lives at imax(u0, u1) and the expected universe is max(u0, u1)\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M3": {
+        "stdout": "PRENEX-FAIL universe: universe level is outside the global parameter scope\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M4": {
+        "stdout": "PRENEX-FAIL budget: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M5-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M5": {
+        "stdout": "PRENEX-FAIL template-collision: expected refusal\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M6-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M6": {
+        "stdout": "PRENEX-FAIL universe: the former lives at 1 and the expected universe is 0\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M7-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      },
+      "C-PRENEX-M7": {
+        "stdout": "PRENEX-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor tinyZero) [])\n",
+        "stderr": ""
+      }
+    }
+  }
+}

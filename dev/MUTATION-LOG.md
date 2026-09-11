@@ -630,3 +630,41 @@ The definition replay in
 `{"passed": true, "killed": 7, "controls": 7}` with
 `PRENEX-OK entries=16 computations=4 negatives=25`.  The seven family
 controls of the block above are unchanged.
+
+## 2026-09-10: textual ordered groups and member controls
+
+`python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY --groups` adds
+eleven controls.  They require clean builds, designated suite refusals
+and a passing restored suite.  M1 reverses family order; M2 reverses
+member order; M3 reverses output rows.  M4 and M5 remove generated-name
+checks against definition templates and constructors.  M6 removes the
+label check against generated companion and member names.  M7 checks
+only root-family labels.  M8 and M9 bypass declaration and specialization
+budgets.  M10 changes the normalized payload.  M11 removes source-group
+reservation against definition templates.
+
+The first M1 run produced `unbound: the family Box is not declared`,
+while the harness expected `unbound: Box`.  It was not counted as killed
+in that attempt.  The exact diagnostic was corrected and the full replay
+reports 11/11 killed with passing baseline and restored suites.  The
+existing family and definition replays report 11/11 and 7/7.  Their
+control expressions and expected mutation diagnostics are unchanged.
+
+The old source tests that refused ordered groups now refuse explicit
+mutual syntax.  Ordered groups have positive coverage in PRENEX-GROUPS.
+The runtime control changes 37 to 41 through specialized member calls;
+the independent call remains 12 on all three hosts.  Results, source
+hashes and baseline/restored outputs are retained under
+dev/validation/stage-c-prenex-groups/.
+
+## 2026-09-10: ordered group review, fix round 1
+
+The review round adds two controls to the `--groups` replay, for a total
+of thirteen.  M12 removes the new label check against the family names
+of the caller globals; its designated refusal is
+`late-label-instance-name`.  M13 removes the group-name check against
+existing constructor labels; its designated refusal is
+`companion-constructor-name`.  The replay reports 13 of 13 killed with a
+passing baseline suite and a passing restored suite.  The family and
+definition replays report 11 of 11 and 7 of 7.  Their control
+expressions and expected diagnostics are unchanged.

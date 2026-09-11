@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-PRENEX-GROUP-M1",
+      "path": "surface/elab.ml",
+      "old": "globals catalog ~arity (List.rev reversed)",
+      "new": "globals catalog ~arity reversed",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "0ee2dded517d927ac1e528455570eeea1795fd2ab0d8cf97cb8520dc3bec146e",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL unbound: the family Box is not declared",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M2",
+      "path": "surface/elab.ml",
+      "old": "~members:(List.rev member_rows)",
+      "new": "~members:member_rows",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "992168a983c577961261a843d1daca4c826bbd0e94b084f482722f02055a3d97",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL unbound: unbox",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M3",
+      "path": "surface/elab.ml",
+      "old": "let rows = List.rev_append member_rows rows in",
+      "new": "let rows = List.append member_rows rows in",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "1576c2483ec83bf63c3fbbadd912da6b54169056f983085d9f544eb5da682323",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL member inventory or row order changed",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M4",
+      "path": "surface/elab.ml",
+      "old": "Option.is_some (Poly.arity catalog n)",
+      "new": "Option.is_some (Poly.arity catalog (n ^ \":missing\"))",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "025ab4473277e59d901f705bb50d7a8501592c06e4f412ac5b7873e2480b162b",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL companion-template-target: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M5",
+      "path": "surface/elab.ml",
+      "old": "Option.is_some (find_ctor n g)",
+      "new": "Option.is_some (find_ctor (n ^ \":missing\") g)",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "41c764ecf8f8143891d583cd792bab358dfa26809efc7cdd183c19fce081ab12",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL companion-constructor-target: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M6",
+      "path": "surface/elab.ml",
+      "old": "List.mem ctor.Positivity.c_name (companions @ members)",
+      "new": "List.mem ctor.Positivity.c_name []",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "984e9bd08a54132904914fae240e7344e8642513487faaf191fb2678e4fefb2c",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL generated-companion-label: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M7",
+      "path": "surface/elab.ml",
+      "old": "List.concat_map (fun f -> f.Positivity.f_ctors) instances",
+      "new": "List.concat_map (fun f -> f.Positivity.f_ctors) (List.filter (fun f -> String.equal f.Positivity.f_name as_name) instances)",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "68fc6eb20efad8574621901031b0e43a746693a553856e95e85d09b5dcb9dc64",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL companion-label-definition-template: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M8",
+      "path": "surface/elab.ml",
+      "old": "elab_family_group ~budget g families catalog ~arity",
+      "new": "elab_family_group ~budget:Budget.unlimited g families catalog ~arity",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "2eabd04168fe7654ff9f701e4fc5f48ecbfd5aa8e06bcd88848560b33f6ef447",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL declaration-budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M9",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+      "new": "Family_poly.instantiate ~budget:Budget.unlimited g families ~name ~levels ~as_name",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "36a8827306210b4b7ea509bd81c27e87d40f0e023e1a6a41ca323f623a8b4fb1",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL instance-budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M10",
+      "path": "test/fixtures/prelude/prenex-groups.mech",
+      "old": "Data_unpack Tiny (Data_pack Tiny (next zero))",
+      "new": "Data_unpack Tiny (Data_pack Tiny zero)",
+      "source_sha256": "ddea5ba9f84904f866bba575cd8491f359488c8575ee021eef9507b6f8ea7d57",
+      "mutant_sha256": "f17b547c07e8bea0ccbece7805b0d257e23d0a9294ed15df437371a5e12cfd5b",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor zero) [])",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-GROUP-M11",
+      "path": "surface/elab.ml",
+      "old": "Option.is_some (Poly.arity definitions name)",
+      "new": "Option.is_some (Poly.arity definitions (name ^ \":missing\"))",
+      "source_sha256": "4b4abe897c15a54c6f644c7c2b99157705a1a68aba500a3c1c1c530bd42ef622",
+      "mutant_sha256": "2ee12c9e560b800ab896a226412ee31605e530577813bcb8a9375682ff54acba",
+      "exit_code": 1,
+      "diagnostic": "PRENEX-GROUPS-FAIL companion-definition-template: expected refusal",
+      "killed": true
+    }
+  ]
+}

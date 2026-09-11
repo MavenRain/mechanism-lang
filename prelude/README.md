@@ -116,3 +116,13 @@ FAMILY-GROUPS covers ordered dependencies, companion universe substitution,
 name collisions, scope, closed rechecking, template references from a
 member, and a refusal after which the caller globals stay usable.  See
 `dev/M0-STAGE-C-CONGRUENCE.md` for the API and reproducible controls.
+
+## Textual ordered groups
+
+`poly (...) mu ... and ... where def ... end` declares ordered family
+templates and their nonrecursive members.  Each explicit specialization
+renames and rechecks the complete group.  The executable clients in
+`test/fixtures/prelude/prenex-groups.mech` cover data, types and proofs
+from an empty environment.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md` for
+grammar, naming and validation.  Category targets and checked source-type
+parity remain open.

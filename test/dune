@@ -85,6 +85,11 @@
  (modules Prenex_families)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
+(executable
+ (name prenex_groups)
+ (modules Prenex_groups)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))
+
 (copy_files ../vendor/kanon/test/main.ml)
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)

@@ -9,9 +9,10 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--families"):
-    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families]")
-FAMILIES = len(sys.argv) == 3
+if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] not in ("--families", "--groups")):
+    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families|--groups]")
+FAMILIES = sys.argv[2:] == ["--families"]
+GROUPS = sys.argv[2:] == ["--groups"]
 WORK = Path(sys.argv[1]).resolve()
 if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
     raise SystemExit("the work directory must be new and outside the source repository")
@@ -39,6 +40,8 @@ def build(name):
 
 def suite(name):
     executable = "prenex_families.exe" if FAMILIES else "prenex.exe"
+    if GROUPS:
+        executable = "prenex_groups.exe"
     return run(name, [str(COPY / "_build/default/test" / executable), str(COPY)])
 
 
@@ -113,6 +116,60 @@ if FAMILIES:
          "String.equal ctor.Positivity.c_name as_name",
          "String.equal ctor.Positivity.c_name (as_name ^ \":missing\")",
          "PRENEX-FAMILIES-FAIL instance-own-constructor: expected refusal"),
+    ]
+
+if GROUPS:
+    controls = [
+        ("C-PRENEX-GROUP-M1", "surface/elab.ml",
+         "globals catalog ~arity (List.rev reversed)", "globals catalog ~arity reversed",
+         "PRENEX-GROUPS-FAIL unbound: the family Box is not declared"),
+        ("C-PRENEX-GROUP-M2", "surface/elab.ml",
+         "~members:(List.rev member_rows)", "~members:member_rows",
+         "PRENEX-GROUPS-FAIL unbound: unbox"),
+        ("C-PRENEX-GROUP-M3", "surface/elab.ml",
+         "let rows = List.rev_append member_rows rows in",
+         "let rows = List.append member_rows rows in",
+         "PRENEX-GROUPS-FAIL member inventory or row order changed"),
+        ("C-PRENEX-GROUP-M4", "surface/elab.ml",
+         "Option.is_some (Poly.arity catalog n)",
+         "Option.is_some (Poly.arity catalog (n ^ \":missing\"))",
+         "PRENEX-GROUPS-FAIL companion-template-target: expected refusal"),
+        ("C-PRENEX-GROUP-M5", "surface/elab.ml",
+         "Option.is_some (find_ctor n g)",
+         "Option.is_some (find_ctor (n ^ \":missing\") g)",
+         "PRENEX-GROUPS-FAIL companion-constructor-target: expected refusal"),
+        ("C-PRENEX-GROUP-M6", "surface/elab.ml",
+         "List.mem ctor.Positivity.c_name (companions @ members)",
+         "List.mem ctor.Positivity.c_name []",
+         "PRENEX-GROUPS-FAIL generated-companion-label: expected refusal"),
+        ("C-PRENEX-GROUP-M7", "surface/elab.ml",
+         "List.concat_map (fun f -> f.Positivity.f_ctors) instances",
+         "List.concat_map (fun f -> f.Positivity.f_ctors) (List.filter (fun f -> String.equal f.Positivity.f_name as_name) instances)",
+         "PRENEX-GROUPS-FAIL companion-label-definition-template: expected refusal"),
+        ("C-PRENEX-GROUP-M8", "surface/elab.ml",
+         "elab_family_group ~budget g families catalog ~arity",
+         "elab_family_group ~budget:Budget.unlimited g families catalog ~arity",
+         "PRENEX-GROUPS-FAIL declaration-budget: expected refusal"),
+        ("C-PRENEX-GROUP-M9", "surface/elab.ml",
+         "Family_poly.instantiate ~budget g families ~name ~levels ~as_name",
+         "Family_poly.instantiate ~budget:Budget.unlimited g families ~name ~levels ~as_name",
+         "PRENEX-GROUPS-FAIL instance-budget: expected refusal"),
+        ("C-PRENEX-GROUP-M10", "test/fixtures/prelude/prenex-groups.mech",
+         "Data_unpack Tiny (Data_pack Tiny (next zero))",
+         "Data_unpack Tiny (Data_pack Tiny zero)",
+         "PRENEX-GROUPS-FAIL wrong computation: dataValue = (In SMu Tiny [] (ACtor zero) [])"),
+        ("C-PRENEX-GROUP-M11", "surface/elab.ml",
+         "Option.is_some (Poly.arity definitions name)",
+         "Option.is_some (Poly.arity definitions (name ^ \":missing\"))",
+         "PRENEX-GROUPS-FAIL companion-definition-template: expected refusal"),
+        ("C-PRENEX-GROUP-M12", "surface/elab.ml",
+         "Option.is_some (Global.find_family ctor.Positivity.c_name g)",
+         "Option.is_some (Global.find_family (ctor.Positivity.c_name ^ \":missing\") g)",
+         "PRENEX-GROUPS-FAIL late-label-instance-name: expected refusal"),
+        ("C-PRENEX-GROUP-M13", "surface/elab.ml",
+         "Option.is_some (find_ctor name globals)",
+         "Option.is_some (find_ctor (name ^ \":missing\") globals)",
+         "PRENEX-GROUPS-FAIL companion-constructor-name: expected refusal"),
     ]
 
 build("baseline-build")

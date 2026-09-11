@@ -58,7 +58,7 @@ let kind_starts_atom (k : Token.kind) : bool =
      never inside a term, so it starts no atom either. *)
   | Token.KReturn | Token.KWith | Token.KAbsurd | Token.KLet | Token.KIn | Token.KMu
   | Token.KAnd | Token.KRec | Token.KMatch | Token.KMutual | Token.KEnd | Token.Eof
-  | Token.KPoly | Token.KSpecialize ->
+  | Token.KPoly | Token.KSpecialize | Token.KWhere ->
       false
 
 let starts_atom (ts : Token.t list) : bool =
@@ -681,13 +681,45 @@ let parse_decl ts =
     :: { Token.kind = Token.LParen; loc = _ } :: rest ->
       let* universes, rest = universe_names rest [] in
       let module P = Scoped (struct let universes = universes end) in
-      let* decl, rest = P.parse_decl rest in
-      (match decl with
-      | Syntax.DDef (name, ty, body) -> Ok (Syntax.DPoly (List.length universes, name, ty, body), rest)
-      | Syntax.DMu [family] -> Ok (Syntax.DPolyMu (List.length universes, family), rest)
-      | Syntax.DAxiom _ | Syntax.DMu ([] | _ :: _ :: _) | Syntax.DRec _
-      | Syntax.DPoly _ | Syntax.DPolyMu _ | Syntax.DSpecialize _ ->
-          expected "a nonrecursive definition or single family after universe binders" ts)
+      let arity = List.length universes in
+      let rec members ts acc = match ts with
+        (* PGRP review, round 1:  "def rec" joins this arm, so a
+           recursive member reads as a declaration and the branch below
+           names it.  Without the KRec token the reader fell to the
+           catch-all, which reported "def" as unexpected. *)
+        | { Token.kind = Token.KDef; loc = _ }
+          :: { Token.kind = (Token.Ident _ | Token.KRec); loc = _ } :: _tail ->
+            let* decl, rest = P.parse_decl ts in
+            (match decl with
+            | Syntax.DDef (name, ty, body) ->
+                members rest ({ Syntax.rd_name = name; rd_ty = ty; rd_body = body } :: acc)
+            | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ | Syntax.DPoly _
+            | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DSpecialize _ ->
+                expected "a nonrecursive member definition" ts)
+        | { Token.kind = Token.KEnd; loc = _ } :: rest ->
+            (match acc with
+            | [] -> expected "a nonempty list of member definitions" ts
+            | _first :: _tail -> Ok (List.rev acc, rest))
+        | ({ Token.kind = _; loc = _ } :: _ | []) ->
+            expected "'def' or 'end' in family members" ts in
+      (match rest with
+      | { Token.kind = Token.KMu; loc = _ } :: rest ->
+          let* group, rest = P.parse_fam_group rest [] in
+          let* definitions, rest = match rest with
+            | { Token.kind = Token.KWhere; loc = _ } :: rest -> members rest []
+            | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ([], rest) in
+          (match group, definitions with
+          | [family], [] -> Ok (Syntax.DPolyMu (arity, family), rest)
+          | family :: companions, definitions ->
+              Ok (Syntax.DPolyGroup (arity, family, companions, definitions), rest)
+          | [], _definitions -> expected "a nonempty family group" ts)
+      | ({ Token.kind = _; loc = _ } :: _ | []) ->
+          let* decl, rest = P.parse_decl rest in
+          (match decl with
+          | Syntax.DDef (name, ty, body) -> Ok (Syntax.DPoly (arity, name, ty, body), rest)
+          | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ | Syntax.DPoly _
+          | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DSpecialize _ ->
+              expected "a nonrecursive definition or single family after universe binders" ts))
   | { Token.kind = Token.KSpecialize; loc = _ }
     :: { Token.kind = Token.Ident name; loc = _ }
     :: { Token.kind = Token.LParen; loc = _ } :: rest ->

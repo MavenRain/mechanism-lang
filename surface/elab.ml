@@ -994,7 +994,7 @@ let elab_mu_group ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
     gives every checking position form its expectation. *)
 let elab_decl (c : Check.ctx) (d : Syntax.decl) : (Check.decl, Error.t) result =
   match d with
-  | Syntax.DPoly _ | Syntax.DPolyMu _ | Syntax.DSpecialize _ ->
+  | Syntax.DPoly _ | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DSpecialize _ ->
       Error (Error.Mismatch "a prenex declaration requires a program catalog")
   | Syntax.DDef (name, ty, body) ->
       let* ty' = elab c ~expected:None ty in
@@ -1152,7 +1152,7 @@ let elab_rec_group ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
     name, so such a template can never be specialized, and the refusal
     at the specialize would name the instance side instead of the real
     cause. *)
-let elab_family_template ~budget globals catalog ~arity (fm : Syntax.fam) =
+let elab_family_parts ~budget globals ~arity (fm : Syntax.fam) =
   let* () = Rules.all_ok (List.map (fun (fc : Syntax.fam_ctor) ->
     if String.equal fc.Syntax.fc_name fm.Syntax.fm_name then
       Error (Error.Mismatch ("the constructor " ^ fc.Syntax.fc_name
@@ -1163,7 +1163,44 @@ let elab_family_template ~budget globals catalog ~arity (fm : Syntax.fam) =
   let* _params, context = elab_telescope
     (Check.make ~level_arity:arity provisional budget) fm.fm_params in
   let* constructors = Rules.all_ok (List.map (elab_ctor_decl context fm.fm_name) fm.fm_ctors) in
+  Ok (family, constructors, provisional)
+
+let elab_family_template ~budget globals catalog ~arity fm =
+  let* family, constructors, _provisional = elab_family_parts ~budget globals ~arity fm in
   Family_poly.declare ~budget globals catalog ~arity family constructors
+
+(** Families check in source order, followed by nonrecursive members.
+    The temporary globals provide expectations for constructor labels and
+    dependent member bodies.  Only the checked group enters the catalog. *)
+let elab_family_group ~budget globals catalog definitions ~arity group members =
+  let names = List.map (fun fm -> fm.Syntax.fm_name) group
+    @ List.map (fun m -> m.Syntax.rd_name) members in
+  let* () = Rules.all_ok (List.map (fun name ->
+    if Option.is_some (Poly.arity definitions name)
+       || Option.is_some (Family_poly.arity catalog name)
+       || Option.is_some (find_ctor name globals) then
+      Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
+    else Ok ()) names) |> Result.map (fun _checks -> ()) in
+  let* symbolic, reversed = List.fold_left (fun acc fm ->
+    let* symbolic, rows = acc in
+    let* family, ctors, provisional = elab_family_parts ~budget symbolic ~arity fm in
+    let* symbolic = Check.define_ctors_at ~arity budget provisional
+      ~group:[family.Check.fam_name] ~name:family.fam_name ctors in
+    Ok (symbolic, (family, ctors) :: rows)) (Ok (globals, [])) group in
+  let* _symbolic, member_rows = List.fold_left (fun acc m ->
+    let* symbolic, rows = acc in
+    let name = m.Syntax.rd_name in
+    if Option.is_some (Global.find name symbolic)
+       || Option.is_some (Global.find_family name symbolic)
+       || Option.is_some (find_ctor name symbolic) then
+      Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
+    else
+      let* row = elab_decl (Check.make ~level_arity:arity symbolic budget)
+        (Syntax.DDef (name, m.Syntax.rd_ty, m.Syntax.rd_body)) in
+      let* entry = Check.check_decl_at ~arity symbolic budget row in
+      Ok (Global.add name entry symbolic, row :: rows)) (Ok (symbolic, [])) members in
+  Family_poly.declare_group ~budget ~members:(List.rev member_rows)
+    globals catalog ~arity (List.rev reversed)
 
 (** The whole file, with the globals the last declaration was checked
     in. Each declaration reads the preceding checked entries. Families
@@ -1181,7 +1218,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
       let names = match d with
         | Syntax.DDef (name, _, _) | Syntax.DAxiom (name, _)
         | Syntax.DPoly (_, name, _, _) | Syntax.DSpecialize (_, _, name) -> [name]
-        | Syntax.DPolyMu (_, fm) -> [fm.Syntax.fm_name]
+        | Syntax.DPolyMu (_, fm) | Syntax.DPolyGroup (_, fm, _, _) -> [fm.Syntax.fm_name]
         | Syntax.DMu fams -> List.map (fun fm -> fm.Syntax.fm_name) fams
         | Syntax.DRec members -> List.map (fun m -> m.Syntax.rd_name) members in
       (* SC-D6:  a constructor name occupies the flat namespace as its
@@ -1197,7 +1234,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
       let names = names @ (match d with
         | Syntax.DMu fams -> List.concat_map (fun fm ->
             List.map (fun (fc : Syntax.fam_ctor) -> fc.Syntax.fc_name) fm.Syntax.fm_ctors) fams
-        | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DPoly _ | Syntax.DPolyMu _
+        | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DPoly _ | Syntax.DPolyMu _ | Syntax.DPolyGroup _
         | Syntax.DSpecialize _ | Syntax.DRec _ -> []) in
       let* () = Rules.all_ok (List.map (fun name ->
         if Option.is_some (Poly.arity catalog name) then
@@ -1207,7 +1244,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
         else Ok ()) names) |> Result.map (fun _checks -> ()) in
       let reserved_by_ctor = match d with
         | Syntax.DPoly (_, name, _, _) | Syntax.DSpecialize (_, _, name) -> [name]
-        | Syntax.DPolyMu (_, fm) -> [fm.Syntax.fm_name]
+        | Syntax.DPolyMu (_, fm) | Syntax.DPolyGroup (_, fm, _, _) -> [fm.Syntax.fm_name]
         | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ -> [] in
       let* () = Rules.all_ok (List.map (fun name ->
         if Option.is_some (find_ctor name g) then
@@ -1222,18 +1259,50 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
       | Syntax.DPolyMu (arity, fm) ->
           let* families = elab_family_template ~budget g families ~arity fm in
           Ok (g, catalog, families, rows)
+      | Syntax.DPolyGroup (arity, fm, companions, members) ->
+          let* families = elab_family_group ~budget g families catalog ~arity
+            (fm :: companions) members in
+          Ok (g, catalog, families, rows)
       | Syntax.DSpecialize (name, levels, as_name) ->
           let* levels = Rules.all_ok (List.map Universe.lower levels) in
           if Option.is_some (Family_poly.arity families name) then
+            let companions = Family_poly.companions families name
+              |> Option.value ~default:[] |> List.map (fun n -> as_name ^ "_" ^ n) in
+            let members = Family_poly.members families name
+              |> Option.value ~default:[] |> List.map (fun n -> as_name ^ "_" ^ n) in
+            let generated = as_name :: companions @ members in
+            let* () = Rules.all_ok (List.map (fun n ->
+              if Option.is_some (Poly.arity catalog n) || Option.is_some (find_ctor n g) then
+                Error (Error.Mismatch ("the name " ^ n ^ " is already declared"))
+              else Ok ()) generated) |> Result.map (fun _checks -> ()) in
             let* installed = Family_poly.instantiate ~budget g families ~name ~levels ~as_name in
-            let* family = Global.find_family as_name installed |> Option.to_result
-              ~none:(Error.Cannot_infer "specialization returned no family") in
+            let* instances = Rules.all_ok (List.map (fun n ->
+              Global.find_family n installed |> Option.to_result
+                ~none:(Error.Cannot_infer "specialization returned no family"))
+              (as_name :: companions)) in
+            (* SC-D6, review round 1:  an installed label also joins the
+               reservation of the caller globals, so it cannot take the
+               name of an earlier instance, of an earlier generated
+               member or of any other definition.  A name that the
+               globals already hold as a constructor label stays
+               allowed, because one template installs its labels again
+               at every instance. *)
             let* () = Rules.all_ok (List.map (fun ctor ->
               if Option.is_some (Poly.arity catalog ctor.Positivity.c_name)
                  || Option.is_some (Family_poly.arity families ctor.Positivity.c_name)
-                 || String.equal ctor.Positivity.c_name as_name then
+                 || String.equal ctor.Positivity.c_name as_name
+                 || List.mem ctor.Positivity.c_name (companions @ members)
+                 || Option.is_some (Global.find_family ctor.Positivity.c_name g)
+                 || (Option.is_some (Global.find ctor.Positivity.c_name g)
+                     && Option.is_none (find_ctor ctor.Positivity.c_name g)) then
                 Error (Error.Mismatch ("the name " ^ ctor.Positivity.c_name ^ " is already declared"))
-              else Ok ()) family.Positivity.f_ctors) |> Result.map (fun _checks -> ()) in
+              else Ok ()) (List.concat_map (fun f -> f.Positivity.f_ctors) instances))
+              |> Result.map (fun _checks -> ()) in
+            let* member_rows = Rules.all_ok (List.map (fun n ->
+              Global.find n installed |> Option.to_result
+                ~none:(Error.Cannot_infer "specialization returned no member")
+              |> Result.map (fun entry -> (n, entry))) members) in
+            let rows = List.rev_append member_rows rows in
             Ok (installed, catalog, families, rows)
           else
           let* g, _term = Poly.instantiate ~budget g catalog ~name ~levels ~as_name in

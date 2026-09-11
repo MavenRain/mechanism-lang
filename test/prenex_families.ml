@@ -61,7 +61,7 @@ let negative_cases = [
     plain ^ "poly (u) mu zero : Type 0 with";
   "groups", "parse",
     "expected a nonrecursive definition or single family after universe binders, found 'poly'", box,
-    "poly (u) mu P : Prop with and Q : Prop with";
+    "poly (u) mutual mu P : Prop with mu Q : Prop with end";
   "late-family-template-collision", "mismatch", "the name box is already declared",
     instance ^ identity,
     box ^ "poly (u) mu box (0 A : Sort u) : Sort (succ u) with | mk : A -> box A "
