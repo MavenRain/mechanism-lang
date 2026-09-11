@@ -175,8 +175,15 @@ Families can refer to earlier families.  Members can refer to all group
 families and earlier members.  The group checks universally and each
 instance checks again.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
 
-Stage C remains open.  Category targets and checked source-type parity
-remain outstanding.
+`prelude/cat/category.mech` supplies categories with independent object
+and morphism universes, identity, composition and all three category laws.
+The PRELUDE-CATEGORY gate checks four specializations from an empty
+environment. PRELUDE-CATEGORY-RUNTIME checks concrete record projections
+on the kernel, Node and Wasmtime. Generic category accessor calls currently
+trap on the WASM hosts; see `dev/M0-STAGE-C-CATEGORY.md` for the reproducer.
+
+Stage C remains open. Functor, NatTrans, LeftKanExtension and checked
+source-type parity remain outstanding.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

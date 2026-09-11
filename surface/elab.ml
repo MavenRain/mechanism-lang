@@ -375,11 +375,15 @@ and elab_pair_proj (c : Check.ctx) (scrut : Term.t) (vs : Value.t Shape.t)
   in
   let size = size_of c in
   let ev = Eval.ev (globals_of c) in
+  let* domain = Eval.quote (globals_of c) (size + 1) dom_v in
+  let first_motive = Some {
+    Term.m_ind = None; m_idx = []; m_self = "self"; m_body = domain;
+  } in
   let* body_v =
     if Int.equal which 0 then Ok dom_v
     else
       let* point =
-        Rules.elim_value ev vs q None (Rules.proj_branch q 0) (env_of c)
+        Rules.elim_value ev vs Quantity.One first_motive (Rules.proj_branch q 0) (env_of c)
           (Value.var size)
       in
       Rules.open_closure ev dclo [ point ]

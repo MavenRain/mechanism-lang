@@ -668,3 +668,48 @@ existing constructor labels; its designated refusal is
 passing baseline suite and a passing restored suite.  The family and
 definition replays report 11 of 11 and 7 of 7.  Their control
 expressions and expected diagnostics are unchanged.
+
+## 2026-09-10: checked categories and dependent records
+
+`dev/category-mutations.py` builds an isolated copy and requires a clean
+build before every rejection. The baseline and restored suites pass.
+All nine controls were killed. The three broad prefixes in the first
+replay were narrowed afterward and checked against the retained outputs
+and matching current source hashes with `--verify`; all nine verify.
+The replay report and stricter verification are recorded separately in
+`dev/validation/stage-c-category/`.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-CAT-M1 | Drop the typed first projection in the surface motive | Elimination without a motive cannot be inferred |
+| C-CAT-M2 | Compare constructor indices without their types | Function-category identity proof cannot convert its endpoint |
+| C-CAT-M3 | Reuse the frozen motive syntax | Captured type has the wrong universe context |
+| C-CAT-M4 | Reuse the frozen branch syntax | De Bruijn index 2 is outside the context |
+| C-CAT-M5 | Do not extend the dependent index environment | De Bruijn index 0 is outside the environment |
+| C-CAT-M6 | Accept unequal constructor indices | Unequal-endpoint negative unexpectedly succeeds |
+| C-CAT-M7 | Return the left-identity field as right identity | Generic member type mismatch |
+| C-CAT-M8 | Reverse noncommuting composition inputs | compositionValue normalizes to the wrong value |
+| C-CAT-M9 | Drop the typed first projection in pair eta | Category eta witness cannot convert the neutral record |
+
+The concrete-record runtime control changes its payload from 37 to 41
+while preserving the other result at 12. The kernel, Node and Wasmtime
+agree for both variants. The independent generic-accessor probe remains
+a documented host failure and is not counted as a killed mutation.
+
+## 2026-09-10: checked categories review
+
+The review adds one control. `dev/category-mutations.py` now replays ten
+controls. The tenth reverses the fresh binder order of the frozen
+elimination quotation, which the previous suite did not observe.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| C-CAT-M10 | Reverse the fresh binder order of a quoted motive | Indexed motive body has the wrong type after quotation |
+
+The replay of this round reports ten of ten killed with a passing
+baseline suite and a passing restored suite. The nine earlier controls
+keep their expressions and their diagnostics. The replay report, the
+saved control outputs and the stricter verification are restaged in
+`dev/validation/stage-c-category/`, so `--verify` runs against a copy of
+that directory outside the repository. The mode writes its report into
+the work directory, so it never writes inside the repository.

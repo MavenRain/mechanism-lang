@@ -1,0 +1,9 @@
+PRELUDE-CATEGORY-ACCESSORS FAIL original/categoryPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='37\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL original/categoryPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='37\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL original/categoryOther/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='12\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL original/categoryOther/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='12\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL mutation/categoryPayload/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='41\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL mutation/categoryPayload/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='41\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL mutation/categoryOther/node: exit=1 stdout='' stderr='trap: illegal cast\n' expected='12\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL mutation/categoryOther/wasmtime: exit=1 stdout='' stderr='trap: cast failure\n' expected='12\n'
+PRELUDE-CATEGORY-ACCESSORS FAIL host_checks=8 failing_checks=8

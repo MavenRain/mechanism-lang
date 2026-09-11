@@ -223,6 +223,8 @@ leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
   $ROOT/_build/default/test/family_groups.exe
 leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
+leg FAST PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
+  $ROOT/_build/default/test/prelude_category.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
@@ -231,6 +233,8 @@ leg MED PRENEX-FAMILIES-RUNTIME '^PRENEX-FAMILIES-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --families
 leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --groups
+leg MED PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
+  python3 -P $ROOT/test/prenex_runtime.py --category
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

@@ -10,7 +10,6 @@
 (copy_files ../vendor/kanon/lib/erase.ml)
 (copy_files ../vendor/kanon/lib/error.ml)
 (copy_files ../vendor/kanon/lib/eterm.ml)
-(copy_files ../vendor/kanon/lib/eval.ml)
 (copy_files ../vendor/kanon/lib/global.ml)
 (copy_files ../vendor/kanon/lib/literal.ml)
 (copy_files ../vendor/kanon/lib/order.ml)

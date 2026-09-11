@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-CAT-M1",
+      "path": "surface/elab.ml",
+      "old": "vs Quantity.One first_motive (Rules.proj_branch q 0)",
+      "new": "vs Quantity.One (Option.bind first_motive (fun _ -> None)) (Rules.proj_branch q 0)",
+      "source_sha256": "37832e287124e1bcc127e8cff938002fe53a65bac5b426f3c5531fd29be7d3c5",
+      "mutant_sha256": "197f11cf778264b7846bdcbc53fe381a99cb630262521e52965dcda6324a7c91",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL cannot infer: an elimination without a motive needs an expected type",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M2",
+      "path": "lib/rules.ml",
+      "old": "let* eq = ops.o_conv ctx ~ty got want in",
+      "new": "let* eq = ops.o_conv_type ctx got want in\n      let _ = ty in",
+      "source_sha256": "fbaf9ddf60f4a273ea0240dd38dfb36c2bfdbbf8be8c01b26b522f1987db58a9",
+      "mutant_sha256": "daa3a5363154d0617f68ce5d1b8bd385a2ec6d5bde3011346c1af4685b758306",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Small gives the index",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M3",
+      "path": "lib/eval.ml",
+      "old": "e_motive = motive;",
+      "new": "e_motive = Option.bind motive (fun _ -> se.Value.s_motive);",
+      "source_sha256": "56dc9809864c3b1300b5ba6c8c3a7302f23284fcf6a20234c19a41120da05e71",
+      "mutant_sha256": "fe9078af0d4a48594e91cb9e175c8a796ca30117820a408a8ea3e2a4e3f431bd",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL universe:",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M4",
+      "path": "lib/eval.ml",
+      "old": "e_branches = branches;",
+      "new": "e_branches = (let _ = branches in se.Value.s_branches);",
+      "source_sha256": "56dc9809864c3b1300b5ba6c8c3a7302f23284fcf6a20234c19a41120da05e71",
+      "mutant_sha256": "c6438fa0562b2af0b12902a719cc2e003a51605d73f84350347ab60cb61b08c7",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 2 is outside the context",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M5",
+      "path": "lib/rules.ml",
+      "old": "if eq then Ok (want :: index_env)",
+      "new": "if eq then Ok index_env",
+      "source_sha256": "fbaf9ddf60f4a273ea0240dd38dfb36c2bfdbbf8be8c01b26b522f1987db58a9",
+      "mutant_sha256": "6bc57bbfa2e12b308812f4e7c89b8c92a69916d278ef0296ee44125ef9b11d1d",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 0 is outside the environment",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M6",
+      "path": "lib/rules.ml",
+      "old": "if eq then Ok (want :: index_env)",
+      "new": "if eq || true then Ok (want :: index_env)",
+      "source_sha256": "fbaf9ddf60f4a273ea0240dd38dfb36c2bfdbbf8be8c01b26b522f1987db58a9",
+      "mutant_sha256": "8f17298ec2c06b573170b22eb9f986c776cf4c707026aa99c73ca57dfd984930",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unequal-endpoint: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M7",
+      "path": "prelude/cat/category.mech",
+      "old": "=> category.2.2.2.2.1",
+      "new": "=> category.2.2.2.1",
+      "source_sha256": "8d66ff12e87b7ffed16de05896fdb861782e3321ebd4cd52b4dfbd76ed4eaafb",
+      "mutant_sha256": "caeb05b8f6d6452b6c23445db197283904a24b89577c6a44da19fac7ebd34382",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch:",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M8",
+      "path": "test/fixtures/prelude/category.mech",
+      "old": "(fun (n : Tiny) => next n) (fun (n : Tiny) => zero) (next zero)",
+      "new": "(fun (n : Tiny) => zero) (fun (n : Tiny) => next n) (next zero)",
+      "source_sha256": "2037ddf6c4aefe9ee155a3953ec10a583f704cb2ddea95cf263abfe69b96a419",
+      "mutant_sha256": "f0d1a807842f0778851dd7a4b5a08e99c199cc2c0f0693c1cae224cb8b66c142",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL wrong computation: compositionValue =",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M9",
+      "path": "lib/rules.ml",
+      "old": "s Quantity.One first_motive (proj_branch q 0)",
+      "new": "s Quantity.One (Option.bind first_motive (fun _ -> None)) (proj_branch q 0)",
+      "source_sha256": "fbaf9ddf60f4a273ea0240dd38dfb36c2bfdbbf8be8c01b26b522f1987db58a9",
+      "mutant_sha256": "c00d645f965123dbbee3dc1d0417c2749a1de6073ac8bf0f8b13cf62d98347bd",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Up gives the index c",
+      "killed": true
+    },
+    {
+      "name": "C-CAT-M10",
+      "path": "lib/eval.ml",
+      "old": "fun i -> Value.var (size + i)",
+      "new": "fun i -> Value.var (size + arity - 1 - i)",
+      "source_sha256": "56dc9809864c3b1300b5ba6c8c3a7302f23284fcf6a20234c19a41120da05e71",
+      "mutant_sha256": "bf78ca3a0683de3597ad4213715cb97671b6ff6256d22aa5bb5fa6e34d6bef74",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the term has type (Lan SMu IndexedValue [Ty; value]",
+      "killed": true
+    }
+  ]
+}

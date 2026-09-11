@@ -1,0 +1,1 @@
+mismatch: the constructor categoryRefl of Small gives the index (Sec SPi w n (Lan SMu Tiny [] (Sec SColl 0 [])) [n => (In SMu Tiny [] (ACtor zero) [])]) and the type asks for (Sec SPi w n (Lan SMu Tiny [] (Sec SColl 0 [])) [n => (In SMu Tiny [] (ACtor next) [n])])

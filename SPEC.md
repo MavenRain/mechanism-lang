@@ -399,5 +399,28 @@ specialization and rechecking share the caller's budget.
 PRENEX-GROUPS checks round-trips, exact inventories, normalization,
 isolation, member order and precise refusals.  PRENEX-GROUPS-RUNTIME checks
 member calls on the kernel, Node and Wasmtime, with a changed payload.
-See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.  Category targets and checked
-source-type parity remain open.
+See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
+
+### Checked categories
+
+`prelude/cat/category.mech` provides a textual MechCategory template over
+independent object and morphism Type levels. A specialization C installs
+the equality family C and members C_Category, C_Hom, C_id, C_comp,
+C_idComp, C_compId and C_assoc. C_Category takes its object type and
+packages a hom family, identity, composition and three Prop-valued laws
+as nested dependent pairs. Object arguments are explicit and erased.
+Composition orders its arguments from x to y and then y to z.
+
+Frozen elimination quotation reopens motives, branch bodies and addresses
+in their captured environment before reification. Dependent projection
+motives retain a typed first projection, including in the pair eta rule.
+Constructor indices use typed conversion under the family index telescope,
+starting from parameters and extending with each expected index. Existing
+eta and proof irrelevance apply through this conversion. No new former,
+schema constructor or elimination rule is introduced.
+
+Concrete category projections compute on the kernel and both WASM hosts.
+Generic category accessor functions currently trap with a WASM cast
+failure; their kernel computations pass. See `dev/M0-STAGE-C-CATEGORY.md`
+for the contracts, tests and reproducible host boundary. Functor, NatTrans,
+LeftKanExtension and checked source-type parity remain open.

@@ -1,0 +1,1 @@
+def bad : IndexedValue (Tiny -> Tiny) (fun (n : Tiny) => next n) := indexedValue

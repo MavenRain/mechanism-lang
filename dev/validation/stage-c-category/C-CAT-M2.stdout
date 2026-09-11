@@ -1,0 +1,1 @@
+PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Small gives the index (Sec SPi w n (Lan SMu Tiny [] (Sec SColl 0 [])) [n => (Out SPi w _ (Lan SMu Tiny [] (Sec SColl 0 [])) (APt w n) f)]) and the type asks for f

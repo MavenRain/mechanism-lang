@@ -1,0 +1,1 @@
+def bad : Small Tiny zero zero := (categoryRefl : Types Tiny zero zero)

@@ -1,0 +1,2 @@
+def bad : Tiny := Types_comp (Type 0) Functions Tiny Point Tiny
+  (fun (n : Tiny) => point) (fun (n : Tiny) => n) zero

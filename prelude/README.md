@@ -124,5 +124,26 @@ templates and their nonrecursive members.  Each explicit specialization
 renames and rechecks the complete group.  The executable clients in
 `test/fixtures/prelude/prenex-groups.mech` cover data, types and proofs
 from an empty environment.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md` for
-grammar, naming and validation.  Category targets and checked source-type
-parity remain open.
+grammar, naming and validation.
+
+## Categories
+
+`cat/category.mech` declares the MechCategory group with two Type-level
+parameters: objects at `Type u` and morphisms at `Type v`. Specializing
+as C installs equality C and seven members: C_Category, C_Hom, C_id,
+C_comp, C_idComp, C_compId and C_assoc. The category record contains its
+hom family, identity, composition and three proofs. Object arguments are
+explicit and erased. Proof fields are erased by their Prop types.
+
+Composition takes an arrow from x to y followed by an arrow from y to z.
+The function-category examples therefore compute `g (f value)`. A caller
+constructs a category with nested pairs and supplies every law. The
+library declares no axioms and has no automatic instance resolution.
+
+PRELUDE-CATEGORY checks four universe specializations, heterogeneous
+composition, generic law projections, pair and function eta, captured
+elimination quotation, exact refusals and the caller budget. Concrete
+record projections run on all three hosts. Generic category accessor
+functions remain subject to the WASM cast limitation documented in
+`dev/M0-STAGE-C-CATEGORY.md`. Functor, NatTrans, LeftKanExtension and
+source-type parity remain open.

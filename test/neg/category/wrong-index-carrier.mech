@@ -1,0 +1,1 @@
+def bad : IndexedValue Point point := indexedValue

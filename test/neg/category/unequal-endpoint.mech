@@ -1,0 +1,1 @@
+def bad : Small Tiny zero (next zero) := categoryRefl

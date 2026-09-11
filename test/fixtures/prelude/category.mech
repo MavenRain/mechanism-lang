@@ -1,0 +1,114 @@
+mu Point : Type 0 with | point : Point
+mu Tiny : Type 0 with | zero : Tiny | next : Tiny -> Tiny
+
+specialize MechCategory (0, 0) as Small
+def End : Small_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => Tiny -> Tiny),
+   ((fun (0 x : Point) (n : Tiny) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : Tiny -> Tiny) (g : Tiny -> Tiny) (n : Tiny) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : Tiny -> Tiny) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : Tiny -> Tiny) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : Tiny -> Tiny) (0 g : Tiny -> Tiny) (0 h : Tiny -> Tiny) =>
+          categoryRefl))))))
+
+def identityValue : Tiny := Small_id Point End point (next zero)
+def compositionValue : Tiny := Small_comp Point End point point point
+  (fun (n : Tiny) => next n) (fun (n : Tiny) => zero) (next zero)
+def reverseValue : Tiny := Small_comp Point End point point point
+  (fun (n : Tiny) => zero) (fun (n : Tiny) => next n) (next zero)
+
+specialize MechCategory (1, 0) as Types
+def Functions : Types_Category (Type 0) :=
+  ((fun (0 A : Type 0) (0 B : Type 0) => A -> B),
+   ((fun (0 A : Type 0) (a : A) => a),
+    ((fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0)
+          (f : A -> B) (g : B -> C) (a : A) => g (f a)),
+     ((fun (0 A : Type 0) (0 B : Type 0) (0 f : A -> B) => categoryRefl),
+      ((fun (0 A : Type 0) (0 B : Type 0) (0 f : A -> B) => categoryRefl),
+       (fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0) (0 D : Type 0)
+            (0 f : A -> B) (0 g : B -> C) (0 h : C -> D) => categoryRefl))))))
+
+def heterogeneousValue : Tiny := Types_comp (Type 0) Functions Tiny Point Tiny
+  (fun (n : Tiny) => point) (fun (p : Point) => next zero) zero
+def leftLaw : Small (Tiny -> Tiny)
+    (Small_comp Point End point point point (Small_id Point End point)
+      (fun (n : Tiny) => next n)) (fun (n : Tiny) => next n) :=
+  Small_idComp Point End point point (fun (n : Tiny) => next n)
+def rightLaw : Small (Tiny -> Tiny)
+    (Small_comp Point End point point point (fun (n : Tiny) => next n)
+      (Small_id Point End point)) (fun (n : Tiny) => next n) :=
+  Small_compId Point End point point (fun (n : Tiny) => next n)
+
+specialize MechCategory (0, 1) as Up
+def UpFunctions : Up_Category (Point) :=
+  ((fun (0 A : Point) (0 B : Point) => Type 0 -> Type 0),
+   ((fun (0 A : Point) (a : Type 0) => a),
+    ((fun (0 A : Point) (0 B : Point) (0 C : Point)
+          (f : Type 0 -> Type 0) (g : Type 0 -> Type 0) (a : Type 0) => g (f a)),
+     ((fun (0 A : Point) (0 B : Point) (0 f : Type 0 -> Type 0) => categoryRefl),
+      ((fun (0 A : Point) (0 B : Point) (0 f : Type 0 -> Type 0) => categoryRefl),
+       (fun (0 A : Point) (0 B : Point) (0 C : Point) (0 D : Point)
+            (0 f : Type 0 -> Type 0) (0 g : Type 0 -> Type 0) (0 h : Type 0 -> Type 0) => categoryRefl))))))
+
+specialize MechCategory (2, 1) as Higher
+def HigherFunctions : Higher_Category (Type 1) :=
+  ((fun (0 A : Type 1) (0 B : Type 1) => A -> B),
+   ((fun (0 A : Type 1) (a : A) => a),
+    ((fun (0 A : Type 1) (0 B : Type 1) (0 C : Type 1)
+          (f : A -> B) (g : B -> C) (a : A) => g (f a)),
+     ((fun (0 A : Type 1) (0 B : Type 1) (0 f : A -> B) => categoryRefl),
+      ((fun (0 A : Type 1) (0 B : Type 1) (0 f : A -> B) => categoryRefl),
+       (fun (0 A : Type 1) (0 B : Type 1) (0 C : Type 1) (0 D : Type 1)
+            (0 f : A -> B) (0 g : B -> C) (0 h : C -> D) => categoryRefl))))))
+
+def upValue : Type 0 := Up_comp Point UpFunctions point point point
+  (fun (A : Type 0) => Point) (fun (A : Type 0) => Tiny) Point
+def higherValue : Type 0 :=
+  Higher_comp (Type 1) HigherFunctions (Type 0) (Type 0) (Type 0)
+    (fun (A : Type 0) => Point) (fun (A : Type 0) => Tiny) Point
+
+-- Eta compares a neutral record to projections of the same record.
+def categoryEta : (c : Small_Category Point) ->
+    Up (Small_Category Point) c ((c.1, (c.2.1, c.2.2)) : Small_Category Point) :=
+  fun (c : Small_Category Point) => categoryRefl
+
+-- A quoted match retains outer variables in its motive and branch.
+def capturedMatch : (0 A : Type 0) -> (fallback : A) ->
+    (tag : Tiny) -> (ignored : Point) -> A :=
+  fun (0 A : Type 0) (fallback : A) (tag : Tiny) (ignored : Point) =>
+    match tag as self in Tiny return A with
+    | zero => fallback
+    | next (n : Tiny) => fallback
+def capturedValue : Tiny := capturedMatch Tiny (next zero) zero point
+def capturedClosed : Tiny -> Point -> Tiny := capturedMatch Tiny (next zero)
+
+-- Each dependent index type is opened under the preceding index.
+mu IndexedValue : (0 A : Type 0) -> (0 value : A) -> Type 1 with
+| indexedValue : IndexedValue (Tiny -> Tiny) (fun (n : Tiny) => n)
+def indexedEta : IndexedValue (Tiny -> Tiny)
+    (fun (n : Tiny) => Small_id Point End point n) := indexedValue
+
+def indexedCaptured : (0 A : Type 0) -> (fallback : A) ->
+    (0 f : Tiny -> Tiny) -> IndexedValue (Tiny -> Tiny) f -> A :=
+  fun (0 A : Type 0) (fallback : A) (0 f : Tiny -> Tiny)
+      (witness : IndexedValue (Tiny -> Tiny) f) =>
+    match witness as self in IndexedValue Ty value return A with
+    | indexedValue => fallback
+def indexedClosed : (0 f : Tiny -> Tiny) ->
+    IndexedValue (Tiny -> Tiny) f -> Tiny := indexedCaptured Tiny (next zero)
+
+-- The motive of this match reads both an index binder and the scrutinee
+-- binder, so the fresh binder order of the quotation is load-bearing.
+def indexedMotive : (0 A : Type 0) -> (0 f : Tiny -> Tiny) ->
+    (witness : IndexedValue (Tiny -> Tiny) f) ->
+    Up (IndexedValue (Tiny -> Tiny) f) witness witness :=
+  fun (0 A : Type 0) (0 f : Tiny -> Tiny)
+      (witness : IndexedValue (Tiny -> Tiny) f) =>
+    match witness as self in IndexedValue Ty value
+      return Up (IndexedValue Ty value) self self with
+    | indexedValue => categoryRefl
+def indexedMotiveClosed : (0 f : Tiny -> Tiny) ->
+    (witness : IndexedValue (Tiny -> Tiny) f) ->
+    Up (IndexedValue (Tiny -> Tiny) f) witness witness := indexedMotive Tiny

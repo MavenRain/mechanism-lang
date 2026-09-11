@@ -1,0 +1,3 @@
+def bad : (0 f : Small_Hom Point End point point) ->
+  Small_Hom Point End point point :=
+  fun (0 f : Small_Hom Point End point point) => f

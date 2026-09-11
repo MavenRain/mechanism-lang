@@ -1417,6 +1417,38 @@ surface/parser.ml 151 in dev/PIN-DELTA.md.  PIN remains
 936a43a92dd59a04698648f24fa5ae94cdb532df.  No kernel, encoder, bound,
 tier or mapping verdict changes.
 
+## Stage C checked categories (2026-09-10)
+
+Base: 1f5d7bf. The category prelude adds independent object and morphism
+universes, identity, composition and three checked laws. The supporting
+kernel changes preserve captured elimination environments during quotation,
+type dependent projection motives and compare constructor indices under
+their family telescope. The evaluator is a physical overlay; vendor/kanon
+remains pinned at 936a43a92dd59a04698648f24fa5ae94cdb532df.
+
+The build reports zero errors and warnings. PRELUDE-CATEGORY checks 47
+definitions, seven families, four instances, seven exact normal forms,
+two quotation round trips and nine refusals. All nine mutation controls
+were killed and the restored suite passed. Tighter diagnostic prefixes
+were checked against the saved outputs and current source hashes, with
+9/9 verified. Evidence is in `dev/validation/stage-c-category/`.
+
+The initial battery had 35 passing legs and only TRUSTED-LINES failed.
+The final battery had 34 passing legs, the same bound failure and a
+30-second PRELUDE-CATEGORY-RUNTIME watchdog expiry. Its isolated retry
+under the same 30-second limit passed: two exports, three hosts and a
+payload-change control. No source change or timeout increase was needed.
+Together the final battery and scoped retry cover all 35 behavioral legs.
+The active counts are kernel=4208/3000 and encoder=246/900, compared with
+kernel=4182/3000 at the base. The bound ruling remains open.
+
+The passing runtime leg uses concrete record projections. Generic category
+accessors compute in the kernel but trap on Node and Wasmtime. The separate
+`--category-accessors` probe confirms eight host failures and is preserved
+for the next emitter slice. This boundary is not claimed as passing WASM
+parity. Functor, NatTrans, LeftKanExtension and source-type parity remain
+open. See `dev/M0-STAGE-C-CATEGORY.md` for the full contract.
+
 A second round answers the two items of the first check.  The 85 column
 line of dev/M0-STAGE-C-PRENEX-GROUPS.md is rewrapped into three lines of
 at most 72 columns, and no word changes.  The review increment gains its
@@ -1458,3 +1490,178 @@ FAIL`, which is the bound the clean base also fails.  The verdict of the
 close is bound only.  PIN remains
 936a43a92dd59a04698648f24fa5ae94cdb532df, and no kernel, encoder, bound,
 tier or mapping verdict changes.
+
+## Stage C checked categories review (2026-09-10)
+
+Base: 1f5d7bf. Four finders reported 16 raw findings. Verification
+kept 14 of them. The judge kept seven findings and dropped seven.
+Four fix rounds and three checks follow. Ten items are fixed in all:
+the seven kept findings, one house violation and two defects that the
+checks found. Nothing is open.
+
+L1-1 (medium). The order of the fresh index binders in the new
+quotation arm of lib/eval.ml had no control, so a full reversal of
+that order still passed the suite. The fix adds the witness pair
+indexedMotive and indexedMotiveClosed in
+test/fixtures/prelude/category.mech, whose motive reads both an index
+binder and the self binder, and control C-CAT-M10 in
+dev/category-mutations.py on the anchor of the binder list. The
+replay kills ten of ten controls, C-CAT-M10 included.
+
+L2-1 (medium). The erased-endpoint negative exercised no category
+rule, and its pin matched any erased binder named n. The case now
+reads an erased `Small_Hom Point End point point` binder, with the
+.err repinned from the new run and the eight-case count kept. A
+control that renames Small_Hom turns the suite red with
+`PRELUDE-CATEGORY-FAIL erased-endpoint: unbound: Small_HomX`.
+
+L2-4 (medium). The PRELUDE-CATEGORY-RUNTIME leg was the slowest
+medium leg and had expired the 30 s watchdog once. The
+first round of the review removed the `check` of the mutation variant
+and both `axioms` invokes, which gave 17 subprocesses, and the leg
+stayed the slowest medium leg. The mutation variant now runs only the
+export whose answer depends on the mutated definition, because the
+second composition gives 12 with and without the mutation. The
+category modes now make no separate `check` pass, because the first
+`emit` makes the same source pass and prints a kernel refusal on a
+source error. The concrete mode makes twelve subprocesses: eight for
+the original variant and four for the mutation variant. An alternating
+measurement of six runs of each harness, at load averages from 19 to
+22, gives a wall median of 11.84 s before and 7.45 s after, which is
+63 percent of the earlier time. The printed leg line, the tier, the
+watchdog ceiling and the trusted bounds stay as they were. The
+accessor probe keeps both mutated exports and still reports eight host
+failures.
+
+L2-5 (low). Two of the four counts in the suite line were not
+measured from the tree: the negatives inventory was a literal name
+list, and the quotation count was a format string literal. The suite
+now reads the directory test/neg/category, compares the sorted names
+with the list, and counts the quotation witnesses from the list that
+it folds. Controls that add and that drop one negative both print
+`PRELUDE-CATEGORY-FAIL category negative inventory changed`.
+
+L2-6 (low). The accessor mode could not separate the documented host
+boundary from a kernel regression. The mode now labels the kernel
+side checks apart from the host checks. The real tree prints
+`PRELUDE-CATEGORY-ACCESSORS FAIL host_checks=8 failing_checks=8`, and
+a control with a broken accessor fixture prints
+`PRELUDE-CATEGORY-ACCESSORS FAIL kernel_checks=3 failing_checks=3`.
+No gate leg is added and no tier moves.
+
+L3-2 (low). The staged replay report recorded the kill predicates
+from before the controls were narrowed, so the stricter verification
+could not be rechecked inside the repository. The file
+dev/validation/stage-c-category/mutations.json now records the
+narrowed diagnostics and the C-CAT-M10 row, and results.json with ten
+stdout and stderr captures is staged. A `--verify` run on a copy of
+the staged directory prints `{"passed": true, "verified": 10}`.
+
+L1-3 (low). The contract sold the branch address round trip of the
+trusted kernel as a kernel correction, but it is inert at M0 and has
+no control. dev/M0-STAGE-C-CATEGORY.md now says that the round trip
+is defensive and is the identity on the M0 addresses. lib/eval.ml is
+untouched, and pin-delta.sh still reports `lib/eval.ml diff=24
+expected=24 OK`.
+
+HV-1-1 (house violation). The documented `--verify` example wrote
+`verification.json` inside the repository. The example now copies the
+evidence directory out of the repository first, so the mode writes
+only outside the repository, and a new paragraph says where the file
+lands. The control run on a copy exits 0 with
+`{"passed": true, "verified": 10}`, and the new file compares equal to
+the committed mutation-verification.json. The verify sentences in
+dev/MUTATION-LOG.md and dev/M0-STAGE-C-CATEGORY.md are made true
+against the new example.
+
+ND-1-1 (new defect, round 1). The committed file
+`dev/validation/stage-c-category/generic-accessors.log` was stale. It
+is restaged from a current run and ends
+`PRELUDE-CATEGORY-ACCESSORS FAIL host_checks=8 failing_checks=8`,
+which is the split that the harness prints, and the README bullet
+names that final line.
+
+ND-3-1 (new defect, round 3). The comment that the round-3 remedy
+added said that the second category export does not read the mutated
+definition, which is false, because the fixture passes categoryInput
+to it. The comment in test/prenex_runtime.py and its two echoes in
+dev/validation/stage-c-category/README.md and in this block now say
+that the mutation variant runs the export whose answer depends on the
+mutated definition. The harness still prints
+`PRELUDE-CATEGORY-RUNTIME OK cases=2 hosts=3 mutation=1`, exit 0.
+Round 4 also rewrapped the prose lines of 73 to 76 columns in the two
+staged documents, and none remains.
+
+The counts of the increment changed in the first review round. The
+category suite reports 49 entries, seven computations, nine refusals
+and three quotation checks. The mutation replay holds ten controls.
+
+The judge dropped seven findings:
+
+- L2-3: merged into L2-5, the same file and the same defect class.
+- L1-2: cut by the cap, a stale doc comment only, and its fix moves a
+  measured row for no functional gain.
+- L2-2: cut after the harm was refuted, only diagnostic text
+  precision remains.
+- L3-1: cut after downgrade, the mutation script refuses a non-unique
+  anchor, so no false kill exists today.
+- L4-1: cut after downgrade to cosmetic, one cross-reference gap in
+  one document.
+- L4-2: cut, whitespace only, no written rule and no gate effect.
+- L4-3: cut after the 72-column norm was refuted for the sibling
+  contract documents.
+
+The review ladder gives:
+
+```
+OK build: 0 errors, 0 warnings
+TRUSTED-LINES kernel=4208/3000 encoder=246/900 FAIL
+PIN-DELTA OK with gitlink vendor/kanon 936a43a
+R0-COUNT OK, R0-AUDIT OK
+PRELUDE-CATEGORY-OK entries=49 computations=7 negatives=9 quotation=3
+PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=39
+PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30
+PRENEX-OK entries=16 computations=4 negatives=25
+PRELUDE-CATEGORY-RUNTIME OK cases=2 hosts=3 mutation=1
+replay rc 0 {"passed": true, "killed": 10, "controls": 10}
+FAMILY-GROUPS-OK cases=22
+PRELUDE-CONGRUENCE-OK instances=8 computations=4 negatives=5
+PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5
+FAMILY-MEMBERS-OK cases=19
+FAMILY-POLY-OK cases=34
+PRELUDE-POLY-OK templates=2 instances=5 negatives=2
+EQUALITY-OK cases=15
+PRELUDE-OK families=10 definitions=16 axioms=0 primitives=0
+PRELUDE-AXIOMS OK
+MAPPING-OK
+EQUALITY-RUNTIME OK cases=3 hosts=3 mutation=1
+AXIOMS OK prelude=0 fixture=1 hidden_builtins=0
+MAP-INVENTORY OK
+IMPORT-TYPES-OK, CORPUS-OK, PARITY-COUNTS OK
+battery PASS=35 FAIL TRUSTED-LINES  EXIT 1
+```
+
+Both map inventory reproductions compare equal to map/prelude.map.tsv
+and to map/NEVER.tsv. The separate generic accessor probe exits 1 with
+eight host failures, which stays the documented open boundary.
+
+The closing battery has 35 PASS legs. The replay prints
+`{"passed": true, "killed": 10, "controls": 10}` and the verify mode
+prints `{"passed": true, "verified": 10}`. The measured rows are
+`MEASURE PRELUDE-CATEGORY tier=FAST elapsed_ms=1342` and
+`MEASURE PRELUDE-CATEGORY-RUNTIME tier=MED elapsed_ms=3421`, at a load
+average of 21 to 24. The tree holds 67 paths, 1698 insertions and 27
+deletions, and `git diff --check` is clean.
+
+One residual stays open as a cost, not as a defect. The cost of the
+PRELUDE-CATEGORY-RUNTIME leg is intrinsic, because each emit and each
+kernel run elaborates the template of 49 entries. The leg measured
+3.4 s in the closing battery and 7 s to 18 s under load averages of 20
+to 27. The MED ceiling of 30 s therefore keeps a margin that gets
+smaller under a heavy load. The SLOW tier is available if the leg ever
+expires.
+
+The one red leg is TRUSTED-LINES, which the clean base also fails, so
+the verdict of the review is bound only. PIN remains
+936a43a92dd59a04698648f24fa5ae94cdb532df, and no kernel, encoder,
+bound, tier or mapping verdict changes.

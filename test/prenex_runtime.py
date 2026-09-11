@@ -6,7 +6,8 @@ import sys
 import tempfile
 
 GATES = {(): "PRENEX-RUNTIME", ("--families",): "PRENEX-FAMILIES-RUNTIME",
-         ("--groups",): "PRENEX-GROUPS-RUNTIME"}
+         ("--groups",): "PRENEX-GROUPS-RUNTIME", ("--category",): "PRELUDE-CATEGORY-RUNTIME",
+         ("--category-accessors",): "PRELUDE-CATEGORY-ACCESSORS"}
 
 
 def gate_name(arguments):
@@ -15,8 +16,9 @@ def gate_name(arguments):
 
 
 def main():
-    if sys.argv[1:] not in ([], ["--families"], ["--groups"]):
-        print("usage: python3 -P test/prenex_runtime.py [--families|--groups]", file=sys.stderr)
+    if tuple(sys.argv[1:]) not in GATES:
+        print("usage: python3 -P test/prenex_runtime.py "
+              "[--families|--groups|--category|--category-accessors]", file=sys.stderr)
         return 64
 
     root = Path(__file__).resolve().parent.parent
@@ -34,6 +36,15 @@ def main():
         fixture = (root / "test/fixtures/prelude/prenex-groups-runtime.mech").read_text()
         original = "def groupPayload : Nat := Run_unpack Nat (Run_pack Nat 37)"
         replacement = "def groupPayload : Nat := Run_unpack Nat (Run_pack Nat 41)"
+    category = sys.argv[1:] in (["--category"], ["--category-accessors"])
+    if category:
+        fixture = (root / "prelude/cat/category.mech").read_text()
+        category_fixture = ("category-accessor-runtime.mech"
+                            if sys.argv[1:] == ["--category-accessors"]
+                            else "category-runtime.mech")
+        fixture += (root / "test/fixtures/prelude" / category_fixture).read_text()
+        original = "def categoryInput : Nat := 37"
+        replacement = "def categoryInput : Nat := 41"
     if fixture.count(original) != 1:
         print(f"{gate} FAIL mutation payload must occur exactly once")
         return 1
@@ -54,18 +65,39 @@ def main():
     payload, other = ("familyPayload", "familyRecursive") if families else ("prenexRuntime", "prenexClosure")
     if groups:
         payload, other = "groupPayload", "groupOther"
+    if category:
+        payload, other = "categoryPayload", "categoryOther"
     cases = [(payload, 37), (other, 12)]
     changed = [(payload, 41), (other, 12)]
+    if sys.argv[1:] == ["--category"]:
+        # The second category export composes the identity with a
+        # constant function, so its answer is 12 before and after the
+        # mutation. That export cannot observe the mutation. The
+        # mutation variant runs the payload export only, which is the
+        # export whose answer depends on the mutated definition. The
+        # accessor mode keeps both mutated exports, because its
+        # refusal count pins the open host boundary over the two
+        # exports.
+        changed = [(payload, 41)]
     with tempfile.TemporaryDirectory(prefix="mechanism-prenex-") as directory:
         work = Path(directory)
         variants = [("original", fixture, cases),
                     ("mutation", fixture.replace(original, replacement), changed)]
+        # The category modes prefix every variant with the same large
+        # prelude template, and every invoke elaborates that prefix
+        # again. The first `emit` of a variant does the same source
+        # pass as `check`, and it prints a kernel refusal on a source
+        # error, so the category modes keep no separate `check` pass
+        # and no `axioms` pass. The leg then stays well inside the
+        # gate watchdog.
         for variant, body, answers in variants:
             source = work / f"{variant}.mech"
             source.write_text(body)
-            if not invoke(f"{variant}/check", [executable, "check", source]):
-                continue
-            invoke(f"{variant}/axioms", [executable, "axioms", source])
+            if not category:
+                if not invoke(f"{variant}/check",
+                              [executable, "check", source]):
+                    continue
+                invoke(f"{variant}/axioms", [executable, "axioms", source])
             for export, answer in answers:
                 expected = f"{answer}\n"
                 label = f"{variant}/{export}"
@@ -80,8 +112,18 @@ def main():
                 invoke(f"{label}/kernel", [executable, "run", source,
                                            "--export", export, "--host", "kernel"], expected)
 
+    # A host trap and a kernel regression are separate outcomes. The
+    # accessor boundary is a host trap only, so a failing kernel-side
+    # invoke gets its own refusal line.
+    kernel_failures = [label for label in failures
+                       if label.endswith(("/check", "/axioms", "/emit", "/kernel"))]
+    if kernel_failures:
+        print(f"{gate} FAIL kernel_checks={len(kernel_failures)} "
+              f"failing_checks={len(failures)}")
+        return 1
     if failures:
-        print(f"{gate} FAIL failing_checks={len(failures)}")
+        print(f"{gate} FAIL host_checks={len(failures)} "
+              f"failing_checks={len(failures)}")
         return 1
     print(f"{gate} OK cases=2 hosts=3 mutation=1")
     return 0

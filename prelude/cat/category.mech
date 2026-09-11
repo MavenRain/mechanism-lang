@@ -1,0 +1,54 @@
+-- Categories have independent object and morphism Type levels.
+-- The equality family and all members specialize together.
+poly (u, v) mu MechCategory (0 A : Sort (succ v)) (0 x : A) :
+    (0 y : A) -> Prop with
+| categoryRefl : MechCategory A x x
+where
+def Category : (0 Obj : Sort (succ u)) -> Sort (max (succ u) (succ (succ v))) :=
+  fun (0 Obj : Sort (succ u)) =>
+    (hom : (0 x : Obj) -> (0 y : Obj) -> Sort (succ v)) *
+    (identity : (0 x : Obj) -> hom x x) *
+    (compose : (0 x : Obj) -> (0 y : Obj) -> (0 z : Obj) ->
+      hom x y -> hom y z -> hom x z) *
+    (left : (0 x : Obj) -> (0 y : Obj) -> (0 f : hom x y) ->
+      MechCategory (hom x y) (compose x x y (identity x) f) f) *
+    (right : (0 x : Obj) -> (0 y : Obj) -> (0 f : hom x y) ->
+      MechCategory (hom x y) (compose x y y f (identity y)) f) *
+    ((0 w : Obj) -> (0 x : Obj) -> (0 y : Obj) -> (0 z : Obj) ->
+      (0 f : hom w x) -> (0 g : hom x y) -> (0 h : hom y z) ->
+      MechCategory (hom w z)
+        (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h)))
+
+def Hom : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 x : Obj) -> (0 y : Obj) -> Sort (succ v) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.1
+
+def id : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 x : Obj) -> Hom Obj category x x :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.1
+
+def comp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 x : Obj) -> (0 y : Obj) -> (0 z : Obj) ->
+    Hom Obj category x y -> Hom Obj category y z -> Hom Obj category x z :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.1
+
+def idComp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 x : Obj) -> (0 y : Obj) -> (0 f : Hom Obj category x y) ->
+    MechCategory (Hom Obj category x y) (comp Obj category x x y (id Obj category x) f) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.1
+
+def compId : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 x : Obj) -> (0 y : Obj) -> (0 f : Hom Obj category x y) ->
+    MechCategory (Hom Obj category x y) (comp Obj category x y y f (id Obj category y)) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.1
+
+def assoc : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (0 w : Obj) -> (0 x : Obj) -> (0 y : Obj) -> (0 z : Obj) ->
+    (0 f : Hom Obj category w x) -> (0 g : Hom Obj category x y) ->
+    (0 h : Hom Obj category y z) ->
+    MechCategory (Hom Obj category w z)
+      (comp Obj category w y z (comp Obj category w x y f g) h)
+      (comp Obj category w x z f (comp Obj category x y z g h)) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.2
+end

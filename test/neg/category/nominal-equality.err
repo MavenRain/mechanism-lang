@@ -1,0 +1,1 @@
+mismatch: the term has type (Lan SMu Types [(In SMu Tiny [] (ACtor zero) [])] (Sec SColl 2 [ => (Lan SMu Tiny [] (Sec SColl 0 []));  => (In SMu Tiny [] (ACtor zero) [])])) and the expected type is (Lan SMu Small [(In SMu Tiny [] (ACtor zero) [])] (Sec SColl 2 [ => (Lan SMu Tiny [] (Sec SColl 0 []));  => (In SMu Tiny [] (ACtor zero) [])]))

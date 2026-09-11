@@ -1,0 +1,15 @@
+specialize MechCategory (1, 0) as Runtime
+def RuntimeFunctions : Runtime_Category (Type 0) :=
+  ((fun (0 A : Type 0) (0 B : Type 0) => A -> B),
+   ((fun (0 A : Type 0) (a : A) => a),
+    ((fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0)
+          (f : A -> B) (g : B -> C) (a : A) => g (f a)),
+     ((fun (0 A : Type 0) (0 B : Type 0) (0 f : A -> B) => categoryRefl),
+      ((fun (0 A : Type 0) (0 B : Type 0) (0 f : A -> B) => categoryRefl),
+       (fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0) (0 D : Type 0)
+            (0 f : A -> B) (0 g : B -> C) (0 h : C -> D) => categoryRefl))))))
+def categoryInput : Nat := 37
+def categoryPayload : Nat := Runtime_comp (Type 0) RuntimeFunctions Nat Nat Nat
+  (fun (n : Nat) => categoryInput) (Runtime_id (Type 0) RuntimeFunctions Nat) 12
+def categoryOther : Nat := Runtime_comp (Type 0) RuntimeFunctions Nat Nat Nat
+  (Runtime_id (Type 0) RuntimeFunctions Nat) (fun (n : Nat) => 12) categoryInput

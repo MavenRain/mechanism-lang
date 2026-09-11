@@ -1,0 +1,1 @@
+mismatch: the constructor categoryRefl of Small gives the index (In SMu Tiny [] (ACtor zero) []) and the type asks for (In SMu Tiny [] (ACtor next) [(In SMu Tiny [] (ACtor zero) [])])

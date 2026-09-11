@@ -608,11 +608,15 @@ let proj_motive (ops : 'c ops) (ctx : 'c) (s : Value.t Shape.t) (dclo : Value.cl
     (Term.motive option, Error.t) result =
   let ev = ops.o_ev ctx in
   let size = ops.o_size ctx in
+  let* domain = ops.o_quote (ops.o_bind x q dom_v ctx) dom_v in
+  let first_motive = Some {
+    Term.m_ind = None; m_idx = []; m_self = "self"; m_body = domain;
+  } in
   let* body_v =
     if Int.equal which 0 then Ok dom_v
     else
       let* point =
-        elim_with spi_beta ev s q None (proj_branch q 0) (ops.o_env ctx)
+        elim_with spi_beta ev s Quantity.One first_motive (proj_branch q 0) (ops.o_env ctx)
           (Value.var size)
       in
       open_closure ev dclo [ point ]
@@ -1101,6 +1105,7 @@ let mu_param_env (ops : 'c ops) (ctx : 'c) (dclo : Value.closure) :
 (** The index rule of the introduction (A14, M1-PLAN.md:79):  the result
     indices convert with those of the expected type.  SG-M3 drops it. *)
 let mu_indices (ops : 'c ops) (ctx : 'c) (n : string) (ct : Positivity.ctor)
+    (fam : Positivity.family) (penv : Value.t list)
     (ixv : Value.t list) (env : Value.t list) : (unit, Error.t) result =
   let arity = List.length ct.Positivity.c_res_idx in
   let* pairs =
@@ -1112,19 +1117,23 @@ let mu_indices (ops : 'c ops) (ctx : 'c) (n : string) (ct : Positivity.ctor)
                  ct.Positivity.c_name arity n (List.length ixv)))
   in
   let ev = ops.o_ev ctx in
-  List.fold_left
-    (fun (acc : (unit, Error.t) result) ((r, want) : Term.t * Value.t) ->
-      let* () = acc in
+  let* typed = zip fam.Positivity.f_indices pairs |> Option.to_result
+    ~none:(Error.Mismatch "the family index telescope has the wrong arity") in
+  let* _indices = List.fold_left
+    (fun acc ((_, _, index_ty), (r, want)) ->
+      let* index_env = acc in
+      let* ty = ev.ev_eval index_env index_ty in
       let* got = ev.ev_eval env r in
-      let* eq = ops.o_conv_type ctx got want in
-      if eq then Ok ()
+      let* eq = ops.o_conv ctx ~ty got want in
+      if eq then Ok (want :: index_env)
       else
         Error
           (Error.Mismatch
              (Printf.sprintf
                 "the constructor %s of %s gives the index %s and the type asks for %s"
                 ct.Positivity.c_name n (ops.o_pp ctx got) (ops.o_pp ctx want))))
-    (Ok ()) pairs
+    (Ok penv) typed in
+  Ok ()
 
 (** Introduction, M1-PLAN.md:79 and brief 3.1:  the address names the
     constructor, every argument checks and the result indices unify. *)
@@ -1145,7 +1154,7 @@ let mu_intro_in (ops : 'c ops) (ctx : 'c) (mode : Quantity.t) (_s : Term.t Shape
   in
   let* penv = mu_param_env ops ctx dclo in
   let* env, uses = mu_telescope_uses ops ctx mode c ct.Positivity.c_args args penv in
-  let* () = mu_indices ops ctx n ct ixv env in
+  let* () = mu_indices ops ctx n ct fam penv ixv env in
   Ok uses
 
 (** Brief 3.3, SH-D5 and SH-D6:  the motive is required, it names the

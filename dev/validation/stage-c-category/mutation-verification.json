@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-CAT-M1",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL cannot infer: an elimination without a motive needs an expected type"
+    },
+    {
+      "name": "C-CAT-M2",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Small gives the index"
+    },
+    {
+      "name": "C-CAT-M3",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL universe:"
+    },
+    {
+      "name": "C-CAT-M4",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 2 is outside the context"
+    },
+    {
+      "name": "C-CAT-M5",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 0 is outside the environment"
+    },
+    {
+      "name": "C-CAT-M6",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL unequal-endpoint: expected refusal"
+    },
+    {
+      "name": "C-CAT-M7",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch:"
+    },
+    {
+      "name": "C-CAT-M8",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL wrong computation: compositionValue ="
+    },
+    {
+      "name": "C-CAT-M9",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Up gives the index c"
+    },
+    {
+      "name": "C-CAT-M10",
+      "verified": true,
+      "diagnostic": "PRELUDE-CATEGORY-FAIL mismatch: the term has type (Lan SMu IndexedValue [Ty; value]"
+    }
+  ]
+}

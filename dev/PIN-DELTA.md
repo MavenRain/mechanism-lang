@@ -52,11 +52,12 @@ names are checked before the immutable program result is returned.
 | --- | --- |
 | lib/check.ml | 140 |
 | lib/conv.ml | 51 |
-| lib/rules.ml | 47 |
+| lib/eval.ml | 24 |
+| lib/rules.ml | 84 |
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 324 |
+| surface/elab.ml | 335 |
 | surface/token.ml | 10 |
 | surface/lexer.ml | 5 |
 | surface/syntax.ml | 49 |
@@ -70,3 +71,8 @@ one universe scope.  The printer preserves both.  The review round of
 globals, names the refusal of a recursive member and drops one repeated
 family check.  No kernel, encoder or vendor source changes in this
 increment.
+
+The category increment reifies frozen elimination closures in an evaluator
+overlay, preserves a typed first projection in dependent projection motives,
+and compares constructor indices at their telescope types.  The corresponding
+pair eta motive uses the same typed projection.  No new kernel form is added.
