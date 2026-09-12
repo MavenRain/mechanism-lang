@@ -1,0 +1,51 @@
+def Identity : Small_Functor Tiny Tiny IndexedEnd IndexedEnd :=
+  Small_idFunctor Tiny IndexedEnd
+def Extension : Small_LeftKanExtension Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity
+    Constant :=
+  identityLan Tiny Point IndexedEnd DoubleEnd Constant
+def Eta : Small_LanCocone Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant
+    :=
+  Small_lanUnit Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension
+def Chosen : Small_LanSolution Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    Constant Constant Eta Alpha :=
+  Small_lanSolve Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension
+    Constant Alpha
+def OtherChosen : Small_LanSolution Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity
+    Constant Constant Constant Eta Beta :=
+  Small_lanSolve Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension
+    Constant Beta
+def Mediator : Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  Small_lanDesc Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Alpha Chosen
+def OtherMediator : Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  Small_lanDesc Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Beta OtherChosen
+def lanUnitValue : Tiny := (Eta.1 (next zero)).2 (next zero)
+def lanMapValue : Tiny :=
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_lanFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd
+      (Small_idFunctor Point DoubleEnd) Swap
+      (identityLan Point Point DoubleEnd DoubleEnd Swap)) point point
+    ((fun (n : Tiny) => next n), (fun (n : Tiny) => n))).2 (next zero)
+def lanDescValue : Tiny := (Mediator.1 (next zero)).1 zero
+def lanDescOther : Tiny := (OtherMediator.1 zero).1 (next zero)
+def lanDescObject : Tiny :=
+  (Mediator.1 zero).1 (next zero)
+def lanDescSecond : Tiny := (Mediator.1 zero).2 (next zero)
+def lanFacProof : Small ((Tiny -> Tiny) * (Tiny -> Tiny))
+    (Small_comp Point DoubleEnd point point point
+      (Eta.1 (next zero)) (Mediator.1 (next zero))) (Alpha.1 (next zero)) :=
+  Small_lanFac Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Alpha Chosen (next zero)
+def lanUniqueProof : Small ((Tiny -> Tiny) * (Tiny -> Tiny))
+    (Alpha.1 (next zero)) (Mediator.1 (next zero)) :=
+  Small_desc_unique Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant
+    Constant Eta Alpha Chosen Alpha Mediator
+    (fun (x : Tiny) => categoryRefl)
+    (Small_lanFac Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant
+    Constant Eta Alpha Chosen) (next zero)
+def higherLan : (0 J : Type 2) -> (0 C : Type 2) -> (0 D : Type 2) ->
+    (0 j : Higher_Category J) -> (0 c : Higher_Category C) -> (0 d : Higher_Category D) ->
+    (0 K : Higher_Functor J C j c) -> (0 F : Higher_Functor J D j d) ->
+    Higher_LeftKanExtension J C D j c d K F -> Higher_Functor C D c d :=
+  Higher_lanFunctor

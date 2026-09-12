@@ -59,12 +59,14 @@ fi
 
 # The named tiers, in seconds.  A tier is a hang ceiling, not a budget:
 # a leg that grows from one second to nine stays green at FAST and shows
-# the growth in the MEASURE block.  These four lines hold every numeric
-# watchdog literal in this file.
+# the growth in the MEASURE block.  The tiers below hold every numeric
+# watchdog literal in this file.  CATEGORY covers repeated checking and
+# erasure of the growing category group.
 FAST=10
 MED=30
 SLOW=120
 SUITE=300
+CATEGORY=900
 
 # gate_timed TIER NAME CMD...
 # Runs one leg under the named tier, records the elapsed wall time in
@@ -223,12 +225,14 @@ leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
   $ROOT/_build/default/test/family_groups.exe
 leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
-leg SLOW PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
+leg CATEGORY PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
   $ROOT/_build/default/test/prelude_category.exe $ROOT
-leg SLOW PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
+leg CATEGORY PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
   $ROOT/_build/default/test/prelude_functor.exe $ROOT
-leg SLOW PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
+leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
   $ROOT/_build/default/test/prelude_nattrans.exe $ROOT
+leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
+  $ROOT/_build/default/test/prelude_left_kan.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
@@ -237,20 +241,23 @@ leg MED PRENEX-FAMILIES-RUNTIME '^PRENEX-FAMILIES-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --families
 leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --groups
-leg SLOW PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
+leg CATEGORY PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --category
-leg SLOW PRELUDE-CATEGORY-ACCESSORS \
+leg CATEGORY PRELUDE-CATEGORY-ACCESSORS \
   '^PRELUDE-CATEGORY-ACCESSORS OK cases=2 hosts=3 mutation=1$' \
   python3 -P $ROOT/test/prenex_runtime.py --category-accessors
 leg MED DEPENDENT-CLOSURE-RUNTIME \
   '^DEPENDENT-CLOSURE-RUNTIME OK cases=9 hosts=3 mutation=1$' \
   python3 -P $ROOT/test/prenex_runtime.py --closures
-leg SUITE PRELUDE-FUNCTOR-RUNTIME \
+leg CATEGORY PRELUDE-FUNCTOR-RUNTIME \
   '^PRELUDE-FUNCTOR-RUNTIME OK cases=6 hosts=3 mutation=1 refusals=2$' \
   python3 -P $ROOT/test/functor_runtime.py
-leg SUITE PRELUDE-NATTRANS-RUNTIME \
+leg CATEGORY PRELUDE-NATTRANS-RUNTIME \
   '^PRELUDE-NATTRANS-RUNTIME OK cases=8 hosts=3 mutation=1$' \
   python3 -P $ROOT/test/nattrans_runtime.py
+leg SUITE PRELUDE-LEFT-KAN-RUNTIME \
+  '^PRELUDE-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1$' \
+  python3 -P $ROOT/test/left_kan_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "baseline": true,
+  "restored": true,
+  "sources": {
+    "prelude/cat/category.mech": "969062d0b1bdf2d4bdc06439c3e1ce35cd2cec4831ac09e89bf4c2e970c3f5d4",
+    "test/fixtures/prelude/nattrans.mech": "f64a1d8c09421482e8ce819a3deeeddd0822dafaecb557380a363f5891c4b0e8",
+    "test/fixtures/prelude/left-kan-identity.mech": "4bc83b8b6d43346b1497a99e5b4bf746df9d3028055223c12cbba30314e32be8",
+    "test/fixtures/prelude/left-kan-common.mech": "ce275fd4affb9d77b8f4f36eabf0889923340154456bab9e546045335841f14d",
+    "test/fixtures/prelude/left-kan.mech": "0809ae3fe0d8710b58308fc1467165bee66c19b9f6ee57f28703aad80b9266df",
+    "test/neg/left-kan/erased-cocone.err": "14d663db143e37264c3ab96996950f5090ae4d6914e386903ad63f9aafd127a4",
+    "test/neg/left-kan/erased-cocone.mech": "4a6cc354bf66d5633cc998368dcf462640721a5d98a629835fbb2e1ce4a4f751",
+    "test/neg/left-kan/missing-uniqueness.err": "bef199d9ecd2511d170173b0f21077402e30ef5dc90b73040358f41a024dca3a",
+    "test/neg/left-kan/missing-uniqueness.mech": "9906a8a51556fa6f01a4265e279e943a42048363b131a4b90b1830e6c37cbf46",
+    "test/neg/left-kan/reversed-unit.err": "b057cfcd1ffae923cc4be66f0515dd69aa246eab498c813bf3e500ceb7af2975",
+    "test/neg/left-kan/reversed-unit.mech": "b2414d812d9d51124d788e3272cf9fb34df6f0439d19c69a14e70893b3578bcf",
+    "test/neg/left-kan/wrong-factor.err": "e2b322409fa448c24a6a3b6cd526862ab9562dfa4380e97bb48e914f009f8338",
+    "test/neg/left-kan/wrong-factor.mech": "47385d9b11c43d7e7d452c6066be98ff575ae30be937906620fc53adba4b4b69",
+    "test/neg/left-kan/wrong-order.err": "57623f49b82635c27eb21eceddaa2be4bb17a0813526f886d75378f6929db672",
+    "test/neg/left-kan/wrong-order.mech": "292c6da15cd96acd7005cd67c5bf2c4b13e3ead71d725e5fefdea94225258da1",
+    "test/neg/left-kan/wrong-uniqueness.err": "6eb557eb4277cbf74f5430b1e346da809dc91ec1a9534191c542e2586b3dede2",
+    "test/neg/left-kan/wrong-uniqueness.mech": "fac2885e38167b1763ee362cc0ad5c35cc8bc0cd90d8d2e7b12ccab91f044a49"
+  },
+  "capture_sha256": {
+    "baseline": {
+      "stdout": "98b1b0d942e8d6707faa9c5368ce571b700afcd0a3220cc8644101763661b878",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M1": {
+      "stdout": "5e6d04ee14ba14dc878bda89cbf460726c78a4fba68233f24a64d99f3e034720",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M2": {
+      "stdout": "bf36998914c040a0121529385d2987d62e88f030911f00fbf50959087f997c21",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M3": {
+      "stdout": "d856e92019cb77c256b0e9e9d81b21d5495e235b3d8476300dfac196d2f5eca3",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M4": {
+      "stdout": "81b92516563fbd6177aea8f05a21f64741c2cc8365d97a2c4870dd9586965834",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M5": {
+      "stdout": "87c33f21d9c4a89de1ac7d36bc8b4ca8435cb28eb720fa854d5f018f88531f3d",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "U1-LAN-M6": {
+      "stdout": "f8fe82d0ccf636b41f416feb44955b8a3aa638214f543218f61362a3860df4a1",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "restored": {
+      "stdout": "98b1b0d942e8d6707faa9c5368ce571b700afcd0a3220cc8644101763661b878",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "checker_sha256": "ef7e1f35bef2426fec8fc325b2fdfdd23b61fb90c273057914479811852f915e",
+  "controls": [
+    {
+      "name": "U1-LAN-M1",
+      "path": "test/fixtures/prelude/left-kan.mech",
+      "old": "(Mediator.1 (next zero)).1 zero",
+      "new": "(Mediator.1 zero).1 zero",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL wrong computation: lanDescValue = (In SMu Tiny [] (ACtor zero) [])",
+      "mutant_sha256": "624c0ac7318d63acfce21611d3157a7b79083cdc0293c25a38be1e073dfd8d48",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-LAN-M2",
+      "path": "test/fixtures/prelude/left-kan.mech",
+      "old": "Constant Constant Eta Beta OtherChosen",
+      "new": "Constant Constant Eta Alpha Chosen",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL wrong computation: lanDescOther = (In SMu Tiny [] (ACtor zero) [])",
+      "mutant_sha256": "ddcccd7382cb7362b96f3205d3575cf52d9c32982193431868ae1e933124f3b2",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-LAN-M3",
+      "path": "prelude/cat/category.mech",
+      "old": "=> s.1",
+      "new": "=> s.2",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL mismatch: the term has type (Lan SPi w fac",
+      "mutant_sha256": "a34c3230cdb0e30dcf293d66eb5653b81c23cdede38414fa74539a69390951e3",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-LAN-M4",
+      "path": "prelude/cat/category.mech",
+      "old": "(lanUniq J C D j c d K F H G eta alpha s beta2 h2 y)",
+      "new": "(lanUniq J C D j c d K F H G eta alpha s beta1 h1 y)",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL mismatch: the term has type (Lan SMu MechCategory [(Out SPi w x C (APt w y)",
+      "mutant_sha256": "e0a04bc6421e6666e4f3fdab1538209ff22f3619376bfc4418026f3cc7e28f3a",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-LAN-M5",
+      "path": "prelude/cat/category.mech",
+      "old": "(eta.1 x) (beta.1 (K.1 x))",
+      "new": "(beta.1 (K.1 x)) (eta.1 x)",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL mismatch: the term has type (Out SPi 0 y D",
+      "mutant_sha256": "ea5e497d980c02bbf5ad3733e863074107ececa0d6a2dbc0bf40be0c414a4981",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-LAN-M6",
+      "path": "test/fixtures/prelude/left-kan.mech",
+      "old": "((fun (n : Tiny) => next n), (fun (n : Tiny) => n))).2 (next zero)",
+      "new": "((fun (n : Tiny) => n), (fun (n : Tiny) => n))).2 (next zero)",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-LEFT-KAN-FAIL wrong computation: lanMapValue = (In SMu Tiny [] (ACtor next) [(In SMu Tiny [] (ACtor zero) [])])",
+      "mutant_sha256": "c9a9b14bf69a3f55ec391c4f433a5c89f0a1e41d67f72c124ea093812a8fd7b1",
+      "exit_code": 1,
+      "killed": true
+    }
+  ]
+}

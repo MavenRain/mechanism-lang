@@ -1,0 +1,25 @@
+--- initial/dev/gates.sh
++++ final/dev/gates.sh
+@@ -60,8 +60,8 @@
+ # The named tiers, in seconds.  A tier is a hang ceiling, not a budget:
+ # a leg that grows from one second to nine stays green at FAST and shows
+ # the growth in the MEASURE block.  The tiers below hold every numeric
+-# watchdog literal in this file.  CATEGORY covers repeated checks and
+-# erasure of the growing category group in the runtime harnesses.
++# watchdog literal in this file.  CATEGORY covers repeated checking and
++# erasure of the growing category group.
+ FAST=10
+ MED=30
+ SLOW=120
+@@ -225,9 +225,9 @@
+   $ROOT/_build/default/test/family_groups.exe
+ leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
+   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
+-leg SUITE PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
++leg CATEGORY PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
+   $ROOT/_build/default/test/prelude_category.exe $ROOT
+-leg SUITE PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
++leg CATEGORY PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
+   $ROOT/_build/default/test/prelude_functor.exe $ROOT
+ leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
+   $ROOT/_build/default/test/prelude_nattrans.exe $ROOT

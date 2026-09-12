@@ -42,10 +42,10 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-11
+## Position on 2026-09-12
 
-The base is bb215e4, the first U1 increment with checked functors.
-The next increment adds natural transformations.  Stage 0, Stage
+The base is 7c6d50d, the U1 natural transformation increment.
+The next increment adds left Kan extensions.  Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,
@@ -54,12 +54,13 @@ textual prenex definitions, families and groups, checked categories,
 and dependent closure calls.  The first U1 increment adds checked
 functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
-and both whiskering operations in that group.  Stage C remains open
-on functors across separate universe pairs, LeftKanExtension and
-source-type parity.  Stage D (typed
+and both whiskering operations in that group.  Left Kan extensions
+add universal mediators and pointwise uniqueness.  Stage C remains
+open on functors across separate universe pairs and source-type
+parity.  Stage D (typed
 mapping) and Stage E (M0-EXIT) have not started.  The map inventory
 holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of 2,477.  The
-gate battery adds PRELUDE-NATTRANS and PRELUDE-NATTRANS-RUNTIME.
+gate battery adds PRELUDE-LEFT-KAN and PRELUDE-LEFT-KAN-RUNTIME.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
@@ -112,7 +113,9 @@ stay under `ports/` (D-UAT-3).
   PRELUDE-FUNCTOR and PRELUDE-FUNCTOR-RUNTIME gates.  The next
   increment, `dev/PORT-UAT-U1-NATTRANS.md`, adds NatTrans, idNat,
   vcomp, whiskerRight and whiskerLeft with kernel and runtime gates.
-  U1 remains open.
+  `dev/PORT-UAT-U1-LEFT-KAN.md` adds LeftKanExtension, its accessors
+  and desc_unique, with kernel and runtime gates.  U1 remains open
+  on separate category universe pairs and source-type parity.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,
   Indiscrete, ConfigSpace, SymmetricGroup, Z2Group and ChoiceRule.
   The last four are framework and land in `prelude/aggregate/`.  The

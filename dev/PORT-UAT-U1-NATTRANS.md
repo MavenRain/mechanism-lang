@@ -7,9 +7,10 @@ Stage C and U1 remain open.
 ## Contract
 
 The group gains eqSymm, NatTrans, natApp, naturality, idNat, vcomp,
-vcompLaw, whiskerRight and whiskerLeft.  A specialization installs one
-equality family and twenty-five definitions.  The existing category and
-functor definitions keep their signatures and bodies.
+vcompLaw, whiskerRight and whiskerLeft.  This increment brought each
+specialization to one equality family and twenty-five definitions.
+The left Kan extension increment adds fifteen more.  The existing
+category and functor definitions keep their signatures and bodies.
 
 NatTrans takes parallel functors F and G.  Its first field maps an
 object x to a morphism from F.obj x to G.obj x.  This function can
@@ -79,7 +80,8 @@ The build log records gate results and mutation evidence.
 
 ## Remaining work
 
-Functor across separate universe pairs, LeftKanExtension,
-desc_unique, source-type parity and bridge theorems remain due.
+The next increment supplies LeftKanExtension and desc_unique; see
+`dev/PORT-UAT-U1-LEFT-KAN.md`.  Functor across separate universe
+pairs, source-type parity and bridge theorems remain due.
 This increment does not change mapping verdicts, denominators,
 trusted-line bounds, vendor sources or the U1 completion gate.

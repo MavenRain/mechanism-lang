@@ -1,0 +1,7 @@
+def missingUniqueness : Small_LeftKanExtension Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd
+    Identity Constant :=
+  (Constant, (Eta,
+    (fun (G : Small_Functor Tiny Point IndexedEnd DoubleEnd)
+         (alpha : Small_LanCocone Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    G) =>
+      ((Extension.2.2 G alpha).1, (Extension.2.2 G alpha).2.1))))

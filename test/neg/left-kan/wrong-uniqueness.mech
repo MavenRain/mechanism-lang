@@ -1,0 +1,5 @@
+def wrongUniqueness : Small ((Tiny -> Tiny) * (Tiny -> Tiny))
+    (Alpha.1 zero) (Beta.1 zero) :=
+  Small_desc_unique Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant
+    Constant Eta Alpha Chosen Alpha Beta
+    (fun (x : Tiny) => categoryRefl) (fun (x : Tiny) => categoryRefl) zero

@@ -196,8 +196,13 @@ PRELUDE-NATTRANS checks their contracts and PRELUDE-NATTRANS-RUNTIME
 compares eight exports on all three hosts.  See
 `dev/PORT-UAT-U1-NATTRANS.md`.
 
-Stage C remains open on functors across separate universe pairs,
-LeftKanExtension and checked source-type parity.
+Left Kan extensions supply a functor, unit and universal mediator.
+Their factorization and uniqueness laws are checked, and
+desc_unique compares any two mediators that factor the same cocone.
+See `dev/PORT-UAT-U1-LEFT-KAN.md` for the contracts and validation.
+
+Stage C remains open on functors across separate universe pairs
+and checked source-type parity.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

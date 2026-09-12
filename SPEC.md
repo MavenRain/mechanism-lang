@@ -452,5 +452,15 @@ maps components through a functor.  Their result types expand the
 NatTrans fields for the composed functors.  The square-composition
 lemma vcompLaw, category laws and functor laws prove naturality.
 See `dev/PORT-UAT-U1-NATTRANS.md` for the checked contracts.
-Functors across separate universe pairs, LeftKanExtension and
-source-type parity remain open.
+LeftKanExtension stores an extended functor, a unit and a solver
+that returns each mediator with its factorization and uniqueness
+proofs.  LanCocone expands the composed functor's maps.  LanFactor
+states unit followed by the mediator at K's object.  LanSolution
+packages the mediator and both laws.  lanFunctor and lanUnit read
+the candidate; lanSolve supplies a solution.  lanDesc, lanFac and
+lanUniq read that solution.  desc_unique derives pointwise
+equality of two mediators that factor the same cocone, by
+symmetry and transitivity.
+See `dev/PORT-UAT-U1-LEFT-KAN.md` for the representation and tests.
+Functors across separate universe pairs and source-type parity
+remain open.

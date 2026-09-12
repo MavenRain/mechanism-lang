@@ -1,0 +1,8 @@
+def erasedCocone :
+    (0 alpha : Small_LanCocone Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    Constant) ->
+    Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  fun (0 alpha : Small_LanCocone Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    Constant) =>
+    (Small_lanSolve Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension
+    Constant alpha).1

@@ -1,0 +1,4 @@
+def wrongFactor : Small ((Tiny -> Tiny) * (Tiny -> Tiny))
+    (Beta.1 zero) (Alpha.1 zero) :=
+  Small_lanFac Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Alpha Chosen zero

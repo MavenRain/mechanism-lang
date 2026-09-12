@@ -130,7 +130,7 @@ grammar, naming and validation.
 
 `cat/category.mech` declares the MechCategory group with two Type-level
 parameters: objects at `Type u` and morphisms at `Type v`. Specializing
-as C installs equality C and twenty-five members.  The category
+as C installs equality C and forty members.  The category
 members are
 C_Category, C_Hom, C_id, C_comp, C_idComp, C_compId and C_assoc.
 The category record contains its
@@ -172,5 +172,15 @@ precomposes and whiskerLeft postcomposes.  PRELUDE-NATTRANS checks
 their contracts; PRELUDE-NATTRANS-RUNTIME checks eight exports with
 two payloads on three hosts.  See `dev/PORT-UAT-U1-NATTRANS.md`.
 
-Functors across separate universe pairs, LeftKanExtension and
-source-type parity remain open.
+Left Kan extensions add C_recordFirst, C_recordSecond, C_LanCocone,
+C_LanFactor, C_LanSolution, C_LanTail, C_LeftKanExtension,
+C_lanFunctor, C_lanTail, C_lanUnit, C_lanSolve, C_lanDesc, C_lanFac,
+C_lanUniq and C_desc_unique.  lanSolve supplies the checked solution
+that lanDesc, lanFac and lanUniq read.  Generic pair projections and
+LanTail support the record accessors.  The mediator has factorization
+and pointwise uniqueness proofs.  PRELUDE-LEFT-KAN checks these
+contracts and misuse cases.  PRELUDE-LEFT-KAN-RUNTIME checks six
+exports on three hosts.  See `dev/PORT-UAT-U1-LEFT-KAN.md`.
+
+Functors across separate universe pairs and source-type parity
+remain open.

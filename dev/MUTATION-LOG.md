@@ -795,3 +795,43 @@ and the restored suite passed.
 The runtime gate separately changes payload 37 to 41 and checks
 every export on all three hosts.  The kernel suite also checks six
 exact misuse diagnostics and an exhausted budget.
+
+## PORT-UAT U1: left Kan extensions, 2026-09-12
+
+Base: 7c6d50d.  Replay command:
+`python3 -I dev/left-kan-mutations.py NEW_DIRECTORY`.
+The output directory must be new and outside the repository.
+
+The baseline and restored suites both pass with 203 entries, four
+universe instances, six computations and seven refusal checks.
+All six controls are detected.  Each control changes one anchor
+in an isolated source copy; the original bytes are restored before
+the next control.  A timeout, crash or unexpected stderr does not
+count as a detected control.
+
+| Control | Change | Observed refusal |
+| --- | --- | --- |
+| U1-LAN-M1 | Use object zero for the first mediator | lanDescValue is zero |
+| U1-LAN-M2 | Solve Alpha instead of Beta for the other mediator | lanDescOther is zero |
+| U1-LAN-M3 | Read the solution's proof pair as its mediator | Type mismatch |
+| U1-LAN-M4 | Reuse beta1's uniqueness proof for beta2 | Type mismatch |
+| U1-LAN-M5 | Reverse unit and mediator composition | Type mismatch |
+| U1-LAN-M6 | Give the identity pair to the extended functor's map | lanMapValue is one |
+
+M1, M2 and M6 check the printed wrong value.  M3 through M5 require
+the checker's type-mismatch diagnostic.  Each of those three names
+the head of the printed term type, so the three kills are distinct:
+M3 aborts on a Lan SPi factor type, M4 on a Lan SMu equality type
+and M5 on an Out SPi hom type.  M6 replaces the swap functor's
+argument arrow with the identity pair, so it proves that the arrow
+map of lanFunctor changes the answer.  The report binds the
+input files, checker binary and complete stdout/stderr streams
+with SHA-256.  The replay writes those streams to NEW_DIRECTORY.
+The transcript and report are retained under
+dev/validation/port-uat-u1-left-kan/.
+
+The runtime client separately checks payloads 37 and 41 on six
+exports.  Its expected values distinguish cocones, object
+arguments and the two projections of each endomorphism pair.  Its
+map export runs through the swap functor, so it doubles its
+payload.

@@ -96,10 +96,10 @@ Results and gate measurements are recorded in dev/M0-BUILD-LOG.md.
 ## Remaining U1 work
 
 The next increment supplies NatTrans, idNat, vcomp, whiskerRight
-and whiskerLeft; see `dev/PORT-UAT-U1-NATTRANS.md`.  Functor between
-separate universe pairs, LeftKanExtension and desc_unique remain
-due.  The source API uses compFunctor
-to distinguish it from category composition in the flat member
-namespace.  Source-type parity and bridge theorems remain separate
-work.  No map verdict, denominator, trusted-line bound, axiom or
-vendor source changes in this increment.
+and whiskerLeft; see `dev/PORT-UAT-U1-NATTRANS.md`.  LeftKanExtension
+and desc_unique follow in `dev/PORT-UAT-U1-LEFT-KAN.md`.  Functor
+between separate universe pairs remains due.  The source API uses
+compFunctor to distinguish it from category composition in the flat
+member namespace.  Source-type parity and bridge theorems remain
+separate work.  No map verdict, denominator, trusted-line bound,
+axiom or vendor source changes in this increment.

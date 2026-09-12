@@ -1,0 +1,23 @@
+LEFT-KAN-MUTATIONS running baseline
+LEFT-KAN-MUTATIONS finished baseline exit=0 elapsed_s=126.834
+LEFT-KAN-MUTATIONS running U1-LAN-M1
+LEFT-KAN-MUTATIONS finished U1-LAN-M1 exit=1 elapsed_s=107.314
+{"control": "U1-LAN-M1", "killed": true}
+LEFT-KAN-MUTATIONS running U1-LAN-M2
+LEFT-KAN-MUTATIONS finished U1-LAN-M2 exit=1 elapsed_s=96.160
+{"control": "U1-LAN-M2", "killed": true}
+LEFT-KAN-MUTATIONS running U1-LAN-M3
+LEFT-KAN-MUTATIONS finished U1-LAN-M3 exit=1 elapsed_s=19.733
+{"control": "U1-LAN-M3", "killed": true}
+LEFT-KAN-MUTATIONS running U1-LAN-M4
+LEFT-KAN-MUTATIONS finished U1-LAN-M4 exit=1 elapsed_s=37.823
+{"control": "U1-LAN-M4", "killed": true}
+LEFT-KAN-MUTATIONS running U1-LAN-M5
+LEFT-KAN-MUTATIONS finished U1-LAN-M5 exit=1 elapsed_s=7.809
+{"control": "U1-LAN-M5", "killed": true}
+LEFT-KAN-MUTATIONS running U1-LAN-M6
+LEFT-KAN-MUTATIONS finished U1-LAN-M6 exit=1 elapsed_s=184.236
+{"control": "U1-LAN-M6", "killed": true}
+LEFT-KAN-MUTATIONS running restored
+LEFT-KAN-MUTATIONS finished restored exit=0 elapsed_s=132.159
+LEFT-KAN-MUTATIONS OK controls=6 restored=1

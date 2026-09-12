@@ -1,0 +1,23 @@
+-- The extension along an identity functor exists in every category.
+def identityLan : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) ->
+    Small_LeftKanExtension C C D c c d (Small_idFunctor C c) F :=
+  fun (0 C : Type 0) (0 D : Type 0) (c : Small_Category C)
+      (d : Small_Category D) (F : Small_Functor C D c d) =>
+    (F, (Small_idNat C D c d F,
+     (fun (G : Small_Functor C D c d)
+           (alpha : Small_LanCocone C C D c c d (Small_idFunctor C c) F G) =>
+         ((alpha.1, alpha.2),
+      ((fun (x : C) => Small_idComp D d (F.1 x) (G.1 x) (alpha.1 x)),
+       (fun (beta : Small_NatTrans C D c d F G)
+            (h : Small_LanFactor C C D c c d (Small_idFunctor C c) F F G
+              (Small_idNat C D c d F) alpha beta) (y : C) =>
+         Small_eqTrans (Small_Hom D d (F.1 y) (G.1 y))
+           (beta.1 y)
+           (Small_comp D d (F.1 y) (F.1 y) (G.1 y)
+             (Small_id D d (F.1 y)) (beta.1 y)) (alpha.1 y)
+           (Small_eqSymm (Small_Hom D d (F.1 y) (G.1 y))
+             (Small_comp D d (F.1 y) (F.1 y) (G.1 y)
+               (Small_id D d (F.1 y)) (beta.1 y)) (beta.1 y)
+             (Small_idComp D d (F.1 y) (G.1 y) (beta.1 y))) (h y)))))))

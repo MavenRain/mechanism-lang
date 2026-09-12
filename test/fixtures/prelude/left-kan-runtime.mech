@@ -1,0 +1,38 @@
+def Identity : Small_Functor Nat Nat IndexedEnd IndexedEnd :=
+  Small_idFunctor Nat IndexedEnd
+def Extension : Small_LeftKanExtension Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity
+    Constant :=
+  identityLan Nat Point IndexedEnd DoubleEnd Constant
+def Eta : Small_LanCocone Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant
+    :=
+  Small_lanUnit Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension
+def Chosen : Small_LanSolution Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    Constant Constant Eta Alpha :=
+  Small_lanSolve Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension Constant
+    Alpha
+def OtherChosen : Small_LanSolution Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant
+    Constant Constant Eta Beta :=
+  Small_lanSolve Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Extension Constant
+    Beta
+def Mediator : Small_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Small_lanDesc Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Alpha Chosen
+def OtherMediator : Small_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Small_lanDesc Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Eta Beta OtherChosen
+def lanUnitAt : Nat -> Nat :=
+  fun (payload : Nat) => (Eta.1 payload).2 payload
+def lanMapAt : Nat -> Nat := fun (payload : Nat) =>
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_lanFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd
+      (Small_idFunctor Point DoubleEnd) Swap
+      (identityLan Point Point DoubleEnd DoubleEnd Swap)) point point
+    ((fun (n : Nat) => natAdd n n), (fun (n : Nat) => n))).2 payload
+def lanDescAt : Nat -> Nat :=
+  fun (payload : Nat) => (Mediator.1 payload).1 0
+def lanOtherAt : Nat -> Nat :=
+  fun (payload : Nat) => (OtherMediator.1 payload).1 payload
+def lanObjectAt : Nat -> Nat :=
+  fun (payload : Nat) => (Mediator.1 (natAdd payload payload)).1 0
+def lanSecondAt : Nat -> Nat :=
+  fun (payload : Nat) => (Mediator.1 0).2 payload

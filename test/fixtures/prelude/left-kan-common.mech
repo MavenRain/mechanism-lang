@@ -1,0 +1,42 @@
+-- These contracts use the original natural transformation operations.
+def coconeContract : (0 J : Type 0) -> (0 C : Type 0) -> (0 D : Type 0) ->
+    (j : Small_Category J) -> (c : Small_Category C) -> (d : Small_Category D) ->
+    (K : Small_Functor J C j c) -> (F : Small_Functor J D j d) ->
+    (G : Small_Functor C D c d) ->
+    Small_NatTrans J D j d F (Small_compFunctor J C D j c d K G) ->
+    Small_LanCocone J C D j c d K F G :=
+  fun (0 J : Type 0) (0 C : Type 0) (0 D : Type 0)
+      (j : Small_Category J) (c : Small_Category C) (d : Small_Category D)
+      (K : Small_Functor J C j c) (F : Small_Functor J D j d)
+      (G : Small_Functor C D c d)
+      (alpha : Small_NatTrans J D j d F (Small_compFunctor J C D j c d K G)) =>
+    alpha
+
+def factorContract : (0 J : Type 0) -> (0 C : Type 0) -> (0 D : Type 0) ->
+    (j : Small_Category J) -> (c : Small_Category C) -> (d : Small_Category D) ->
+    (K : Small_Functor J C j c) -> (F : Small_Functor J D j d) ->
+    (H : Small_Functor C D c d) -> (G : Small_Functor C D c d) ->
+    (eta : Small_LanCocone J C D j c d K F H) ->
+    (alpha : Small_LanCocone J C D j c d K F G) ->
+    (s : Small_LanSolution J C D j c d K F H G eta alpha) ->
+    (x : J) -> Small (Small_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (Small_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+        (eta.1 x)
+        ((Small_whiskerRight C D J c d j H G
+          (Small_lanDesc J C D j c d K F H G eta alpha s) K).1 x))
+      (alpha.1 x) := Small_lanFac
+
+def uniqueContract : (0 J : Type 0) -> (0 C : Type 0) -> (0 D : Type 0) ->
+    (j : Small_Category J) -> (c : Small_Category C) -> (d : Small_Category D) ->
+    (K : Small_Functor J C j c) -> (F : Small_Functor J D j d) ->
+    (H : Small_Functor C D c d) -> (G : Small_Functor C D c d) ->
+    (eta : Small_LanCocone J C D j c d K F H) ->
+    (alpha : Small_LanCocone J C D j c d K F G) ->
+    (s : Small_LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : Small_NatTrans C D c d H G) ->
+    (beta2 : Small_NatTrans C D c d H G) ->
+    Small_LanFactor J C D j c d K F H G eta alpha beta1 ->
+    Small_LanFactor J C D j c d K F H G eta alpha beta2 ->
+    (y : C) -> Small (Small_Hom D d (H.1 y) (G.1 y))
+      (Small_natApp C D c d H G beta1 y)
+      (Small_natApp C D c d H G beta2 y) := Small_desc_unique

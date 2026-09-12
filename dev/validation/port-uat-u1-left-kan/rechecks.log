@@ -1,0 +1,4 @@
+RECHECK PRELUDE-CATEGORY seconds=900 elapsed_ms=206416.758 exit=0
+PRELUDE-CATEGORY-OK entries=181 computations=7 negatives=9 quotation=3
+RECHECK PRELUDE-FUNCTOR seconds=900 elapsed_ms=215939.399 exit=0
+PRELUDE-FUNCTOR-OK entries=177 instances=4 computations=7 negatives=8

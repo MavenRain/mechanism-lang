@@ -105,7 +105,7 @@ def main():
                 expected = "".join(f"{name}\t{answer}\n" for name, answer in answers)
                 if not invoke(f"{variant}/kernel-emit",
                               [root / "_build/default/test/prelude_runtime.exe", source,
-                               work, *(name for name, _ in answers)], expected, timeout=60):
+                               work, *(name for name, _ in answers)], expected, timeout=210):
                     continue
                 hosts.add("kernel")
             if not category:

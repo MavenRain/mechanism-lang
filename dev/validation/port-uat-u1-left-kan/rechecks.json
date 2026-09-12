@@ -1,0 +1,36 @@
+[
+  {
+    "name": "PRELUDE-CATEGORY",
+    "tier": "CATEGORY",
+    "seconds": 900,
+    "argv": [
+      "_build/default/test/prelude_category.exe",
+      "."
+    ],
+    "oracle": "^PRELUDE-CATEGORY-OK entries=",
+    "elapsed_ms": 206416.7575421743,
+    "exit_code": 0,
+    "passed": true,
+    "capture_sha256": {
+      "stdout": "b842bac09c6021204a19001fd20b2e310320e529b306b15275bfc838ad6e897a",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "name": "PRELUDE-FUNCTOR",
+    "tier": "CATEGORY",
+    "seconds": 900,
+    "argv": [
+      "_build/default/test/prelude_functor.exe",
+      "."
+    ],
+    "oracle": "^PRELUDE-FUNCTOR-OK entries=",
+    "elapsed_ms": 215939.39908314496,
+    "exit_code": 0,
+    "passed": true,
+    "capture_sha256": {
+      "stdout": "952d00c376cbf8b7c3e88bcc7fc54a1d5828418b3a6e0c883c8d80696201c819",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+]

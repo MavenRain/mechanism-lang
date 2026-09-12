@@ -1,0 +1,5 @@
+def wrongOrder : Small_LanFactor Tiny Tiny Point
+    IndexedEnd IndexedEnd DoubleEnd Identity Constant Constant Constant
+    Alpha
+    (Small_vcomp Tiny Point IndexedEnd DoubleEnd Constant Constant Constant Beta Alpha)
+    Beta := fun (x : Tiny) => categoryRefl

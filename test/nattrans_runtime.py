@@ -7,11 +7,10 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 GATE = "PRELUDE-NATTRANS-RUNTIME"
-# The leg runs under the 300-second SUITE watchdog.  The whole run keeps
-# 270 seconds, so a slow command reports its own label before the watchdog.
-DEADLINE = 270
-# The nattrans batch checks and emits eight exports, so it keeps 90 seconds.
-BATCH = 90
+# The category prelude is checked and erased for both payloads.
+# Keep the whole run below the 900-second CATEGORY watchdog.
+DEADLINE = 870
+BATCH = 210
 HOST = 20
 
 

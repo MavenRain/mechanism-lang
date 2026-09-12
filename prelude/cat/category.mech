@@ -365,4 +365,208 @@ def whiskerLeft : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
        f))
        (functorMapComp D E d e H (F.1 x) (G.1 x) (G.1 y) (alpha.1 x) (functorMap C D c d G x y
        f)))))
+
+-- Generic projections keep the pair's carrier and fibre abstract.
+def recordFirst : (0 A : Sort (max (succ u) (succ v))) -> (0 B : A -> Sort (max (succ u) (succ v)))
+    ->
+    ((a : A) * B a) -> A :=
+  fun (0 A : Sort (max (succ u) (succ v))) (0 B : A -> Sort (max (succ u) (succ v)))
+      (p : (a : A) * B a) => p.1
+def recordSecond : (0 A : Sort (max (succ u) (succ v))) -> (0 B : A -> Sort (max (succ u) (succ v)))
+    ->
+    (p : (a : A) * B a) -> B (recordFirst A B p) :=
+  fun (0 A : Sort (max (succ u) (succ v))) (0 B : A -> Sort (max (succ u) (succ v)))
+      (p : (a : A) * B a) => p.2
+
+-- A cocone F => K followed by G, with the composite maps expanded.
+def LanCocone : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> Functor J C j c -> Functor J D j d ->
+    Functor C D c d -> Sort (max (succ u) (succ v)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) (G : Functor C D c d) =>
+    (app : (x : J) -> Hom D d (F.1 x) (G.1 (K.1 x))) *
+    ((0 x : J) -> (0 y : J) -> (f : Hom J j x y) ->
+      MechCategory (Hom D d (F.1 x) (G.1 (K.1 y)))
+        (comp D d (F.1 x) (F.1 y) (G.1 (K.1 y))
+          (functorMap J D j d F x y f) (app y))
+        (comp D d (F.1 x) (G.1 (K.1 x)) (G.1 (K.1 y))
+          (app x) (functorMap C D c d G (K.1 x) (K.1 y)
+            (functorMap J C j c K x y f))))
+
+-- The unit followed by a mediator at K's object equals the cocone.
+def LanFactor : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> (G : Functor C D c d) ->
+    LanCocone J C D j c d K F H -> LanCocone J C D j c d K F G ->
+    NatTrans C D c d H G -> Prop :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d)
+      (H : Functor C D c d) (G : Functor C D c d)
+      (eta : LanCocone J C D j c d K F H)
+      (alpha : LanCocone J C D j c d K F G)
+      (beta : NatTrans C D c d H G) =>
+    (x : J) -> MechCategory (Hom D d (F.1 x) (G.1 (K.1 x)))
+      (comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+        (eta.1 x) (beta.1 (K.1 x))) (alpha.1 x)
+
+-- Package each mediator with its factorization and uniqueness proofs.
+def LanSolution : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> (G : Functor C D c d) ->
+    LanCocone J C D j c d K F H -> LanCocone J C D j c d K F G ->
+    Sort (max (succ u) (succ v)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d)
+      (H : Functor C D c d) (G : Functor C D c d)
+      (eta : LanCocone J C D j c d K F H)
+      (alpha : LanCocone J C D j c d K F G) =>
+    (beta : NatTrans C D c d H G) *
+    (fac : LanFactor J C D j c d K F H G eta alpha beta) *
+    ((other : NatTrans C D c d H G) ->
+      LanFactor J C D j c d K F H G eta alpha other ->
+      (y : C) -> MechCategory (Hom D d (H.1 y) (G.1 y))
+        (other.1 y) (beta.1 y))
+
+def LanTail : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> Sort (max (succ u) (succ v)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) (H : Functor C D c d) =>
+    (eta : LanCocone J C D j c d K F H) *
+    ((G : Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+      LanSolution J C D j c d K F H G eta alpha)
+
+def LeftKanExtension : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    Sort (max (succ u) (succ v)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) =>
+    (H : Functor C D c d) * LanTail J C D j c d K F H
+
+def lanFunctor : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (0 j : Category J) -> (0 c : Category C) ->
+    (0 d : Category D) -> (0 K : Functor J C j c) -> (0 F : Functor J D j d) ->
+    LeftKanExtension J C D j c d K F -> Functor C D c d :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (0 j : Category J) (0 c : Category C) (0 d : Category D)
+      (0 K : Functor J C j c) (0 F : Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordFirst (Functor C D c d)
+      (fun (H : Functor C D c d) => LanTail J C D j c d K F H) L
+
+def lanTail : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (0 j : Category J) -> (0 c : Category C) ->
+    (0 d : Category D) -> (0 K : Functor J C j c) -> (0 F : Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> LanTail J C D j c d K F (lanFunctor J C D j c d K F L)
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (0 j : Category J) (0 c : Category C) (0 d : Category D)
+      (0 K : Functor J C j c) (0 F : Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordSecond (Functor C D c d)
+      (fun (H : Functor C D c d) => LanTail J C D j c d K F H) L
+
+def lanUnit : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (0 j : Category J) -> (0 c : Category C) ->
+    (0 d : Category D) -> (0 K : Functor J C j c) -> (0 F : Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> LanCocone J C D j c d K F (lanFunctor J C D j c d K F
+    L) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (0 j : Category J) (0 c : Category C) (0 d : Category D)
+      (0 K : Functor J C j c) (0 F : Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordFirst (LanCocone J C D j c d K F (lanFunctor J C D j c d K F L))
+      (fun (eta : LanCocone J C D j c d K F (lanFunctor J C D j c d K F L)) =>
+        (G : Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+          LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G eta alpha)
+      (lanTail J C D j c d K F L)
+
+def lanSolve : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (0 j : Category J) -> (0 c : Category C) ->
+    (0 d : Category D) -> (0 K : Functor J C j c) -> (0 F : Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> (G : Functor C D c d) ->
+    (alpha : LanCocone J C D j c d K F G) ->
+    LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G (lanUnit J C D j c d K F L) alpha
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (0 j : Category J) (0 c : Category C) (0 d : Category D)
+      (0 K : Functor J C j c) (0 F : Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordSecond (LanCocone J C D j c d K F (lanFunctor J C D j c d K F L))
+      (fun (eta : LanCocone J C D j c d K F (lanFunctor J C D j c d K F L)) =>
+        (G : Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+          LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G eta alpha)
+      (lanTail J C D j c d K F L)
+
+def lanDesc : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (0 j : Category J) -> (0 c : Category C) ->
+    (0 d : Category D) -> (0 K : Functor J C j c) -> (0 F : Functor J D j d) ->
+    (0 H : Functor C D c d) -> (0 G : Functor C D c d) ->
+    (0 eta : LanCocone J C D j c d K F H) -> (0 alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> NatTrans C D c d H G :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (0 j : Category J) (0 c : Category C) (0 d : Category D)
+      (0 K : Functor J C j c) (0 F : Functor J D j d) (0 H : Functor C D c d) (0 G : Functor C D c d)
+      (0 eta : LanCocone J C D j c d K F H) (0 alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.1
+
+def lanFac : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> (G : Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> LanFactor J C D j c d K F H G eta alpha (s.1)
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) (H : Functor C D c d) (G : Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.2.1
+
+def lanUniq : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> (G : Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> (beta : NatTrans C D c d H G) ->
+    LanFactor J C D j c d K F H G eta alpha beta ->
+    (y : C) -> MechCategory (Hom D d (H.1 y) (G.1 y))
+      (beta.1 y) ((s.1).1 y) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) (H : Functor C D c d) (G : Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.2.2
+
+-- Two mediators that factor the same cocone agree at every object.
+def desc_unique : (0 J : Sort (succ u)) -> (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ u)) -> (j : Category J) -> (c : Category C) ->
+    (d : Category D) -> (K : Functor J C j c) -> (F : Functor J D j d) ->
+    (H : Functor C D c d) -> (G : Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : NatTrans C D c d H G) -> (beta2 : NatTrans C D c d H G) ->
+    LanFactor J C D j c d K F H G eta alpha beta1 ->
+    LanFactor J C D j c d K F H G eta alpha beta2 ->
+    (y : C) -> MechCategory (Hom D d (H.1 y) (G.1 y))
+      (beta1.1 y) (beta2.1 y) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (j : Category J) (c : Category C) (d : Category D)
+      (K : Functor J C j c) (F : Functor J D j d) (H : Functor C D c d) (G : Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha)
+      (beta1 : NatTrans C D c d H G) (beta2 : NatTrans C D c d H G)
+      (h1 : LanFactor J C D j c d K F H G eta alpha beta1)
+      (h2 : LanFactor J C D j c d K F H G eta alpha beta2) (y : C) =>
+    eqTrans (Hom D d (H.1 y) (G.1 y))
+      (beta1.1 y) ((s.1).1 y) (beta2.1 y)
+      (lanUniq J C D j c d K F H G eta alpha s beta1 h1 y)
+      (eqSymm (Hom D d (H.1 y) (G.1 y)) (beta2.1 y) ((s.1).1 y)
+        (lanUniq J C D j c d K F H G eta alpha s beta2 h2 y))
 end

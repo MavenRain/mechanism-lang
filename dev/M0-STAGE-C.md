@@ -63,9 +63,9 @@ parity for generic category accessors; see dev/M0-STAGE-C-CLOSURES.md.
 The first U1 increment adds functors, identity and composition within
 one category group instance; see dev/PORT-UAT-U1.md.  The next U1
 increment adds natural transformations, identity, vertical composition
-and whiskering; see dev/PORT-UAT-U1-NATTRANS.md.  Functors across
-separate universe pairs, LeftKanExtension and source-type parity
-remain open.
+and whiskering; see dev/PORT-UAT-U1-NATTRANS.md.  Left Kan extensions
+and desc_unique follow in dev/PORT-UAT-U1-LEFT-KAN.md.  Functors
+across separate universe pairs and source-type parity remain open.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

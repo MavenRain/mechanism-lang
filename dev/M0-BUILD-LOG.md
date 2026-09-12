@@ -2001,3 +2001,134 @@ hand.  The rerun of verify-final gives every check row OK and exit
 0.  In its replay at a load above 200, four of the five suites
 reached the harness timeout.  The closure suite and the six
 executables passed.  These replays are not a gate result.
+
+## M0 Stage C / U1: left Kan extensions, 2026-09-12
+
+Base: 7c6d50d.  The category group gains LeftKanExtension,
+LanCocone, LanFactor, LanSolution and their accessors.  A solution
+pairs its mediator with factorization and pointwise uniqueness
+proofs.  desc_unique compares two mediators that factor the same
+cocone.  The group now installs forty definitions per instance.
+The original twenty-five declarations retain their source bytes.
+
+Generic pair projections and LanTail support the record accessors.
+lanSolve supplies a solution; lanDesc, lanFac and lanUniq consume
+that solution with explicit candidate and cocone arguments.
+The data accessors carry quantity zero on their type-only
+parameters.  lanFac, lanUniq and desc_unique return proofs that
+erase whole, so their parameters stay relevant.
+The checked identity-extension witness is generic over its source
+and target categories and the functor being extended.
+
+PRELUDE-LEFT-KAN checks four universe instances, 203 entries, six
+computations, six exact misuse diagnostics and budget exhaustion.
+It starts from Global.empty and rejects axioms, primitives and
+incomplete families.  Contract clients connect LanCocone to
+composed functors, lanFac to whiskerRight and desc_unique to natApp.
+The runtime client checks six exports at payloads 37 and 41 in one
+program, including two cocones, two object arguments and both
+endomorphism projections.  The unit export reads its object and the
+map export runs through the swap functor, so it doubles its
+payload.
+
+The build reports zero errors and warnings.  The mutation replay
+passes its baseline and restored suites and detects all six
+controls.  Its transcript, input hashes, checker hash and complete
+stream hashes are recorded with the validation evidence.  See
+dev/MUTATION-LOG.md and dev/PORT-UAT-U1-LEFT-KAN.md.
+
+The enlarged group increases template checking and erasure costs.
+The runtime harnesses retain their predicates and refusal probes,
+with larger category watchdogs.  No compiler, vendor, mapping or
+denominator source changes.  The trusted-line bounds remain 3000
+kernel and 900 encoder lines.  Separate category universe pairs,
+source-type parity and bridge theorems remain open.
+
+The full battery gives 41 PASS legs, two source-suite watchdog
+expiries at 300 s and the inherited TRUSTED-LINES failure.  The
+category and functor source suites then pass under CATEGORY's
+900 s ceiling, in 206.417 s and 215.939 s.  Their predicates and
+test bodies are unchanged.  The final coverage combines those
+rechecks with the passing battery legs: 43 checks pass, with only
+TRUSTED-LINES red at kernel=4208/3000 and encoder=246/900.
+
+All runtime gates pass in the battery.  PRELUDE-LEFT-KAN takes
+184.578 s and PRELUDE-LEFT-KAN-RUNTIME takes 112.072 s.  The source
+and runtime measurements vary with load; they are observations,
+not performance guarantees.  Complete logs, both sets of gate
+measurements, the timeout diff and replay hashes are retained in
+dev/validation/port-uat-u1-left-kan/.
+
+## Stage C / U1: left Kan extensions review (2026-09-12)
+
+Review of this slice.  One workflow ran four finder lenses over the
+staged diff, the source gate, the mutation controls and the docs.
+The lenses gave 17 raw candidates.  A verify stage rechecked every
+candidate.  The judge kept five fix rulings.  It refuted L2-1, the
+claim on the 300 s headroom of the PRELUDE-NATTRANS leg.  It
+downgraded L2-2 and L4-1 and did not fix them.  It dropped L4-2 as a
+duplicate of L1-1.  It refuted or dropped L1-3, L2-4, L2-5, L2-6,
+L3-2, L3-3, L4-3 and L4-4.
+
+| Id | Severity | Status | Note |
+| --- | --- | --- | --- |
+| L1-1 | medium | FIXED | blanket quantity-zero sentence narrowed |
+| L2-3 | medium | FIXED | lanMapValue now uses its morphism |
+| L3-1 | medium | FIXED | six controls kill on distinct text |
+| L1-2 | low | FIXED | README lists all 15 members |
+| L4-5 | low | FIXED | desc_unique sentence corrected |
+
+Fix paths.  L1-1 touched dev/PORT-UAT-U1-LEFT-KAN.md and the slice
+block of this file.  L2-3 touched
+test/fixtures/prelude/left-kan.mech,
+test/fixtures/prelude/left-kan-runtime.mech,
+test/prelude_left_kan.ml and test/left_kan_runtime.py.  L3-1 touched
+dev/left-kan-mutations.py and dev/MUTATION-LOG.md.  It added the
+control U1-LAN-M6 and made the diagnostic heads of M3, M4 and M5
+distinct.  L1-2 touched prelude/README.md.  L4-5 touched SPEC.md.
+
+Evidence.  The bundle is dev/validation/port-uat-u1-left-kan/.  Round
+2 regenerated left-kan-mutations.json and mutations.log for six
+controls under checker ef7e1f35.  It also refreshed the 52 source
+rows of gates.json.  Round 2 overwrote gates.log with a killed
+battery and set passes to 26.  The reviewer restored gates.log to the
+initial battery of the author, which gives 41 PASS, two 300 s
+expiries and TRUSTED-LINES, with sha f6aadc5b.  The reviewer restored
+passes 43 and failures [TRUSTED-LINES], restored the five-entry
+checker map with prelude_left_kan at ef7e1f35, and pinned the
+regenerated mutation files.  All pins verify on disk.
+
+Closing ladders.  The battery on the final staged bytes started at
+13:46:07 at a load of 23.21.  It gives 41 PASS and three FAIL rows:
+PRELUDE-NATTRANS-RUNTIME, PRELUDE-LEFT-KAN-RUNTIME and
+TRUSTED-LINES.  The two runtime legs expired on the 210 s batch
+budget of their Python harness at a load of 39.12.  Their measured
+rows are elapsed_ms=358645.998 exit=2 for the nattrans leg and
+elapsed_ms=211927.258 exit=2 for the left Kan leg.  TRUSTED-LINES
+gives elapsed_ms=75.829 exit=1 at kernel=4208/3000 and
+encoder=246/900.  That bound is inherited and the ruling on it is
+open.  The leg commands were rerun standalone after a load wait.
+The family_members executable gives FAMILY-MEMBERS-OK cases=19 and
+rc=0.  The prelude audit gives PRELUDE-OK families=10 definitions=16
+axioms=0 primitives=0 and rc=0.  The nattrans runtime suite gives
+PRELUDE-NATTRANS-RUNTIME OK cases=8 hosts=3 mutation=1 and rc=0 at a
+load of 23.05.  The category accessors suite gives
+PRELUDE-CATEGORY-ACCESSORS OK cases=2 hosts=3 mutation=1 and rc=0 at
+a load of 16.35.  The exact left Kan runtime leg stayed red in two
+reruns, at 14:34 at a load of 21.71 and at 14:58 at a load of 28.39.
+Each gives elapsed_s=210 on the same batch budget.  A third run of
+the same harness module with the DEADLINE, BATCH and HOST budgets
+raised from 270/210/20 s to 1800/1500/120 s gives
+PRELUDE-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1, elapsed_s=179
+and rc=0 at a load of 24.30.  That green block supersedes the two red
+blocks.  The relaxed run checks the same six cases, three hosts and
+one mutation.  No product file was edited for it.  The harness
+budgets exist so that the leg fits the 300 s SUITE watchdog on a
+quiet machine.  The executable hashes before and after the reruns are
+equal, so no rebuild took place.  Both runners end with exit 0.  The
+replay ends LEFT-KAN-MUTATIONS OK controls=6 restored=1.
+
+Tier note.  The Fable 5.1 builder tier could not be used.  Two Fable
+builders died on the reasoning-extraction classifier
+(req_011CeywCYsrchkvioLjCHypa and req_011CeywD63MMgz36RSPSwyJ3).  The
+finder, the builder and the closer ran on Opus at medium effort.

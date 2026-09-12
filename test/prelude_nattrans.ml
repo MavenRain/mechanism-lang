@@ -36,7 +36,7 @@ let suite root =
   let* () = require "nattrans instance inventory changed"
     (installed = expected_families) in
   let* () = require (Printf.sprintf "nattrans entry inventory changed: %d" (List.length rows))
-    (List.length rows = 123 && Global.StringMap.cardinal globals.entries = 123) in
+    (List.length rows = 183 && Global.StringMap.cardinal globals.entries = 183) in
   let members = ["eqSymm"; "NatTrans"; "natApp"; "naturality";
     "idNat"; "vcompLaw"; "vcomp"; "whiskerRight"; "whiskerLeft"] in
   let* () = List.fold_left (fun acc instance -> let* () = acc in
