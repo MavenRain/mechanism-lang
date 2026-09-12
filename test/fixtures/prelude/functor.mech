@@ -1,0 +1,100 @@
+mu Tiny : Type 0 with | zero : Tiny | next : Tiny -> Tiny
+mu Point : Type 0 with | point : Point
+specialize MechCategory (0, 0) as Small
+
+def Uniform : Small_Category Tiny :=
+  ((fun (0 x : Tiny) (0 y : Tiny) => Tiny -> Tiny),
+   ((fun (0 x : Tiny) (n : Tiny) => n),
+    ((fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (f : Tiny -> Tiny) (g : Tiny -> Tiny) (n : Tiny) => g (f n)),
+     ((fun (0 x : Tiny) (0 y : Tiny) (0 f : Tiny -> Tiny) => categoryRefl),
+      ((fun (0 x : Tiny) (0 y : Tiny) (0 f : Tiny -> Tiny) => categoryRefl),
+       (fun (0 w : Tiny) (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+            (0 f : Tiny -> Tiny) (0 g : Tiny -> Tiny) (0 h : Tiny -> Tiny) =>
+          categoryRefl))))))
+
+def NextObj : Small_Functor Tiny Tiny Uniform Uniform :=
+  ((fun (x : Tiny) => next x),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : Tiny -> Tiny) => f),
+    ((fun (0 x : Tiny) => categoryRefl),
+     (fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (0 f : Tiny -> Tiny) (0 g : Tiny -> Tiny) => categoryRefl))))
+def ZeroObj : Small_Functor Tiny Tiny Uniform Uniform :=
+  ((fun (x : Tiny) => zero),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : Tiny -> Tiny) => f),
+    ((fun (0 x : Tiny) => categoryRefl),
+     (fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (0 f : Tiny -> Tiny) (0 g : Tiny -> Tiny) => categoryRefl))))
+def objectIdentity : Tiny := Small_functorObj Tiny Tiny Uniform Uniform
+  (Small_idFunctor Tiny Uniform) (next zero)
+def objectForward : Tiny := Small_functorObj Tiny Tiny Uniform Uniform
+  (Small_compFunctor Tiny Tiny Tiny Uniform Uniform Uniform NextObj ZeroObj) (next zero)
+def objectReverse : Tiny := Small_functorObj Tiny Tiny Uniform Uniform
+  (Small_compFunctor Tiny Tiny Tiny Uniform Uniform Uniform ZeroObj NextObj) (next zero)
+
+def DoubleEnd : Small_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Tiny -> Tiny) * (Tiny -> Tiny)),
+   ((fun (0 x : Point) => ((fun (n : Tiny) => n), (fun (n : Tiny) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Tiny -> Tiny) * (Tiny -> Tiny))
+          (g : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+       ((fun (n : Tiny) => g.1 (f.1 n)), (fun (n : Tiny) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Tiny -> Tiny) * (Tiny -> Tiny))
+            (0 g : (Tiny -> Tiny) * (Tiny -> Tiny))
+            (0 h : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))))))
+def Swap : Small_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+      (f.2, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Tiny -> Tiny) * (Tiny -> Tiny))
+          (0 g : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))))
+def CopyFirst : Small_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+      (f.1, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Tiny -> Tiny) * (Tiny -> Tiny))
+          (0 g : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))))
+def arrows : (Tiny -> Tiny) * (Tiny -> Tiny) :=
+  ((fun (n : Tiny) => zero), (fun (n : Tiny) => next n))
+def mapIdentity : Tiny :=
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_idFunctor Point DoubleEnd) point point arrows).2 zero
+def mapForward : Tiny :=
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd Swap CopyFirst)
+    point point arrows).1 zero
+def mapReverse : Tiny :=
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd CopyFirst Swap)
+    point point arrows).1 zero
+def mapNested : Tiny :=
+  (Small_functorMap Point Point DoubleEnd DoubleEnd
+    (Small_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd
+      (Small_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd Swap CopyFirst)
+      Swap) point point arrows).2 (next zero)
+
+-- The endpoints differ in a generic hom family, so a swapped index fails.
+def genericMap : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) -> (0 x : C) -> (0 y : C) ->
+    Small_Hom C c x y -> Small_Hom D d (F.1 x) (F.1 y) :=
+  fun (0 C : Type 0) (0 D : Type 0) (c : Small_Category C) (d : Small_Category D)
+      (F : Small_Functor C D c d) (0 x : C) (0 y : C) (f : Small_Hom C c x y) =>
+    Small_functorMap C D c d F x y f
+
+specialize MechCategory (1, 0) as Types
+specialize MechCategory (0, 1) as Up
+specialize MechCategory (2, 1) as Higher
+def higherIdentity : (0 C : Type 2) -> (c : Higher_Category C) ->
+    Higher_Functor C C c c := Higher_idFunctor
+def upIdentity : (0 C : Type 0) -> (c : Up_Category C) ->
+    Up_Functor C C c c := Up_idFunctor

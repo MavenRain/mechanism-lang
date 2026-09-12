@@ -60,7 +60,10 @@ dev/M0-STAGE-C-PRENEX-GROUPS.md. The category increment adds checked
 category records and dependent-record kernel fixes; see
 dev/M0-STAGE-C-CATEGORY.md.  The dependent-closure increment adds WASM
 parity for generic category accessors; see dev/M0-STAGE-C-CLOSURES.md.
-Functor, NatTrans, LeftKanExtension and source-type parity remain open.
+The first U1 increment adds functors, identity and composition within
+one category group instance; see dev/PORT-UAT-U1.md.  Functors across
+separate universe pairs, NatTrans, LeftKanExtension and source-type
+parity remain open.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

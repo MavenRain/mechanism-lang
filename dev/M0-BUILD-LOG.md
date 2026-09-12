@@ -1754,3 +1754,113 @@ The closing battery verdict is bound only: 37 PASS legs at load 17.36,
 with TRUSTED-LINES the one red leg at kernel=4208/3000 and
 encoder=246/900.  PIN-DELTA is OK and the gitlink stays at 936a43a.
 The TRUSTED-LINES leg stays red until the user rules D-A-1.
+
+## Stage C / U1: checked functors (2026-09-11)
+
+Base: 7742d96.  The user requested continued development and staging
+of all changes.  This increment extends the MechCategory group with
+Functor, object and arrow projections, both preservation laws,
+identity and composition.  Two equality helpers supply the checked
+composition proofs.  The design is dev/PORT-UAT-U1.md.
+
+The categories of a functor share one template instance.  Their
+object and morphism levels remain independent of each other.
+Functors between separate universe pairs remain due.  NatTrans,
+LeftKanExtension, source-type parity and the rest of U1 remain open.
+The kernel, encoder, vendor pin, map inventory, denominators and
+trusted-line bounds have no changes.
+
+PRELUDE-FUNCTOR reports 81 entries, four universe instances, seven
+computations and eight refusal or budget checks.  The suite asserts
+that entry count and the full family list, so an extra definition
+or an extra family fails it.  The category
+suite retains all its assertions and now expects 85 entries from
+the extended group.  Both suites check an empty environment.
+
+The runtime helper checks and erases one source variant, audits its
+axioms, then evaluates and emits all requested exports with the same
+APIs as the CLI.  The new functor runtime suite checks six exports
+at payloads 37 and 41 on the kernel, Node and Wasmtime.  The existing
+category runtime modes also use the helper and retain their values,
+host comparisons and payload controls.  The functor runtime suite
+also drives two helper refusals: a source axiom and an export name
+that is not a basename.  Each prints its fixed message on stderr
+and exits 1, and the OK line reports the count.
+
+The larger source template puts PRELUDE-CATEGORY above its old FAST
+budget of 10 seconds: the staged battery measured 16.6 seconds.
+PRELUDE-CATEGORY and PRELUDE-FUNCTOR use SLOW (120 seconds).  The two
+category runtime gates also use SLOW, with 60 seconds for each batch
+check and emission and 20 seconds for each host command.  The staged
+battery measured them at 10.5 and 11.2 seconds.  The author battery
+that the review replaced measured them at 39.0 and 33.3 seconds.
+PRELUDE-FUNCTOR-RUNTIME uses SUITE (300 seconds).
+No result oracle or refusal check is relaxed.  The build reports
+zero errors and zero warnings.
+
+Four source mutation controls fail at their designated oracle, and
+the restored suite passes.  The two kernel mismatch controls pin
+the first words of their message, so they cannot share one kill.
+The saved report is dev/validation/port-uat-u1/functor-mutations.json,
+refreshed by the review replay of 2026-09-11 after the diagnostic
+pins of U1-F-M3 and U1-F-M4 changed.  Its source and checker hashes
+were compared with the final build.
+
+Final U1 functor battery: 39 PASS legs.  The sole failure is
+the inherited TRUSTED-LINES bound at kernel=4208/3000 and
+encoder=246/900.  No watchdog expires.  The complete output and
+measurements are saved in dev/validation/port-uat-u1/gates.log
+and gates.json.  The JSON also pins the changed code and fixture
+hashes.  The staged log is the battery that ran at the repository
+root after the review fixes of 2026-09-11, at a load of 20.  The
+staging step verifies the base and all file hashes.
+
+| Gate | Tier | Wall ms | Exit |
+| --- | --- | ---: | ---: |
+| BUILD | SLOW | 1137.9 | 0 |
+| PRELUDE-CATEGORY | SLOW | 16565.7 | 0 |
+| PRELUDE-FUNCTOR | SLOW | 14307.1 | 0 |
+| PRELUDE-CATEGORY-RUNTIME | SLOW | 10483.1 | 0 |
+| PRELUDE-CATEGORY-ACCESSORS | SLOW | 11198.3 | 0 |
+| PRELUDE-FUNCTOR-RUNTIME | SUITE | 42394.8 | 0 |
+| TRUSTED-LINES | FAST | 80.7 | 1 |
+
+## Stage C / U1: checked functors review (2026-09-11)
+
+The finders raised 23 findings.  Verify refuted 1.  The judge kept 7,
+refuted 0 and dropped 16.  All 7 kept findings are fixed.
+
+Medium: L1-1 pins the functor inventory in test/prelude_functor.ml.
+The family filter is dropped and the full family list and entries=81
+are asserted.  L3-2 splits the shared diagnostic prefix of U1-F-M3
+and U1-F-M4 in dev/functor-mutations.py, pins the two mismatch texts
+and updates dev/MUTATION-LOG.md.  L4-5 in dev/PORT-UAT-U1.md cited
+walls that no staged log holds.  Round 1 quoted the author log and
+round 2 replaced that log, so the fix landed in hand round 3.  The
+text now cites the staged walls 10.5 s and 11.2 s at load 20 and
+names the replaced author battery (39.0 s and 33.3 s).
+
+Low, all fixed in round 1: L4-1 says in dev/PORT-UAT-U1.md that the
+batch helper replaces the four mech CLI calls of the category modes.
+L2-6 sets DEADLINE=270 with a budget() clamp in
+test/functor_runtime.py.  L3-3 sets REPLAY=600 in
+dev/functor-mutations.py.  L4-6 makes test/functor_runtime.py drive
+the two helper refusals; the OK line PRELUDE-FUNCTOR-RUNTIME OK
+cases=6 hosts=3 mutation=1 refusals=2 is pinned in dev/gates.sh.
+
+The check stages raised 6 items, all fixed.  HV-1-1 reflowed an
+85-column line here.  HV-1-2 removed an untracked test cache.
+ND-1-1, ND-1-2 and ND-1-3 refreshed stale evidence.  ND-2-1 replaced
+the author walls in the MEASURE table above, and one 73-column line
+in prelude/README.md is reflowed.
+
+Refreshed rows: dev/validation/port-uat-u1/gates.json (25 of 25
+hashes equal the staged bytes), functor-mutations.json (16 hashes and
+checker hash 4a49f928) and gates.log.  Three ladders ran: baseline,
+round 1 and round 2.  Each gives BOUND-ONLY with 39 PASS and no leg
+expired.  TRUSTED-LINES stays red at kernel=4208/3000 and
+encoder=246/900, the unchanged D-A-1 bound.  The leg stays red until
+the user rules D-A-1.  The closing ladder of 19:40 at a load of 30
+repeats the verdict: 39 PASS, TRUSTED-LINES red, no leg expired.  Its
+category runtime legs took 14.1 and 21.6 seconds, under the SLOW
+limit.  The replay ended FUNCTOR-MUTATIONS OK controls=4 restored=1.

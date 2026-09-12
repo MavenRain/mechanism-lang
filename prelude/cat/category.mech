@@ -51,4 +51,117 @@ def assoc : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
       (comp Obj category w y z (comp Obj category w x y f g) h)
       (comp Obj category w x z f (comp Obj category x y z g h)) :=
   fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.2
+
+-- Equality operations retain this group's nominal equality family.
+def eqTrans : (0 A : Sort (succ v)) -> (0 x : A) -> (0 y : A) ->
+    (0 z : A) -> MechCategory A x y -> MechCategory A y z -> MechCategory A x z :=
+  fun (0 A : Sort (succ v)) (0 x : A) (0 y : A) (0 z : A)
+      (first : MechCategory A x y) (second : MechCategory A y z) =>
+    match second as self in MechCategory right return MechCategory A x right with
+    | categoryRefl => first
+
+def eqCongr : (0 A : Sort (succ v)) -> (0 B : Sort (succ v)) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    MechCategory A x y -> MechCategory B (f x) (f y) :=
+  fun (0 A : Sort (succ v)) (0 B : Sort (succ v)) (0 f : A -> B)
+      (0 x : A) (0 y : A) (proof : MechCategory A x y) =>
+    match proof as self in MechCategory right return MechCategory B (f x) (f right) with
+    | categoryRefl => categoryRefl
+
+-- Both categories use the group's levels and equality family.
+def Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    Category C -> Category D -> Sort (max (succ u) (succ v)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Hom C c x y -> Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> MechCategory (Hom D d (obj x) (obj x))
+      (map x x (id C c x)) (id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Hom C c x y) -> (0 g : Hom C c y z) ->
+      MechCategory (Hom D d (obj x) (obj z))
+        (map x z (comp C c x y z f g))
+        (comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def functorObj : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) -> Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) (F : Functor C D c d) => F.1
+
+def functorMap : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Hom C c x y ->
+    Hom D d (functorObj C D c d F x) (functorObj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) (F : Functor C D c d) => F.2.1
+
+def functorMapId : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> MechCategory (Hom D d (F.1 x) (F.1 x))
+      (functorMap C D c d F x x (id C c x)) (id D d (F.1 x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) (F : Functor C D c d) => F.2.2.1
+
+def functorMapComp : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Hom C c x y) -> (0 g : Hom C c y z) ->
+    MechCategory (Hom D d (F.1 x) (F.1 z))
+      (functorMap C D c d F x z (comp C c x y z f g))
+      (comp D d (F.1 x) (F.1 y) (F.1 z)
+        (functorMap C D c d F x y f) (functorMap C D c d F y z g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) (F : Functor C D c d) => F.2.2.2
+
+def idFunctor : (0 C : Sort (succ u)) -> (c : Category C) -> Functor C C c c :=
+  fun (0 C : Sort (succ u)) (c : Category C) =>
+    ((fun (x : C) => x),
+     ((fun (0 x : C) (0 y : C) (f : Hom C c x y) => f),
+      ((fun (0 x : C) => categoryRefl),
+       (fun (0 x : C) (0 y : C) (0 z : C)
+            (0 f : Hom C c x y) (0 g : Hom C c y z) => categoryRefl))))
+
+def compFunctor : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (0 E : Sort (succ u)) -> (c : Category C) -> (d : Category D) ->
+    (e : Category E) -> Functor C D c d -> Functor D E d e -> Functor C E c e :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u)) (0 E : Sort (succ u))
+      (c : Category C) (d : Category D) (e : Category E)
+      (F : Functor C D c d) (G : Functor D E d e) =>
+    ((fun (x : C) => G.1 (F.1 x)),
+     ((fun (0 x : C) (0 y : C) (f : Hom C c x y) =>
+         functorMap D E d e G (F.1 x) (F.1 y) (functorMap C D c d F x y f)),
+      ((fun (0 x : C) =>
+          eqTrans (Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+            (functorMap D E d e G (F.1 x) (F.1 x)
+              (functorMap C D c d F x x (id C c x)))
+            (functorMap D E d e G (F.1 x) (F.1 x) (id D d (F.1 x)))
+            (id E e (G.1 (F.1 x)))
+            (eqCongr (Hom D d (F.1 x) (F.1 x))
+              (Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+              (fun (h : Hom D d (F.1 x) (F.1 x)) =>
+                functorMap D E d e G (F.1 x) (F.1 x) h)
+              (functorMap C D c d F x x (id C c x)) (id D d (F.1 x))
+              (functorMapId C D c d F x))
+            (functorMapId D E d e G (F.1 x))),
+       (fun (0 x : C) (0 y : C) (0 z : C)
+            (0 f : Hom C c x y) (0 g : Hom C c y z) =>
+          eqTrans (Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+            (functorMap D E d e G (F.1 x) (F.1 z)
+              (functorMap C D c d F x z (comp C c x y z f g)))
+            (functorMap D E d e G (F.1 x) (F.1 z)
+              (comp D d (F.1 x) (F.1 y) (F.1 z)
+                (functorMap C D c d F x y f) (functorMap C D c d F y z g)))
+            (comp E e (G.1 (F.1 x)) (G.1 (F.1 y)) (G.1 (F.1 z))
+              (functorMap D E d e G (F.1 x) (F.1 y) (functorMap C D c d F x y f))
+              (functorMap D E d e G (F.1 y) (F.1 z) (functorMap C D c d F y z g)))
+            (eqCongr (Hom D d (F.1 x) (F.1 z))
+              (Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+              (fun (h : Hom D d (F.1 x) (F.1 z)) =>
+                functorMap D E d e G (F.1 x) (F.1 z) h)
+              (functorMap C D c d F x z (comp C c x y z f g))
+              (comp D d (F.1 x) (F.1 y) (F.1 z)
+                (functorMap C D c d F x y f) (functorMap C D c d F y z g))
+              (functorMapComp C D c d F x y z f g))
+            (functorMapComp D E d e G (F.1 x) (F.1 y) (F.1 z)
+              (functorMap C D c d F x y f) (functorMap C D c d F y z g))))))
 end

@@ -22,7 +22,7 @@ let suite root =
   let expected_families = ["Higher"; "IndexedValue"; "Point"; "Small";
     "Tiny"; "Types"; "Up"] in
   let* () = require "category inventory changed"
-    (List.length rows = 49 && Global.StringMap.cardinal globals.entries = 49
+    (List.length rows = 85 && Global.StringMap.cardinal globals.entries = 85
       && List.map fst (Global.StringMap.bindings globals.families) = expected_families) in
   let* () = Global.StringMap.fold (fun name entry acc -> let* () = acc in
     match entry with

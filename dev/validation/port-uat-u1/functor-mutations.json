@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "restored": true,
+  "sources": {
+    "prelude/cat/category.mech": "9f09eabc6264010aa11b66ca01fcd29b6ff728cfcc2afce0d00237e089407b28",
+    "test/fixtures/prelude/functor.mech": "75aef06b2b798efbea01dedec57c6ba0b13ee145699d893d1df91951a2b78097",
+    "test/neg/functor/erased-object.err": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "test/neg/functor/erased-object.mech": "59046dacffcd71fb011e3646e9c1ea6309a3b695704509eff69de22906a171df",
+    "test/neg/functor/missing-law.err": "6b39c1dd2975bd553341ff5f1b997de7eff81e4ab6a9ffaaaf503895f4d8afc4",
+    "test/neg/functor/missing-law.mech": "ccb06ce5159bcc9ad60c416f3b6c55d6afb1d4ea7d310f392cccd42109500c6c",
+    "test/neg/functor/wrong-composition-law.err": "d0134f2bf6c02bfa7ac755700180327d55271108e23f052331a4402dae8fb30d",
+    "test/neg/functor/wrong-composition-law.mech": "4cebad97c681e2705dcc3032327823389deda558316ed5208e1d7f096610854d",
+    "test/neg/functor/wrong-endpoint.err": "007fca6b9098e329224454611f831a68a0dfcb81e933e84ce19bd5b80f419732",
+    "test/neg/functor/wrong-endpoint.mech": "372d56c56ecfb4e3a981becd33219a837b65c71be995330caa54491234194015",
+    "test/neg/functor/wrong-identity-law.err": "43ccbf5ed05df742d33fbeed79c2deef64078d24b3a72b35fe0f072d3ea40d25",
+    "test/neg/functor/wrong-identity-law.mech": "54bb2d95ad56c5369b27dd5ddadf4c3f568873dab5aea25607936daa0c5d0114",
+    "test/neg/functor/wrong-level-arity.err": "e995497efef4a060d61e20295f508bf0befe6cef3199e211156236268370ab8e",
+    "test/neg/functor/wrong-level-arity.mech": "793aa0931f108195e87c2af8a25cdf156ef777f32ab234cc01a6f7456abea1fe",
+    "test/neg/functor/wrong-object.err": "5a11507d976354dc671813781cab43425edee2f7cfc6023228314ca9b957aa09",
+    "test/neg/functor/wrong-object.mech": "5b09913f0c0fc09151a0f395751bf8e7534a6c8ee2b26de7043ef216c35e02c6"
+  },
+  "checker_sha256": "4a49f92817231bcea3204d2ff75ec5632fa985544222b6bf0da0b1d68d2e1bd9",
+  "controls": [
+    {
+      "name": "U1-F-M1",
+      "path": "test/fixtures/prelude/functor.mech",
+      "old": "Uniform Uniform Uniform NextObj ZeroObj)",
+      "new": "Uniform Uniform Uniform ZeroObj NextObj)",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-FUNCTOR-FAIL wrong computation: objectForward =",
+      "mutant_sha256": "078a72f041453155889e93c346fd24c41724c648d151078414712200cb33f24e",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-F-M2",
+      "path": "test/fixtures/prelude/functor.mech",
+      "old": "DoubleEnd DoubleEnd DoubleEnd Swap CopyFirst)",
+      "new": "DoubleEnd DoubleEnd DoubleEnd CopyFirst Swap)",
+      "replacements": 2,
+      "diagnostic": "PRELUDE-FUNCTOR-FAIL wrong computation: mapForward =",
+      "mutant_sha256": "b29489665dfcb2514f65f57b7200b268fbf2ee586d5bc964d03826ebc21b6863",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-F-M3",
+      "path": "prelude/cat/category.mech",
+      "old": "=> F.2.2.2",
+      "new": "=> F.2.2.1",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-FUNCTOR-FAIL mismatch: the term has type",
+      "mutant_sha256": "f88ada761cd31aff809f2afc4749316b108ce65ba5ca1899c577e6f7df078d04",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-F-M4",
+      "path": "prelude/cat/category.mech",
+      "old": "(functorMapId D E d e G (F.1 x))",
+      "new": "categoryRefl",
+      "replacements": 1,
+      "diagnostic": "PRELUDE-FUNCTOR-FAIL mismatch: the constructor categoryRefl",
+      "mutant_sha256": "1dc1280fc1d9395a68f6c695cc8ae2c25cdac36b658a85bb2fd7b719cbfd6242",
+      "exit_code": 1,
+      "killed": true
+    }
+  ]
+}

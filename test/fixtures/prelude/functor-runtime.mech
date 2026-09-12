@@ -1,0 +1,70 @@
+mu Point : Type 0 with | point : Point
+specialize MechCategory (0, 0) as Run
+def functorInput : Nat := 37
+def Uniform : Run_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) =>
+          categoryRefl))))))
+def PayloadObj : Run_Functor Nat Nat Uniform Uniform :=
+  ((fun (x : Nat) => functorInput),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def OtherObj : Run_Functor Nat Nat Uniform Uniform :=
+  ((fun (x : Nat) => 12),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def objectIdentity : Nat := Run_functorObj Nat Nat Uniform Uniform
+  (Run_idFunctor Nat Uniform) functorInput
+def objectForward : Nat := Run_functorObj Nat Nat Uniform Uniform
+  (Run_compFunctor Nat Nat Nat Uniform Uniform Uniform PayloadObj OtherObj) 0
+def objectReverse : Nat := Run_functorObj Nat Nat Uniform Uniform
+  (Run_compFunctor Nat Nat Nat Uniform Uniform Uniform OtherObj PayloadObj) 0
+
+def DoubleEnd : Run_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat -> Nat) * (Nat -> Nat)),
+   ((fun (0 x : Point) => ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat -> Nat) * (Nat -> Nat)) (g : (Nat -> Nat) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => g.1 (f.1 n)), (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat -> Nat) * (Nat -> Nat))
+            (0 g : (Nat -> Nat) * (Nat -> Nat))
+            (0 h : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))))
+def Swap : Run_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Nat -> Nat) * (Nat -> Nat)) => (f.2, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Nat -> Nat) * (Nat -> Nat))
+          (0 g : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))
+def CopyFirst : Run_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Nat -> Nat) * (Nat -> Nat)) => (f.1, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Nat -> Nat) * (Nat -> Nat))
+          (0 g : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))
+def arrows : (Nat -> Nat) * (Nat -> Nat) :=
+  ((fun (n : Nat) => 12), (fun (n : Nat) => n))
+def mapIdentity : Nat := (Run_functorMap Point Point DoubleEnd DoubleEnd
+  (Run_idFunctor Point DoubleEnd) point point arrows).2 functorInput
+def mapForward : Nat := (Run_functorMap Point Point DoubleEnd DoubleEnd
+  (Run_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd Swap CopyFirst)
+  point point arrows).1 functorInput
+def mapReverse : Nat := (Run_functorMap Point Point DoubleEnd DoubleEnd
+  (Run_compFunctor Point Point Point DoubleEnd DoubleEnd DoubleEnd CopyFirst Swap)
+  point point arrows).1 functorInput

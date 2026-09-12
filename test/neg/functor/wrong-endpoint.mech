@@ -1,0 +1,7 @@
+def badEndpoint : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) -> (0 x : C) -> (0 y : C) ->
+    Small_Hom C c x y -> Small_Hom D d (F.1 y) (F.1 x) :=
+  fun (0 C : Type 0) (0 D : Type 0) (c : Small_Category C) (d : Small_Category D)
+      (F : Small_Functor C D c d) (0 x : C) (0 y : C) (f : Small_Hom C c x y) =>
+    Small_functorMap C D c d F x y f

@@ -1,0 +1,4 @@
+def missingLaw : Small_Functor Tiny Tiny Uniform Uniform :=
+  ((fun (x : Tiny) => x),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : Tiny -> Tiny) => f),
+    (fun (0 x : Tiny) => categoryRefl)))

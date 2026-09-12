@@ -1,0 +1,276 @@
+{
+  "base": "7742d96832235c6f82163fbd46a0553694c665dc",
+  "passes": 39,
+  "failures": [
+    "TRUSTED-LINES"
+  ],
+  "source_sha256": {
+    "dev/functor-mutations.py": "56caa2dc6d1a4003323aba66f94229ddef4ff47b6dfefb57f63f2227d15bec88",
+    "dev/gates.sh": "f8bb332f5fcf7c86b22dfed011959f2712854baf00939f65b83298ad56b4eadd",
+    "prelude/cat/category.mech": "9f09eabc6264010aa11b66ca01fcd29b6ff728cfcc2afce0d00237e089407b28",
+    "test/dune": "099c7632fc70f91b398b752a1d77ae44efc38d826f203d7296e8eeb506e407eb",
+    "test/fixtures/prelude/functor-runtime.mech": "ff4a3ce2d8109a6821870d64ab7298f8f45a6e1664cc22d1239df158a912f004",
+    "test/fixtures/prelude/functor.mech": "75aef06b2b798efbea01dedec57c6ba0b13ee145699d893d1df91951a2b78097",
+    "test/functor_runtime.py": "a75302e3d41fd62be93f0f07cf49890e4f6cc6f0bf1be320d1b1fc5766f4af7f",
+    "test/neg/functor/erased-object.err": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "test/neg/functor/erased-object.mech": "59046dacffcd71fb011e3646e9c1ea6309a3b695704509eff69de22906a171df",
+    "test/neg/functor/missing-law.err": "6b39c1dd2975bd553341ff5f1b997de7eff81e4ab6a9ffaaaf503895f4d8afc4",
+    "test/neg/functor/missing-law.mech": "ccb06ce5159bcc9ad60c416f3b6c55d6afb1d4ea7d310f392cccd42109500c6c",
+    "test/neg/functor/wrong-composition-law.err": "d0134f2bf6c02bfa7ac755700180327d55271108e23f052331a4402dae8fb30d",
+    "test/neg/functor/wrong-composition-law.mech": "4cebad97c681e2705dcc3032327823389deda558316ed5208e1d7f096610854d",
+    "test/neg/functor/wrong-endpoint.err": "007fca6b9098e329224454611f831a68a0dfcb81e933e84ce19bd5b80f419732",
+    "test/neg/functor/wrong-endpoint.mech": "372d56c56ecfb4e3a981becd33219a837b65c71be995330caa54491234194015",
+    "test/neg/functor/wrong-identity-law.err": "43ccbf5ed05df742d33fbeed79c2deef64078d24b3a72b35fe0f072d3ea40d25",
+    "test/neg/functor/wrong-identity-law.mech": "54bb2d95ad56c5369b27dd5ddadf4c3f568873dab5aea25607936daa0c5d0114",
+    "test/neg/functor/wrong-level-arity.err": "e995497efef4a060d61e20295f508bf0befe6cef3199e211156236268370ab8e",
+    "test/neg/functor/wrong-level-arity.mech": "793aa0931f108195e87c2af8a25cdf156ef777f32ab234cc01a6f7456abea1fe",
+    "test/neg/functor/wrong-object.err": "5a11507d976354dc671813781cab43425edee2f7cfc6023228314ca9b957aa09",
+    "test/neg/functor/wrong-object.mech": "5b09913f0c0fc09151a0f395751bf8e7534a6c8ee2b26de7043ef216c35e02c6",
+    "test/prelude_category.ml": "a0a3f7ec24cc90775e9bfb3790edd93617869a1249ffd0c378c2cbed28574053",
+    "test/prelude_functor.ml": "632b118c560af6b60d7fab9b9103a63253b55f85cabd909114e25e6aa3d4a232",
+    "test/prelude_runtime.ml": "e921465446b8163ac386e3c0569c7248e2b0c6364a73623882fd14026fb1f7ca",
+    "test/prenex_runtime.py": "9f9046f63fead0a9cae5ebb056c194ca7ecc3d1a9b525b107d1d588b83dd68b1"
+  },
+  "measurements": [
+    {
+      "name": "BUILD",
+      "tier": "SLOW",
+      "elapsed_ms": 1137.897,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN",
+      "tier": "FAST",
+      "elapsed_ms": 212.694,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN-DELTA",
+      "tier": "MED",
+      "elapsed_ms": 2370.938,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-COUNT",
+      "tier": "FAST",
+      "elapsed_ms": 72.527,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-AUDIT",
+      "tier": "FAST",
+      "elapsed_ms": 141.592,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-KERNEL",
+      "tier": "SUITE",
+      "elapsed_ms": 485.64,
+      "exit_code": 0
+    },
+    {
+      "name": "LEVELS",
+      "tier": "FAST",
+      "elapsed_ms": 128.794,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX",
+      "tier": "FAST",
+      "elapsed_ms": 21.336,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES",
+      "tier": "FAST",
+      "elapsed_ms": 21.861,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 21.937,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-SURFACE",
+      "tier": "FAST",
+      "elapsed_ms": 28.464,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-WASM",
+      "tier": "SUITE",
+      "elapsed_ms": 4250.083,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-GRAMMAR",
+      "tier": "MED",
+      "elapsed_ms": 1241.75,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-CLI",
+      "tier": "FAST",
+      "elapsed_ms": 401.067,
+      "exit_code": 0
+    },
+    {
+      "name": "CORPUS-UAT",
+      "tier": "MED",
+      "elapsed_ms": 3431.655,
+      "exit_code": 0
+    },
+    {
+      "name": "PARITY-COUNTS",
+      "tier": "MED",
+      "elapsed_ms": 849.449,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE",
+      "tier": "FAST",
+      "elapsed_ms": 31.284,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY",
+      "tier": "FAST",
+      "elapsed_ms": 12.241,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 56.635,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 97.159,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-MEMBERS",
+      "tier": "FAST",
+      "elapsed_ms": 31.586,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-TRANSPORT",
+      "tier": "FAST",
+      "elapsed_ms": 31.715,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-EQUALITY-OPS",
+      "tier": "FAST",
+      "elapsed_ms": 48.433,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-DEPENDENT",
+      "tier": "FAST",
+      "elapsed_ms": 40.026,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 21.058,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CONGRUENCE",
+      "tier": "FAST",
+      "elapsed_ms": 38.289,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY",
+      "tier": "SLOW",
+      "elapsed_ms": 16565.683,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR",
+      "tier": "SLOW",
+      "elapsed_ms": 14307.055,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1090.784,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1342.321,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1493.259,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 550.196,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 10483.12,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "tier": "SLOW",
+      "elapsed_ms": 11198.309,
+      "exit_code": 0
+    },
+    {
+      "name": "DEPENDENT-CLOSURE-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 2379.095,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 42394.839,
+      "exit_code": 0
+    },
+    {
+      "name": "AXIOMS",
+      "tier": "FAST",
+      "elapsed_ms": 272.947,
+      "exit_code": 0
+    },
+    {
+      "name": "MAP-INVENTORY",
+      "tier": "MED",
+      "elapsed_ms": 3061.572,
+      "exit_code": 0
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "tier": "FAST",
+      "elapsed_ms": 80.705,
+      "exit_code": 1
+    },
+    {
+      "name": "DENOMINATORS",
+      "tier": "MED",
+      "elapsed_ms": 103.168,
+      "exit_code": 0
+    }
+  ]
+}

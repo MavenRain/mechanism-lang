@@ -130,8 +130,9 @@ grammar, naming and validation.
 
 `cat/category.mech` declares the MechCategory group with two Type-level
 parameters: objects at `Type u` and morphisms at `Type v`. Specializing
-as C installs equality C and seven members: C_Category, C_Hom, C_id,
-C_comp, C_idComp, C_compId and C_assoc. The category record contains its
+as C installs equality C and sixteen members.  The category members are
+C_Category, C_Hom, C_id, C_comp, C_idComp, C_compId and C_assoc.
+The category record contains its
 hom family, identity, composition and three proofs. Object arguments are
 explicit and erased. Proof fields are erased by their Prop types.
 
@@ -147,4 +148,19 @@ record projections and generic accessor calls run on all three hosts.
 PRELUDE-CATEGORY-ACCESSORS checks generic identity and composition.
 DEPENDENT-CLOSURE-RUNTIME checks dependent function results and calls
 whose source arguments all erase.  See `dev/M0-STAGE-C-CLOSURES.md`.
-Functor, NatTrans, LeftKanExtension and source-type parity remain open.
+
+The other nine members are C_eqTrans, C_eqCongr, C_Functor,
+C_functorObj, C_functorMap, C_functorMapId, C_functorMapComp,
+C_idFunctor and C_compFunctor.  A functor takes two categories from
+the same group instance.  Its object map and dependent arrow map
+compute, and its identity and composition laws are propositions.
+Composition takes F then G.  Its checked proofs use equality
+congruence and transitivity.
+
+PRELUDE-FUNCTOR checks four universe instances, generic endpoints,
+identity, both composition orders and nested composition.  Its seven
+exact misuse cases include a map that preserves identity but fails
+composition.  PRELUDE-FUNCTOR-RUNTIME exercises object and arrow maps
+on all three hosts, with two payloads.  See `dev/PORT-UAT-U1.md`.
+Functors across separate universe pairs, NatTrans, LeftKanExtension
+and source-type parity remain open.

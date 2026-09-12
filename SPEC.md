@@ -431,4 +431,16 @@ The helper invokes a stored nullary closure or returns a partial
 application when its stored arity is positive.  That result has the
 generic value representation.  Known global calls retain their declared
 signatures.  See `dev/M0-STAGE-C-CLOSURES.md` for the runtime tests.
-Functor, NatTrans, LeftKanExtension and source-type parity remain open.
+The group also provides eqTrans, eqCongr, Functor, functorObj,
+functorMap, functorMapId, functorMapComp, idFunctor and compFunctor.
+Functor takes two object types and their category records, all from
+one specialization.  It packages an object map, a dependent arrow
+map, and Prop-valued preservation laws for identity and composition.
+compFunctor takes F then G and computes G after F on both maps.
+Its laws follow by equality congruence and transitivity.
+
+Object maps are runtime functions; arrow endpoints and the two law
+fields erase.  Both categories share the specialization's object
+level and morphism level.  See `dev/PORT-UAT-U1.md` for validation.
+Functors across separate universe pairs, NatTrans, LeftKanExtension
+and source-type parity remain open.

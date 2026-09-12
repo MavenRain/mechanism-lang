@@ -223,8 +223,10 @@ leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
   $ROOT/_build/default/test/family_groups.exe
 leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
-leg FAST PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
+leg SLOW PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
   $ROOT/_build/default/test/prelude_category.exe $ROOT
+leg SLOW PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
+  $ROOT/_build/default/test/prelude_functor.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
@@ -233,14 +235,17 @@ leg MED PRENEX-FAMILIES-RUNTIME '^PRENEX-FAMILIES-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --families
 leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --groups
-leg MED PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
+leg SLOW PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --category
-leg MED PRELUDE-CATEGORY-ACCESSORS \
+leg SLOW PRELUDE-CATEGORY-ACCESSORS \
   '^PRELUDE-CATEGORY-ACCESSORS OK cases=2 hosts=3 mutation=1$' \
   python3 -P $ROOT/test/prenex_runtime.py --category-accessors
 leg MED DEPENDENT-CLOSURE-RUNTIME \
   '^DEPENDENT-CLOSURE-RUNTIME OK cases=9 hosts=3 mutation=1$' \
   python3 -P $ROOT/test/prenex_runtime.py --closures
+leg SUITE PRELUDE-FUNCTOR-RUNTIME \
+  '^PRELUDE-FUNCTOR-RUNTIME OK cases=6 hosts=3 mutation=1 refusals=2$' \
+  python3 -P $ROOT/test/functor_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

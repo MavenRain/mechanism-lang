@@ -1,0 +1,6 @@
+def badComposition : Small_Functor Tiny Tiny Uniform Uniform :=
+  ((fun (x : Tiny) => x),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : Tiny -> Tiny) (n : Tiny) => f (f n)),
+    ((fun (0 x : Tiny) => categoryRefl),
+     (fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (0 f : Tiny -> Tiny) (0 g : Tiny -> Tiny) => categoryRefl))))

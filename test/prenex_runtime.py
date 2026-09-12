@@ -59,9 +59,9 @@ def main():
     failures = []
     hosts = set()
 
-    def invoke(label, arguments, expected=""):
+    def invoke(label, arguments, expected="", timeout=20):
         result = subprocess.run(list(map(str, arguments)), cwd=root,
-                                capture_output=True, text=True, timeout=20)
+                                capture_output=True, text=True, timeout=timeout)
         if result.returncode != 0 or result.stdout != expected or result.stderr != "":
             failures.append(label)
             print(f"{gate} FAIL {label}: exit={result.returncode} "
@@ -95,16 +95,19 @@ def main():
         work = Path(directory)
         variants = [("original", fixture, cases),
                     ("mutation", fixture.replace(original, replacement), changed)]
-        # The category modes prefix every variant with the same large
-        # prelude template, and every invoke elaborates that prefix
-        # again. The first `emit` of a variant does the same source
-        # pass as `check`, and it prints a kernel refusal on a source
-        # error, so the category modes keep no separate `check` pass
-        # and no `axioms` pass. The leg then stays well inside the
-        # gate watchdog.
+        # The batch helper checks and erases each category variant once,
+        # audits its axioms, then evaluates and emits every requested
+        # export through the same APIs as the CLI.
         for variant, body, answers in variants:
             source = work / f"{variant}.mech"
             source.write_text(body)
+            if category:
+                expected = "".join(f"{name}\t{answer}\n" for name, answer in answers)
+                if not invoke(f"{variant}/kernel-emit",
+                              [root / "_build/default/test/prelude_runtime.exe", source,
+                               work, *(name for name, _ in answers)], expected, timeout=60):
+                    continue
+                hosts.add("kernel")
             if not category:
                 if not invoke(f"{variant}/check",
                               [executable, "check", source]):
@@ -113,9 +116,9 @@ def main():
             for export, answer in answers:
                 expected = f"{answer}\n"
                 label = f"{variant}/{export}"
-                wasm = work / f"{variant}-{export}.wasm"
-                if not invoke(f"{label}/emit", [executable, "emit", source,
-                                               "-o", wasm, "--export", export]):
+                wasm = work / (f"{export}.wasm" if category else f"{variant}-{export}.wasm")
+                if not category and not invoke(f"{label}/emit", [executable, "emit", source,
+                                                                "-o", wasm, "--export", export]):
                     continue
                 # The OK line reports the hosts that ran, never a
                 # literal, so a dropped host shows in the count.
@@ -123,16 +126,17 @@ def main():
                     ("node", ["node", root / "dev/run-node.mjs", wasm, export]),
                     ("wasmtime", ["zsh", root / "dev/run-wasmtime.sh", wasm,
                                   export]),
-                    ("kernel", [executable, "run", source, "--export", export,
-                                "--host", "kernel"]),
                 )
+                if not category:
+                    host_runs += (("kernel", [executable, "run", source, "--export", export,
+                                               "--host", "kernel"]),)
                 for host, arguments in host_runs:
                     hosts.add(host)
                     invoke(f"{label}/{host}", arguments, expected)
 
     # A host failure and a kernel regression are separate outcomes.
     kernel_failures = [label for label in failures
-                       if label.endswith(("/check", "/axioms", "/emit", "/kernel"))]
+                       if label.endswith(("/check", "/axioms", "/emit", "/kernel", "/kernel-emit"))]
     if kernel_failures:
         print(f"{gate} FAIL kernel_checks={len(kernel_failures)} "
               f"failing_checks={len(failures)}")

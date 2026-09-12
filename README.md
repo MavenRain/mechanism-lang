@@ -185,8 +185,13 @@ indirect calls by the stored closure arity, including calls whose source
 arguments all erase.  See `dev/M0-STAGE-C-CLOSURES.md` for the runtime
 contract and dependent-closure regressions.
 
-Stage C remains open. Functor, NatTrans, LeftKanExtension and checked
-source-type parity remain outstanding.
+The same category group supplies Functor, identity functors and
+composition for categories sharing its object and morphism levels.
+The object map and dependent arrow map compute; both preservation
+laws are checked source proofs.  See `dev/PORT-UAT-U1.md`.
+
+Stage C remains open on functors across separate universe pairs,
+NatTrans, LeftKanExtension and checked source-type parity.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

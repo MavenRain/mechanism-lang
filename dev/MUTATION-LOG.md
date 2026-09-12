@@ -739,3 +739,29 @@ input tree against the current build.  The restored suite passes.
 The replay reports and complete control outputs are stored in
 `dev/validation/stage-c-closures/`.  The generic category accessor
 probe now passes and is included in the ordinary gate battery.
+
+## Stage C / U1: checked functors (2026-09-11)
+
+dev/functor-mutations.py copies the source fixtures to a new external
+directory and runs the current built checker.  It checks the baseline
+and restored suites, every control's exit status, empty stderr and
+the designated diagnostic.  The diagnostic of U1-F-M3 and U1-F-M4
+includes the discriminating text, so a different kernel mismatch
+does not record a kill.  The report pins source and checker
+hashes.  All four controls fail as intended; the restored suite passes.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| U1-F-M1 | Reverse the object functors | objectForward has the wrong normal form |
+| U1-F-M2 | Reverse the arrow functors | mapForward has the wrong normal form |
+| U1-F-M3 | Project the identity law as the composition law | Kernel type mismatch |
+| U1-F-M4 | Replace the second identity proof with reflexivity | Kernel index mismatch |
+
+Replay after a build with
+`python3 -I dev/functor-mutations.py NEW_DIRECTORY`.
+The saved report is dev/validation/port-uat-u1/functor-mutations.json.
+The report holds the round-2 replay.  That replay killed all four
+controls again and the restored suite passed.
+The seven exact negative fixtures separately check bad objects,
+reversed endpoints, false identity and composition laws, a missing
+law, erased object use and the current universe-arity boundary.

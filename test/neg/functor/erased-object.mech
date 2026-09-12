@@ -1,0 +1,2 @@
+def erasedObject : (0 x : Tiny) -> Tiny :=
+  fun (0 x : Tiny) => Small_functorObj Tiny Tiny Uniform Uniform NextObj x

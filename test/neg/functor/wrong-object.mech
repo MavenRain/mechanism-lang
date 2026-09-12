@@ -1,0 +1,2 @@
+def badObject : Point :=
+  Small_functorObj Tiny Tiny Uniform Uniform NextObj zero

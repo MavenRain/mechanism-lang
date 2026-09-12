@@ -96,6 +96,16 @@
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
 (copy_files ../vendor/kanon/test/main.ml)
+(executable
+ (name prelude_runtime)
+ (modules Prelude_runtime)
+ (libraries mechanism_kernel mechanism_surface mechanism_wasm mechanism_import))
+
+(executable
+ (name prelude_functor)
+ (modules Prelude_functor)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))
+
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)
 (copy_files ../vendor/kanon/test/sys_io.ml)
