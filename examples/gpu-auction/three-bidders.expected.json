@@ -1,0 +1,19 @@
+{
+  "allocation": {
+    "A": 8,
+    "B": 0,
+    "C": 0
+  },
+  "backend": "reference",
+  "payments": {
+    "A": 9,
+    "B": 0,
+    "C": 0
+  },
+  "ranked_objective": 38,
+  "reported_welfare": 12,
+  "slices": 8,
+  "validated": true,
+  "version": 1,
+  "winner": "A"
+}

@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "auction_id": "mig-combinatorial-three",
+  "inventory": {
+    "horizon": 2,
+    "tick_seconds": 3600,
+    "hosts": [{"id": "node0", "cpu_cores": 8}],
+    "slices": [
+      {"id": "m0", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m1", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m2", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m3", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m4", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m5", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m6", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240},
+      {"id": "m7", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240}
+    ]
+  },
+  "tenants": [
+    {"id": "A", "offers": [{"id": "A-all", "value": 12, "bundle": {
+      "start": 0, "duration": 1, "cpu_cores": {"node0": 8},
+      "slices": [{"id": "m0", "hbm_mib": 4096}, {"id": "m1", "hbm_mib": 4096},
+                 {"id": "m2", "hbm_mib": 4096}, {"id": "m3", "hbm_mib": 4096},
+                 {"id": "m4", "hbm_mib": 4096}, {"id": "m5", "hbm_mib": 4096},
+                 {"id": "m6", "hbm_mib": 4096}, {"id": "m7", "hbm_mib": 4096}]
+    }}]},
+    {"id": "B", "offers": [{"id": "B-first", "value": 9, "bundle": {
+      "start": 0, "duration": 1, "cpu_cores": {"node0": 4},
+      "slices": [{"id": "m0", "hbm_mib": 4096}, {"id": "m1", "hbm_mib": 4096},
+                 {"id": "m2", "hbm_mib": 4096}, {"id": "m3", "hbm_mib": 4096}]
+    }}]},
+    {"id": "C", "offers": [{"id": "C-last", "value": 7, "bundle": {
+      "start": 0, "duration": 1, "cpu_cores": {"node0": 4},
+      "slices": [{"id": "m4", "hbm_mib": 4096}, {"id": "m5", "hbm_mib": 4096},
+                 {"id": "m6", "hbm_mib": 4096}, {"id": "m7", "hbm_mib": 4096}]
+    }}]}
+  ]
+}

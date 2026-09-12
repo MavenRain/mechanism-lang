@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mechanism-cuopt"
+version = "0.1.0"
+description = "Combinatorial GPU auctions with VCG payments, mechanism-lang proofs, and cuOpt models"
+requires-python = ">=3.11"
+license = "MIT OR Apache-2.0"
+readme = "GPU-AUCTION.md"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["jsonschema>=4.23,<5"]
+
+[project.scripts]
+mech-cuopt = "mechanism_cuopt.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

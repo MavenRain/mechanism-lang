@@ -1,0 +1,3 @@
+include GPU-AUCTION.md
+include LICENSE-MIT LICENSE-APACHE
+recursive-include schema *.json

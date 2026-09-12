@@ -1,0 +1,6 @@
+{
+  "selected_offers": ["B-first", "C-last"],
+  "welfare": 16,
+  "payments": {"A": 0, "B": 5, "C": 3},
+  "revenue": 8
+}

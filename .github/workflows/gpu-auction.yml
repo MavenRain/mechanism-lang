@@ -1,0 +1,64 @@
+name: GPU auction
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      live_gpu:
+        description: Run on a provisioned NVIDIA GPU runner with cuOpt 26.08
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  cpu:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        python: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: '5.3.0'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh libgmp-dev
+          opam install dune.3.24.0 zarith.1.14
+          python -m pip install '.[test]'
+      - name: Build the mechanism compiler and certificate checker
+        run: opam exec -- zsh dev/dunecho.sh build
+      - name: Auction and certificate checks
+        run: python -P dev/gpu-auction-check.py --category --schemas --record auction-validation.json
+      - name: Installed CLI round trip
+        run: |
+          mech-cuopt export examples/combinatorial/three-bidders.json --out /tmp/mig-model
+          mech-cuopt solve /tmp/mig-model --backend reference --out /tmp/mig-settlement
+          mech-cuopt audit /tmp/mig-model /tmp/mig-settlement
+
+  live-gpu:
+    if: github.event_name == 'workflow_dispatch' && inputs.live_gpu
+    runs-on: [self-hosted, linux, gpu]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+      # The runner supplies Python >=3.11, zsh, OCaml >=5.3, dune >=3.24,
+      # zarith 1.14, and cuOpt 26.08 configured for its NVIDIA driver/CUDA.
+      - run: zsh dev/dunecho.sh build
+      - run: python3 -m pip install --no-deps .
+      - run: python3 -P dev/gpu-auction-check.py --gpu --record auction-gpu-validation.json

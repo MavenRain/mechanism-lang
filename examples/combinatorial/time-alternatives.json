@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "auction_id": "time-alternatives",
+  "inventory": {
+    "horizon": 3,
+    "tick_seconds": 3600,
+    "hosts": [{"id": "node0", "cpu_cores": 4}],
+    "slices": [{"id": "m0", "host": "node0", "profile": "1g.10gb", "hbm_mib": 10240}]
+  },
+  "tenants": [
+    {"id": "A", "offers": [
+      {"id": "A-early", "value": 18, "bundle": {
+        "start": 0, "duration": 2, "slices": [{"id": "m0", "hbm_mib": 8192}], "cpu_cores": {"node0": 2}
+      }},
+      {"id": "A-late", "value": 6, "bundle": {
+        "start": 2, "duration": 1, "slices": [{"id": "m0", "hbm_mib": 4096}], "cpu_cores": {"node0": 2}
+      }}
+    ]},
+    {"id": "B", "offers": [
+      {"id": "B-early", "value": 8, "bundle": {
+        "start": 0, "duration": 1, "slices": [{"id": "m0", "hbm_mib": 10240}], "cpu_cores": {"node0": 3}
+      }}
+    ]},
+    {"id": "C", "offers": [
+      {"id": "C-middle", "value": 7, "bundle": {
+        "start": 1, "duration": 1, "slices": [{"id": "m0", "hbm_mib": 10240}], "cpu_cores": {"node0": 4}
+      }}
+    ]}
+  ]
+}

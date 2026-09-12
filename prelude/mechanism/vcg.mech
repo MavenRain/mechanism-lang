@@ -1,0 +1,92 @@
+-- Load init.mech and mechanism/second-price.mech first.
+-- VCG utility is true total welfare minus an opponent-only pivot.
+-- The feasible outcome set and public bundle menu are fixed across reports.
+
+def rec vcgAdd : MechNat -> MechNat -> MechNat :=
+  fun (left : MechNat) (right : MechNat) =>
+    case right as self in MechNat return MechNat with
+    | mechZero => left
+    | mechSucc previous => mechSucc (vcgAdd left previous)
+
+def rec vcgLeShift : (lower : MechNat) -> (upper : MechNat) -> (offset : MechNat) ->
+    AuctionLe lower upper -> AuctionLe (vcgAdd lower offset) (vcgAdd upper offset) :=
+  fun (lower : MechNat) (upper : MechNat) (offset : MechNat) (bound : AuctionLe lower upper) =>
+    case offset as self in MechNat
+      return AuctionLe (vcgAdd lower self) (vcgAdd upper self) with
+    | mechZero => bound
+    | mechSucc previous => vcgLeShift lower upper previous bound
+
+def rec vcgLeUnshift : (lower : MechNat) -> (upper : MechNat) -> (offset : MechNat) ->
+    AuctionLe (vcgAdd lower offset) (vcgAdd upper offset) -> AuctionLe lower upper :=
+  fun (lower : MechNat) (upper : MechNat) (offset : MechNat) =>
+    case offset as self in MechNat
+      return AuctionLe (vcgAdd lower self) (vcgAdd upper self) -> AuctionLe lower upper with
+    | mechZero => fun (bound : AuctionLe lower upper) => bound
+    | mechSucc previous =>
+      fun (bound : AuctionLe (vcgAdd lower (mechSucc previous)) (vcgAdd upper (mechSucc previous))) =>
+        vcgLeUnshift lower upper previous bound
+
+-- This order compares signed differences (truth - pivot) >= (deviation - pivot).
+-- Cross addition preserves losses rather than truncating a negative utility.
+def VcgUtilityGe : MechNat -> MechNat -> MechNat -> Prop :=
+  fun (truth : MechNat) (deviation : MechNat) (pivot : MechNat) =>
+    AuctionLe (vcgAdd deviation pivot) (vcgAdd truth pivot)
+
+-- An allocation rule must maximize welfare over every feasible outcome.
+def VcgOptimal : (0 Allocation : Type 0) -> (Allocation -> MechNat) ->
+    (Allocation -> Prop) -> Allocation -> Prop :=
+  fun (0 Allocation : Type 0) (welfare : Allocation -> MechNat)
+      (feasible : Allocation -> Prop) (selected : Allocation) =>
+    (alternative : Allocation) -> feasible alternative -> AuctionLe (welfare alternative) (welfare selected)
+
+-- Given the truthful welfare optimum, any feasible deviating outcome has
+-- weakly smaller signed utility. The pivot cannot depend on this tenant's report.
+def vcgIncentiveCompatible : (0 Allocation : Type 0) -> (welfare : Allocation -> MechNat) ->
+    (feasible : Allocation -> Prop) -> (truth : Allocation) -> (deviation : Allocation) ->
+    VcgOptimal Allocation welfare feasible truth -> feasible deviation -> (pivot : MechNat) ->
+    VcgUtilityGe (welfare truth) (welfare deviation) pivot :=
+  fun (0 Allocation : Type 0) (welfare : Allocation -> MechNat) (feasible : Allocation -> Prop)
+      (truth : Allocation) (deviation : Allocation)
+      (optimal : VcgOptimal Allocation welfare feasible truth) (allowed : feasible deviation)
+      (pivot : MechNat) =>
+    vcgLeShift (welfare deviation) (welfare truth) pivot (optimal deviation allowed)
+
+def vcgLeLeft : (0 left : MechNat) -> (0 replacement : MechNat) -> (upper : MechNat) ->
+    MechEq MechNat left replacement -> AuctionLe left upper -> AuctionLe replacement upper :=
+  fun (0 left : MechNat) (0 replacement : MechNat) (upper : MechNat)
+      (equality : MechEq MechNat left replacement) (bound : AuctionLe left upper) =>
+    case equality as self in MechEq right return AuctionLe right upper with
+    | mechReflCtor => bound
+
+def vcgLeRight : (lower : MechNat) -> (0 right : MechNat) -> (0 replacement : MechNat) ->
+    MechEq MechNat right replacement -> AuctionLe lower right -> AuctionLe lower replacement :=
+  fun (lower : MechNat) (0 right : MechNat) (0 replacement : MechNat)
+      (equality : MechEq MechNat right replacement) (bound : AuctionLe lower right) =>
+    case equality as self in MechEq upper return AuctionLe lower upper with
+    | mechReflCtor => bound
+
+-- The pivot identity defines the Clarke payment: payment + others = pivot.
+-- Efficiency includes the outcome selected when this tenant is absent.
+def vcgIndividualRational : (value : MechNat) -> (payment : MechNat) -> (others : MechNat) ->
+    (welfare : MechNat) -> (pivot : MechNat) ->
+    MechEq MechNat (vcgAdd value others) welfare ->
+    MechEq MechNat (vcgAdd payment others) pivot ->
+    AuctionLe pivot welfare -> AuctionLe payment value :=
+  fun (value : MechNat) (payment : MechNat) (others : MechNat) (welfare : MechNat) (pivot : MechNat)
+      (total : MechEq MechNat (vcgAdd value others) welfare)
+      (externality : MechEq MechNat (vcgAdd payment others) pivot) (efficient : AuctionLe pivot welfare) =>
+    vcgLeUnshift payment value others
+      (vcgLeRight (vcgAdd payment others) welfare (vcgAdd value others)
+        (mechSymm MechNat (vcgAdd value others) welfare total)
+        (vcgLeLeft pivot (vcgAdd payment others) welfare
+          (mechSymm MechNat (vcgAdd payment others) pivot externality) efficient))
+
+-- Every accepted payment is a natural satisfying the pivot identity above.
+-- Their sum is therefore a nonnegative revenue, without seller subsidies.
+def vcgNoDeficit : (revenue : MechNat) -> AuctionLe mechZero revenue :=
+  fun (revenue : MechNat) => auctionLeZero revenue
+
+-- Exact native arithmetic is used only by closed instance certificates.
+-- The generated certificate checks both subtraction preconditions and identities.
+def vcgNativePayment : Nat -> Nat -> Nat -> Nat :=
+  fun (welfare : Nat) (own : Nat) (without : Nat) => natSub without (natSub welfare own)

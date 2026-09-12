@@ -1,0 +1,178 @@
+-- Load prelude/init.mech first. All proofs use structural naturals.
+-- A choice describes allocation of one indivisible bundle.
+def rec AuctionLe : MechNat -> MechNat -> Prop :=
+  fun (lower : MechNat) (upper : MechNat) =>
+    case lower as self in MechNat return Prop with
+    | mechZero => MechTrue
+    | mechSucc previous =>
+      case upper as other in MechNat return Prop with
+      | mechZero => MechFalse
+      | mechSucc next => AuctionLe previous next
+
+def auctionLeZero : (0 upper : MechNat) -> AuctionLe mechZero upper :=
+  fun (0 upper : MechNat) => mechTrivial
+def auctionLeSucc : (0 lower : MechNat) -> (0 upper : MechNat) ->
+    (proof : AuctionLe lower upper) -> AuctionLe (mechSucc lower) (mechSucc upper) :=
+  fun (0 lower : MechNat) (0 upper : MechNat) (proof : AuctionLe lower upper) => proof
+
+mu AuctionChoice : Type 0 with
+| auctionLose : AuctionChoice
+| auctionWin : AuctionChoice
+
+-- Both branches admit equality: the fixed priority chooses the tie branch.
+mu AuctionOrder (0 bid : MechNat) (0 price : MechNat) : Type 0 with
+| auctionAbove : (proof : AuctionLe price bid) -> AuctionOrder bid price
+| auctionBelow : (proof : AuctionLe bid price) -> AuctionOrder bid price
+
+def rec auctionCompare : MechBool -> (bid : MechNat) -> (price : MechNat) ->
+    AuctionOrder bid price :=
+  fun (tieWins : MechBool) (bid : MechNat) (price : MechNat) =>
+    case bid as self in MechNat return AuctionOrder self price with
+    | mechZero => (
+      case price as threshold in MechNat return AuctionOrder mechZero threshold with
+      | mechZero => (
+        case tieWins as priority in MechBool return AuctionOrder mechZero mechZero with
+        | mechFalse => auctionBelow (auctionLeZero mechZero)
+        | mechTrue => auctionAbove (auctionLeZero mechZero))
+      | mechSucc previous => auctionBelow (auctionLeZero (mechSucc previous)))
+    | mechSucc previous => (
+      case price as threshold in MechNat return AuctionOrder (mechSucc previous) threshold with
+      | mechZero => auctionAbove (auctionLeZero (mechSucc previous))
+      | mechSucc other =>
+        case auctionCompare tieWins previous other as order in AuctionOrder
+          return AuctionOrder (mechSucc previous) (mechSucc other) with
+        | auctionAbove proof => auctionAbove (auctionLeSucc other previous proof)
+        | auctionBelow proof => auctionBelow (auctionLeSucc previous other proof))
+
+def auctionChoice : (0 bid : MechNat) -> (0 price : MechNat) ->
+    AuctionOrder bid price -> AuctionChoice :=
+  fun (0 bid : MechNat) (0 price : MechNat) (order : AuctionOrder bid price) =>
+    case order as self in AuctionOrder return AuctionChoice with
+    | auctionAbove proof => auctionWin
+    | auctionBelow proof => auctionLose
+
+def auctionAllocate : MechBool -> MechNat -> MechNat -> AuctionChoice :=
+  fun (tieWins : MechBool) (bid : MechNat) (price : MechNat) =>
+    auctionChoice bid price (auctionCompare tieWins bid price)
+
+def auctionPayment : MechNat -> AuctionChoice -> MechNat :=
+  fun (price : MechNat) (choice : AuctionChoice) =>
+    case choice as self in AuctionChoice return MechNat with
+    | auctionLose => mechZero
+    | auctionWin => price
+
+def auctionWinnerPaysThreshold : (0 price : MechNat) ->
+    MechEq MechNat (auctionPayment price auctionWin) price :=
+  fun (0 price : MechNat) => mechRefl MechNat price
+def auctionLoserPaysZero : (0 price : MechNat) ->
+    MechEq MechNat (auctionPayment price auctionLose) mechZero :=
+  fun (0 price : MechNat) => mechRefl MechNat mechZero
+
+-- This is the four-case normal form of signed quasi-linear utility:
+-- u(v, win, price) = v - price and u(v, lose, price) = 0.
+-- It does not truncate negative utility to zero.
+def AuctionUtilityGe : MechNat -> MechNat -> AuctionChoice -> AuctionChoice -> Prop :=
+  fun (value : MechNat) (price : MechNat) (truth : AuctionChoice) (deviation : AuctionChoice) =>
+    case truth as self in AuctionChoice return Prop with
+    | auctionLose => (
+      case deviation as other in AuctionChoice return Prop with
+      | auctionLose => MechTrue
+      | auctionWin => AuctionLe value price)
+    | auctionWin => (
+      case deviation as other in AuctionChoice return Prop with
+      | auctionLose => AuctionLe price value
+      | auctionWin => MechTrue)
+
+def auctionDominatesAnyChoice : (value : MechNat) -> (price : MechNat) ->
+    (truth : AuctionOrder value price) -> (deviation : AuctionChoice) ->
+    AuctionUtilityGe value price (auctionChoice value price truth) deviation :=
+  fun (value : MechNat) (price : MechNat) (truth : AuctionOrder value price)
+      (deviation : AuctionChoice) =>
+    case truth as self in AuctionOrder
+      return AuctionUtilityGe value price (auctionChoice value price self) deviation with
+    | auctionAbove proof => (
+      case deviation as other in AuctionChoice
+        return AuctionUtilityGe value price auctionWin other with
+      | auctionLose => proof
+      | auctionWin => mechTrivial)
+    | auctionBelow proof => (
+      case deviation as other in AuctionChoice
+        return AuctionUtilityGe value price auctionLose other with
+      | auctionLose => mechTrivial
+      | auctionWin => proof)
+
+-- Price and tie priority are fixed by competing bids, independently of report.
+def auctionIncentiveCompatible : (tieWins : MechBool) -> (price : MechNat) ->
+    (value : MechNat) -> (report : MechNat) ->
+    AuctionUtilityGe value price (auctionAllocate tieWins value price)
+      (auctionAllocate tieWins report price) :=
+  fun (tieWins : MechBool) (price : MechNat) (value : MechNat) (report : MechNat) =>
+    auctionDominatesAnyChoice value price (auctionCompare tieWins value price)
+      (auctionAllocate tieWins report price)
+
+def auctionIndividualRational : (tieWins : MechBool) -> (price : MechNat) ->
+    (value : MechNat) ->
+    AuctionUtilityGe value price (auctionAllocate tieWins value price) auctionLose :=
+  fun (tieWins : MechBool) (price : MechNat) (value : MechNat) =>
+    auctionDominatesAnyChoice value price (auctionCompare tieWins value price) auctionLose
+
+def auctionNoDeficit : (price : MechNat) -> (choice : AuctionChoice) ->
+    AuctionLe mechZero (auctionPayment price choice) :=
+  fun (price : MechNat) (choice : AuctionChoice) => auctionLeZero (auctionPayment price choice)
+
+def auctionMax : MechNat -> MechNat -> MechNat :=
+  fun (left : MechNat) (right : MechNat) =>
+    case auctionAllocate mechTrue left right as choice in AuctionChoice return MechNat with
+    | auctionLose => right
+    | auctionWin => left
+
+-- Bidder order A, B, C breaks all ties. B wins a tie with C only when A is lower.
+def auctionPriorityB : MechNat -> MechNat -> MechBool :=
+  fun (a : MechNat) (c : MechNat) =>
+    case auctionAllocate mechTrue a c as choice in AuctionChoice return MechBool with
+    | auctionLose => mechTrue
+    | auctionWin => mechFalse
+
+def auctionChoiceA : MechNat -> MechNat -> MechNat -> AuctionChoice :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) => auctionAllocate mechTrue a (auctionMax b c)
+def auctionChoiceB : MechNat -> MechNat -> MechNat -> AuctionChoice :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) =>
+    auctionAllocate (auctionPriorityB a c) b (auctionMax a c)
+def auctionChoiceC : MechNat -> MechNat -> MechNat -> AuctionChoice :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) => auctionAllocate mechFalse c (auctionMax a b)
+
+def auctionPaymentA : MechNat -> MechNat -> MechNat -> MechNat :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) => auctionPayment (auctionMax b c) (auctionChoiceA a b c)
+def auctionPaymentB : MechNat -> MechNat -> MechNat -> MechNat :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) => auctionPayment (auctionMax a c) (auctionChoiceB a b c)
+def auctionPaymentC : MechNat -> MechNat -> MechNat -> MechNat :=
+  fun (a : MechNat) (b : MechNat) (c : MechNat) => auctionPayment (auctionMax a b) (auctionChoiceC a b c)
+
+def auctionTruthfulA : (value : MechNat) -> (report : MechNat) -> (b : MechNat) -> (c : MechNat) ->
+    AuctionUtilityGe value (auctionMax b c) (auctionChoiceA value b c) (auctionChoiceA report b c) :=
+  fun (value : MechNat) (report : MechNat) (b : MechNat) (c : MechNat) =>
+    auctionIncentiveCompatible mechTrue (auctionMax b c) value report
+def auctionTruthfulB : (a : MechNat) -> (value : MechNat) -> (report : MechNat) -> (c : MechNat) ->
+    AuctionUtilityGe value (auctionMax a c) (auctionChoiceB a value c) (auctionChoiceB a report c) :=
+  fun (a : MechNat) (value : MechNat) (report : MechNat) (c : MechNat) =>
+    auctionIncentiveCompatible (auctionPriorityB a c) (auctionMax a c) value report
+def auctionTruthfulC : (a : MechNat) -> (b : MechNat) -> (value : MechNat) -> (report : MechNat) ->
+    AuctionUtilityGe value (auctionMax a b) (auctionChoiceC a b value) (auctionChoiceC a b report) :=
+  fun (a : MechNat) (b : MechNat) (value : MechNat) (report : MechNat) =>
+    auctionIncentiveCompatible mechFalse (auctionMax a b) value report
+
+def rec auctionAdd : MechNat -> MechNat -> MechNat :=
+  fun (left : MechNat) (right : MechNat) =>
+    case left as self in MechNat return MechNat with
+    | mechZero => right
+    | mechSucc previous => mechSucc (auctionAdd previous right)
+
+-- Native naturals occur only at the host boundary, outside the proof above.
+def auctionToNative : MechNat -> Nat :=
+  fun (n : MechNat) => mechNatRec (fun (value : MechNat) => Nat) 0
+    (fun (value : MechNat) (previous : Nat) => natAdd 1 previous) n
+def auctionBit : AuctionChoice -> Nat :=
+  fun (choice : AuctionChoice) =>
+    case choice as self in AuctionChoice return Nat with
+    | auctionLose => 0
+    | auctionWin => 1

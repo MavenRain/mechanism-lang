@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unverified solver candidate v1",
+  "description": "All dynamic variable names, model hashes, full/counterfactual coverage, feasibility, and exact optimality are checked by mech-cuopt verify.",
+  "type": "object", "additionalProperties": false,
+  "required": ["version", "backend", "auction_sha256", "cases"],
+  "properties": {
+    "version": {"const": 1}, "backend": {"enum": ["reference", "cuopt"]},
+    "auction_sha256": {"$ref": "#/$defs/hash"},
+    "cases": {
+      "type": "object", "minProperties": 2, "maxProperties": 65,
+      "propertyNames": {"pattern": "^(full|without_[0-9]+)$"},
+      "required": ["full"],
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["status", "lp_sha256", "objective", "variables"],
+        "properties": {
+          "status": {"const": "Optimal"}, "lp_sha256": {"$ref": "#/$defs/hash"},
+          "objective": {"type": "number", "minimum": 0, "maximum": 1125899906842623},
+          "variables": {
+            "type": "object", "minProperties": 1, "maxProperties": 128,
+            "propertyNames": {"pattern": "^x_([0-9]+|empty)$"},
+            "additionalProperties": {"type": "number", "minimum": -0.000001, "maximum": 1.000001}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[a-f0-9]{64}$", "minLength": 64, "maxLength": 64}}
+}

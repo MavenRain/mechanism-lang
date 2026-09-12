@@ -1,0 +1,37 @@
+-- One indivisible bundle of eight inventory slices for one fixed time slot.
+-- Credits are whole units. Priority order is A, then B, then C.
+-- The runner prepends the data and auction libraries.
+def gpuOne : MechNat := mechSucc mechZero
+def gpuTwo : MechNat := auctionAdd gpuOne gpuOne
+def gpuFour : MechNat := auctionAdd gpuTwo gpuTwo
+def gpuEight : MechNat := auctionAdd gpuFour gpuFour
+def gpuTen : MechNat := auctionAdd gpuEight gpuTwo
+def gpuBidA : MechNat := auctionAdd gpuTen gpuTwo
+def gpuBidB : MechNat := auctionAdd gpuEight gpuOne
+def gpuBidC : MechNat := auctionAdd gpuFour (auctionAdd gpuTwo gpuOne)
+def gpuSlices : Nat := 8
+
+-- Allocation and payment values are exported from the checked mechanism.
+def gpuXA : Nat := auctionBit (auctionChoiceA gpuBidA gpuBidB gpuBidC)
+def gpuXB : Nat := auctionBit (auctionChoiceB gpuBidA gpuBidB gpuBidC)
+def gpuXC : Nat := auctionBit (auctionChoiceC gpuBidA gpuBidB gpuBidC)
+def gpuPA : Nat := auctionToNative (auctionPaymentA gpuBidA gpuBidB gpuBidC)
+def gpuPB : Nat := auctionToNative (auctionPaymentB gpuBidA gpuBidB gpuBidC)
+def gpuPC : Nat := auctionToNative (auctionPaymentC gpuBidA gpuBidB gpuBidC)
+def gpuValueA : Nat := auctionToNative gpuBidA
+def gpuValueB : Nat := auctionToNative gpuBidB
+def gpuValueC : Nat := auctionToNative gpuBidC
+def gpuAllocated : Nat := natMul gpuSlices (natAdd gpuXA (natAdd gpuXB gpuXC))
+
+-- Hand calculation: A wins, pays 9, receives all 8 slices; B and C pay 0.
+def gpuWinnerChecked : MechEq Nat gpuXA 1 := mechRefl Nat 1
+def gpuLoserBChecked : MechEq Nat gpuXB 0 := mechRefl Nat 0
+def gpuLoserCChecked : MechEq Nat gpuXC 0 := mechRefl Nat 0
+def gpuPriceChecked : MechEq Nat gpuPA 9 := mechRefl Nat 9
+def gpuPaymentBChecked : MechEq Nat gpuPB 0 := mechRefl Nat 0
+def gpuPaymentCChecked : MechEq Nat gpuPC 0 := mechRefl Nat 0
+def gpuCapacityChecked : MechEq Nat gpuAllocated 8 := mechRefl Nat 8
+
+-- Equality transport carries the checked inventory count to the host boundary.
+def gpuTransportedSlices : Nat :=
+  mechTransport Nat (fun (n : Nat) => Nat) gpuAllocated 8 gpuCapacityChecked gpuSlices

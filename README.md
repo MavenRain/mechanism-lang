@@ -11,6 +11,12 @@ map/prelude.map.tsv.
 
 The driver is `mech` and the source extension is `.mech`.
 
+The [combinatorial GPU auction](GPU-AUCTION.md) is a complete reservation-auction
+CLI with tenant-defined XOR bundles, exact VCG payments, cuOpt LP export,
+independent optimality verification, and kernel-checked settlement certificates.
+The [original second-price milestone](examples/gpu-auction/README.md) remains a
+small, executable proof for one bundle of eight MIG slices.
+
 ## The M0 gate
 
 PRELUDE-CHECKED is the M0 gate.  It prints two lines:
@@ -208,8 +214,9 @@ See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
 
 `zsh dev/dunecho.sh build` is the only way a dune verb runs in this
-repository.  The runner puts the zxcaml-p1 opam switch first on PATH and
-it takes the root from its own path.
+repository. The runner uses dunecho when available and dune otherwise. It
+honors `MECH_OPAM_SWITCH`, an active opam environment, or the existing local
+zxcaml-p1 switch, and takes the root from its own path.
 
 ## Roadmap
 
