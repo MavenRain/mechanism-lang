@@ -164,4 +164,205 @@ def compFunctor : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
               (functorMapComp C D c d F x y z f g))
             (functorMapComp D E d e G (F.1 x) (F.1 y) (F.1 z)
               (functorMap C D c d F x y f) (functorMap C D c d F y z g))))))
+
+def eqSymm : (0 A : Sort (succ v)) -> (0 x : A) -> (0 y : A) ->
+    MechCategory A x y -> MechCategory A y x :=
+  fun (0 A : Sort (succ v)) (0 x : A) (0 y : A)
+      (proof : MechCategory A x y) =>
+    match proof as self in MechCategory right return MechCategory A right x with
+    | categoryRefl => categoryRefl
+
+-- Components can inspect their object.  The naturality field erases.
+-- A naturality proof can inspect its morphism during proof construction.
+def NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) ->
+    Functor C D c d -> Functor C D c d -> Sort (max (succ u) (succ v)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D)
+      (F : Functor C D c d) (G : Functor C D c d) =>
+    (app : (x : C) -> Hom D d (F.1 x) (G.1 x)) *
+    ((0 x : C) -> (0 y : C) -> (f : Hom C c x y) ->
+      MechCategory (Hom D d (F.1 x) (G.1 y))
+        (comp D d (F.1 x) (F.1 y) (G.1 y)
+          (functorMap C D c d F x y f) (app y))
+        (comp D d (F.1 x) (G.1 x) (G.1 y)
+          (app x) (functorMap C D c d G x y f)))
+
+def natApp : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) ->
+    (F : Functor C D c d) -> (G : Functor C D c d) ->
+    NatTrans C D c d F G -> (x : C) -> Hom D d (F.1 x) (G.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D)
+      (F : Functor C D c d) (G : Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.1
+
+def naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) ->
+    (F : Functor C D c d) -> (G : Functor C D c d) ->
+    (alpha : NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Hom C c x y) ->
+    MechCategory (Hom D d (F.1 x) (G.1 y))
+      (comp D d (F.1 x) (F.1 y) (G.1 y)
+        (functorMap C D c d F x y f) (alpha.1 y))
+      (comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (functorMap C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D)
+      (F : Functor C D c d) (G : Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.2
+
+def idNat : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) ->
+    (F : Functor C D c d) -> NatTrans C D c d F F :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D) (F : Functor C D c d) =>
+    ((fun (x : C) => id D d (F.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Hom C c x y) =>
+       eqTrans (Hom D d (F.1 x) (F.1 y))
+       (comp D d (F.1 x) (F.1 y) (F.1 y) (functorMap C D c d F x y f) (id D d (F.1 y)))
+       (functorMap C D c d F x y f)
+       (comp D d (F.1 x) (F.1 x) (F.1 y) (id D d (F.1 x)) (functorMap C D c d F x y f))
+       (compId D d (F.1 x) (F.1 y) (functorMap C D c d F x y f))
+       (eqSymm (Hom D d (F.1 x) (F.1 y))
+       (comp D d (F.1 x) (F.1 x) (F.1 y) (id D d (F.1 x)) (functorMap C D c d F x y f))
+       (functorMap C D c d F x y f) (idComp D d (F.1 x) (F.1 y) (functorMap C D c d F x y f)))))
+
+-- Two naturality squares compose using the category laws.
+def vcompLaw : (0 D : Sort (succ u)) -> (d : Category D) ->
+    (0 fx : D) -> (0 fy : D) -> (0 gx : D) -> (0 gy : D) -> (0 hx : D) -> (0 hy : D) ->
+    (0 fm : Hom D d fx fy) -> (0 gm : Hom D d gx gy) -> (0 hm : Hom D d hx hy) ->
+    (0 ax : Hom D d fx gx) -> (0 ay : Hom D d fy gy) ->
+    (0 bx : Hom D d gx hx) -> (0 by : Hom D d gy hy) ->
+    MechCategory (Hom D d fx gy) (comp D d fx fy gy fm ay) (comp D d fx gx gy ax gm) ->
+    MechCategory (Hom D d gx hy) (comp D d gx gy hy gm by) (comp D d gx hx hy bx hm) ->
+    MechCategory (Hom D d fx hy)
+      (comp D d fx fy hy fm (comp D d fy gy hy ay by))
+      (comp D d fx hx hy (comp D d fx gx hx ax bx) hm) :=
+  fun (0 D : Sort (succ u)) (d : Category D)
+      (0 fx : D) (0 fy : D) (0 gx : D) (0 gy : D) (0 hx : D) (0 hy : D)
+      (0 fm : Hom D d fx fy) (0 gm : Hom D d gx gy) (0 hm : Hom D d hx hy)
+      (0 ax : Hom D d fx gx) (0 ay : Hom D d fy gy)
+      (0 bx : Hom D d gx hx) (0 by : Hom D d gy hy)
+      (first : MechCategory (Hom D d fx gy)
+        (comp D d fx fy gy fm ay) (comp D d fx gx gy ax gm))
+      (second : MechCategory (Hom D d gx hy)
+        (comp D d gx gy hy gm by) (comp D d gx hx hy bx hm)) =>
+    eqTrans (Hom D d fx hy)
+      (comp D d fx fy hy fm (comp D d fy gy hy ay by))
+      (comp D d fx gy hy (comp D d fx fy gy fm ay) by)
+      (comp D d fx hx hy (comp D d fx gx hx ax bx) hm)
+      (eqSymm (Hom D d fx hy)
+        (comp D d fx gy hy (comp D d fx fy gy fm ay) by)
+        (comp D d fx fy hy fm (comp D d fy gy hy ay by))
+        (assoc D d fx fy gy hy fm ay by))
+      (eqTrans (Hom D d fx hy)
+        (comp D d fx gy hy (comp D d fx fy gy fm ay) by)
+        (comp D d fx gy hy (comp D d fx gx gy ax gm) by)
+        (comp D d fx hx hy (comp D d fx gx hx ax bx) hm)
+        (eqCongr (Hom D d fx gy) (Hom D d fx hy)
+          (fun (h : Hom D d fx gy) => comp D d fx gy hy h by)
+          (comp D d fx fy gy fm ay) (comp D d fx gx gy ax gm) first)
+        (eqTrans (Hom D d fx hy)
+          (comp D d fx gy hy (comp D d fx gx gy ax gm) by)
+          (comp D d fx gx hy ax (comp D d gx gy hy gm by))
+          (comp D d fx hx hy (comp D d fx gx hx ax bx) hm)
+          (assoc D d fx gx gy hy ax gm by)
+          (eqTrans (Hom D d fx hy)
+            (comp D d fx gx hy ax (comp D d gx gy hy gm by))
+            (comp D d fx gx hy ax (comp D d gx hx hy bx hm))
+            (comp D d fx hx hy (comp D d fx gx hx ax bx) hm)
+            (eqCongr (Hom D d gx hy) (Hom D d fx hy)
+              (fun (h : Hom D d gx hy) => comp D d fx gx hy ax h)
+              (comp D d gx gy hy gm by) (comp D d gx hx hy bx hm) second)
+            (eqSymm (Hom D d fx hy)
+              (comp D d fx hx hy (comp D d fx gx hx ax bx) hm)
+              (comp D d fx gx hy ax (comp D d gx hx hy bx hm))
+              (assoc D d fx gx hx hy ax bx hm)))))
+
+-- Vertical composition applies alpha first, then beta.
+def vcomp : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (c : Category C) -> (d : Category D) ->
+    (F : Functor C D c d) -> (G : Functor C D c d) ->
+    (H : Functor C D c d) -> NatTrans C D c d F G ->
+    NatTrans C D c d G H -> NatTrans C D c d F H :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Category C) (d : Category D)
+      (F : Functor C D c d) (G : Functor C D c d) (H : Functor C D c d)
+      (alpha : NatTrans C D c d F G) (beta : NatTrans C D c d G H) =>
+    ((fun (x : C) =>
+       comp D d (F.1 x) (G.1 x) (H.1 x) (alpha.1 x) (beta.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Hom C c x y) =>
+       vcompLaw D d (F.1 x) (F.1 y) (G.1 x) (G.1 y) (H.1 x) (H.1 y)
+         (functorMap C D c d F x y f) (functorMap C D c d G x y f)
+         (functorMap C D c d H x y f) (alpha.1 x) (alpha.1 y) (beta.1 x) (beta.1 y)
+         (naturality C D c d F G alpha x y f) (naturality C D c d G H beta x y f)))
+
+-- UAT calls precomposition whiskerRight: evaluate alpha at K's object.
+def whiskerRight : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (0 E : Sort (succ u)) -> (c : Category C) -> (d : Category D) ->
+    (e : Category E) -> (F : Functor C D c d) -> (G : Functor C D c d) ->
+    NatTrans C D c d F G -> (K : Functor E C e c) ->
+    (app : (x : E) -> Hom D d (F.1 (K.1 x)) (G.1 (K.1 x))) *
+    ((0 x : E) -> (0 y : E) -> (f : Hom E e x y) ->
+      MechCategory (Hom D d (F.1 (K.1 x)) (G.1 (K.1 y)))
+        (comp D d (F.1 (K.1 x)) (F.1 (K.1 y)) (G.1 (K.1 y))
+          (functorMap C D c d F (K.1 x) (K.1 y) (functorMap E C e c K x y f)) (app y))
+        (comp D d (F.1 (K.1 x)) (G.1 (K.1 x)) (G.1 (K.1 y))
+          (app x) (functorMap C D c d G (K.1 x) (K.1 y) (functorMap E C e c K x y f)))) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u)) (0 E : Sort (succ u))
+      (c : Category C) (d : Category D) (e : Category E)
+      (F : Functor C D c d) (G : Functor C D c d)
+      (alpha : NatTrans C D c d F G) (K : Functor E C e c) =>
+    ((fun (x : E) => alpha.1 (K.1 x)),
+     (fun (0 x : E) (0 y : E) (f : Hom E e x y) =>
+       naturality C D c d F G alpha (K.1 x) (K.1 y)
+         (functorMap E C e c K x y f)))
+
+-- UAT calls postcomposition whiskerLeft: map alpha's component through H.
+def whiskerLeft : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    (0 E : Sort (succ u)) -> (c : Category C) -> (d : Category D) ->
+    (e : Category E) -> (H : Functor D E d e) ->
+    (F : Functor C D c d) -> (G : Functor C D c d) ->
+    NatTrans C D c d F G ->
+    (app : (x : C) -> Hom E e (H.1 (F.1 x)) (H.1 (G.1 x))) *
+    ((0 x : C) -> (0 y : C) -> (f : Hom C c x y) ->
+      MechCategory (Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+        (comp E e (H.1 (F.1 x)) (H.1 (F.1 y)) (H.1 (G.1 y))
+          (functorMap D E d e H (F.1 x) (F.1 y) (functorMap C D c d F x y f)) (app y))
+        (comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (G.1 y))
+          (app x) (functorMap D E d e H (G.1 x) (G.1 y) (functorMap C D c d G x y f)))) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u)) (0 E : Sort (succ u))
+      (c : Category C) (d : Category D) (e : Category E)
+      (H : Functor D E d e) (F : Functor C D c d) (G : Functor C D c d)
+      (alpha : NatTrans C D c d F G) =>
+    ((fun (x : C) => functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Hom C c x y) =>
+       eqTrans (Hom E e (H.1 (F.1 x)) (H.1 (G.1 y))) (comp E e (H.1 (F.1 x)) (H.1 (F.1 y)) (H.1 (G.1
+         y))
+       (functorMap D E d e H (F.1 x) (F.1 y) (functorMap C D c d F x y f)) (functorMap D E d e H
+       (F.1 y) (G.1 y) (alpha.1 y))) (functorMap D E d e H (F.1 x) (G.1 y)
+       (comp D d (F.1 x) (F.1 y) (G.1 y) (functorMap C D c d F x y f) (alpha.1 y))) (comp E e (H.1
+         (F.1 x)) (H.1 (G.1 x)) (H.1 (G.1 y))
+       (functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)) (functorMap D E d e H (G.1 x) (G.1 y)
+       (functorMap C D c d G x y f)))
+       (eqSymm (Hom E e (H.1 (F.1 x)) (H.1 (G.1 y))) (functorMap D E d e H (F.1 x) (G.1 y) (comp D d
+       (F.1 x) (F.1 y) (G.1 y) (functorMap C D c d F x y f) (alpha.1 y))) (comp E e (H.1 (F.1 x))
+         (H.1 (F.1 y)) (H.1 (G.1 y))
+       (functorMap D E d e H (F.1 x) (F.1 y) (functorMap C D c d F x y f)) (functorMap D E d e H
+       (F.1 y) (G.1 y) (alpha.1 y)))
+       (functorMapComp D E d e H (F.1 x) (F.1 y) (G.1 y) (functorMap C D c d F x y f) (alpha.1 y)))
+       (eqTrans (Hom E e (H.1 (F.1 x)) (H.1 (G.1 y))) (functorMap D E d e H (F.1 x) (G.1 y) (comp D
+       d (F.1 x) (F.1 y) (G.1 y) (functorMap C D c d F x y f) (alpha.1 y))) (functorMap D E d e H
+       (F.1 x) (G.1 y) (comp D d (F.1 x) (G.1 x) (G.1 y) (alpha.1 x) (functorMap C D c d G x y
+       f))) (comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (G.1 y))
+       (functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)) (functorMap D E d e H (G.1 x) (G.1 y)
+       (functorMap C D c d G x y f)))
+       (eqCongr (Hom D d (F.1 x) (G.1 y)) (Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+       (fun (h : Hom D d (F.1 x) (G.1 y)) => functorMap D E d e H (F.1 x) (G.1 y) h)
+       (comp D d (F.1 x) (F.1 y) (G.1 y) (functorMap C D c d F x y f) (alpha.1 y)) (comp D d (F.1 x)
+       (G.1 x) (G.1 y) (alpha.1 x) (functorMap C D c d G x y f)) (naturality C D c d F G alpha x y
+       f))
+       (functorMapComp D E d e H (F.1 x) (G.1 x) (G.1 y) (alpha.1 x) (functorMap C D c d G x y
+       f)))))
 end

@@ -1,0 +1,5 @@
+def wrongWhiskerEndpoint : Small_NatTrans Tiny Point IndexedEnd DoubleEnd
+    (Small_compFunctor Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Jump Constant)
+    (Small_compFunctor Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Jump Constant) :=
+  Small_whiskerRight Tiny Point Tiny IndexedEnd DoubleEnd IndexedEnd
+    Constant Constant Alpha Swap

@@ -1864,3 +1864,140 @@ the user rules D-A-1.  The closing ladder of 19:40 at a load of 30
 repeats the verdict: 39 PASS, TRUSTED-LINES red, no leg expired.  Its
 category runtime legs took 14.1 and 21.6 seconds, under the SLOW
 limit.  The replay ended FUNCTOR-MUTATIONS OK controls=4 restored=1.
+
+## Stage C / U1: natural transformations (2026-09-11)
+
+Base: bb215e4.  The increment adds NatTrans, component and naturality
+accessors, identity, vertical composition and both whiskering
+operations.  eqSymm and the reusable square-composition proof
+vcompLaw support the laws.  A category specialization now installs
+one equality family and twenty-five definitions.  There is no
+kernel, vendor, mapping-verdict or denominator change.
+
+Components can inspect their objects.  A naturality proof can
+inspect its morphism; the entire law is Prop-valued and erases.
+The fixture uses propositional endpoint paths with endomorphisms
+and pairs of endomorphisms.  Its Alpha and Beta components read
+their object.  The two vertical orders and the nested composition
+give three different answers, p, 2p and 3p for a payload p.  The
+whiskering exports are checked against the payload-dependent
+component, and they are equal to the payload.  The whiskering
+results also check at NatTrans types for the composed functors.
+
+The source template checks universally.  PRELUDE-NATTRANS reports
+entries=123, instances=4, computations=8 and negatives=7.  Six
+negative fixtures compare complete diagnostics; the seventh case
+checks the precise exhausted-budget error.  The runtime leg checks
+eight exports at payloads 37 and 41 on the kernel, Node and Wasmtime.
+Every host agrees, and the runtime helper's axiom audit passes.
+
+The full battery reports 41 PASS legs.  Its only failure is the
+inherited TRUSTED-LINES result, kernel=4208/3000 and encoder=246/900.
+All 39 previous passing legs remain, and the two new legs pass.
+No watchdog expired and no gate tier or trusted-line bound changed.
+
+| Leg | Tier | Elapsed ms | Exit |
+| --- | --- | ---: | ---: |
+| PRELUDE-CATEGORY | SLOW | 55260.459 | 0 |
+| PRELUDE-FUNCTOR | SLOW | 57103.629 | 0 |
+| PRELUDE-NATTRANS | SLOW | 39055.039 | 0 |
+| PRELUDE-CATEGORY-RUNTIME | SLOW | 81967.042 | 0 |
+| PRELUDE-CATEGORY-ACCESSORS | SLOW | 58880.262 | 0 |
+| PRELUDE-FUNCTOR-RUNTIME | SUITE | 96947.783 | 0 |
+| PRELUDE-NATTRANS-RUNTIME | SUITE | 45632.817 | 0 |
+
+The table holds one measurement of a loaded machine, at a start
+load of 26.93.  A rerun of the same tree on a quieter machine
+measured 41.2 seconds for PRELUDE-CATEGORY and 35.4 seconds for
+PRELUDE-FUNCTOR, which reverses their order, so the table does not
+isolate the template cost.  Both legs stay below the existing
+120-second SLOW ceiling.  They have less margin under heavy load.
+The square-composition helper avoids repeated expansion of the
+full functor-dependent proof.  Whiskering result types state the
+equivalent component and naturality pairs directly.
+
+The diff review checked composition direction, dependent endpoints,
+the availability of law arguments, proof erasure, exact refusals,
+universe inventories, axiom checks and preservation of prior gates.
+Stage C and U1 remain open on separate universe pairs,
+LeftKanExtension, desc_unique and source-type parity.  The D-A-1
+trusted-line ruling remains open.  No commit is created.
+
+The mutation replay ends NATTRANS-MUTATIONS OK controls=5 restored=1.
+It detects reversed vertical composition, a changed precomposed
+object, an ignored arrow map, vcomp's first naturality proof
+replaced by reflexivity and idNat's right unit law replaced by
+reflexivity.  Each diagnostic includes the discriminating text, so
+two controls cannot share one kill.  The baseline
+and restored suites pass.  Source hashes, checker hash, control
+results and the full gate table are saved under
+dev/validation/port-uat-u1-nattrans/.  The validated changes are
+staged in the canonical repository.
+
+## Stage C / U1: natural transformations review (2026-09-12)
+
+Review of this slice.  One workflow ran four finder lenses over the
+staged diff, the source gate, the mutation controls and the docs.
+A verify stage rechecked every candidate.  The judge kept 8 and
+dropped 12.  It refuted none.  Fix round 1 and fix round 2 closed
+seven of the kept findings.  A check stage reopened L2-1 and the
+evidence pins, so hand round 3 closed both.  Round 4 corrected the
+fixture paragraph above.
+
+| Id | Severity | Status | Note |
+| --- | --- | --- | --- |
+| L2-1 | medium | FIXED | answers now depend on the payload |
+| L3-1 | medium | FIXED | five controls kill on distinct text |
+| L3-5 | low | FIXED | anchors matched with counts |
+| L2-2 | low | FIXED | duplicate negative removed |
+| L3-4 | low | FIXED | replay sentence matches the controls |
+| L3-3 | low | FIXED | hash sentence corrected |
+| L4-4 | low | FIXED | causal claim on the table removed |
+| HV-1-1 | low | FIXED | 79-column doc line rewrapped |
+| F1 | low | FIXED | fixture paragraph above corrected |
+
+Fix paths.  L2-1 touched test/fixtures/prelude/nattrans-runtime.mech,
+test/nattrans_runtime.py and dev/PORT-UAT-U1-NATTRANS.md.  L3-1
+touched dev/nattrans-mutations.py and dev/MUTATION-LOG.md.  L3-5
+touched dev/nattrans-mutations.py.  L2-2 touched
+test/neg/nattrans/wrong-whisker-endpoint.mech, its .err file and
+test/prelude_nattrans.ml.  L3-4 and L4-4 and F1 touched this file.
+L3-3 touched dev/MUTATION-LOG.md.  HV-1-1 touched
+dev/PORT-UAT-U1-NATTRANS.md.  The 12 dropped candidates are L1-1,
+L1-2, L2-3, L2-4, L2-5, L2-6, L2-7, L3-2, L4-1, L4-2, L4-3 and
+L4-5.
+
+The check stages raised seven items, all fixed.  HV-1-1 rewrapped a
+doc line.  ND-1-1 replaced placeholder refusal bytes with the
+captured 13,714 bytes.  ND-1-2 removed the copied negative.  ND-1-3
+corrected the control count here.  ND-1-4 and ND-1-5 refreshed the
+evidence under dev/validation/port-uat-u1-nattrans/; round 3
+regenerated gates.log and the gates.json pins from the round-3
+battery, and all 24 pins and 42 measurement rows verify on disk.
+GATE-1 recorded the round-1 ladder failures, which round 2 cleared.
+
+Four ladders ran.  The baseline of 21:23 to 21:32 gives 41 PASS
+with TRUSTED-LINES as the only failure.  Round 1 gives 37 PASS with
+the GATE-1 legs red.  Round 2 gives 41 PASS with TRUSTED-LINES as
+the only failure.  Round 3 gives the same 41 PASS at a start load
+of 26.93, and its replay ends NATTRANS-MUTATIONS OK controls=5
+restored=1.  TRUSTED-LINES stays red at kernel=4208/3000 and
+encoder=246/900.  That bound is inherited and the D-A-1 ruling is
+open.
+
+The closing ladder ran from 01:23 to 01:49 on 2026-09-12.  The start
+load was 47.93.  The build and the six test executables gave exit 0.
+The nattrans runtime suite, the category accessors suite and the
+closure suite gave exit 0.  The functor runtime suite and the
+category runtime suite gave exit 2 as standalone legs.  In each of
+the two, one kernel probe reached the harness timeout (90 s and
+60 s) at that load.  The same two gates passed in the battery of the
+same ladder.  The replay ends NATTRANS-MUTATIONS OK controls=5
+restored=1.  The battery started at a load of 27.28 and gives 41
+PASS with TRUSTED-LINES as the only failure and no watchdog expiry.
+The verify-final run in the ladder gave one FAIL row: the review
+heading was missing.  The heading and this paragraph were added by
+hand.  The rerun of verify-final gives every check row OK and exit
+0.  In its replay at a load above 200, four of the five suites
+reached the harness timeout.  The closure suite and the six
+executables passed.  These replays are not a gate result.

@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "restored": true,
+  "sources": {
+    "prelude/cat/category.mech": "0fa36a29257486a49d8d075fc9308526b716c476bf8ec538dea758ed89693751",
+    "test/fixtures/prelude/nattrans.mech": "f64a1d8c09421482e8ce819a3deeeddd0822dafaecb557380a363f5891c4b0e8",
+    "test/neg/nattrans/erased-object.err": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "test/neg/nattrans/erased-object.mech": "9b0e9511ac7240e9428329669baa1d76aaaeb2a2613a34c50f2d6916615f9956",
+    "test/neg/nattrans/missing-law.err": "1ba7ca00e902dbf972bbb2741ce94b8b9de1558d26422abea1ad72e615e0bf10",
+    "test/neg/nattrans/missing-law.mech": "7612ccb48a70d762787873ecb2356581e8cdb7b4f1df4c8961f5332c0745f1c4",
+    "test/neg/nattrans/wrong-endpoint.err": "9f74f1dc03cf99bc26730041587f101352e3cbe99c2a87c216c690d2ce315f0c",
+    "test/neg/nattrans/wrong-endpoint.mech": "8919121c9788c2c61249f6b477707ac67feb986850e10068ad897498dda887a2",
+    "test/neg/nattrans/wrong-middle.err": "3ac6e216f7402ecd6c47cd998e05d97bf00f4c77c8c6b201ccbff6f23086e4b9",
+    "test/neg/nattrans/wrong-middle.mech": "f567c3b93f12a2b5968bc2c9cc644a64a83b36b7792722c452bbc87b46b3c426",
+    "test/neg/nattrans/wrong-naturality.err": "01a1d87a84b339348ac48f91c2def2b63187622424430e3a8130db931fe18c68",
+    "test/neg/nattrans/wrong-naturality.mech": "6f13c9fcd2d1ec357428bded0189c914f91fe62248b1d385aa9d75988eac91ac",
+    "test/neg/nattrans/wrong-whisker-endpoint.err": "a5aae737ba32dcc85fbb89dc81b31fc355dca8d8c1023dba6867e2e6827a5146",
+    "test/neg/nattrans/wrong-whisker-endpoint.mech": "a2e778f3904e4bbef8151b768e9334e31b7110ea16addd8a5a28cfe9e4dad64e"
+  },
+  "checker_sha256": "31722a1d2ccc731efdbe2b593086f4658d50951db2e5d0b8d3bd82db5cdc4685",
+  "controls": [
+    {
+      "name": "U1-NT-M1",
+      "path": "test/fixtures/prelude/nattrans.mech",
+      "old": "Constant Constant Constant Alpha Beta).1 zero",
+      "new": "Constant Constant Constant Beta Alpha).1 zero",
+      "anchors": 1,
+      "occurrence": 0,
+      "replacements": 1,
+      "diagnostic": "PRELUDE-NATTRANS-FAIL wrong computation: verticalForward = (In SMu Tiny [] (ACtor zero) [])",
+      "mutant_sha256": "f89a648abd5ab880b68f70a08e183ac31d78a9ee2aac1f7e51c759e463f554a7",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-NT-M2",
+      "path": "test/fixtures/prelude/nattrans.mech",
+      "old": "((fun (x : Tiny) => next zero),",
+      "new": "((fun (x : Tiny) => zero),",
+      "anchors": 1,
+      "occurrence": 0,
+      "replacements": 1,
+      "diagnostic": "PRELUDE-NATTRANS-FAIL wrong computation: rightValue = (In SMu Tiny [] (ACtor zero) [])",
+      "mutant_sha256": "4e920983fcdc17a039808b740708fc6ee8a1326a87cff372fcaae0bd9261c7e8",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-NT-M3",
+      "path": "test/fixtures/prelude/nattrans.mech",
+      "old": "(f.2, f.1)",
+      "new": "(f.1, f.2)",
+      "anchors": 1,
+      "occurrence": 0,
+      "replacements": 1,
+      "diagnostic": "PRELUDE-NATTRANS-FAIL wrong computation: leftValue = (In SMu Tiny [] (ACtor zero) [])",
+      "mutant_sha256": "9a88d8e8b343fd06396de497a448c7b3d290a30b772cfb944a02b4b120b2b4b3",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-NT-M4",
+      "path": "prelude/cat/category.mech",
+      "old": "(naturality C D c d F G alpha x y f)",
+      "new": "categoryRefl",
+      "anchors": 2,
+      "occurrence": 0,
+      "replacements": 1,
+      "diagnostic": "PRELUDE-NATTRANS-FAIL mismatch: the constructor categoryRefl of MechCategory gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w y) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with ",
+      "mutant_sha256": "def993f6f3d4d4c63868e39fac772a4665f30405487de192e9c6ffd3c93bed09",
+      "exit_code": 1,
+      "killed": true
+    },
+    {
+      "name": "U1-NT-M5",
+      "path": "prelude/cat/category.mech",
+      "old": "(compId D d (F.1 x) (F.1 y) (functorMap C D c d F x y f))",
+      "new": "categoryRefl",
+      "anchors": 1,
+      "occurrence": 0,
+      "replacements": 1,
+      "diagnostic": "PRELUDE-NATTRANS-FAIL mismatch: the constructor categoryRefl of MechCategory gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w y) (Elim SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with ",
+      "mutant_sha256": "69e7eb5a864b47363e0458f9ac78568ceeb327014241798acffc6ead0d496abc",
+      "exit_code": 1,
+      "killed": true
+    }
+  ]
+}

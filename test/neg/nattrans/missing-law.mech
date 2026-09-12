@@ -1,0 +1,2 @@
+def missingLaw : Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  Components

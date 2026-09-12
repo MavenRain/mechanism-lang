@@ -1,0 +1,116 @@
+mu Tiny : Type 0 with | zero : Tiny | next : Tiny -> Tiny
+mu Point : Type 0 with | point : Point
+mu Path (0 x : Tiny) : (0 y : Tiny) -> Prop with | same : Path x x
+specialize MechCategory (0, 0) as Small
+
+def pathTrans : (0 x : Tiny) -> (0 y : Tiny) -> (0 z : Tiny) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Small_Category Tiny :=
+  ((fun (0 x : Tiny) (0 y : Tiny) => (Path x y) * (Tiny -> Tiny)),
+   ((fun (0 x : Tiny) => (same, (fun (n : Tiny) => n))),
+    ((fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (f : (Path x y) * (Tiny -> Tiny)) (g : (Path y z) * (Tiny -> Tiny)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Tiny) => g.2 (f.2 n)))),
+     ((fun (0 x : Tiny) (0 y : Tiny) (0 f : (Path x y) * (Tiny -> Tiny)) => categoryRefl),
+      ((fun (0 x : Tiny) (0 y : Tiny) (0 f : (Path x y) * (Tiny -> Tiny)) => categoryRefl),
+       (fun (0 w : Tiny) (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+            (0 f : (Path w x) * (Tiny -> Tiny))
+            (0 g : (Path x y) * (Tiny -> Tiny))
+            (0 h : (Path y z) * (Tiny -> Tiny)) => categoryRefl))))))
+
+def DoubleEnd : Small_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Tiny -> Tiny) * (Tiny -> Tiny)),
+   ((fun (0 x : Point) => ((fun (n : Tiny) => n), (fun (n : Tiny) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Tiny -> Tiny) * (Tiny -> Tiny))
+          (g : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+       ((fun (n : Tiny) => g.1 (f.1 n)), (fun (n : Tiny) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Tiny -> Tiny) * (Tiny -> Tiny))
+            (0 g : (Tiny -> Tiny) * (Tiny -> Tiny))
+            (0 h : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))))))
+def Constant : Small_Functor Tiny Point IndexedEnd DoubleEnd :=
+  ((fun (x : Tiny) => point),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : (Path x y) * (Tiny -> Tiny)) =>
+       ((fun (n : Tiny) => n), (fun (n : Tiny) => n))),
+    ((fun (0 x : Tiny) => categoryRefl),
+     (fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (0 f : (Path x y) * (Tiny -> Tiny)) (0 g : (Path y z) * (Tiny -> Tiny)) => categoryRefl))))
+def Components : (x : Tiny) -> (Tiny -> Tiny) * (Tiny -> Tiny) :=
+  fun (x : Tiny) => ((fun (n : Tiny) => x), (fun (n : Tiny) => n))
+def componentLaw : (0 x : Tiny) -> (0 y : Tiny) -> Path x y ->
+    Small ((Tiny -> Tiny) * (Tiny -> Tiny)) (Components y) (Components x) :=
+  fun (0 x : Tiny) (0 y : Tiny) (proof : Path x y) =>
+    match proof as self in Path right return
+      Small ((Tiny -> Tiny) * (Tiny -> Tiny)) (Components right) (Components x) with
+    | same => categoryRefl
+def Alpha : Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  (Components,
+   (fun (0 x : Tiny) (0 y : Tiny) (f : (Path x y) * (Tiny -> Tiny)) =>
+     componentLaw x y f.1))
+def Beta : Small_NatTrans Tiny Point IndexedEnd DoubleEnd Constant Constant :=
+  ((fun (x : Tiny) => ((fun (n : Tiny) => next n), (fun (n : Tiny) => next n))),
+   (fun (0 x : Tiny) (0 y : Tiny) (f : (Path x y) * (Tiny -> Tiny)) => categoryRefl))
+
+def Jump : Small_Functor Tiny Tiny IndexedEnd IndexedEnd :=
+  ((fun (x : Tiny) => next zero),
+   ((fun (0 x : Tiny) (0 y : Tiny) (f : (Path x y) * (Tiny -> Tiny)) => (same, (fun (n : Tiny) => n))),
+    ((fun (0 x : Tiny) => categoryRefl),
+     (fun (0 x : Tiny) (0 y : Tiny) (0 z : Tiny)
+          (0 f : (Path x y) * (Tiny -> Tiny)) (0 g : (Path y z) * (Tiny -> Tiny)) => categoryRefl))))
+def Swap : Small_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Tiny -> Tiny) * (Tiny -> Tiny)) =>
+       (f.2, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Tiny -> Tiny) * (Tiny -> Tiny))
+          (0 g : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))))
+
+def componentValue : Tiny :=
+  (Small_natApp Tiny Point IndexedEnd DoubleEnd Constant Constant Alpha (next zero)).1 zero
+def identityValue : Tiny :=
+  ((Small_idNat Tiny Point IndexedEnd DoubleEnd Constant).1 zero).1 (next zero)
+def verticalForward : Tiny :=
+  ((Small_vcomp Tiny Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta).1 zero).1 zero
+def verticalReverse : Tiny :=
+  ((Small_vcomp Tiny Point IndexedEnd DoubleEnd Constant Constant Constant Beta Alpha).1 zero).1 zero
+def verticalNested : Tiny :=
+  ((Small_vcomp Tiny Point IndexedEnd DoubleEnd Constant Constant Constant
+    (Small_vcomp Tiny Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta)
+    Beta).1 zero).1 zero
+def Right : Small_NatTrans Tiny Point IndexedEnd DoubleEnd
+    (Small_compFunctor Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Jump Constant)
+    (Small_compFunctor Tiny Tiny Point IndexedEnd IndexedEnd DoubleEnd Jump Constant) :=
+  Small_whiskerRight Tiny Point Tiny IndexedEnd DoubleEnd IndexedEnd Constant Constant Alpha Jump
+def Left : Small_NatTrans Tiny Point IndexedEnd DoubleEnd
+    (Small_compFunctor Tiny Point Point IndexedEnd DoubleEnd DoubleEnd Constant Swap)
+    (Small_compFunctor Tiny Point Point IndexedEnd DoubleEnd DoubleEnd Constant Swap) :=
+  Small_whiskerLeft Tiny Point Point IndexedEnd DoubleEnd DoubleEnd Swap Constant Constant Alpha
+def rightValue : Tiny :=
+  (Right.1 zero).1 zero
+def leftValue : Tiny :=
+  (Left.1 zero).1 (next zero)
+def leftOther : Tiny :=
+  (Left.1 zero).2 (next zero)
+
+def genericComponent : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) -> (G : Small_Functor C D c d) ->
+    Small_NatTrans C D c d F G -> (x : C) -> Small_Hom D d (F.1 x) (G.1 x) :=
+  Small_natApp
+specialize MechCategory (1, 0) as Types
+specialize MechCategory (0, 1) as Up
+specialize MechCategory (2, 1) as Higher
+def higherIdentity : (0 C : Type 2) -> (0 D : Type 2) ->
+    (c : Higher_Category C) -> (d : Higher_Category D) ->
+    (F : Higher_Functor C D c d) -> Higher_NatTrans C D c d F F := Higher_idNat
+def upIdentity : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Up_Category C) -> (d : Up_Category D) ->
+    (F : Up_Functor C D c d) -> Up_NatTrans C D c d F F := Up_idNat

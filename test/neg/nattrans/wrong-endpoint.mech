@@ -1,0 +1,8 @@
+def wrongEndpoint : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) -> (G : Small_Functor C D c d) ->
+    Small_NatTrans C D c d F G -> (x : C) -> Small_Hom D d (G.1 x) (F.1 x) :=
+  fun (0 C : Type 0) (0 D : Type 0) (c : Small_Category C) (d : Small_Category D)
+      (F : Small_Functor C D c d) (G : Small_Functor C D c d)
+      (alpha : Small_NatTrans C D c d F G) (x : C) =>
+    Small_natApp C D c d F G alpha x

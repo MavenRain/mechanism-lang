@@ -130,7 +130,8 @@ grammar, naming and validation.
 
 `cat/category.mech` declares the MechCategory group with two Type-level
 parameters: objects at `Type u` and morphisms at `Type v`. Specializing
-as C installs equality C and sixteen members.  The category members are
+as C installs equality C and twenty-five members.  The category
+members are
 C_Category, C_Hom, C_id, C_comp, C_idComp, C_compId and C_assoc.
 The category record contains its
 hom family, identity, composition and three proofs. Object arguments are
@@ -149,7 +150,7 @@ PRELUDE-CATEGORY-ACCESSORS checks generic identity and composition.
 DEPENDENT-CLOSURE-RUNTIME checks dependent function results and calls
 whose source arguments all erase.  See `dev/M0-STAGE-C-CLOSURES.md`.
 
-The other nine members are C_eqTrans, C_eqCongr, C_Functor,
+The nine functor members are C_eqTrans, C_eqCongr, C_Functor,
 C_functorObj, C_functorMap, C_functorMapId, C_functorMapComp,
 C_idFunctor and C_compFunctor.  A functor takes two categories from
 the same group instance.  Its object map and dependent arrow map
@@ -162,5 +163,14 @@ identity, both composition orders and nested composition.  Its seven
 exact misuse cases include a map that preserves identity but fails
 composition.  PRELUDE-FUNCTOR-RUNTIME exercises object and arrow maps
 on all three hosts, with two payloads.  See `dev/PORT-UAT-U1.md`.
-Functors across separate universe pairs, NatTrans, LeftKanExtension
-and source-type parity remain open.
+Natural transformations add C_eqSymm, C_NatTrans, C_natApp,
+C_naturality, C_idNat, C_vcompLaw, C_vcomp, C_whiskerRight and
+C_whiskerLeft.  Components can inspect their objects.  Naturality
+proofs can inspect their morphisms and erase as complete Prop fields.
+Vertical composition takes alpha then beta.  UAT's whiskerRight
+precomposes and whiskerLeft postcomposes.  PRELUDE-NATTRANS checks
+their contracts; PRELUDE-NATTRANS-RUNTIME checks eight exports with
+two payloads on three hosts.  See `dev/PORT-UAT-U1-NATTRANS.md`.
+
+Functors across separate universe pairs, LeftKanExtension and
+source-type parity remain open.

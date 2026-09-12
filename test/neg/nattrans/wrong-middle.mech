@@ -1,0 +1,11 @@
+def wrongMiddle : (0 C : Type 0) -> (0 D : Type 0) ->
+    (c : Small_Category C) -> (d : Small_Category D) ->
+    (F : Small_Functor C D c d) -> (G : Small_Functor C D c d) ->
+    (H : Small_Functor C D c d) -> (I : Small_Functor C D c d) ->
+    Small_NatTrans C D c d F G -> Small_NatTrans C D c d I H ->
+    Small_NatTrans C D c d F H :=
+  fun (0 C : Type 0) (0 D : Type 0) (c : Small_Category C) (d : Small_Category D)
+      (F : Small_Functor C D c d) (G : Small_Functor C D c d)
+      (H : Small_Functor C D c d) (I : Small_Functor C D c d)
+      (alpha : Small_NatTrans C D c d F G) (beta : Small_NatTrans C D c d I H) =>
+    Small_vcomp C D c d F G H alpha beta

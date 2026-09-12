@@ -95,9 +95,10 @@ Results and gate measurements are recorded in dev/M0-BUILD-LOG.md.
 
 ## Remaining U1 work
 
-Functor between separate object and morphism universe pairs is still
-due, as are NatTrans, idNat, vcomp, whiskerRight, whiskerLeft,
-LeftKanExtension and desc_unique.  The source API uses compFunctor
+The next increment supplies NatTrans, idNat, vcomp, whiskerRight
+and whiskerLeft; see `dev/PORT-UAT-U1-NATTRANS.md`.  Functor between
+separate universe pairs, LeftKanExtension and desc_unique remain
+due.  The source API uses compFunctor
 to distinguish it from category composition in the flat member
 namespace.  Source-type parity and bridge theorems remain separate
 work.  No map verdict, denominator, trusted-line bound, axiom or

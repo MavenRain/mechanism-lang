@@ -44,8 +44,8 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-11
 
-The base is 7742d96, the UAT port roadmap after dependent closure
-calls.  Stage 0, Stage
+The base is bb215e4, the first U1 increment with checked functors.
+The next increment adds natural transformations.  Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,
@@ -53,11 +53,14 @@ dependent functions and pairs, ordered family groups and congruence,
 textual prenex definitions, families and groups, checked categories,
 and dependent closure calls.  The first U1 increment adds checked
 functors, identity and composition within one category group instance.
-Stage C remains open on functors across separate universe pairs,
-NatTrans, LeftKanExtension and source-type parity.  Stage D (typed
+Natural transformations now supply identity, vertical composition
+and both whiskering operations in that group.  Stage C remains open
+on functors across separate universe pairs, LeftKanExtension and
+source-type parity.  Stage D (typed
 mapping) and Stage E (M0-EXIT) have not started.  The map inventory
 holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of 2,477.  The
-gate battery prints 39 PASS legs.  TRUSTED-LINES stays red at
+gate battery adds PRELUDE-NATTRANS and PRELUDE-NATTRANS-RUNTIME.
+TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
 ## Port tracks
@@ -106,7 +109,10 @@ stay under `ports/` (D-UAT-3).
   by the new records.
   The first increment is specified in `dev/PORT-UAT-U1.md`: Functor,
   idFunctor and compFunctor within one universe pair.  It adds the
-  PRELUDE-FUNCTOR and PRELUDE-FUNCTOR-RUNTIME gates.  U1 remains open.
+  PRELUDE-FUNCTOR and PRELUDE-FUNCTOR-RUNTIME gates.  The next
+  increment, `dev/PORT-UAT-U1-NATTRANS.md`, adds NatTrans, idNat,
+  vcomp, whiskerRight and whiskerLeft with kernel and runtime gates.
+  U1 remains open.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,
   Indiscrete, ConfigSpace, SymmetricGroup, Z2Group and ChoiceRule.
   The last four are framework and land in `prelude/aggregate/`.  The

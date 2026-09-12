@@ -765,3 +765,33 @@ controls again and the restored suite passed.
 The seven exact negative fixtures separately check bad objects,
 reversed endpoints, false identity and composition laws, a missing
 law, erased object use and the current universe-arity boundary.
+
+## Stage C / U1: natural transformations (2026-09-11)
+
+dev/nattrans-mutations.py copies the prelude and fixtures to a new
+external directory and runs the built natural-transformation suite.
+Each control changes one source anchor, checks the expected exit
+status and diagnostic, and restores the file.  The baseline and
+restored suites pass.  All five controls fail as intended.
+
+| Control | Change | Observed rejection |
+| --- | --- | --- |
+| U1-NT-M1 | Reverse vertical composition | Wrong verticalForward value |
+| U1-NT-M2 | Replace the precomposed object by zero | Wrong rightValue |
+| U1-NT-M3 | Replace the arrow swap by identity | Wrong leftValue |
+| U1-NT-M4 | Replace vcomp's first naturality proof by reflexivity | Index mismatch |
+| U1-NT-M5 | Replace idNat's right unit law by reflexivity | Index mismatch |
+
+Replay after building with
+`python3 -I dev/nattrans-mutations.py NEW_DIRECTORY`.
+The report is saved under dev/validation/port-uat-u1-nattrans/.
+It binds the prelude, the kernel-suite fixture and the negative
+bytes, plus the checker binary, by SHA-256.
+The diagnostic of U1-NT-M1 to U1-NT-M3 includes the printed value,
+and the diagnostic of U1-NT-M4 and U1-NT-M5 names the functor of
+the mismatched index, so another failure of the same kind does not
+record a kill.  The round-2 replay killed all five controls again
+and the restored suite passed.
+The runtime gate separately changes payload 37 to 41 and checks
+every export on all three hosts.  The kernel suite also checks six
+exact misuse diagnostics and an exhausted budget.

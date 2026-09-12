@@ -1,0 +1,4 @@
+def wrongNaturality : Small_NatTrans Point Point DoubleEnd DoubleEnd
+    (Small_idFunctor Point DoubleEnd) (Small_idFunctor Point DoubleEnd) :=
+  ((fun (x : Point) => ((fun (n : Tiny) => zero), (fun (n : Tiny) => n))),
+   (fun (0 x : Point) (0 y : Point) (f : (Tiny -> Tiny) * (Tiny -> Tiny)) => categoryRefl))

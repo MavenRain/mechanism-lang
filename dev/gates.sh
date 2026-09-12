@@ -227,6 +227,8 @@ leg SLOW PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
   $ROOT/_build/default/test/prelude_category.exe $ROOT
 leg SLOW PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
   $ROOT/_build/default/test/prelude_functor.exe $ROOT
+leg SLOW PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
+  $ROOT/_build/default/test/prelude_nattrans.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \
@@ -246,6 +248,9 @@ leg MED DEPENDENT-CLOSURE-RUNTIME \
 leg SUITE PRELUDE-FUNCTOR-RUNTIME \
   '^PRELUDE-FUNCTOR-RUNTIME OK cases=6 hosts=3 mutation=1 refusals=2$' \
   python3 -P $ROOT/test/functor_runtime.py
+leg SUITE PRELUDE-NATTRANS-RUNTIME \
+  '^PRELUDE-NATTRANS-RUNTIME OK cases=8 hosts=3 mutation=1$' \
+  python3 -P $ROOT/test/nattrans_runtime.py
 leg FAST AXIOMS '^AXIOMS OK prelude=0 fixture=1 hidden_builtins=0$' \
   python3 -P $ROOT/dev/prelude-gates.py axioms
 leg MED MAP-INVENTORY '^MAP-INVENTORY OK$' \

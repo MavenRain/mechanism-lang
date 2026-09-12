@@ -190,8 +190,14 @@ composition for categories sharing its object and morphism levels.
 The object map and dependent arrow map compute; both preservation
 laws are checked source proofs.  See `dev/PORT-UAT-U1.md`.
 
+Natural transformations supply object-dependent components, naturality,
+identity, vertical composition and both whiskering operations.
+PRELUDE-NATTRANS checks their contracts and PRELUDE-NATTRANS-RUNTIME
+compares eight exports on all three hosts.  See
+`dev/PORT-UAT-U1-NATTRANS.md`.
+
 Stage C remains open on functors across separate universe pairs,
-NatTrans, LeftKanExtension and checked source-type parity.
+LeftKanExtension and checked source-type parity.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

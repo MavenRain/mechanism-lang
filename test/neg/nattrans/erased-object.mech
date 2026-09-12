@@ -1,0 +1,2 @@
+def erasedObject : (0 x : Tiny) -> (Tiny -> Tiny) * (Tiny -> Tiny) :=
+  fun (0 x : Tiny) => Small_natApp Tiny Point IndexedEnd DoubleEnd Constant Constant Alpha x

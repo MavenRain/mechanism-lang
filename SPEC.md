@@ -442,5 +442,15 @@ Its laws follow by equality congruence and transitivity.
 Object maps are runtime functions; arrow endpoints and the two law
 fields erase.  Both categories share the specialization's object
 level and morphism level.  See `dev/PORT-UAT-U1.md` for validation.
-Functors across separate universe pairs, NatTrans, LeftKanExtension
-and source-type parity remain open.
+The group adds eqSymm, NatTrans, natApp, naturality, idNat, vcompLaw,
+vcomp, whiskerRight and whiskerLeft.  NatTrans is a dependent pair
+of an object-dependent component and a Prop-valued naturality law.
+The law's morphism argument is available for proof construction;
+the complete law field erases.  vcomp takes alpha then beta.
+whiskerRight precomposes with an object and arrow map; whiskerLeft
+maps components through a functor.  Their result types expand the
+NatTrans fields for the composed functors.  The square-composition
+lemma vcompLaw, category laws and functor laws prove naturality.
+See `dev/PORT-UAT-U1-NATTRANS.md` for the checked contracts.
+Functors across separate universe pairs, LeftKanExtension and
+source-type parity remain open.

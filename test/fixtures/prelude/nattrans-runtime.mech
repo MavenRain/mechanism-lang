@@ -1,0 +1,110 @@
+mu Point : Type 0 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechCategory (0, 0) as Small
+def nattransInput : Nat := 37
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Small_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat))
+            (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def DoubleEnd : Small_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat -> Nat) * (Nat -> Nat)),
+   ((fun (0 x : Point) => ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat -> Nat) * (Nat -> Nat))
+          (g : (Nat -> Nat) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => g.1 (f.1 n)), (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat -> Nat) * (Nat -> Nat))
+            (0 g : (Nat -> Nat) * (Nat -> Nat))
+            (0 h : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))))
+def Constant : Small_Functor Nat Point IndexedEnd DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def Components : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => x), (fun (n : Nat) => n))
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Small ((Nat -> Nat) * (Nat -> Nat)) (Components y) (Components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Small ((Nat -> Nat) * (Nat -> Nat)) (Components right) (Components x) with
+    | same => categoryRefl
+def Alpha : Small_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  (Components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+     componentLaw x y f.1))
+def BetaComponents : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => natAdd n x), (fun (n : Nat) => x))
+def betaComponentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Small ((Nat -> Nat) * (Nat -> Nat)) (BetaComponents y) (BetaComponents x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Small ((Nat -> Nat) * (Nat -> Nat)) (BetaComponents right) (BetaComponents x) with
+    | same => categoryRefl
+def Beta : Small_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  (BetaComponents,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+     betaComponentLaw x y f.1))
+
+def Jump : Small_Functor Nat Nat IndexedEnd IndexedEnd :=
+  ((fun (x : Nat) => nattransInput),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def Swap : Small_Functor Point Point DoubleEnd DoubleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Nat -> Nat) * (Nat -> Nat)) =>
+       (f.2, f.1)),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Nat -> Nat) * (Nat -> Nat))
+          (0 g : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))
+
+def componentValue : Nat :=
+  (Small_natApp Nat Point IndexedEnd DoubleEnd Constant Constant Alpha (nattransInput)).1 0
+def identityValue : Nat :=
+  ((Small_idNat Nat Point IndexedEnd DoubleEnd Constant).1 0).1 (nattransInput)
+def verticalForward : Nat :=
+  ((Small_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta).1 nattransInput).1 0
+def verticalReverse : Nat :=
+  ((Small_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Beta Alpha).1 nattransInput).2 0
+def verticalNested : Nat :=
+  ((Small_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    (Small_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta)
+    Beta).1 nattransInput).1 0
+def Right : Small_NatTrans Nat Point IndexedEnd DoubleEnd
+    (Small_compFunctor Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Jump Constant)
+    (Small_compFunctor Nat Nat Point IndexedEnd IndexedEnd DoubleEnd Jump Constant) :=
+  Small_whiskerRight Nat Point Nat IndexedEnd DoubleEnd IndexedEnd Constant Constant Alpha Jump
+def Left : Small_NatTrans Nat Point IndexedEnd DoubleEnd
+    (Small_compFunctor Nat Point Point IndexedEnd DoubleEnd DoubleEnd Constant Swap)
+    (Small_compFunctor Nat Point Point IndexedEnd DoubleEnd DoubleEnd Constant Swap) :=
+  Small_whiskerLeft Nat Point Point IndexedEnd DoubleEnd DoubleEnd Swap Constant Constant Alpha
+def rightValue : Nat :=
+  (Right.1 0).1 0
+def leftValue : Nat :=
+  (Left.1 0).1 (nattransInput)
+def leftOther : Nat :=
+  (Left.1 (nattransInput)).2 (nattransInput)
