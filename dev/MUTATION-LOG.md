@@ -835,3 +835,35 @@ exports.  Its expected values distinguish cocones, object
 arguments and the two projections of each endomorphism pair.  Its
 map export runs through the swap functor, so it doubles its
 payload.
+
+## Stage C template checking, 2026-09-12
+
+Base: ac3f35f.  Replay command:
+`python3 -I dev/congruence-mutations.py NEW_DIRECTORY`.
+The baseline and restored family-group and congruence suites pass.
+The family-group suite now has 31 cases.  All twelve controls are
+detected, including all nine earlier controls.
+
+C-CONG-M4 now removes the consolidated member-checking call.  It
+still fails the member-family collision test.  C-CONG-M10 retains
+the collision guard but fabricates a definition entry without
+checking its body.  It fails the invalid-member-body test.
+C-CONG-M11 supplies the original globals to member callbacks.  It
+fails the check that the callback sees complete group families.
+C-CONG-M12 removes the budget poll that runs before the first
+member elaboration.  It fails the callback-budget-stops-at-entry
+test, which requires the poll before the first callback.
+
+An exploratory scope-only control survived because the kernel
+independently checks universe scope.  It was replaced by the
+unchecked-body control.  The replay counts only controls that
+compile, exit with the expected diagnostic and restore to passing
+suites.  The final report and output streams are retained under
+`dev/validation/stage-c-template-checking/`.
+
+Review round 2 replayed the twelve controls from the staged tool
+into a new copy.  The report is
+`{"passed": true, "killed": 12, "controls": 12}`, with every
+control C-CONG-M1 to C-CONG-M12 killed.  The replay output is
+retained outside the repository, in the review directory of the
+round.

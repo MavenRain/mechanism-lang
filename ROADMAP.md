@@ -44,8 +44,10 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-12
 
-The base is 7c6d50d, the U1 natural transformation increment.
-The next increment adds left Kan extensions.  Stage 0, Stage
+The base is ac3f35f, following the committed left Kan extension and
+GPU auction increments.  The current increment consolidates
+symbolic template member checking into one ordered pass; see
+`dev/M0-STAGE-C-TEMPLATE-CHECKING.md`.  Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,
@@ -60,7 +62,7 @@ open on functors across separate universe pairs and source-type
 parity.  Stage D (typed
 mapping) and Stage E (M0-EXIT) have not started.  The map inventory
 holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of 2,477.  The
-gate battery adds PRELUDE-LEFT-KAN and PRELUDE-LEFT-KAN-RUNTIME.
+gate battery includes PRELUDE-LEFT-KAN and PRELUDE-LEFT-KAN-RUNTIME.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 

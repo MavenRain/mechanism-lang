@@ -57,7 +57,7 @@ names are checked before the immutable program result is returned.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 335 |
+| surface/elab.ml | 331 |
 | surface/token.ml | 10 |
 | surface/lexer.ml | 5 |
 | surface/syntax.ml | 49 |
@@ -84,3 +84,9 @@ Indirect calls use the arity stored in the closure.  Abstract nullary
 closures dispatch even when every source argument erases.  Direct global
 calls keep their declared signatures.  The kernel, erasure, encoder and
 vendored tree keep their existing sources.
+
+The template checking increment lets the family catalog elaborate and
+check each member in one ordered pass.  The surface supplies raw member
+syntax through callbacks.  Scope validation and the kernel judgment run
+before a member becomes visible to later callbacks.  Closed instances
+still recheck every member.  The surface overlay loses four delta lines.

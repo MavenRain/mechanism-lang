@@ -2132,3 +2132,163 @@ Tier note.  The Fable 5.1 builder tier could not be used.  Two Fable
 builders died on the reasoning-extraction classifier
 (req_011CeywCYsrchkvioLjCHypa and req_011CeywD63MMgz36RSPSwyJ3).  The
 finder, the builder and the closer ran on Opus at medium effort.
+
+## Stage C template checking, 2026-09-12
+
+Base: ac3f35f.  Build copy: `/Users/oobi/Documents/gpt12/mechanism-universes`.
+Cost baseline copy: `/Users/oobi/Documents/gpt12/mechanism-template-baseline`.
+The category group now declares each symbolic
+member with one kernel check after elaboration.  Previously the
+surface checked the member to prepare later elaborations, then
+the family catalog repeated that judgment.
+
+The family catalog now requests raw members through callbacks.
+It validates their scope and checks their types and bodies before
+making them visible to the next callback.  The raw declaration
+API uses the same path.  Every closed specialization still
+rechecks its members against the caller's globals.  The source
+grammar, category definitions, kernel, encoder, vendor pin and
+all watchdogs retain their existing contracts and bytes.
+
+The family-group suite passes 31 cases, including eight new
+callback cases and one refusal-precedence case.  The interface
+states the refusal precedence of both declaration entry points.  The family-member, family-template, congruence
+and prenex suites pass.  All twelve congruence mutation controls
+are detected, including all nine existing controls and the new
+unchecked-body, wrong-environment and unguarded-first-callback
+controls.  The baseline and
+restored suites pass.  The PIN delta check passes with the
+surface elaborator at 331 changed lines, down from 335.
+
+The benchmark compares two runs per version and scope using the
+same source and driver.  The harness now builds the driver in each
+tree before the timing loop and records the base commit and the
+worktree state of both trees beside the executable hashes, so a
+measured executable always belongs to the sources of its tree.
+The recorded `cost.json` predates that field and predates the
+member count of the driver.  The driver reports the number of
+checked members, and the harness refuses a scope whose member counts
+differ between the trees.  The battery gains the MED leg
+TEMPLATE-COST, which checks the category group through Hom and
+requires the refusal `TEMPLATE-COST-FAIL unknown last member` for a
+name no member carries.  The battery recorded in the validation
+bundle predates that leg.  For the full category group, budget polls
+fall from 74,719,726 to 55,248,999, and cumulative allocated words
+fall from 28,710,148,193 to 19,908,735,939.  Those are reductions of
+26.06 and 30.66 percent.  For the group through compFunctor, the
+reductions are 21.61 and 24.50 percent.  Counts agree exactly
+between repetitions.  CPU and wall times vary with system load;
+no wall-time improvement is claimed.  The measurements cover
+declaration checking after parsing, not specialization or erasure.
+
+The design is `dev/M0-STAGE-C-TEMPLATE-CHECKING.md`.  Reports and
+captured validation outputs are retained under
+`dev/validation/stage-c-template-checking/`.  Stage C and U1 remain
+open on separate category universe pairs and source-type parity.
+
+Closing validation records 37 PASS legs of 44.  Six behavior legs
+expire, and TRUSTED-LINES remains at kernel=4208/3000 and
+encoder=246/900.  The six expired legs were rerun separately under
+their original limits.  DEPENDENT-CLOSURE-RUNTIME passes in
+5.19 seconds with nine cases on three hosts and one mutation.
+PRELUDE-CATEGORY-ACCESSORS, PRELUDE-FUNCTOR-RUNTIME,
+PRELUDE-LEFT-KAN-RUNTIME and PRELUDE-NATTRANS-RUNTIME still reach
+their 210 s kernel-batch limits.  PRELUDE-NATTRANS still reaches
+its 300 s source-suite watchdog.  The raw battery, rerun results,
+stdout and stderr are retained in the validation bundle.
+
+System load exceeded 100 during the battery.  A load reading during
+the reruns was above 50.  The timeouts remain unresolved validation
+limits, and the recorded verdict stays GATES-FAIL.  The benchmark
+driver was built and measured separately while the battery ran.
+Production compiler sources, runtime harnesses and gate fixtures
+kept their bytes throughout validation.
+
+## Stage C template checking review (2026-09-12)
+
+Review of this slice.  One workflow ran four finder lenses over the
+staged diff, the mutation controls, the benchmark harness and the
+docs.  The lenses gave 15 raw candidates.  A verify stage rechecked
+every candidate and kept 13 survivors.  It refuted 2.  The judge kept
+seven fix rulings and dropped six.  Two fix rounds followed.  Round 1
+applied the seven rulings.  Round 2 applied four freshness defects of
+the round 1 check and closed the gate finding GATE-1.  Fifteen agents
+ran in all.
+
+| Id | Severity | Status | Note |
+| --- | --- | --- | --- |
+| GATE-1 | high | FIXED | round 2 battery gives 44 PASS of 45 |
+| GATE-2 | high | FIXED | round 2 checker waited out the ladder |
+| L3-1 | medium | FIXED | budget poll now has a case and a control |
+| L2-3 | medium | FIXED | cost tool ties each exe to its tree |
+| L2-4 | medium | FIXED | battery leg TEMPLATE-COST added |
+| ND-1-1 | medium | FIXED | receipt sources recomputed, 19 rows |
+| ND-1-2 | medium | FIXED | 31 cases and twelve controls recorded |
+| ND-1-3 | medium | FIXED | cost.json marked as the pre-fix capture |
+| ND-1-4 | medium | FIXED | README states eleven archived controls |
+| ND-2-1 | medium | FIXED | receipt artifact row regenerated |
+| L1-1 | low | FIXED | both refusal precedences stated and pinned |
+| L2-5 | low | FIXED | driver prints the checked member count |
+| L4-1 | low | FIXED | both foreign build copies named |
+| L4-2 | low | FIXED | six behavior-leg expiries wording |
+
+Fix paths.  L3-1 touched test/family_groups.ml and
+dev/congruence-mutations.py.  It added the case
+callback-budget-stops-at-entry and the control C-CONG-M12, which
+deletes the budget poll before the first member elaboration.  L2-3
+touched dev/template-cost.py.  The tool now builds each tree and
+refuses output without `0 errors, 0 warnings`.  It records the root,
+the HEAD, the porcelain status and the executable digest of each tree
+in a `trees` block.  L2-4 touched dev/gates.sh and test/dune.  The MED
+leg TEMPLATE-COST runs the driver through Hom and requires the
+refusal `TEMPLATE-COST-FAIL unknown last member: noSuchMember` with
+exit 1.  The battery holds 45 legs, and the slice holds 68 staged
+paths.  L1-1 touched surface/family_poly.mli and test/family_poly.ml.
+The interface states that declare traverses all members and then
+kernel-checks, and that declare_group refuses per member.  The case
+member-refusal-precedence pins both.  L2-5 touched
+test/template_cost.ml.  The driver prints `"members":N` for the
+checked prefix, and dev/template-cost.py pins the count across the two
+trees.  L4-1 and L4-2 touched this file, README.md and the bundle
+README.
+
+Evidence.  The bundle is dev/validation/stage-c-template-checking/.
+Round 2 recomputed the 19 source rows of receipt.json from the staged
+blobs with 0 bad rows.  It corrected dev/MUTATION-LOG.md to 31 cases
+and twelve controls and named C-CONG-M12.  It marked the recorded
+cost.json as the archived pre-fix capture, and a new capture replaces
+the file.  It corrected the bundle README, which now states that the
+archived replay detects the eleven controls the tool held at the
+capture.  M12 came after that archive.  The main session regenerated
+the stale artifact row of receipt.json from the staged blob, which
+gives 49 artifact rows and 19 source rows with 0 bad rows.  The slice
+block and the bundle README name the build copy and the cost baseline
+copy, and receipt.json carries a build_trees block with both roots at
+ac3f35f.
+
+Closing ladders.  The baseline battery on the pre-fix bytes gives 37
+PASS of 44 legs, six load expiries and TRUSTED-LINES, and the
+baseline replay ends `{"passed": true, "killed": 11, "controls":
+11}`.  The fix round 1 battery gives 40 PASS of 45 with four load
+expiries and TRUSTED-LINES.  The gate stage of round 1 gives 43 PASS
+of 45, with PRELUDE-NATTRANS expired under load and TRUSTED-LINES.
+The fix round 2 battery gives 40 PASS of 45 with four load expiries
+and TRUSTED-LINES.  The gate stage of round 2 gives 44 PASS of 45 with
+no expiry.  Its only FAIL row is TRUSTED-LINES at kernel=4208/3000 and
+encoder=246/900, which is the inherited bound, so the battery is
+BOUND-ONLY.  Each ladder runs 14 items, of which twelve give rc=0.
+Item 14 carries the TRUSTED-LINES red.  Item 5 is a runner defect that
+passes the repository root to family_members.exe, and the battery leg
+FAMILY-MEMBERS passes on the same bytes.  Both replays of the review
+end `{"passed": true, "killed": 12, "controls": 12}`.  The pins hold:
+HEAD ac3f35f, the vendor/kanon gitlink at
+936a43a92dd59a04698648f24fa5ae94cdb532df, PIN-DELTA OK with
+surface/elab.ml at diff=331, FAMILY-GROUPS-OK cases=31 and
+FAMILY-POLY-OK cases=34.
+
+Tier note.  The Fable 5.1 tier could not be used.  Fable subagents die
+on the reasoning-extraction classifier in this session
+(req_011Cezcab1FkyGuU46YE7h5K).  The finder, the builder and the
+closer stages ran on model opus at medium effort, so those tier
+rulings are UNMET.  The verify, judge and check stages ran on opus at
+high effort.  The gate runners ran on sonnet.

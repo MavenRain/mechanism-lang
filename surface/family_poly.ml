@@ -182,7 +182,8 @@ let declare ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity
           Ok () in
     Ok ((family.fam_name, { arity; family; ctors; companions = []; members }) :: catalog)
 
-let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity families =
+let declare_group_elaborated ?(budget = Budget.unlimited) ~members globals catalog
+    ~arity families =
   match families with
   | [] -> Error (Error.Mismatch "a family schema group must be nonempty")
   | (family, ctors) :: companions ->
@@ -199,9 +200,19 @@ let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~
           Error (Error.Not_yet "references between family schemas are not supported")
         else Ok n in
       let level l = if Level.in_scope arity l then Ok l else Error scope_error in
-      let* members = map_list (map_member budget level name) members in
-      let* _checked = check_members budget catalog ~arity symbolic members in
+      let* _symbolic, reversed = List.fold_left (fun acc elaborate ->
+        let* symbolic, reversed = acc in
+        let* () = poll budget in
+        let* member = elaborate symbolic in
+        let* member = map_member budget level name member in
+        let* checked = check_members budget catalog ~arity symbolic [member] in
+        Ok (checked, member :: reversed)) (Ok (symbolic, [])) members in
+      let members = List.rev reversed in
       Ok ((family.fam_name, { arity; family; ctors; companions; members }) :: catalog)
+
+let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity families =
+  declare_group_elaborated ~budget ~members:(List.map (fun member _globals -> Ok member) members)
+    globals catalog ~arity families
 
 let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog

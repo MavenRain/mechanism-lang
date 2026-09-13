@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-CONG-M1",
+      "path": "prelude/congruence.ml",
+      "old": "\"B\", Term.Univ v",
+      "new": "\"B\", Term.Univ u",
+      "source_sha256": "2bf5430aaf1da2f2eb579c7e4fac798c02ae95a1b6b1843b8d94c32a4e135be8",
+      "mutant_sha256": "7b1c4c963f81ac101a4e365e143b205558939449844851106e816a5b80868326",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CONGRUENCE-FAIL mismatch: the term has type Type u0 and the expected type is Type u1",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M2",
+      "path": "prelude/congruence.ml",
+      "old": "(apply (Term.Var 5) (Term.Var 3) (Term.Var 1)) in",
+      "new": "(apply (Term.Var 5) (Term.Var 3) (Term.Var 2)) in",
+      "source_sha256": "2bf5430aaf1da2f2eb579c7e4fac798c02ae95a1b6b1843b8d94c32a4e135be8",
+      "mutant_sha256": "4d343ff4afd86da1451dd3494c522003b142d187ab541bb0c9421c7b4609e8e2",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CONGRUENCE-FAIL mismatch: the term has type (Lan SMu Result [(Out SPi w point A (APt w y) f)]",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M3",
+      "path": "surface/family_poly.ml",
+      "old": "scheme.companions -> as_name ^ \"_\" ^ n",
+      "new": "scheme.companions -> n",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "661cd580b7c297f8d38e0fda1fa4077f8885cf63ab31f237311dfb3abc4a4d79",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL ordered-families-members-and-renaming: mismatch: the name Second is already declared",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M4",
+      "path": "surface/family_poly.ml",
+      "old": "let* checked = check_members budget catalog ~arity symbolic [member] in",
+      "new": "let* checked = Ok symbolic in",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "b6b222df8da17577a1b05acd30a745a7d8b242f421a66a4a2745a8586b961464",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL member-family-collision: expected refusal: mismatch: the name Second is already declared",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M5",
+      "path": "prelude/congruence.ml",
+      "old": "Family_poly.declare_group ~budget ~members:[congr]",
+      "new": "Family_poly.declare_group ~budget:Budget.unlimited ~members:[congr]",
+      "source_sha256": "2bf5430aaf1da2f2eb579c7e4fac798c02ae95a1b6b1843b8d94c32a4e135be8",
+      "mutant_sha256": "3733e1dd1372223cba7d2988f36954404439bdf9a6ffe406cf926f45e413ded0",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CONGRUENCE-FAIL budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M6",
+      "path": "test/fixtures/prelude/congruence.mech",
+      "old": "case upProof as self in Up_Result right return MechNat with\n  | mechReflCtor => mechSucc mechZero",
+      "new": "case upProof as self in Up_Result right return MechNat with\n  | mechReflCtor => mechZero",
+      "source_sha256": "e7dfa9504f3bf3a01f47f9608882cbde08442c14b2909b68774d51e95eac2afb",
+      "mutant_sha256": "f3d42bf8aad340cf189135f04a8766077bffdb799b4bfb61f6a313b2ba3b4238",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CONGRUENCE-FAIL wrong computation: upValue",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M7",
+      "path": "test/prelude_congruence.ml",
+      "old": "\"Same_Result\", \"Again_Result\",",
+      "new": "\"Same_Result\", \"Same_Result\",",
+      "source_sha256": "b6f12f38a4e1b00712bedf70b4e2d10d3f0120d5f4ce2ec3d2f03f7c97e63b31",
+      "mutant_sha256": "9689a78408d7c22104bffe230a73f53fd6532b0aa19896b07a799a4556df1f10",
+      "exit_code": 1,
+      "diagnostic": "PRELUDE-CONGRUENCE-FAIL wrong-instance: expected refusal:",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M8",
+      "path": "surface/family_poly.ml",
+      "old": "      let name n = if List.mem_assoc n catalog then\n          Error (Error.Not_yet \"references between family schemas are not supported\")\n        else Ok n in",
+      "new": "      let name n = Ok n in",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "2e428dbbfe870ac286a621f7924dff11fb2bb5cb6f0029ebbe833d143e1aca18",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL member-template-reference: wrong refusal: unbound: the family Other is not declared",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M9",
+      "path": "surface/family_poly.ml",
+      "old": "        if occupied globals catalog family.Check.fam_name then Error (collision family.fam_name)\n        else\n          let* provisional = Check.declare_family ~budget globals family in",
+      "new": "          let* provisional = Check.declare_family ~budget globals family in",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "520f76352f018babf7100d49219776a06c21e62827eb2d44fcb229e757c54edc",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL target-companion-collision-atomic: expected refusal: mismatch: the name One_Second is already declared",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M10",
+      "path": "surface/family_poly.ml",
+      "old": "let* checked = check_members budget catalog ~arity symbolic [member] in",
+      "new": "let* checked =\n          if occupied symbolic catalog member.Check.d_name then Error (collision member.d_name)\n          else\n            let* body = member.d_body |> Option.to_result\n              ~none:(Check.missing_body member.d_name) in\n            Ok (Global.add member.d_name (Global.Def { Global.ty = member.d_ty;\n              def = body; reducible = true; rec_arg = None; partial = false }) symbolic) in",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "20fb1ab41df74d192cbc66e0650aaba11511486e6ca8e3844956597993c427bf",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL member-body: expected refusal: mismatch: the term has type (Lan SMu First",
+      "killed": true
+    },
+    {
+      "name": "C-CONG-M11",
+      "path": "surface/family_poly.ml",
+      "old": "let* member = elaborate symbolic in",
+      "new": "let* member = elaborate globals in",
+      "source_sha256": "2fb48d1d9514e22fd24a78b3964c7a4dbc2082eaca9ed8727c3dc9b70a743030",
+      "mutant_sha256": "bc82bbf14816532560adb38d1856a3612406b723b5799230c1472ced795ff839",
+      "exit_code": 1,
+      "diagnostic": "FAMILY-GROUPS-FAIL callback-order-and-parity: mismatch: callback saw an incomplete family",
+      "killed": true
+    }
+  ]
+}

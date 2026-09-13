@@ -225,6 +225,16 @@ leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
   $ROOT/_build/default/test/family_groups.exe
 leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
   $ROOT/_build/default/test/prelude_congruence.exe $ROOT
+leg MED TEMPLATE-COST '^TEMPLATE-COST OK members=[0-9]+ refusal=1$' \
+  zsh -c 'exe=$1; source=$2;
+    ok=$($exe $source --through Hom) || exit 1;
+    members=$(print -r -- $ok | rg -o -- "\"members\":[0-9]+" | rg -o -- "[0-9]+");
+    [[ -n $members ]] || exit 1;
+    bad=$($exe $source --through noSuchMember 2>&1); code=$?;
+    [[ $code -eq 1 ]] || exit 1;
+    print -r -- $bad | rg -q -- "^TEMPLATE-COST-FAIL unknown last member: noSuchMember$" || exit 1;
+    print -r -- "TEMPLATE-COST OK members=$members refusal=1"' \
+  template-cost-leg $ROOT/_build/default/test/template_cost.exe $ROOT/prelude/cat/category.mech
 leg CATEGORY PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
   $ROOT/_build/default/test/prelude_category.exe $ROOT
 leg CATEGORY PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \

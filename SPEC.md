@@ -376,7 +376,10 @@ Families check in order.  Each family can use itself and preceding
 families, but cannot use a later family.  After all families check, members
 check in order under that symbolic environment.  A member can use all
 group families and earlier members.  Members cannot refer to themselves
-or later members.  `Family_poly.declare_group` checks the complete schema
+or later members.  `Family_poly.declare_group_elaborated` requests raw
+members through callbacks, validates their scope, and kernel-checks each
+one before the next callback sees it.  `Family_poly.declare_group` uses
+the same path for supplied core declarations.  The complete schema checks
 universally before it enters the catalog.  Only the first family names
 the catalog entry.  All symbolic globals stay outside the caller's
 environment and output rows.
@@ -400,6 +403,9 @@ PRENEX-GROUPS checks round-trips, exact inventories, normalization,
 isolation, member order and precise refusals.  PRENEX-GROUPS-RUNTIME checks
 member calls on the kernel, Node and Wasmtime, with a changed payload.
 See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
+
+The callback checking contract and cost measurements are described in
+`dev/M0-STAGE-C-TEMPLATE-CHECKING.md`.
 
 ### Checked categories
 

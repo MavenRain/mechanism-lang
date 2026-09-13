@@ -66,6 +66,9 @@ increment adds natural transformations, identity, vertical composition
 and whiskering; see dev/PORT-UAT-U1-NATTRANS.md.  Left Kan extensions
 and desc_unique follow in dev/PORT-UAT-U1-LEFT-KAN.md.  Functors
 across separate universe pairs and source-type parity remain open.
+The template checking increment removes a repeated symbolic member
+check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
+rechecking and all existing gate predicates.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

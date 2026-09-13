@@ -41,10 +41,12 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-The implementation passes its behavioral suites.  Acceptance remains
+The focused suites and mutation controls pass.  Acceptance remains
 pending the trusted-kernel limit ruling: the active kernel exceeds the
 unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
+The latest full battery also records six behavior-leg expiries; see
+`dev/validation/stage-c-template-checking/` for the results and reruns.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -180,6 +182,11 @@ This installs families `Data` and `Data_Second`, plus `Data_witness`.
 Families can refer to earlier families.  Members can refer to all group
 families and earlier members.  The group checks universally and each
 instance checks again.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
+
+Template members are elaborated and checked in one ordered pass.
+The catalog validates each raw member before later members can use it.
+See `dev/M0-STAGE-C-TEMPLATE-CHECKING.md` for the checking contract
+and reproducible cost measurements.
 
 `prelude/cat/category.mech` supplies categories with independent object
 and morphism universes, identity, composition and all three category laws.

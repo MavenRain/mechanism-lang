@@ -1185,25 +1185,22 @@ let elab_family_group ~budget globals catalog definitions ~arity group members =
        || Option.is_some (find_ctor name globals) then
       Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
     else Ok ()) names) |> Result.map (fun _checks -> ()) in
-  let* symbolic, reversed = List.fold_left (fun acc fm ->
+  let* _symbolic, reversed = List.fold_left (fun acc fm ->
     let* symbolic, rows = acc in
     let* family, ctors, provisional = elab_family_parts ~budget symbolic ~arity fm in
     let* symbolic = Check.define_ctors_at ~arity budget provisional
       ~group:[family.Check.fam_name] ~name:family.fam_name ctors in
     Ok (symbolic, (family, ctors) :: rows)) (Ok (globals, [])) group in
-  let* _symbolic, member_rows = List.fold_left (fun acc m ->
-    let* symbolic, rows = acc in
+  let members = List.map (fun m symbolic ->
     let name = m.Syntax.rd_name in
     if Option.is_some (Global.find name symbolic)
        || Option.is_some (Global.find_family name symbolic)
        || Option.is_some (find_ctor name symbolic) then
       Error (Error.Mismatch ("the name " ^ name ^ " is already declared"))
     else
-      let* row = elab_decl (Check.make ~level_arity:arity symbolic budget)
-        (Syntax.DDef (name, m.Syntax.rd_ty, m.Syntax.rd_body)) in
-      let* entry = Check.check_decl_at ~arity symbolic budget row in
-      Ok (Global.add name entry symbolic, row :: rows)) (Ok (symbolic, [])) members in
-  Family_poly.declare_group ~budget ~members:(List.rev member_rows)
+      elab_decl (Check.make ~level_arity:arity symbolic budget)
+        (Syntax.DDef (name, m.Syntax.rd_ty, m.Syntax.rd_body))) members in
+  Family_poly.declare_group_elaborated ~budget ~members
     globals catalog ~arity (List.rev reversed)
 
 (** The whole file, with the globals the last declaration was checked

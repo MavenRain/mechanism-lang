@@ -1,0 +1,1 @@
+PRELUDE-CONGRUENCE-FAIL wrong-instance: expected refusal: mismatch: the term has type (Lan SMu Same_Result [y] (Sec SColl 2 [ => (Lan SMu MechNat [] (Sec SColl 0 []));  => x])) and the expected type is (Lan SMu Again_Result [y]

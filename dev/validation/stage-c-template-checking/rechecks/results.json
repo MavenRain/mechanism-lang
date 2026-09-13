@@ -1,0 +1,87 @@
+[
+  {
+    "name": "DEPENDENT-CLOSURE-RUNTIME",
+    "command": [
+      "python3",
+      "-P",
+      "test/prenex_runtime.py",
+      "--closures"
+    ],
+    "watchdog_seconds": 30,
+    "exit_code": 0,
+    "elapsed_seconds": 5.189085875172168,
+    "passed": true,
+    "stdout_sha256": "c3284f3eac2e662b1062dff9224cccdea5e58e7f049256fbb886cba4d4316fd9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "PRELUDE-CATEGORY-ACCESSORS",
+    "command": [
+      "python3",
+      "-P",
+      "test/prenex_runtime.py",
+      "--category-accessors"
+    ],
+    "watchdog_seconds": 900,
+    "exit_code": 2,
+    "elapsed_seconds": 210.20903562474996,
+    "passed": false,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "b28bf8f8af8d9398d543b271094ebe90966fbade962a6848347cb9be8ad47dea"
+  },
+  {
+    "name": "PRELUDE-FUNCTOR-RUNTIME",
+    "command": [
+      "python3",
+      "-P",
+      "test/functor_runtime.py"
+    ],
+    "watchdog_seconds": 900,
+    "exit_code": 2,
+    "elapsed_seconds": 210.51219391683117,
+    "passed": false,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "13aaf488072b66e6461f8b31e00554526925ea1568c4ea09762fe07618c2e0b3"
+  },
+  {
+    "name": "PRELUDE-LEFT-KAN-RUNTIME",
+    "command": [
+      "python3",
+      "-P",
+      "test/left_kan_runtime.py"
+    ],
+    "watchdog_seconds": 300,
+    "exit_code": 2,
+    "elapsed_seconds": 210.47646029107273,
+    "passed": false,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7772d20c6c276c4eb5f932d33484e58820f8b7c6c886b200f49b39a3d61257ba"
+  },
+  {
+    "name": "PRELUDE-NATTRANS",
+    "command": [
+      "_build/default/test/prelude_nattrans.exe",
+      "."
+    ],
+    "watchdog_seconds": 300,
+    "exit_code": 124,
+    "elapsed_seconds": 300.116208165884,
+    "passed": false,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "PRELUDE-NATTRANS-RUNTIME",
+    "command": [
+      "python3",
+      "-P",
+      "test/nattrans_runtime.py"
+    ],
+    "watchdog_seconds": 900,
+    "exit_code": 2,
+    "elapsed_seconds": 360.1249042497948,
+    "passed": false,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "eec3e6c0a2640377f90329ec4a88668d4e1f1ed211f35253f5a8e1fd39021223"
+  }
+]

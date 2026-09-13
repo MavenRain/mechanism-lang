@@ -1,0 +1,1 @@
+PRELUDE-CONGRUENCE-FAIL mismatch: the term has type (Lan SMu Result [(Out SPi w point A (APt w y) f)] (Sec SColl 2 [ => B;  => (Out SPi w point A (APt w x) f)])) and the expected type is (Lan SMu Result [(Out SPi w point A (APt w x) f)] (Sec SColl 2 [ => B;  => (Out SPi w point A (APt w x) f)]))

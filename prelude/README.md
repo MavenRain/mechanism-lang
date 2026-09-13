@@ -126,6 +126,11 @@ renames and rechecks the complete group.  The executable clients in
 from an empty environment.  See `dev/M0-STAGE-C-PRENEX-GROUPS.md` for
 grammar, naming and validation.
 
+Symbolic members elaborate and check in one ordered pass through the
+family catalog.  Closed specialization still rechecks every member.
+See `dev/M0-STAGE-C-TEMPLATE-CHECKING.md` for the callback contract
+and declaration cost measurements.
+
 ## Categories
 
 `cat/category.mech` declares the MechCategory group with two Type-level

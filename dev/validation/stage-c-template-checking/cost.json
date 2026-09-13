@@ -1,0 +1,106 @@
+{
+  "driver_sha256": "201f2df57de075611b26ebba905fd4c97f8162879e74291ab40a209c91b9edab",
+  "executables": {
+    "after": "716cb6103c8f007f5cc3479aa4a7f0254ab139c93f393d010ad587b36ebeb6c6",
+    "before": "0a84754328079a32dc5582aa8d98d6f87c477016b2459aeefc070d7267189dc3"
+  },
+  "runs": [
+    {
+      "allocated_words": 2214413436,
+      "checked": true,
+      "compiler": "before",
+      "cpu_seconds": 3.091241,
+      "entries": 0,
+      "families": 0,
+      "polls": 5694720,
+      "repetition": 1,
+      "scope": "functors",
+      "wall_seconds": 4.193496165797114
+    },
+    {
+      "allocated_words": 1671785048,
+      "checked": true,
+      "compiler": "after",
+      "cpu_seconds": 2.500165,
+      "entries": 0,
+      "families": 0,
+      "polls": 4464293,
+      "repetition": 1,
+      "scope": "functors",
+      "wall_seconds": 4.2042240826413035
+    },
+    {
+      "allocated_words": 1671785048,
+      "checked": true,
+      "compiler": "after",
+      "cpu_seconds": 2.083844,
+      "entries": 0,
+      "families": 0,
+      "polls": 4464293,
+      "repetition": 2,
+      "scope": "functors",
+      "wall_seconds": 2.45533479237929
+    },
+    {
+      "allocated_words": 2214413436,
+      "checked": true,
+      "compiler": "before",
+      "cpu_seconds": 2.74613,
+      "entries": 0,
+      "families": 0,
+      "polls": 5694720,
+      "repetition": 2,
+      "scope": "functors",
+      "wall_seconds": 2.9225605418905616
+    },
+    {
+      "allocated_words": 28710148193,
+      "checked": true,
+      "compiler": "before",
+      "cpu_seconds": 38.638941,
+      "entries": 0,
+      "families": 0,
+      "polls": 74719726,
+      "repetition": 1,
+      "scope": "full",
+      "wall_seconds": 55.30508679198101
+    },
+    {
+      "allocated_words": 19908735939,
+      "checked": true,
+      "compiler": "after",
+      "cpu_seconds": 31.515344,
+      "entries": 0,
+      "families": 0,
+      "polls": 55248999,
+      "repetition": 1,
+      "scope": "full",
+      "wall_seconds": 91.45759070897475
+    },
+    {
+      "allocated_words": 19908735939,
+      "checked": true,
+      "compiler": "after",
+      "cpu_seconds": 54.465765,
+      "entries": 0,
+      "families": 0,
+      "polls": 55248999,
+      "repetition": 2,
+      "scope": "full",
+      "wall_seconds": 157.30379833420739
+    },
+    {
+      "allocated_words": 28710148193,
+      "checked": true,
+      "compiler": "before",
+      "cpu_seconds": 64.948273,
+      "entries": 0,
+      "families": 0,
+      "polls": 74719726,
+      "repetition": 2,
+      "scope": "full",
+      "wall_seconds": 238.5852875825949
+    }
+  ],
+  "source_sha256": "969062d0b1bdf2d4bdc06439c3e1ce35cd2cec4831ac09e89bf4c2e970c3f5d4"
+}

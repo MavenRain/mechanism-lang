@@ -1,0 +1,464 @@
+{
+  "passes": 37,
+  "failures": [
+    "DEPENDENT-CLOSURE-RUNTIME",
+    "PRELUDE-CATEGORY-ACCESSORS",
+    "PRELUDE-FUNCTOR-RUNTIME",
+    "PRELUDE-LEFT-KAN-RUNTIME",
+    "PRELUDE-NATTRANS",
+    "PRELUDE-NATTRANS-RUNTIME",
+    "TRUSTED-LINES"
+  ],
+  "verdicts": [
+    {
+      "name": "BUILD",
+      "status": "PASS"
+    },
+    {
+      "name": "PIN",
+      "status": "PASS"
+    },
+    {
+      "name": "PIN-DELTA",
+      "status": "PASS"
+    },
+    {
+      "name": "R0-COUNT",
+      "status": "PASS"
+    },
+    {
+      "name": "R0-AUDIT",
+      "status": "PASS"
+    },
+    {
+      "name": "SUITE-KERNEL",
+      "status": "PASS"
+    },
+    {
+      "name": "LEVELS",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX-FAMILIES",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX-GROUPS",
+      "status": "PASS"
+    },
+    {
+      "name": "SUITE-SURFACE",
+      "status": "PASS"
+    },
+    {
+      "name": "SUITE-WASM",
+      "status": "PASS"
+    },
+    {
+      "name": "IMPORT-GRAMMAR",
+      "status": "PASS"
+    },
+    {
+      "name": "IMPORT-CLI",
+      "status": "PASS"
+    },
+    {
+      "name": "CORPUS-UAT",
+      "status": "PASS"
+    },
+    {
+      "name": "PARITY-COUNTS",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE",
+      "status": "PASS"
+    },
+    {
+      "name": "EQUALITY",
+      "status": "PASS"
+    },
+    {
+      "name": "FAMILY-POLY",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-POLY",
+      "status": "PASS"
+    },
+    {
+      "name": "FAMILY-MEMBERS",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-TRANSPORT",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-EQUALITY-OPS",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-DEPENDENT",
+      "status": "PASS"
+    },
+    {
+      "name": "FAMILY-GROUPS",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-CONGRUENCE",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-CATEGORY",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-FUNCTOR",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-NATTRANS",
+      "status": "FAIL"
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN",
+      "status": "PASS"
+    },
+    {
+      "name": "EQUALITY-RUNTIME",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX-RUNTIME",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX-FAMILIES-RUNTIME",
+      "status": "PASS"
+    },
+    {
+      "name": "PRENEX-GROUPS-RUNTIME",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "status": "PASS"
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "status": "FAIL"
+    },
+    {
+      "name": "DEPENDENT-CLOSURE-RUNTIME",
+      "status": "FAIL"
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "status": "FAIL"
+    },
+    {
+      "name": "PRELUDE-NATTRANS-RUNTIME",
+      "status": "FAIL"
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-RUNTIME",
+      "status": "FAIL"
+    },
+    {
+      "name": "AXIOMS",
+      "status": "PASS"
+    },
+    {
+      "name": "MAP-INVENTORY",
+      "status": "PASS"
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "status": "FAIL"
+    },
+    {
+      "name": "DENOMINATORS",
+      "status": "PASS"
+    }
+  ],
+  "measurements": [
+    {
+      "name": "BUILD",
+      "tier": "SLOW",
+      "elapsed_ms": 817.383,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN",
+      "tier": "FAST",
+      "elapsed_ms": 247.57,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN-DELTA",
+      "tier": "MED",
+      "elapsed_ms": 2255.162,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-COUNT",
+      "tier": "FAST",
+      "elapsed_ms": 706.205,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-AUDIT",
+      "tier": "FAST",
+      "elapsed_ms": 590.161,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-KERNEL",
+      "tier": "SUITE",
+      "elapsed_ms": 1341.789,
+      "exit_code": 0
+    },
+    {
+      "name": "LEVELS",
+      "tier": "FAST",
+      "elapsed_ms": 761.386,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX",
+      "tier": "FAST",
+      "elapsed_ms": 177.84,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES",
+      "tier": "FAST",
+      "elapsed_ms": 50.089,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 50.51,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-SURFACE",
+      "tier": "FAST",
+      "elapsed_ms": 458.169,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-WASM",
+      "tier": "SUITE",
+      "elapsed_ms": 6143.383,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-GRAMMAR",
+      "tier": "MED",
+      "elapsed_ms": 1828.902,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-CLI",
+      "tier": "FAST",
+      "elapsed_ms": 351.055,
+      "exit_code": 0
+    },
+    {
+      "name": "CORPUS-UAT",
+      "tier": "MED",
+      "elapsed_ms": 2650.174,
+      "exit_code": 0
+    },
+    {
+      "name": "PARITY-COUNTS",
+      "tier": "MED",
+      "elapsed_ms": 1516.344,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE",
+      "tier": "FAST",
+      "elapsed_ms": 662.075,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY",
+      "tier": "FAST",
+      "elapsed_ms": 532.128,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 96.536,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 482.488,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-MEMBERS",
+      "tier": "FAST",
+      "elapsed_ms": 66.469,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-TRANSPORT",
+      "tier": "FAST",
+      "elapsed_ms": 451.422,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-EQUALITY-OPS",
+      "tier": "FAST",
+      "elapsed_ms": 494.79,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-DEPENDENT",
+      "tier": "FAST",
+      "elapsed_ms": 508.438,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 34.633,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CONGRUENCE",
+      "tier": "FAST",
+      "elapsed_ms": 74.431,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY",
+      "tier": "CATEGORY",
+      "elapsed_ms": 228640.216,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR",
+      "tier": "CATEGORY",
+      "elapsed_ms": 450657.683,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS",
+      "tier": "SUITE",
+      "elapsed_ms": 300149.155,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN",
+      "tier": "SUITE",
+      "elapsed_ms": 249776.24,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1326.131,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1021.261,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1359.344,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1550.058,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 329329.932,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 214517.828,
+      "exit_code": 2
+    },
+    {
+      "name": "DEPENDENT-CLOSURE-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 31827.607,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210676.723,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-NATTRANS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210422.687,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 211197.439,
+      "exit_code": 2
+    },
+    {
+      "name": "AXIOMS",
+      "tier": "FAST",
+      "elapsed_ms": 2010.84,
+      "exit_code": 0
+    },
+    {
+      "name": "MAP-INVENTORY",
+      "tier": "MED",
+      "elapsed_ms": 10176.394,
+      "exit_code": 0
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "tier": "FAST",
+      "elapsed_ms": 123.05,
+      "exit_code": 1
+    },
+    {
+      "name": "DENOMINATORS",
+      "tier": "MED",
+      "elapsed_ms": 284.855,
+      "exit_code": 0
+    }
+  ],
+  "remaining_failures_after_rechecks": [
+    "PRELUDE-CATEGORY-ACCESSORS",
+    "PRELUDE-FUNCTOR-RUNTIME",
+    "PRELUDE-LEFT-KAN-RUNTIME",
+    "PRELUDE-NATTRANS",
+    "PRELUDE-NATTRANS-RUNTIME",
+    "TRUSTED-LINES"
+  ]
+}

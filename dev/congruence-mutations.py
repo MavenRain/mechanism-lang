@@ -61,10 +61,8 @@ controls = [
      "family_groups", "FAMILY-GROUPS-FAIL ordered-families-members-and-renaming:"
      " mismatch: the name Second is already declared"),
     ("C-CONG-M4", groups,
-     'let* _checked = check_members budget catalog ~arity symbolic members in\n'
-     '      Ok ((family.fam_name, { arity; family; ctors; companions; members }) :: catalog)',
-     'let* _checked = Ok symbolic in\n'
-     '      Ok ((family.fam_name, { arity; family; ctors; companions; members }) :: catalog)',
+     'let* checked = check_members budget catalog ~arity symbolic [member] in',
+     'let* checked = Ok symbolic in',
      "family_groups", "FAMILY-GROUPS-FAIL member-family-collision: expected refusal:"
      " mismatch: the name Second is already declared"),
     ("C-CONG-M5", library,
@@ -95,6 +93,27 @@ controls = [
      '          let* provisional = Check.declare_family ~budget globals family in',
      "family_groups", "FAMILY-GROUPS-FAIL target-companion-collision-atomic: expected refusal:"
      " mismatch: the name One_Second is already declared"),
+    ("C-CONG-M10", groups,
+     'let* checked = check_members budget catalog ~arity symbolic [member] in',
+     'let* checked =\n'
+     '          if occupied symbolic catalog member.Check.d_name then Error (collision member.d_name)\n'
+     '          else\n'
+     '            let* body = member.d_body |> Option.to_result\n'
+     '              ~none:(Check.missing_body member.d_name) in\n'
+     '            Ok (Global.add member.d_name (Global.Def { Global.ty = member.d_ty;\n'
+     '              def = body; reducible = true; rec_arg = None; partial = false }) symbolic) in',
+     "family_groups", "FAMILY-GROUPS-FAIL member-body: expected refusal:"
+     " mismatch: the term has type (Lan SMu First"),
+    ("C-CONG-M11", groups,
+     'let* member = elaborate symbolic in', 'let* member = elaborate globals in',
+     "family_groups", "FAMILY-GROUPS-FAIL callback-order-and-parity: mismatch:"
+     " callback saw an incomplete family"),
+    ("C-CONG-M12", groups,
+     '        let* () = poll budget in\n'
+     '        let* member = elaborate symbolic in',
+     '        let* member = elaborate symbolic in',
+     "family_groups", "FAMILY-GROUPS-FAIL callback-budget-stops-at-entry:"
+     " the first callback ran before the member poll"),
 ]
 
 reports = []
