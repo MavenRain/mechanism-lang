@@ -1,0 +1,109 @@
+PASS BUILD
+PASS PIN pin=936a43a92dd59a04698648f24fa5ae94cdb532df gitlink=936a43a92dd59a04698648f24fa5ae94cdb532df head=936a43a92dd59a04698648f24fa5ae94cdb532df want=936a43a92dd59a04698648f24fa5ae94cdb532df
+PASS PIN-DELTA
+PASS R0-COUNT
+PASS R0-AUDIT
+PASS SUITE-KERNEL
+PASS LEVELS
+PASS PRENEX
+PASS PRENEX-FAMILIES
+PASS PRENEX-GROUPS
+PASS TEMPLATE-COMPOSITION
+PASS SUITE-SURFACE
+PASS SUITE-WASM
+PASS IMPORT-GRAMMAR
+PASS IMPORT-CLI
+PASS CORPUS-UAT
+PASS PARITY-COUNTS
+PASS PRELUDE
+PASS EQUALITY
+PASS FAMILY-POLY
+PASS PRELUDE-POLY
+PASS FAMILY-MEMBERS
+PASS PRELUDE-TRANSPORT
+PASS PRELUDE-EQUALITY-OPS
+PASS PRELUDE-DEPENDENT
+PASS FAMILY-GROUPS
+PASS PRELUDE-CONGRUENCE
+PASS TEMPLATE-COST
+FAIL PRELUDE-CATEGORY
+
+FAIL PRELUDE-FUNCTOR
+
+PASS PRELUDE-HETEROGENEOUS-FUNCTOR
+PASS PRELUDE-NATTRANS
+PASS PRELUDE-LEFT-KAN
+PASS EQUALITY-RUNTIME
+PASS PRENEX-RUNTIME
+PASS PRENEX-FAMILIES-RUNTIME
+PASS PRENEX-GROUPS-RUNTIME
+PASS TEMPLATE-COMPOSITION-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME
+FAIL PRELUDE-CATEGORY-RUNTIME
+PRELUDE-CATEGORY-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-znakc60e/mutation.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-znakc60e', 'categoryPayload']' timed out after 210 seconds
+FAIL PRELUDE-CATEGORY-ACCESSORS
+PRELUDE-CATEGORY-ACCESSORS FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-er4npcit/original.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-er4npcit', 'categoryPayload', 'categoryOther']' timed out after 210 seconds
+PASS DEPENDENT-CLOSURE-RUNTIME
+FAIL PRELUDE-FUNCTOR-RUNTIME
+PRELUDE-FUNCTOR-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-functor-9go8fwru/original/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-functor-9go8fwru/original', 'objectIdentity', 'objectForward', 'objectReverse', 'mapIdentity', 'mapForward', 'mapReverse']' timed out after 210 seconds
+FAIL PRELUDE-NATTRANS-RUNTIME
+PRELUDE-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-ft8_s0oy/mutation/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-ft8_s0oy/mutation', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'rightValue', 'leftValue', 'leftOther']' timed out after 210 seconds
+FAIL PRELUDE-LEFT-KAN-RUNTIME
+PRELUDE-LEFT-KAN-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-8mikwtq_/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-8mikwtq_', 'lanUnitValue', 'lanMapValue', 'lanDescValue', 'lanDescOther', 'lanDescObject', 'lanDescSecond', 'lanUnitValueChanged', 'lanMapValueChanged', 'lanDescValueChanged', 'lanDescOtherChanged', 'lanDescObjectChanged', 'lanDescSecondChanged']' timed out after 210 seconds
+PASS AXIOMS
+PASS MAP-INVENTORY
+FAIL TRUSTED-LINES
+TRUSTED-LINES kernel=4208/3000 encoder=246/900 FAIL
+PASS DENOMINATORS denominators.json: OK
+
+MEASURE BUILD tier=SLOW elapsed_ms=494.905 exit=0
+MEASURE PIN tier=FAST elapsed_ms=333.910 exit=0
+MEASURE PIN-DELTA tier=MED elapsed_ms=1602.108 exit=0
+MEASURE R0-COUNT tier=FAST elapsed_ms=477.801 exit=0
+MEASURE R0-AUDIT tier=FAST elapsed_ms=500.698 exit=0
+MEASURE SUITE-KERNEL tier=SUITE elapsed_ms=623.272 exit=0
+MEASURE LEVELS tier=FAST elapsed_ms=214.477 exit=0
+MEASURE PRENEX tier=FAST elapsed_ms=33.777 exit=0
+MEASURE PRENEX-FAMILIES tier=FAST elapsed_ms=37.832 exit=0
+MEASURE PRENEX-GROUPS tier=FAST elapsed_ms=37.105 exit=0
+MEASURE TEMPLATE-COMPOSITION tier=MED elapsed_ms=3753.417 exit=0
+MEASURE SUITE-SURFACE tier=FAST elapsed_ms=60.442 exit=0
+MEASURE SUITE-WASM tier=SUITE elapsed_ms=12320.388 exit=0
+MEASURE IMPORT-GRAMMAR tier=MED elapsed_ms=4434.792 exit=0
+MEASURE IMPORT-CLI tier=FAST elapsed_ms=890.197 exit=0
+MEASURE CORPUS-UAT tier=MED elapsed_ms=15426.340 exit=0
+MEASURE PARITY-COUNTS tier=MED elapsed_ms=4015.586 exit=0
+MEASURE PRELUDE tier=FAST elapsed_ms=74.153 exit=0
+MEASURE EQUALITY tier=FAST elapsed_ms=35.934 exit=0
+MEASURE FAMILY-POLY tier=FAST elapsed_ms=40.045 exit=0
+MEASURE PRELUDE-POLY tier=FAST elapsed_ms=41.694 exit=0
+MEASURE FAMILY-MEMBERS tier=FAST elapsed_ms=34.680 exit=0
+MEASURE PRELUDE-TRANSPORT tier=FAST elapsed_ms=49.857 exit=0
+MEASURE PRELUDE-EQUALITY-OPS tier=FAST elapsed_ms=78.907 exit=0
+MEASURE PRELUDE-DEPENDENT tier=FAST elapsed_ms=78.293 exit=0
+MEASURE FAMILY-GROUPS tier=FAST elapsed_ms=57.631 exit=0
+MEASURE PRELUDE-CONGRUENCE tier=FAST elapsed_ms=57.198 exit=0
+MEASURE TEMPLATE-COST tier=MED elapsed_ms=162.717 exit=0
+MEASURE PRELUDE-CATEGORY tier=CATEGORY elapsed_ms=900101.623 exit=124
+MEASURE PRELUDE-FUNCTOR tier=CATEGORY elapsed_ms=900301.970 exit=124
+MEASURE PRELUDE-HETEROGENEOUS-FUNCTOR tier=SLOW elapsed_ms=9496.244 exit=0
+MEASURE PRELUDE-NATTRANS tier=SUITE elapsed_ms=283255.908 exit=0
+MEASURE PRELUDE-LEFT-KAN tier=SUITE elapsed_ms=161911.946 exit=0
+MEASURE EQUALITY-RUNTIME tier=MED elapsed_ms=1245.929 exit=0
+MEASURE PRENEX-RUNTIME tier=MED elapsed_ms=701.100 exit=0
+MEASURE PRENEX-FAMILIES-RUNTIME tier=MED elapsed_ms=773.197 exit=0
+MEASURE PRENEX-GROUPS-RUNTIME tier=MED elapsed_ms=719.647 exit=0
+MEASURE TEMPLATE-COMPOSITION-RUNTIME tier=SLOW elapsed_ms=895.636 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME tier=SLOW elapsed_ms=7736.576 exit=0
+MEASURE PRELUDE-CATEGORY-RUNTIME tier=CATEGORY elapsed_ms=397972.977 exit=2
+MEASURE PRELUDE-CATEGORY-ACCESSORS tier=CATEGORY elapsed_ms=210283.997 exit=2
+MEASURE DEPENDENT-CLOSURE-RUNTIME tier=MED elapsed_ms=9435.371 exit=0
+MEASURE PRELUDE-FUNCTOR-RUNTIME tier=CATEGORY elapsed_ms=210296.785 exit=2
+MEASURE PRELUDE-NATTRANS-RUNTIME tier=CATEGORY elapsed_ms=402740.072 exit=2
+MEASURE PRELUDE-LEFT-KAN-RUNTIME tier=SUITE elapsed_ms=210450.890 exit=2
+MEASURE AXIOMS tier=FAST elapsed_ms=1915.142 exit=0
+MEASURE MAP-INVENTORY tier=MED elapsed_ms=16905.567 exit=0
+MEASURE TRUSTED-LINES tier=FAST elapsed_ms=125.318 exit=1
+MEASURE DENOMINATORS tier=MED elapsed_ms=214.287 exit=0
+
+GATES-FAIL

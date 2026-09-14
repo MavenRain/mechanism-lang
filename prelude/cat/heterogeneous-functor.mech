@@ -1,0 +1,59 @@
+-- Load category-core.mech before this file.
+-- Source and target keep independent universe pairs and equality families.
+poly (u, v, w, z) group MechHeterogeneousFunctor where
+specialize MechCategoryCore (u, v) as Source
+specialize MechCategoryCore (w, z) as Target
+
+def Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    Source_Category C -> Target_Category D -> Sort (max (max (succ u) (succ v)) (max (succ w) (succ z))) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Source_Hom C c x y -> Target_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Target (Target_Hom D d (obj x) (obj x))
+      (map x x (Source_id C c x)) (Target_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+      Target (Target_Hom D d (obj x) (obj z))
+        (map x z (Source_comp C c x y z f g))
+        (Target_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def functorObj : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.1
+
+def functorMap : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Source_Hom C c x y ->
+    Target_Hom D d (functorObj C D c d F x) (functorObj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.1
+
+def functorMapId : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> Target (Target_Hom D d (F.1 x) (F.1 x))
+      (functorMap C D c d F x x (Source_id C c x)) (Target_id D d (F.1 x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.2.1
+
+def functorMapComp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+    Target (Target_Hom D d (F.1 x) (F.1 z))
+      (functorMap C D c d F x z (Source_comp C c x y z f g))
+      (Target_comp D d (F.1 x) (F.1 y) (F.1 z)
+        (functorMap C D c d F x y f) (functorMap C D c d F y z g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.2.2
+
+-- Congruence crosses both the universe and nominal equality boundary.
+def eqCongr : (0 A : Sort (succ v)) -> (0 B : Sort (succ z)) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Source A x y -> Target B (f x) (f y) :=
+  fun (0 A : Sort (succ v)) (0 B : Sort (succ z)) (0 f : A -> B)
+      (0 x : A) (0 y : A) (proof : Source A x y) =>
+    match proof as self in Source right return Target B (f x) (f right) with
+    | categoryRefl => categoryRefl
+end

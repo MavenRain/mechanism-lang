@@ -1,0 +1,396 @@
+{
+  "version": 1,
+  "base": "75b835e64b73348d7303a4c207b946959bb17bb0",
+  "gate_capture": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-FltVxG",
+  "passes": 41,
+  "failures": [
+    "FAIL PRELUDE-CATEGORY",
+    "FAIL PRELUDE-FUNCTOR",
+    "FAIL PRELUDE-CATEGORY-RUNTIME",
+    "FAIL PRELUDE-CATEGORY-ACCESSORS",
+    "FAIL PRELUDE-FUNCTOR-RUNTIME",
+    "FAIL PRELUDE-NATTRANS-RUNTIME",
+    "FAIL PRELUDE-LEFT-KAN-RUNTIME",
+    "FAIL TRUSTED-LINES"
+  ],
+  "measurements": [
+    {
+      "name": "BUILD",
+      "tier": "SLOW",
+      "elapsed_ms": 494.905,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN",
+      "tier": "FAST",
+      "elapsed_ms": 333.91,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN-DELTA",
+      "tier": "MED",
+      "elapsed_ms": 1602.108,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-COUNT",
+      "tier": "FAST",
+      "elapsed_ms": 477.801,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-AUDIT",
+      "tier": "FAST",
+      "elapsed_ms": 500.698,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-KERNEL",
+      "tier": "SUITE",
+      "elapsed_ms": 623.272,
+      "exit_code": 0
+    },
+    {
+      "name": "LEVELS",
+      "tier": "FAST",
+      "elapsed_ms": 214.477,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX",
+      "tier": "FAST",
+      "elapsed_ms": 33.777,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES",
+      "tier": "FAST",
+      "elapsed_ms": 37.832,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 37.105,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COMPOSITION",
+      "tier": "MED",
+      "elapsed_ms": 3753.417,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-SURFACE",
+      "tier": "FAST",
+      "elapsed_ms": 60.442,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-WASM",
+      "tier": "SUITE",
+      "elapsed_ms": 12320.388,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-GRAMMAR",
+      "tier": "MED",
+      "elapsed_ms": 4434.792,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-CLI",
+      "tier": "FAST",
+      "elapsed_ms": 890.197,
+      "exit_code": 0
+    },
+    {
+      "name": "CORPUS-UAT",
+      "tier": "MED",
+      "elapsed_ms": 15426.34,
+      "exit_code": 0
+    },
+    {
+      "name": "PARITY-COUNTS",
+      "tier": "MED",
+      "elapsed_ms": 4015.586,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE",
+      "tier": "FAST",
+      "elapsed_ms": 74.153,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY",
+      "tier": "FAST",
+      "elapsed_ms": 35.934,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 40.045,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 41.694,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-MEMBERS",
+      "tier": "FAST",
+      "elapsed_ms": 34.68,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-TRANSPORT",
+      "tier": "FAST",
+      "elapsed_ms": 49.857,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-EQUALITY-OPS",
+      "tier": "FAST",
+      "elapsed_ms": 78.907,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-DEPENDENT",
+      "tier": "FAST",
+      "elapsed_ms": 78.293,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 57.631,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CONGRUENCE",
+      "tier": "FAST",
+      "elapsed_ms": 57.198,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COST",
+      "tier": "MED",
+      "elapsed_ms": 162.717,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY",
+      "tier": "CATEGORY",
+      "elapsed_ms": 900101.623,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-FUNCTOR",
+      "tier": "CATEGORY",
+      "elapsed_ms": 900301.97,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "tier": "SLOW",
+      "elapsed_ms": 9496.244,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS",
+      "tier": "SUITE",
+      "elapsed_ms": 283255.908,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN",
+      "tier": "SUITE",
+      "elapsed_ms": 161911.946,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1245.929,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 701.1,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 773.197,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 719.647,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COMPOSITION-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 895.636,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 7736.576,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 397972.977,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210283.997,
+      "exit_code": 2
+    },
+    {
+      "name": "DEPENDENT-CLOSURE-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 9435.371,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210296.785,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-NATTRANS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 402740.072,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 210450.89,
+      "exit_code": 2
+    },
+    {
+      "name": "AXIOMS",
+      "tier": "FAST",
+      "elapsed_ms": 1915.142,
+      "exit_code": 0
+    },
+    {
+      "name": "MAP-INVENTORY",
+      "tier": "MED",
+      "elapsed_ms": 16905.567,
+      "exit_code": 0
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "tier": "FAST",
+      "elapsed_ms": 125.318,
+      "exit_code": 1
+    },
+    {
+      "name": "DENOMINATORS",
+      "tier": "MED",
+      "elapsed_ms": 214.287,
+      "exit_code": 0
+    }
+  ],
+  "new_gates": [
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "tier": "SLOW",
+      "elapsed_ms": 9496.244,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 7736.576,
+      "exit_code": 0
+    }
+  ],
+  "mutation_controls": 6,
+  "mutation_replay_passed": true,
+  "executable_sha256": "f799e406226008b5a8f47117aa4fa4842f67b9dda421724d55d29bd952722bea",
+  "build_capture": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-tXQD0X",
+  "notes": [
+    "No compiler, vendor, mapping, denominator or trusted-line bound changes.",
+    "The full battery ran under heavy shared machine load."
+  ],
+  "executables": {
+    "_build/default/test/prelude_heterogeneous_functor.exe": "f799e406226008b5a8f47117aa4fa4842f67b9dda421724d55d29bd952722bea",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a",
+    "_build/default/bin/mech.exe": "ab8b603cf3cc5acac8e9cf9c07f3e5e6a01fab526a4c9bb59999dc4fb85e1162"
+  },
+  "reruns": [
+    {
+      "name": "category",
+      "passed": true,
+      "elapsed_ms": 551434,
+      "exit_code": 0,
+      "limit_seconds": 900
+    },
+    {
+      "name": "functor",
+      "passed": true,
+      "elapsed_ms": 517899,
+      "exit_code": 0,
+      "limit_seconds": 900
+    }
+  ],
+  "remaining_failures": [
+    "FAIL PRELUDE-CATEGORY-RUNTIME",
+    "FAIL PRELUDE-CATEGORY-ACCESSORS",
+    "FAIL PRELUDE-FUNCTOR-RUNTIME",
+    "FAIL PRELUDE-NATTRANS-RUNTIME",
+    "FAIL PRELUDE-LEFT-KAN-RUNTIME",
+    "FAIL TRUSTED-LINES"
+  ],
+  "internal_timeouts": [
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "seconds": 210
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "seconds": 210
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "seconds": 210
+    },
+    {
+      "name": "PRELUDE-NATTRANS-RUNTIME",
+      "seconds": 210
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-RUNTIME",
+      "seconds": 210
+    }
+  ],
+  "review_delta": {
+    "date": "2026-09-13",
+    "reason": "Review round 1 fixed L2-1, L2-2, L1-1 and L3-4 in the suite source, so the captured executable hash is stale for the fixed tree. The captured row stays as recorded.",
+    "paths": [
+      {
+        "path": "test/prelude_heterogeneous_functor.ml",
+        "captured": "3af19faf28fb2d24b13230dbf0fa86398501f14903e6932349985c65ac3c96e2",
+        "final": "ef397753e8f55e0e5133aacf21d5ad706327babac4550d16c517167ef25c8039"
+      }
+    ]
+  }
+}

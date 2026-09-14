@@ -895,3 +895,17 @@ Final reports, source hashes and output streams are retained under
 Review round 2 replayed the seven composition controls and the twelve
 congruence controls with no anchor change.  Both replays report every
 control killed.
+
+## Stage C / U1 heterogeneous functors, review round 1 (2026-09-14)
+
+| Control | Change | Expected refusal |
+| --- | --- | --- |
+| source-hom | Moved from `Source_Category C` to the `Source_Hom C c x y` argument of `map`, with its endpoints swapped | Mismatch, distinct from target-object-level |
+| generic-sort | `Type 3` sort pin of the generic fixture becomes `Type 4` | Mismatch |
+| negative-corpus | `wrong-object.mech` becomes a correct definition | `wrong-object: expected refusal` |
+
+The replay now holds eight controls. It also copies
+`prelude/cat/category.mech`, which the suite reads for the mirror
+check, and it asserts that the eight control outputs are pairwise
+distinct. The `source-category` control had the same output as
+`target-object-level`.

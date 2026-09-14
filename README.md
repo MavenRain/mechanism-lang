@@ -45,8 +45,8 @@ The focused suites and mutation controls pass.  Acceptance remains
 pending the trusted-kernel limit ruling: the active kernel exceeds the
 unchanged 3,000-line bound, so TRUSTED-LINES fails.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The latest full battery also records six behavior-leg expiries; see
-`dev/validation/stage-c-template-checking/` for the results and reruns.
+The latest full battery and its failed checks are recorded in
+`dev/validation/port-uat-u1-heterogeneous-functor/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -214,10 +214,14 @@ Their factorization and uniqueness laws are checked, and
 desc_unique compares any two mediators that factor the same cocone.
 See `dev/PORT-UAT-U1-LEFT-KAN.md` for the contracts and validation.
 
-Stage C remains open on functors across separate universe pairs
-and checked source-type parity.
-Checked template composition now supplies a prerequisite for that
-work.  A `poly (...) group NAME where ... end` block imports preceding
+`prelude/cat/category-core.mech` and `prelude/cat/heterogeneous-functor.mech`
+supply a functor template at four independent universe levels, with object
+and arrow accessors, both preservation laws and cross-family congruence.
+See `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md` for usage and validation.
+Stage C remains open on shared category instances for heterogeneous
+functor composition, heterogeneous natural transformations and left Kan
+extensions, and checked source-type parity.
+Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete
 group.  See `dev/M0-STAGE-C-COMPOSITION.md` for syntax and limits.

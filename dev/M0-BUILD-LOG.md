@@ -2495,3 +2495,159 @@ Replays and final check.  Item 10 ends `{"passed": true, "killed": 7,
 ladder outputs ends rc=0 with 32 OK rows.  The eight expired legs count
 as rechecked, so 38 plus 8 meets the floor of 46, and the battery item
 is judged by the gates log.
+
+
+## Stage C / U1 heterogeneous functors (2026-09-13)
+
+Base 75b835e. Added a public functor template with independent source
+and target object and hom universe levels. It supplies object and arrow
+accessors, both preservation laws and cross-family congruence. A small
+MechCategoryCore template carries the existing category representation
+and first nine operations, with the equality family renamed, so the
+new pair does not import the same-pair natural-transformation and left
+Kan APIs. The old category source keeps its bytes.
+
+The kernel suite checks three universe pairs, 90 definitions, three
+computations, ten typed negative fixtures, arity and budget refusal.
+Symbolic templates check in Global.empty and install no ordinary
+globals. Closed checks introduce no trusted entries. Equal universe
+arguments do not identify the nominal source and target families.
+Runtime tests use source and target objects in Type 0 and Type 1 while
+their hom types move in the opposite direction, then compare three
+exports at two payloads on the kernel, Node and Wasmtime.
+
+Review round 1 made the checks stronger. Each of the nine type
+mismatch negatives is matched by a discriminating message substring,
+and not by the error variant alone. The suite compares the first 70
+lines of the core template, with the family renamed, against
+category.mech, so the two copies cannot drift without a red gate. The
+printed instance count is measured by the run. The mutation replay
+holds eight controls with pairwise distinct outputs: the source anchor
+moved to the hom argument of map, one control changes a sort pin of
+the generic fixture, and one control removes the intended refusal of a
+negative fixture.
+
+Build: zero errors and warnings. Both new gates passed in the final
+battery: kernel 9.496 seconds and runtime 7.737
+seconds. Six source mutation controls were detected and the restored
+suite passed. Two controls retain checked functor laws while changing
+computation. The replay's source and executable hashes match the final
+tree. Shell and Python syntax, whitespace, source-prefix comparison
+and the compiler/trust/mapping byte audit passed.
+
+Full battery: 41 of 49 PASS. The failure names are
+PRELUDE-CATEGORY, PRELUDE-FUNCTOR, PRELUDE-CATEGORY-RUNTIME,
+PRELUDE-CATEGORY-ACCESSORS, PRELUDE-FUNCTOR-RUNTIME,
+PRELUDE-NATTRANS-RUNTIME,
+PRELUDE-LEFT-KAN-RUNTIME, TRUSTED-LINES.
+The complete diagnostics and timings are retained in
+dev/validation/port-uat-u1-heterogeneous-functor/. The battery ran under
+heavy shared load, reaching about 102 during the first category suite.
+Its failed gates remain recorded as failures; no watchdog, denominator
+or trusted-line bound was moved. The active kernel remains subject to
+the existing D-A-1 ruling. The two new gates use SLOW (120 seconds),
+with the focused restored kernel-suite measurement of 30.791 seconds
+from the mutation replay.
+
+Standalone reruns after the load fell, with unchanged watchdogs:
+
+- category: PASS, 551.434 seconds, unchanged 900-second limit.
+- functor: PASS, 517.899 seconds, unchanged 900-second limit.
+
+Unresolved after the standalone reruns:
+PRELUDE-CATEGORY-RUNTIME, PRELUDE-CATEGORY-ACCESSORS,
+PRELUDE-FUNCTOR-RUNTIME, PRELUDE-NATTRANS-RUNTIME,
+PRELUDE-LEFT-KAN-RUNTIME, TRUSTED-LINES.
+
+Stage C and U1 remain open on shared category instances for general
+heterogeneous functor identity and composition, heterogeneous natural
+transformations and left Kan extensions, and source-type parity.
+Typed mapping and PRELUDE-CHECKED remain due. No commit was made.
+
+## Stage C / U1 heterogeneous functors review (2026-09-13)
+
+Review of the slice block above. Workflow found 12 raw items, refuted 2,
+kept 7 for the fix round and dropped 3 at the cap.
+
+| id | sev | file:line | title | verdict |
+|---|---|---|---|---|
+| L2-1 | medium | test/prelude_heterogeneous_functor.ml:84 | nine negatives pinned by error variant only, vacuous regression pins | fixed |
+| L2-2 | low | test/prelude_heterogeneous_functor.ml:32 | eager Option.fold ~none: carried a three-arm match | fixed |
+| L1-1 | low | prelude/README.md:211 | mirror claim category-core.mech vs category.mech had no guard | fixed |
+| L3-2 | low | dev/heterogeneous-functor-mutations.py:20 | all four prelude controls died at the first template elaboration | fixed |
+| L3-1 | low | dev/heterogeneous-functor-mutations.py:16 | two of six controls gave the identical refusal | fixed |
+| L3-4 | low | test/prelude_heterogeneous_functor.ml:109 | instances=3 was frozen in the OK line | fixed |
+| L4-2 | low | dev/M0-BUILD-LOG.md:2537 | build log attributed the 30.791 s replay time to both new gates | fixed |
+| L4-1 | - | - | merged into L2-1, same defect | dropped |
+| L1-2 | - | - | cut at the 7 cap, not introduced by this slice | dropped |
+| L3-3 | - | - | cut at the 7 cap, weakest survivor, no present defect | dropped |
+| L4-3 | - | dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md:77-78 | contract wording joins the SLOW watchdog claim to the replay time | refuted |
+| L3-5 | - | dev/gates.sh:244 | kernel gate leg pins no count | refuted |
+
+Refuted reasons, one line each, are in the review work directory. L4-3: the
+two clauses of the cited text carry different explicit subjects and the
+document never calls the replay a battery leg. L3-5: the cited line is the
+house form of every kernel prelude leg in dev/gates.sh, and the row count
+is pinned twice in the tree, once inside the suite and once outside it.
+
+Gate result: battery dev/gates.sh, 49 legs, PASS 48 of 49. The one FAIL is
+`TRUSTED-LINES kernel=4208/3000 encoder=246/900 FAIL`, the inherited
+bound-only failure, never moved. Round 2 battery start load 16.29 (runner
+start 02:54, load averages 12.62 13.57 15.88, runner end 03:18).
+
+The three OK lines, from the final staged bytes:
+
+```
+PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12
+PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME OK cases=3 hosts=3 mutation=1
+HETEROGENEOUS-FUNCTOR-MUTATIONS passed=True controls=8 restored=1
+```
+
+Pin: vendor/kanon at 936a43a92dd59a04698648f24fa5ae94cdb532df.
+
+Staged paths: 33 before the review edits, 33 after.
+
+The close ladder result is added below this block by the main session,
+which runs it after the closer returns.
+
+Closing ladder. The close ladder ran on 2026-09-14. It launched at
+03:42:49 at load 6.77. It ended with RUNNER-EXIT 0 at 03:59:07 at load
+8.22.
+
+Items 0 to 6 gave rc=0. Item 0 waited for the baseline runner. Item 1
+built the tree. Item 2 read the exe hashes. Item 3 ran the
+heterogeneous functor suite. Item 4 ran the heterogeneous functor
+runtime suite. Item 5 ran the cli probes. Item 6 waited for the load to
+fall. Item 7 ran the battery and gave rc=1. This rc comes from an
+inherited bound, not from a new defect. Item 8 ran the mutation replay
+and gave rc=0.
+
+The ten item 2 hash rows match the round 2 ladder log exactly. A sorted
+diff of the two hash lists gave no output.
+
+The close battery ran dev/gates.sh with 49 legs. It gave PASS 48 of 49.
+The one FAIL row stayed TRUSTED-LINES kernel=4208/3000
+encoder=246/900. This bound is inherited and did not move. The two new
+gates measured PRELUDE-HETEROGENEOUS-FUNCTOR at 3.58 seconds and
+PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME at 3.42 seconds. No leg gave
+exit=124 and no leg timed out, so no standalone rerun was needed.
+
+The mutation replay ended with
+HETEROGENEOUS-FUNCTOR-MUTATIONS passed=True controls=8 restored=1.
+
+Run 1 of verify-final-HF.sh gave one FAIL row, staged paths outside
+the review, naming dev/MUTATION-LOG.md. That FAIL came from an
+allowlist gap in the review's own verify script, not from the tree.
+The repair added dev/MUTATION-LOG.md to the allowlist before run 1b.
+
+Run 1b then gave 30 OK rows and no FAIL row, but it errored on an
+unset rc variable before it could print a VERIFY rc line, because no
+FAIL row set the variable. This is a second, separate defect in the
+review's own script. The repair set rc=0 before the helper functions,
+so the script always reaches its result row.
+
+Run 2 of verify-final-HF.sh gave 30 OK rows, no FAIL row, and one
+NOTE row. The NOTE row read: ladder battery rc=1 in
+ladder-HF-close.log, judged by the gates log check. This is the
+expected inherited bound noted above, not a new defect. The script
+ended with VERIFY rc=0.

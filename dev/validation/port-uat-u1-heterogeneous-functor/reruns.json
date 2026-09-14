@@ -1,0 +1,30 @@
+[
+  {
+    "version": 1,
+    "name": "category",
+    "limit_seconds": 900,
+    "executable_sha256": "f4c5d38e111f6e7066129df4d4d3026f63951d554da50ee880f9f82e2ff551b9",
+    "category_source_sha256": "969062d0b1bdf2d4bdc06439c3e1ce35cd2cec4831ac09e89bf4c2e970c3f5d4",
+    "head": "75b835e64b73348d7303a4c207b946959bb17bb0",
+    "load": "21:47  28 users, load averages: 27.33 27.56 39.12",
+    "elapsed_ms": 551434,
+    "exit_code": 0,
+    "stdout": "PRELUDE-CATEGORY-OK entries=181 computations=7 negatives=9 quotation=3\n",
+    "stderr": "",
+    "passed": true
+  },
+  {
+    "version": 1,
+    "name": "functor",
+    "limit_seconds": 900,
+    "executable_sha256": "351c2e0ff8b6e5d503d42069ae762aba4ca39ab4564c15f61aedf6c8f01fa849",
+    "category_source_sha256": "969062d0b1bdf2d4bdc06439c3e1ce35cd2cec4831ac09e89bf4c2e970c3f5d4",
+    "head": "75b835e64b73348d7303a4c207b946959bb17bb0",
+    "load": "21:47  28 users, load averages: 27.33 27.56 39.12",
+    "elapsed_ms": 517899,
+    "exit_code": 0,
+    "stdout": "PRELUDE-FUNCTOR-OK entries=177 instances=4 computations=7 negatives=8\n",
+    "stderr": "",
+    "passed": true
+  }
+]

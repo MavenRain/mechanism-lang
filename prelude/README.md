@@ -195,3 +195,26 @@ universe arguments.  The composition fixture checks a functor shape
 between those categories.  This is a source-layer prerequisite;
 the public category prelude still uses its existing universe pair.
 See `dev/M0-STAGE-C-COMPOSITION.md`.
+
+## Functors across independent universe pairs
+
+Load `cat/category-core.mech`, then `cat/heterogeneous-functor.mech`.
+`specialize MechHeterogeneousFunctor (0, 1, 2, 3) as Mixed` installs
+`Mixed_Source` and `Mixed_Target` equality families, their category
+operations, and `Mixed_Functor`, `Mixed_functorObj`, `Mixed_functorMap`,
+`Mixed_functorMapId`, `Mixed_functorMapComp` and `Mixed_eqCongr`.
+The four arguments are the source object and hom levels followed by
+the target object and hom levels. Both preservation laws use target
+equality. Congruence eliminates source equality and constructs target
+equality without identifying the two nominal families.
+
+`MechCategoryCore` has the same category representation and first nine
+operations as `MechCategory`, with its equality family renamed. It
+omits the same-pair functor, natural-transformation and left Kan API,
+so composed pairs check only the category foundation they consume.
+The kernel gate compares the first 70 lines of the two files, with the
+family renamed, so the copies cannot drift.
+The existing `cat/category.mech` API remains available. Independent
+pair instances still need a shared middle category for general
+heterogeneous functor composition. See
+`dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md` for the contract and examples.

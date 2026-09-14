@@ -1,0 +1,4 @@
+def bad : Run_Functor Nat High SourceCategory TargetCategory :=
+  (Lift.1, ((fun (0 x : Nat) (0 y : Nat) (f : (0 A : Type 0) -> Nat -> Nat)
+      (n : Nat) => 0),
+    ((fun (0 x : Nat) => categoryRefl), Lift.2.2.2)))

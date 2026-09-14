@@ -1,0 +1,36 @@
+specialize MechHeterogeneousFunctor (0, 1, 2, 3) as Mixed
+specialize MechHeterogeneousFunctor (0, 0, 0, 0) as Equal
+
+def mixedObjects : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Target_Category D) ->
+    Mixed_Functor C D c d -> C -> D := Mixed_functorObj
+def mixedArrows : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Target_Category D) ->
+    (F : Mixed_Functor C D c d) -> (0 x : C) -> (0 y : C) ->
+    Mixed_Source_Hom C c x y -> Mixed_Target_Hom D d (F.1 x) (F.1 y) := Mixed_functorMap
+def mixedSourceHom : (0 C : Type 0) -> (c : Mixed_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 1 := Mixed_Source_Hom
+def mixedTargetHom : (0 D : Type 2) -> (d : Mixed_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 3 := Mixed_Target_Hom
+def mixedFunctorSort : (0 C : Type 0) -> (0 D : Type 2) ->
+    Mixed_Source_Category C -> Mixed_Target_Category D -> Type 3 := Mixed_Functor
+def mixedCongruence : (0 A : Type 1) -> (0 B : Type 3) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Mixed_Source A x y -> Mixed_Target B (f x) (f y) := Mixed_eqCongr
+
+def retainedIdentityLaw : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Target_Category D) ->
+    (F : Mixed_Functor C D c d) -> (0 x : C) ->
+    Mixed_Target (Mixed_Target_Hom D d (F.1 x) (F.1 x))
+      (Mixed_functorMap C D c d F x x (Mixed_Source_id C c x))
+      (Mixed_Target_id D d (F.1 x)) := Mixed_functorMapId
+
+def retainedCompositionLaw : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Target_Category D) ->
+    (F : Mixed_Functor C D c d) -> (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Mixed_Source_Hom C c x y) -> (0 g : Mixed_Source_Hom C c y z) ->
+    Mixed_Target (Mixed_Target_Hom D d (F.1 x) (F.1 z))
+      (Mixed_functorMap C D c d F x z (Mixed_Source_comp C c x y z f g))
+      (Mixed_Target_comp D d (F.1 x) (F.1 y) (F.1 z)
+        (Mixed_functorMap C D c d F x y f) (Mixed_functorMap C D c d F y z g)) :=
+  Mixed_functorMapComp

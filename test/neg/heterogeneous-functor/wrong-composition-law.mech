@@ -1,0 +1,8 @@
+def bad : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Target_Category D) ->
+    (F : Mixed_Functor C D c d) -> Mixed_Functor C D c d :=
+  fun (0 C : Type 0) (0 D : Type 2) (c : Mixed_Source_Category C)
+      (d : Mixed_Target_Category D) (F : Mixed_Functor C D c d) =>
+    (F.1, (F.2.1, (F.2.2.1,
+      (fun (0 x : C) (0 y : C) (0 z : C)
+          (0 f : Mixed_Source_Hom C c x y) (0 g : Mixed_Source_Hom C c y z) => categoryRefl))))

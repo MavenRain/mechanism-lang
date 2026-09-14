@@ -1,0 +1,72 @@
+-- Object and morphism levels move in opposite directions.
+specialize MechHeterogeneousFunctor (0, 1, 1, 0) as Run
+mu High : Type 1 with | high : Nat -> High
+def heterogeneousInput : Nat := 37
+
+def SourceCategory : Run_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (0 A : Type 0) -> Nat -> Nat),
+   ((fun (0 x : Nat) (0 A : Type 0) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (0 A : Type 0) -> Nat -> Nat)
+          (g : (0 A : Type 0) -> Nat -> Nat) (0 A : Type 0) (n : Nat) => g A (f A n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (0 A : Type 0) -> Nat -> Nat)
+            (0 g : (0 A : Type 0) -> Nat -> Nat)
+            (0 h : (0 A : Type 0) -> Nat -> Nat) => categoryRefl))))))
+
+def TargetCategory : Run_Target_Category High :=
+  ((fun (0 x : High) (0 y : High) => Nat -> Nat),
+   ((fun (0 x : High) (n : Nat) => n),
+    ((fun (0 x : High) (0 y : High) (0 z : High)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : High) (0 y : High) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : High) (0 y : High) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : High) (0 x : High) (0 y : High) (0 z : High)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def Lift : Run_Functor Nat High SourceCategory TargetCategory :=
+  ((fun (x : Nat) => high (natAdd x 2)),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (0 A : Type 0) -> Nat -> Nat) => f Nat),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (0 A : Type 0) -> Nat -> Nat)
+          (0 g : (0 A : Type 0) -> Nat -> Nat) => categoryRefl))))
+
+def objectValue : Nat :=
+  match Run_functorObj Nat High SourceCategory TargetCategory Lift heterogeneousInput
+    as self in High return Nat with
+  | high n => n
+def mapValue : Nat :=
+  Run_functorMap Nat High SourceCategory TargetCategory Lift 0 1
+    (fun (0 A : Type 0) (n : Nat) => natAdd n 3) heterogeneousInput
+def compositionValue : Nat :=
+  Run_functorMap Nat High SourceCategory TargetCategory Lift 0 2
+    (Run_Source_comp Nat SourceCategory 0 1 2
+      (fun (0 A : Type 0) (n : Nat) => natAdd n 3)
+      (fun (0 A : Type 0) (n : Nat) => natMul n 2)) heterogeneousInput
+
+def identityLaw : Run_Target (Nat -> Nat)
+    (Run_functorMap Nat High SourceCategory TargetCategory Lift 0 0
+      (Run_Source_id Nat SourceCategory 0))
+    (Run_Target_id High TargetCategory (Lift.1 0)) :=
+  Run_functorMapId Nat High SourceCategory TargetCategory Lift 0
+def compositionLaw : Run_Target (Nat -> Nat)
+    (Run_functorMap Nat High SourceCategory TargetCategory Lift 0 2
+      (Run_Source_comp Nat SourceCategory 0 1 2
+        (fun (0 A : Type 0) (n : Nat) => natAdd n 3)
+        (fun (0 A : Type 0) (n : Nat) => natMul n 2)))
+    (Run_Target_comp High TargetCategory (Lift.1 0) (Lift.1 1) (Lift.1 2)
+      (Run_functorMap Nat High SourceCategory TargetCategory Lift 0 1
+        (fun (0 A : Type 0) (n : Nat) => natAdd n 3))
+      (Run_functorMap Nat High SourceCategory TargetCategory Lift 1 2
+        (fun (0 A : Type 0) (n : Nat) => natMul n 2))) :=
+  Run_functorMapComp Nat High SourceCategory TargetCategory Lift 0 1 2
+    (fun (0 A : Type 0) (n : Nat) => natAdd n 3)
+    (fun (0 A : Type 0) (n : Nat) => natMul n 2)
+
+def crossEquality : Run_Target Nat 7 7 :=
+  Run_eqCongr ((0 A : Type 0) -> Nat) Nat
+    (fun (f : (0 A : Type 0) -> Nat) => f Nat)
+    (fun (0 A : Type 0) => 7) (fun (0 A : Type 0) => 7) categoryRefl

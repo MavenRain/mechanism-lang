@@ -44,10 +44,12 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-13
 
-The base is bfc398b, following committed ordered template checking.
-The current increment adds checked template composition at symbolic
-universe arguments; see `dev/M0-STAGE-C-COMPOSITION.md`.  It supplies
-a prerequisite for categories at separate universe pairs.
+The base is 75b835e, following committed template composition.
+The current increment supplies a lightweight category core and a
+public heterogeneous functor template at independent source and
+target universe pairs. See `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md`.
+Object and arrow accessors, both preservation laws and cross-family
+congruence are checked.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -59,12 +61,14 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
-open on functors across separate universe pairs and source-type
-parity.  Stage D (typed
+open on shared category instances for heterogeneous functor
+composition, heterogeneous natural transformations and left Kan
+extensions, and source-type parity.  Stage D (typed
 mapping) and Stage E (M0-EXIT) have not started.  The map inventory
 holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of 2,477.  The
 gate battery includes PRELUDE-LEFT-KAN and PRELUDE-LEFT-KAN-RUNTIME.
-It also includes TEMPLATE-COMPOSITION and its runtime gate.
+It also includes TEMPLATE-COMPOSITION, PRELUDE-HETEROGENEOUS-FUNCTOR
+and their runtime gates.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
@@ -118,10 +122,14 @@ stay under `ports/` (D-UAT-3).
   increment, `dev/PORT-UAT-U1-NATTRANS.md`, adds NatTrans, idNat,
   vcomp, whiskerRight and whiskerLeft with kernel and runtime gates.
   `dev/PORT-UAT-U1-LEFT-KAN.md` adds LeftKanExtension, its accessors
-  and desc_unique, with kernel and runtime gates.  U1 remains open
-  on separate category universe pairs and source-type parity.
-  Checked template composition now supplies a source-layer
-  prerequisite; see `dev/M0-STAGE-C-COMPOSITION.md`.
+  and desc_unique, with kernel and runtime gates. The heterogeneous
+  functor increment adds independent source and target universe pairs,
+  accessors and checked laws over a lightweight category core; see
+  `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md`. U1 remains open on shared
+  category instances for composition, heterogeneous natural
+  transformations and left Kan extensions, and source-type parity.
+  Checked template composition supplies the source foundation;
+  see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,
   Indiscrete, ConfigSpace, SymmetricGroup, Z2Group and ChoiceRule.
   The last four are framework and land in `prelude/aggregate/`.  The

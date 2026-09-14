@@ -1,0 +1,2 @@
+def bad : Run_Functor Nat High SourceCategory TargetCategory :=
+  (Lift.1, (Lift.2.1, Lift.2.2.1))
