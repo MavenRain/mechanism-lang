@@ -909,3 +909,30 @@ The replay now holds eight controls. It also copies
 check, and it asserts that the eight control outputs are pairwise
 distinct. The `source-category` control had the same output as
 `target-object-level`.
+
+## Stage C / U1 composable functors (2026-09-14)
+
+`dev/composable-functors-mutations.py` replays eight source controls
+against the built kernel suite. It copies only the required source
+files and records their hashes plus the executable hash. Each anchor
+must occur exactly once. Every mutant must exit 1 at its named check,
+with no stderr and a distinct stdout, followed by a passing restored
+suite. The source tree is unchanged by the replay.
+
+- first-identity-proof: remove the first functor's preservation proof.
+- second-composition-proof: remove the second functor's law.
+- second-object-map: replace the second object map's doubling by addition.
+- constant-arrow: replace the first arrow map by constant identity.
+- generic-target-sort: lower the target hom sort in the generic pin.
+- negative-corpus: replace the missing-law fixture by a checked value.
+- canonical-mirror: change the original functor law accessor.
+- composite-mirror: change the composite functor law accessor of the
+  new prelude. The mirror fold stops at its first changed row, so the
+  canonical-mirror control reaches the First row only. This control
+  holds the Composite row of the same fold.
+
+All eight were detected with distinct outputs; the restored suite
+passed. The object and arrow mutations retain checked functor laws,
+so their failures exercise the value assertions. Replay results and
+input hashes are in
+`dev/validation/port-uat-u1-composable-functors/mutations.json`.

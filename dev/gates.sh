@@ -243,6 +243,8 @@ leg CATEGORY PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
   $ROOT/_build/default/test/prelude_functor.exe $ROOT
 leg SLOW PRELUDE-HETEROGENEOUS-FUNCTOR '^PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=' \
   $ROOT/_build/default/test/prelude_heterogeneous_functor.exe $ROOT
+leg SLOW PRELUDE-COMPOSABLE-FUNCTORS '^PRELUDE-COMPOSABLE-FUNCTORS-OK entries=' \
+  $ROOT/_build/default/test/prelude_composable_functors.exe $ROOT
 leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
   $ROOT/_build/default/test/prelude_nattrans.exe $ROOT
 leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
@@ -261,6 +263,9 @@ leg SLOW TEMPLATE-COMPOSITION-RUNTIME \
 leg SLOW PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME \
   '^PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME OK cases=3 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/heterogeneous_functor_runtime.py
+leg SLOW PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME \
+  '^PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
+  python3 -I $ROOT/test/composable_functors_runtime.py
 leg CATEGORY PRELUDE-CATEGORY-RUNTIME '^PRELUDE-CATEGORY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --category
 leg CATEGORY PRELUDE-CATEGORY-ACCESSORS \

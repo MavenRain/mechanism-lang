@@ -2651,3 +2651,117 @@ NOTE row. The NOTE row read: ladder battery rc=1 in
 ladder-HF-close.log, judged by the gates log check. This is the
 expected inherited bound noted above, not a new defect. The script
 ended with VERIFY rc=0.
+
+## Stage C / U1 composable functors (2026-09-14)
+
+Base c1a6075. Added MechComposableFunctors with six independent
+universe levels and three shared category instances. First, Second
+and Composite functor records share those instances; composition
+requires the same middle category record for both inputs. The object
+and arrow maps apply the first functor and then the second. Both
+preservation laws are checked source proofs, using the second
+functor's cross-family congruence and target equality transitivity.
+The three functor bodies mirror MechHeterogeneousFunctor under
+renaming, enforced by the new kernel suite.
+
+The suite checks 158 definitions and three instances, including six
+distinct levels and an all-zero instance. Generic signatures pin each
+hom and functor sort, and generic witnesses retain arbitrary input
+laws. Ten negative fixtures refuse incompatible middle records,
+nominal category and equality mismatches, reversed inputs, missing
+and false laws, erased objects and wrong hom levels. Arity and budget
+refusals bring the total to twelve. No symbolic globals escape and no
+new trusted entries appear.
+
+Four runtime exports pass on the kernel, Node and Wasmtime at two
+payloads. The object levels rise twice while hom levels first fall
+and then rise. Erased type arguments disappear and reappear at
+different levels in the composed arrow closure. The numeric oracles
+detect changed object maps, changed arrow maps and reversed source
+arrow composition. Mapping identity returns the original payload.
+
+Build: zero errors and warnings. The new kernel and runtime gates
+passed in 17.113 and 24.947 seconds. The existing
+heterogeneous-functor suite passed. Seven mutation controls produced
+distinct named failures, then the restored suite passed in
+38.040 seconds. Source and executable hashes match the replay.
+Shell and Python syntax checks and the staged whitespace check pass.
+
+Full battery: 47 of 51 PASS, exit 1.
+Failed gate: PRELUDE-LEFT-KAN.
+Failed gate: PRELUDE-CATEGORY-RUNTIME.
+Failed gate: PRELUDE-CATEGORY-ACCESSORS.
+Failed gate: TRUSTED-LINES.
+Watchdog timeout: PRELUDE-LEFT-KAN, exit 124.
+Subprocess timeout: PRELUDE-CATEGORY-RUNTIME, 210 seconds.
+Subprocess timeout: PRELUDE-CATEGORY-ACCESSORS, 210 seconds.
+
+Complete diagnostics, timings and hashes are retained in
+`dev/validation/port-uat-u1-composable-functors/`. Existing watchdogs,
+trusted-line bounds, compiler and vendor bytes, mapping verdicts and
+corpus denominators are unchanged.
+
+The design contract is `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`.
+Stage C and U1 remain open on sharing across separate template
+instances, general identity and repeated composition APIs,
+heterogeneous natural transformations and left Kan extensions, and
+source-type parity. All changes are staged for the user's commit.
+
+### Review round 1 (2026-09-14)
+
+`dev/composable-functors-mutations.py` holds one more control,
+composite-mirror. It changes the composite functor law accessor of
+`prelude/cat/composable-functors.mech`. The mirror fold of the kernel
+suite stops at its first changed row, so canonical-mirror reaches the
+First row only. On a temporary copy the mutant printed
+PRELUDE-COMPOSABLE-FUNCTORS-FAIL functor mirror changed: Composite and
+the restored copy printed PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158
+instances=3 computations=4 negatives=12.
+
+The control that was named object-order is now named second-object-map.
+It replaces one operation of the second object map. The two object maps
+have different source and target types, so no well typed swap of their
+order is possible. `dev/MUTATION-LOG.md` gives the same name.
+
+### Review round 2 (2026-09-14)
+
+The renaming table for levels in `test/prelude_composable_functors.ml`
+now applies to sort positions only, that is to a name after `succ`.
+The object binder of the Second edge and of the Composite edge of
+`prelude/cat/composable-functors.mech` is `z`, the name of the
+template, and the universe parameter `q` of the new prelude does not
+move: `rg -c -F 'succ q'` gives 6 in the index and 6 in the tree. The
+suite printed PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3
+computations=4 negatives=12 after the change, and the build printed
+OK build: 0 errors, 0 warnings.
+
+## Stage C / U1 composable functors review (2026-09-14)
+
+Findings, fixed: L3-1 (medium, universal Mismatch substring pinned two
+negative fixtures), L3-2 (low, canonical-mirror control covered only
+the First edge), L2-4 (low, eager three-arm match inside Option.fold
+~none:), L2-5 (low, catch-all `_` match arm), L2-6 (low, partial
+string indexing text.[index]), L2-1 (low, token-blind mirror renaming
+map), L3-4 (low, control named object-order tested no order, renamed
+second-object-map), GATE-1 (high, round 2 waited for the round 1
+battery EXIT row before it touched _build and .gatework).
+
+Dropped: L4-2 refuted by control, the temp directory is removed on
+timeout and mkdtemp gives each replay a distinct path. L1-1 and L2-2
+folded into L3-1 as duplicates. L2-3 folded into L3-2 as a duplicate.
+L3-3 cut at the finding cap, same refuted scenario as L4-2. No item
+was ruled.
+
+Gate verdict BOUND-ONLY. PASS count 50 of 51 legs. TRUSTED-LINES
+stays red on the inherited kernel bound (D-A-1); the leg stays red
+until the user rules D-A-1. Kernel count 4208 of 3000. Encoder count
+246 of 900. Load at battery start 15.02, waits 0.
+
+PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4
+negatives=12
+PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME OK cases=4 hosts=3 mutation=1
+COMPOSABLE-FUNCTORS-MUTATIONS passed=True controls=8 restored=1
+
+Pin: vendor/kanon at 936a43a92dd59a04698648f24fa5ae94cdb532df.
+
+Staged paths: 30 before this review block, 30 after.

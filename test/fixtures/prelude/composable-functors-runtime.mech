@@ -1,0 +1,74 @@
+-- Object levels rise twice; morphism levels first fall, then rise.
+specialize MechComposableFunctors (0, 1, 1, 0, 2, 2) as Run
+mu High : Type 1 with | high : Nat -> High
+mu Higher : Type 2 with | higher : Nat -> Higher
+def composableInput : Nat := 37
+
+def SourceCategory : Run_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (0 A : Type 0) -> Nat -> Nat),
+   ((fun (0 x : Nat) (0 A : Type 0) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (0 A : Type 0) -> Nat -> Nat)
+          (g : (0 A : Type 0) -> Nat -> Nat) (0 A : Type 0) (n : Nat) => g A (f A n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (0 A : Type 0) -> Nat -> Nat)
+            (0 g : (0 A : Type 0) -> Nat -> Nat)
+            (0 h : (0 A : Type 0) -> Nat -> Nat) => categoryRefl))))))
+
+def MiddleCategory : Run_Middle_Category High :=
+  ((fun (0 x : High) (0 y : High) => Nat -> Nat),
+   ((fun (0 x : High) (n : Nat) => n),
+    ((fun (0 x : High) (0 y : High) (0 z : High)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : High) (0 y : High) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : High) (0 y : High) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : High) (0 x : High) (0 y : High) (0 z : High)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def Lift : Run_First_Functor Nat High SourceCategory MiddleCategory :=
+  ((fun (x : Nat) => high (natAdd x 2)),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (0 A : Type 0) -> Nat -> Nat) => f Nat),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (0 A : Type 0) -> Nat -> Nat)
+          (0 g : (0 A : Type 0) -> Nat -> Nat) => categoryRefl))))
+
+def TargetCategory : Run_Target_Category Higher :=
+  ((fun (0 x : Higher) (0 y : Higher) => (0 A : Type 1) -> Nat -> Nat),
+   ((fun (0 x : Higher) (0 A : Type 1) (n : Nat) => n),
+    ((fun (0 x : Higher) (0 y : Higher) (0 z : Higher)
+          (f : (0 A : Type 1) -> Nat -> Nat)
+          (g : (0 A : Type 1) -> Nat -> Nat) (0 A : Type 1) (n : Nat) => g A (f A n)),
+     ((fun (0 x : Higher) (0 y : Higher) (0 f : (0 A : Type 1) -> Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Higher) (0 y : Higher) (0 f : (0 A : Type 1) -> Nat -> Nat) => categoryRefl),
+       (fun (0 w : Higher) (0 x : Higher) (0 y : Higher) (0 z : Higher)
+            (0 f : (0 A : Type 1) -> Nat -> Nat)
+            (0 g : (0 A : Type 1) -> Nat -> Nat)
+            (0 h : (0 A : Type 1) -> Nat -> Nat) => categoryRefl))))))
+
+def Raise : Run_Second_Functor High Higher MiddleCategory TargetCategory :=
+  ((fun (x : High) =>
+      match x as self in High return Higher with | high n => higher (natMul n 2)),
+   ((fun (0 x : High) (0 y : High) (f : Nat -> Nat) (0 A : Type 1) => f),
+    ((fun (0 x : High) => categoryRefl),
+     (fun (0 x : High) (0 y : High) (0 z : High)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+
+def Composed : Run_Composite_Functor Nat Higher SourceCategory TargetCategory :=
+  Run_compFunctor Nat High Higher SourceCategory MiddleCategory TargetCategory Lift Raise
+def objectValue : Nat :=
+  match Run_Composite_functorObj Nat Higher SourceCategory TargetCategory Composed composableInput
+    as self in Higher return Nat with | higher n => n
+def mapValue : Nat :=
+  Run_Composite_functorMap Nat Higher SourceCategory TargetCategory Composed 0 1
+    (fun (0 A : Type 0) (n : Nat) => natAdd n 3) High composableInput
+def compositionValue : Nat :=
+  Run_Composite_functorMap Nat Higher SourceCategory TargetCategory Composed 0 2
+    (Run_Source_comp Nat SourceCategory 0 1 2
+      (fun (0 A : Type 0) (n : Nat) => natAdd n 3)
+      (fun (0 A : Type 0) (n : Nat) => natMul n 2)) High composableInput
+def identityValue : Nat :=
+  Run_Composite_functorMap Nat Higher SourceCategory TargetCategory Composed 0 0
+    (Run_Source_id Nat SourceCategory 0) High composableInput

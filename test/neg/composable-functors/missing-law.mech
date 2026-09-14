@@ -1,0 +1,2 @@
+def bad : Run_Composite_Functor Nat Higher SourceCategory TargetCategory :=
+  (Composed.1, Composed.2.1)

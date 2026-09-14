@@ -1,0 +1,461 @@
+{
+  "version": 1,
+  "base": "c1a60759225799d2617c610a46b4db750a0333a6",
+  "focused": [
+    {
+      "name": "build",
+      "command": [
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "exit_code": 0,
+      "stdout": "OK build: 0 errors, 0 warnings\n",
+      "stderr": ""
+    },
+    {
+      "name": "kernel",
+      "command": [
+        "_build/default/test/prelude_composable_functors.exe",
+        "."
+      ],
+      "exit_code": 0,
+      "stdout": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12\n",
+      "stderr": ""
+    },
+    {
+      "name": "runtime",
+      "command": [
+        "python3",
+        "-I",
+        "test/composable_functors_runtime.py"
+      ],
+      "exit_code": 0,
+      "stdout": "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME OK cases=4 hosts=3 mutation=1\n",
+      "stderr": ""
+    },
+    {
+      "name": "heterogeneous-regression",
+      "command": [
+        "_build/default/test/prelude_heterogeneous_functor.exe",
+        "."
+      ],
+      "exit_code": 0,
+      "stdout": "PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12\n",
+      "stderr": ""
+    }
+  ],
+  "full_battery": {
+    "command": [
+      "zsh",
+      "dev/gates.sh"
+    ],
+    "exit_code": 1,
+    "passed": [
+      "BUILD",
+      "PIN",
+      "PIN-DELTA",
+      "R0-COUNT",
+      "R0-AUDIT",
+      "SUITE-KERNEL",
+      "LEVELS",
+      "PRENEX",
+      "PRENEX-FAMILIES",
+      "PRENEX-GROUPS",
+      "TEMPLATE-COMPOSITION",
+      "SUITE-SURFACE",
+      "SUITE-WASM",
+      "IMPORT-GRAMMAR",
+      "IMPORT-CLI",
+      "CORPUS-UAT",
+      "PARITY-COUNTS",
+      "PRELUDE",
+      "EQUALITY",
+      "FAMILY-POLY",
+      "PRELUDE-POLY",
+      "FAMILY-MEMBERS",
+      "PRELUDE-TRANSPORT",
+      "PRELUDE-EQUALITY-OPS",
+      "PRELUDE-DEPENDENT",
+      "FAMILY-GROUPS",
+      "PRELUDE-CONGRUENCE",
+      "TEMPLATE-COST",
+      "PRELUDE-CATEGORY",
+      "PRELUDE-FUNCTOR",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "PRELUDE-COMPOSABLE-FUNCTORS",
+      "PRELUDE-NATTRANS",
+      "EQUALITY-RUNTIME",
+      "PRENEX-RUNTIME",
+      "PRENEX-FAMILIES-RUNTIME",
+      "PRENEX-GROUPS-RUNTIME",
+      "TEMPLATE-COMPOSITION-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+      "DEPENDENT-CLOSURE-RUNTIME",
+      "PRELUDE-FUNCTOR-RUNTIME",
+      "PRELUDE-NATTRANS-RUNTIME",
+      "PRELUDE-LEFT-KAN-RUNTIME",
+      "AXIOMS",
+      "MAP-INVENTORY",
+      "DENOMINATORS"
+    ],
+    "failed": [
+      "PRELUDE-LEFT-KAN",
+      "PRELUDE-CATEGORY-RUNTIME",
+      "PRELUDE-CATEGORY-ACCESSORS",
+      "TRUSTED-LINES"
+    ],
+    "measurements": [
+      {
+        "gate": "BUILD",
+        "tier": "SLOW",
+        "elapsed_ms": 515.478,
+        "exit_code": 0
+      },
+      {
+        "gate": "PIN",
+        "tier": "FAST",
+        "elapsed_ms": 107.591,
+        "exit_code": 0
+      },
+      {
+        "gate": "PIN-DELTA",
+        "tier": "MED",
+        "elapsed_ms": 4081.67,
+        "exit_code": 0
+      },
+      {
+        "gate": "R0-COUNT",
+        "tier": "FAST",
+        "elapsed_ms": 298.089,
+        "exit_code": 0
+      },
+      {
+        "gate": "R0-AUDIT",
+        "tier": "FAST",
+        "elapsed_ms": 573.739,
+        "exit_code": 0
+      },
+      {
+        "gate": "SUITE-KERNEL",
+        "tier": "SUITE",
+        "elapsed_ms": 1118.382,
+        "exit_code": 0
+      },
+      {
+        "gate": "LEVELS",
+        "tier": "FAST",
+        "elapsed_ms": 255.098,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX",
+        "tier": "FAST",
+        "elapsed_ms": 36.453,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX-FAMILIES",
+        "tier": "FAST",
+        "elapsed_ms": 43.747,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX-GROUPS",
+        "tier": "FAST",
+        "elapsed_ms": 43.426,
+        "exit_code": 0
+      },
+      {
+        "gate": "TEMPLATE-COMPOSITION",
+        "tier": "MED",
+        "elapsed_ms": 3693.231,
+        "exit_code": 0
+      },
+      {
+        "gate": "SUITE-SURFACE",
+        "tier": "FAST",
+        "elapsed_ms": 68.67,
+        "exit_code": 0
+      },
+      {
+        "gate": "SUITE-WASM",
+        "tier": "SUITE",
+        "elapsed_ms": 7365.466,
+        "exit_code": 0
+      },
+      {
+        "gate": "IMPORT-GRAMMAR",
+        "tier": "MED",
+        "elapsed_ms": 1598.384,
+        "exit_code": 0
+      },
+      {
+        "gate": "IMPORT-CLI",
+        "tier": "FAST",
+        "elapsed_ms": 481.851,
+        "exit_code": 0
+      },
+      {
+        "gate": "CORPUS-UAT",
+        "tier": "MED",
+        "elapsed_ms": 3279.867,
+        "exit_code": 0
+      },
+      {
+        "gate": "PARITY-COUNTS",
+        "tier": "MED",
+        "elapsed_ms": 1321.008,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE",
+        "tier": "FAST",
+        "elapsed_ms": 42.966,
+        "exit_code": 0
+      },
+      {
+        "gate": "EQUALITY",
+        "tier": "FAST",
+        "elapsed_ms": 26.51,
+        "exit_code": 0
+      },
+      {
+        "gate": "FAMILY-POLY",
+        "tier": "FAST",
+        "elapsed_ms": 30.86,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-POLY",
+        "tier": "FAST",
+        "elapsed_ms": 41.46,
+        "exit_code": 0
+      },
+      {
+        "gate": "FAMILY-MEMBERS",
+        "tier": "FAST",
+        "elapsed_ms": 28.499,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-TRANSPORT",
+        "tier": "FAST",
+        "elapsed_ms": 99.969,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-EQUALITY-OPS",
+        "tier": "FAST",
+        "elapsed_ms": 69.203,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-DEPENDENT",
+        "tier": "FAST",
+        "elapsed_ms": 41.943,
+        "exit_code": 0
+      },
+      {
+        "gate": "FAMILY-GROUPS",
+        "tier": "FAST",
+        "elapsed_ms": 28.713,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-CONGRUENCE",
+        "tier": "FAST",
+        "elapsed_ms": 35.272,
+        "exit_code": 0
+      },
+      {
+        "gate": "TEMPLATE-COST",
+        "tier": "MED",
+        "elapsed_ms": 87.767,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-CATEGORY",
+        "tier": "CATEGORY",
+        "elapsed_ms": 451043.346,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-FUNCTOR",
+        "tier": "CATEGORY",
+        "elapsed_ms": 186702.61,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+        "tier": "SLOW",
+        "elapsed_ms": 6211.215,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-COMPOSABLE-FUNCTORS",
+        "tier": "SLOW",
+        "elapsed_ms": 17113.418,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-NATTRANS",
+        "tier": "SUITE",
+        "elapsed_ms": 276502.05,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-LEFT-KAN",
+        "tier": "SUITE",
+        "elapsed_ms": 300471.274,
+        "exit_code": 124
+      },
+      {
+        "gate": "EQUALITY-RUNTIME",
+        "tier": "MED",
+        "elapsed_ms": 10981.725,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX-RUNTIME",
+        "tier": "MED",
+        "elapsed_ms": 4907.099,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX-FAMILIES-RUNTIME",
+        "tier": "MED",
+        "elapsed_ms": 1197.005,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRENEX-GROUPS-RUNTIME",
+        "tier": "MED",
+        "elapsed_ms": 1281.237,
+        "exit_code": 0
+      },
+      {
+        "gate": "TEMPLATE-COMPOSITION-RUNTIME",
+        "tier": "SLOW",
+        "elapsed_ms": 1120.687,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+        "tier": "SLOW",
+        "elapsed_ms": 9656.858,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+        "tier": "SLOW",
+        "elapsed_ms": 24947.084,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-CATEGORY-RUNTIME",
+        "tier": "CATEGORY",
+        "elapsed_ms": 210269.376,
+        "exit_code": 2
+      },
+      {
+        "gate": "PRELUDE-CATEGORY-ACCESSORS",
+        "tier": "CATEGORY",
+        "elapsed_ms": 210349.074,
+        "exit_code": 2
+      },
+      {
+        "gate": "DEPENDENT-CLOSURE-RUNTIME",
+        "tier": "MED",
+        "elapsed_ms": 3498.306,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-FUNCTOR-RUNTIME",
+        "tier": "CATEGORY",
+        "elapsed_ms": 336650.372,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-NATTRANS-RUNTIME",
+        "tier": "CATEGORY",
+        "elapsed_ms": 146721.018,
+        "exit_code": 0
+      },
+      {
+        "gate": "PRELUDE-LEFT-KAN-RUNTIME",
+        "tier": "SUITE",
+        "elapsed_ms": 118548.426,
+        "exit_code": 0
+      },
+      {
+        "gate": "AXIOMS",
+        "tier": "FAST",
+        "elapsed_ms": 129.795,
+        "exit_code": 0
+      },
+      {
+        "gate": "MAP-INVENTORY",
+        "tier": "MED",
+        "elapsed_ms": 2125.403,
+        "exit_code": 0
+      },
+      {
+        "gate": "TRUSTED-LINES",
+        "tier": "FAST",
+        "elapsed_ms": 34.306,
+        "exit_code": 1
+      },
+      {
+        "gate": "DENOMINATORS",
+        "tier": "MED",
+        "elapsed_ms": 62.047,
+        "exit_code": 0
+      }
+    ]
+  },
+  "unchanged_from_base": [
+    "lib",
+    "surface",
+    "wasm",
+    "vendor",
+    "map",
+    "schema",
+    "PIN",
+    "dev/denominators.json",
+    "prelude/cat/category.mech",
+    "prelude/cat/category-core.mech",
+    "prelude/cat/heterogeneous-functor.mech",
+    "test/prelude_left_kan.ml",
+    "test/prelude_nattrans.ml",
+    "test/prenex_runtime.py"
+  ],
+  "executables": {
+    "_build/default/test/prelude_composable_functors.exe": "8fa8c406c50a7c21e59ee3c9125fc00fd143247dfd12b6049c927faf400fec54",
+    "_build/default/test/prelude_heterogeneous_functor.exe": "279265ae074d7e43f6bdb48b24019d03b2827e37631e2cfda9f937611d96f02b",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a"
+  },
+  "evidence_sha256": {
+    "sources.sha256": "960611f891f9aac95bf000a20fdd75d59efd8159f870e7113e4e34b8ae589522",
+    "mutations.json": "d1df91e030b2f42d2235a993530f2861dc18c45276aa0b97c047feb8279188cb",
+    "gates.log": "b9d300b0a0f3cfa28377c85fa390052675c717f2111de256bd26ec07517b059f",
+    "gates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "review_delta": {
+    "date": "2026-09-14",
+    "reason": "review fixes L2-1, L2-4, L2-5, L2-6, L3-1 (test/prelude_composable_functors.ml, prelude/cat/composable-functors.mech) rebuilt the suite executable, and the review_delta key added to mutations.json changed its evidence hash; the captured rows above are kept as captured, the final values are recorded here",
+    "paths": [
+      {
+        "path": "_build/default/test/prelude_composable_functors.exe",
+        "captured": "8fa8c406c50a7c21e59ee3c9125fc00fd143247dfd12b6049c927faf400fec54",
+        "final": "956e300f61357f9833575f96c2ae87bbe7913c81d56665fdea9bc8ab3c60763d"
+      },
+      {
+        "path": "dev/validation/port-uat-u1-composable-functors/mutations.json",
+        "captured": "d1df91e030b2f42d2235a993530f2861dc18c45276aa0b97c047feb8279188cb",
+        "final": "4874f8fba42e3d35eae4b23918d9d3294436cb404b786b84637fd6e74f64d486"
+      }
+    ]
+  }
+}

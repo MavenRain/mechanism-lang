@@ -131,6 +131,11 @@
  (modules Prelude_heterogeneous_functor)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
+(executable
+ (name prelude_composable_functors)
+ (modules Prelude_composable_functors)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))
+
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)
 (copy_files ../vendor/kanon/test/sys_io.ml)

@@ -1,0 +1,8 @@
+def bad : (0 C : Type 0) -> (0 D : Type 0) -> (0 E : Type 0) ->
+    (c : Equal_Source_Category C) -> (d : Equal_Middle_Category D) ->
+    (e : Equal_Target_Category E) -> Equal_First_Functor C D c d ->
+    Equal_Second_Functor D E d e -> Equal_Composite_Functor C E c e :=
+  fun (0 C : Type 0) (0 D : Type 0) (0 E : Type 0)
+      (c : Equal_Source_Category C) (d : Equal_Middle_Category D) (e : Equal_Target_Category E)
+      (F : Equal_First_Functor C D c d) (G : Equal_Second_Functor D E d e) =>
+    Equal_compFunctor C D E c d e G F

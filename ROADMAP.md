@@ -42,14 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-13
+## Position on 2026-09-14
 
-The base is 75b835e, following committed template composition.
-The current increment supplies a lightweight category core and a
-public heterogeneous functor template at independent source and
-target universe pairs. See `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md`.
-Object and arrow accessors, both preservation laws and cross-family
-congruence are checked.
+The base is c1a6075, following committed heterogeneous functors.
+The current increment adds heterogeneous functor composition over
+three shared category instances at six independent universe levels.
+Both input functors use the same middle category record. Object and
+arrow composition and both preservation proofs check in source.
+See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -61,14 +61,16 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
-open on shared category instances for heterogeneous functor
-composition, heterogeneous natural transformations and left Kan
-extensions, and source-type parity.  Stage D (typed
-mapping) and Stage E (M0-EXIT) have not started.  The map inventory
-holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of 2,477.  The
+open on reuse across separate category template instances, general
+identity and repeated composition APIs, heterogeneous natural
+transformations and left Kan extensions, and source-type parity.
+Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
+inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
+2,477. The
 gate battery includes PRELUDE-LEFT-KAN and PRELUDE-LEFT-KAN-RUNTIME.
 It also includes TEMPLATE-COMPOSITION, PRELUDE-HETEROGENEOUS-FUNCTOR
-and their runtime gates.
+and their runtime gates. PRELUDE-COMPOSABLE-FUNCTORS and its runtime
+gate check composition within a shared three-category group.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
@@ -125,9 +127,12 @@ stay under `ports/` (D-UAT-3).
   and desc_unique, with kernel and runtime gates. The heterogeneous
   functor increment adds independent source and target universe pairs,
   accessors and checked laws over a lightweight category core; see
-  `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md`. U1 remains open on shared
-  category instances for composition, heterogeneous natural
-  transformations and left Kan extensions, and source-type parity.
+  `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md`. Composition over a shared
+  three-category group is specified in
+  `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`. U1 remains open on general
+  reuse across separate category instances, identity and repeated
+  composition APIs, heterogeneous natural transformations and left
+  Kan extensions, and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

@@ -1,0 +1,9 @@
+def bad : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (other : Mixed_Middle_Category D) -> (e : Mixed_Target_Category E) ->
+    Mixed_First_Functor C D c d -> Mixed_Second_Functor D E other e -> Mixed_Composite_Functor C E c e :=
+  fun (0 C : Type 0) (0 D : Type 2) (0 E : Type 4)
+      (c : Mixed_Source_Category C) (d : Mixed_Middle_Category D)
+      (other : Mixed_Middle_Category D) (e : Mixed_Target_Category E)
+      (F : Mixed_First_Functor C D c d) (G : Mixed_Second_Functor D E other e) =>
+    Mixed_compFunctor C D E c d e F G

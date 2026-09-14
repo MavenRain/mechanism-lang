@@ -1,0 +1,214 @@
+-- Load category-core.mech before this file.
+-- Three shared categories supply the two inputs and their composite.
+poly (u, v, w, z, p, q) group MechComposableFunctors where
+specialize MechCategoryCore (u, v) as Source
+specialize MechCategoryCore (w, z) as Middle
+specialize MechCategoryCore (p, q) as Target
+
+-- First functor over shared category instances.
+def First_Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    Source_Category C -> Middle_Category D -> Sort (max (max (succ u) (succ v)) (max (succ w) (succ z))) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Source_Hom C c x y -> Middle_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Middle (Middle_Hom D d (obj x) (obj x))
+      (map x x (Source_id C c x)) (Middle_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+      Middle (Middle_Hom D d (obj x) (obj z))
+        (map x z (Source_comp C c x y z f g))
+        (Middle_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def First_functorObj : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> First_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Functor C D c d) => F.1
+
+def First_functorMap : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Source_Hom C c x y ->
+    Middle_Hom D d (First_functorObj C D c d F x) (First_functorObj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Functor C D c d) => F.2.1
+
+def First_functorMapId : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Functor C D c d) ->
+    (0 x : C) -> Middle (Middle_Hom D d (F.1 x) (F.1 x))
+      (First_functorMap C D c d F x x (Source_id C c x)) (Middle_id D d (F.1 x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Functor C D c d) => F.2.2.1
+
+def First_functorMapComp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+    Middle (Middle_Hom D d (F.1 x) (F.1 z))
+      (First_functorMap C D c d F x z (Source_comp C c x y z f g))
+      (Middle_comp D d (F.1 x) (F.1 y) (F.1 z)
+        (First_functorMap C D c d F x y f) (First_functorMap C D c d F y z g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Functor C D c d) => F.2.2.2
+
+-- Congruence crosses both the universe and nominal equality boundary.
+def First_eqCongr : (0 A : Sort (succ v)) -> (0 B : Sort (succ z)) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Source A x y -> Middle B (f x) (f y) :=
+  fun (0 A : Sort (succ v)) (0 B : Sort (succ z)) (0 f : A -> B)
+      (0 x : A) (0 y : A) (proof : Source A x y) =>
+    match proof as self in Source right return Middle B (f x) (f right) with
+    | categoryRefl => categoryRefl
+
+-- Second functor over shared category instances.
+def Second_Functor : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    Middle_Category C -> Target_Category D -> Sort (max (max (succ w) (succ z)) (max (succ p) (succ q))) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Middle_Hom C c x y -> Target_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Target (Target_Hom D d (obj x) (obj x))
+      (map x x (Middle_id C c x)) (Target_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Middle_Hom C c x y) -> (0 g : Middle_Hom C c y z) ->
+      Target (Target_Hom D d (obj x) (obj z))
+        (map x z (Middle_comp C c x y z f g))
+        (Target_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def Second_functorObj : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> Second_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Functor C D c d) => F.1
+
+def Second_functorMap : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Middle_Hom C c x y ->
+    Target_Hom D d (Second_functorObj C D c d F x) (Second_functorObj C D c d F y) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Functor C D c d) => F.2.1
+
+def Second_functorMapId : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Functor C D c d) ->
+    (0 x : C) -> Target (Target_Hom D d (F.1 x) (F.1 x))
+      (Second_functorMap C D c d F x x (Middle_id C c x)) (Target_id D d (F.1 x)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Functor C D c d) => F.2.2.1
+
+def Second_functorMapComp : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Middle_Hom C c x y) -> (0 g : Middle_Hom C c y z) ->
+    Target (Target_Hom D d (F.1 x) (F.1 z))
+      (Second_functorMap C D c d F x z (Middle_comp C c x y z f g))
+      (Target_comp D d (F.1 x) (F.1 y) (F.1 z)
+        (Second_functorMap C D c d F x y f) (Second_functorMap C D c d F y z g)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Functor C D c d) => F.2.2.2
+
+-- Congruence crosses both the universe and nominal equality boundary.
+def Second_eqCongr : (0 A : Sort (succ z)) -> (0 B : Sort (succ q)) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Middle A x y -> Target B (f x) (f y) :=
+  fun (0 A : Sort (succ z)) (0 B : Sort (succ q)) (0 f : A -> B)
+      (0 x : A) (0 y : A) (proof : Middle A x y) =>
+    match proof as self in Middle right return Target B (f x) (f right) with
+    | categoryRefl => categoryRefl
+
+-- Composite functor over shared category instances.
+def Composite_Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    Source_Category C -> Target_Category D -> Sort (max (max (succ u) (succ v)) (max (succ p) (succ q))) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Source_Hom C c x y -> Target_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Target (Target_Hom D d (obj x) (obj x))
+      (map x x (Source_id C c x)) (Target_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+      Target (Target_Hom D d (obj x) (obj z))
+        (map x z (Source_comp C c x y z f g))
+        (Target_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def Composite_functorObj : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> Composite_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Functor C D c d) => F.1
+
+def Composite_functorMap : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Source_Hom C c x y ->
+    Target_Hom D d (Composite_functorObj C D c d F x) (Composite_functorObj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Functor C D c d) => F.2.1
+
+def Composite_functorMapId : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Functor C D c d) ->
+    (0 x : C) -> Target (Target_Hom D d (F.1 x) (F.1 x))
+      (Composite_functorMap C D c d F x x (Source_id C c x)) (Target_id D d (F.1 x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Functor C D c d) => F.2.2.1
+
+def Composite_functorMapComp : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Source_Hom C c x y) -> (0 g : Source_Hom C c y z) ->
+    Target (Target_Hom D d (F.1 x) (F.1 z))
+      (Composite_functorMap C D c d F x z (Source_comp C c x y z f g))
+      (Target_comp D d (F.1 x) (F.1 y) (F.1 z)
+        (Composite_functorMap C D c d F x y f) (Composite_functorMap C D c d F y z g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Functor C D c d) => F.2.2.2
+
+-- Congruence crosses both the universe and nominal equality boundary.
+def Composite_eqCongr : (0 A : Sort (succ v)) -> (0 B : Sort (succ q)) ->
+    (0 f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Source A x y -> Target B (f x) (f y) :=
+  fun (0 A : Sort (succ v)) (0 B : Sort (succ q)) (0 f : A -> B)
+      (0 x : A) (0 y : A) (proof : Source A x y) =>
+    match proof as self in Source right return Target B (f x) (f right) with
+    | categoryRefl => categoryRefl
+
+def compFunctor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Source_Category C) -> (d : Middle_Category D) ->
+    (e : Target_Category E) -> First_Functor C D c d -> Second_Functor D E d e -> Composite_Functor C E c e :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Source_Category C) (d : Middle_Category D) (e : Target_Category E)
+      (F : First_Functor C D c d) (G : Second_Functor D E d e) =>
+    ((fun (x : C) => G.1 (F.1 x)),
+     ((fun (0 x : C) (0 y : C) (f : Source_Hom C c x y) =>
+         Second_functorMap D E d e G (F.1 x) (F.1 y) (First_functorMap C D c d F x y f)),
+      ((fun (0 x : C) =>
+          Target_eqTrans (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+            (Second_functorMap D E d e G (F.1 x) (F.1 x)
+              (First_functorMap C D c d F x x (Source_id C c x)))
+            (Second_functorMap D E d e G (F.1 x) (F.1 x) (Middle_id D d (F.1 x)))
+            (Target_id E e (G.1 (F.1 x)))
+            (Second_eqCongr (Middle_Hom D d (F.1 x) (F.1 x))
+              (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+              (fun (h : Middle_Hom D d (F.1 x) (F.1 x)) =>
+                Second_functorMap D E d e G (F.1 x) (F.1 x) h)
+              (First_functorMap C D c d F x x (Source_id C c x)) (Middle_id D d (F.1 x))
+              (First_functorMapId C D c d F x))
+            (Second_functorMapId D E d e G (F.1 x))),
+       (fun (0 x : C) (0 y : C) (0 z : C)
+            (0 f : Source_Hom C c x y) (0 g : Source_Hom C c y z) =>
+          Target_eqTrans (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+            (Second_functorMap D E d e G (F.1 x) (F.1 z)
+              (First_functorMap C D c d F x z (Source_comp C c x y z f g)))
+            (Second_functorMap D E d e G (F.1 x) (F.1 z)
+              (Middle_comp D d (F.1 x) (F.1 y) (F.1 z)
+                (First_functorMap C D c d F x y f) (First_functorMap C D c d F y z g)))
+            (Target_comp E e (G.1 (F.1 x)) (G.1 (F.1 y)) (G.1 (F.1 z))
+              (Second_functorMap D E d e G (F.1 x) (F.1 y) (First_functorMap C D c d F x y f))
+              (Second_functorMap D E d e G (F.1 y) (F.1 z) (First_functorMap C D c d F y z g)))
+            (Second_eqCongr (Middle_Hom D d (F.1 x) (F.1 z))
+              (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+              (fun (h : Middle_Hom D d (F.1 x) (F.1 z)) =>
+                Second_functorMap D E d e G (F.1 x) (F.1 z) h)
+              (First_functorMap C D c d F x z (Source_comp C c x y z f g))
+              (Middle_comp D d (F.1 x) (F.1 y) (F.1 z)
+                (First_functorMap C D c d F x y f) (First_functorMap C D c d F y z g))
+              (First_functorMapComp C D c d F x y z f g))
+            (Second_functorMapComp D E d e G (F.1 x) (F.1 y) (F.1 z)
+              (First_functorMap C D c d F x y f) (First_functorMap C D c d F y z g))))))
+
+end

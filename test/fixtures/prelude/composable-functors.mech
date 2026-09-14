@@ -1,0 +1,52 @@
+specialize MechComposableFunctors (0, 1, 2, 3, 4, 5) as Mixed
+specialize MechComposableFunctors (0, 0, 0, 0, 0, 0) as Equal
+
+def mixedComposition : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) -> Mixed_First_Functor C D c d ->
+    Mixed_Second_Functor D E d e -> Mixed_Composite_Functor C E c e := Mixed_compFunctor
+def mixedSourceHom : (0 C : Type 0) -> (c : Mixed_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 1 := Mixed_Source_Hom
+def mixedMiddleHom : (0 D : Type 2) -> (d : Mixed_Middle_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 3 := Mixed_Middle_Hom
+def mixedTargetHom : (0 E : Type 4) -> (e : Mixed_Target_Category E) ->
+    (0 x : E) -> (0 y : E) -> Type 5 := Mixed_Target_Hom
+def mixedFirstSort : (0 C : Type 0) -> (0 D : Type 2) ->
+    Mixed_Source_Category C -> Mixed_Middle_Category D -> Type 3 := Mixed_First_Functor
+def mixedSecondSort : (0 D : Type 2) -> (0 E : Type 4) ->
+    Mixed_Middle_Category D -> Mixed_Target_Category E -> Type 5 := Mixed_Second_Functor
+def mixedCompositeSort : (0 C : Type 0) -> (0 E : Type 4) ->
+    Mixed_Source_Category C -> Mixed_Target_Category E -> Type 5 := Mixed_Composite_Functor
+
+-- These proofs retain arbitrary input laws under three distinct equalities.
+def compositeIdentityLaw : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) -> (F : Mixed_First_Functor C D c d) ->
+    (G : Mixed_Second_Functor D E d e) -> (0 x : C) ->
+    Mixed_Target (Mixed_Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+      (Mixed_Composite_functorMap C E c e (Mixed_compFunctor C D E c d e F G)
+        x x (Mixed_Source_id C c x)) (Mixed_Target_id E e (G.1 (F.1 x))) :=
+  fun (0 C : Type 0) (0 D : Type 2) (0 E : Type 4)
+      (c : Mixed_Source_Category C) (d : Mixed_Middle_Category D)
+      (e : Mixed_Target_Category E) (F : Mixed_First_Functor C D c d)
+      (G : Mixed_Second_Functor D E d e) (0 x : C) =>
+    Mixed_Composite_functorMapId C E c e (Mixed_compFunctor C D E c d e F G) x
+def compositeCompositionLaw : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) -> (F : Mixed_First_Functor C D c d) ->
+    (G : Mixed_Second_Functor D E d e) -> (0 x : C) -> (0 y : C) -> (0 z : C) ->
+    (0 f : Mixed_Source_Hom C c x y) -> (0 g : Mixed_Source_Hom C c y z) ->
+    Mixed_Target (Mixed_Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+      (Mixed_Composite_functorMap C E c e (Mixed_compFunctor C D E c d e F G)
+        x z (Mixed_Source_comp C c x y z f g))
+      (Mixed_Target_comp E e (G.1 (F.1 x)) (G.1 (F.1 y)) (G.1 (F.1 z))
+        (Mixed_Second_functorMap D E d e G (F.1 x) (F.1 y)
+          (Mixed_First_functorMap C D c d F x y f))
+        (Mixed_Second_functorMap D E d e G (F.1 y) (F.1 z)
+          (Mixed_First_functorMap C D c d F y z g))) :=
+  fun (0 C : Type 0) (0 D : Type 2) (0 E : Type 4)
+      (c : Mixed_Source_Category C) (d : Mixed_Middle_Category D)
+      (e : Mixed_Target_Category E) (F : Mixed_First_Functor C D c d)
+      (G : Mixed_Second_Functor D E d e) (0 x : C) (0 y : C) (0 z : C)
+      (0 f : Mixed_Source_Hom C c x y) (0 g : Mixed_Source_Hom C c y z) =>
+    Mixed_Composite_functorMapComp C E c e (Mixed_compFunctor C D E c d e F G) x y z f g

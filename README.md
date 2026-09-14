@@ -41,12 +41,13 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-The focused suites and mutation controls pass.  Acceptance remains
-pending the trusted-kernel limit ruling: the active kernel exceeds the
-unchanged 3,000-line bound, so TRUSTED-LINES fails.
+The focused composition checks and mutation controls pass. The full
+battery remains red; its validation record lists every failed gate.
+The active kernel still exceeds the unchanged 3,000-line bound, so
+TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 The latest full battery and its failed checks are recorded in
-`dev/validation/port-uat-u1-heterogeneous-functor/`.
+`dev/validation/port-uat-u1-composable-functors/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -218,9 +219,13 @@ See `dev/PORT-UAT-U1-LEFT-KAN.md` for the contracts and validation.
 supply a functor template at four independent universe levels, with object
 and arrow accessors, both preservation laws and cross-family congruence.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md` for usage and validation.
-Stage C remains open on shared category instances for heterogeneous
-functor composition, heterogeneous natural transformations and left Kan
-extensions, and checked source-type parity.
+`prelude/cat/composable-functors.mech` adds composition at six universe
+levels. Its input and result functors share three category instances;
+the two inputs use the same middle record. Both preservation laws are
+checked source proofs. See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`.
+Stage C remains open on reuse across separate template instances,
+general identity and repeated composition APIs, heterogeneous natural
+transformations and left Kan extensions, and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

@@ -218,3 +218,26 @@ The existing `cat/category.mech` API remains available. Independent
 pair instances still need a shared middle category for general
 heterogeneous functor composition. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md` for the contract and examples.
+
+## Heterogeneous functor composition
+
+Load `cat/category-core.mech`, then `cat/composable-functors.mech`:
+
+```text
+specialize MechComposableFunctors (0, 1, 2, 3, 4, 5) as Chain
+```
+
+The three object/hom pairs belong to Source, Middle and Target.
+`Chain_First_Functor C D c d` and `Chain_Second_Functor D E d e`
+share the middle category record. Apply
+`Chain_compFunctor C D E c d e F G` to obtain
+`Chain_Composite_Functor C E c e`. Each of the three functor prefixes
+has object and arrow accessors, both law accessors and congruence.
+The laws transport the first functor's preservation proofs through
+the second functor before composing proofs in Target equality.
+
+Separate template specializations still have distinct nominal
+families. This API shares instances within a three-category group;
+general reuse between groups and repeated composition remain due.
+See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md` for the full contract,
+generic signatures, negative fixtures and runtime checks.
