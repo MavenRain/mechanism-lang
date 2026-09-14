@@ -22,6 +22,30 @@ let companions catalog name =
   Option.map (fun s -> List.map (fun (f, _ctors) -> f.Check.fam_name) s.companions)
     (List.assoc_opt name catalog)
 
+let constructors catalog name =
+  Option.map (fun scheme ->
+    List.concat_map (fun (_family, ctors) ->
+      List.map (fun ctor -> ctor.Check.ct_name) ctors)
+      ((scheme.family, scheme.ctors) :: scheme.companions))
+    (List.assoc_opt name catalog)
+
+let rename_instance scheme ~name ~as_name n = match () with
+  | () when String.equal n name -> as_name
+  | () when String.equal n scheme.family.Check.fam_name
+      || List.exists (fun (f, _ctors) -> String.equal f.Check.fam_name n)
+        scheme.companions -> as_name ^ "_" ^ n
+  | () when List.exists (fun d -> String.equal d.Check.d_name n) scheme.members ->
+      as_name ^ "_" ^ n
+  | () -> n
+
+let instance_names catalog ~name ~as_name =
+  Option.map (fun scheme ->
+    let rename = rename_instance scheme ~name ~as_name in
+    List.map (fun (family, _ctors) -> rename family.Check.fam_name)
+      ((scheme.family, scheme.ctors) :: scheme.companions),
+    List.map (fun member -> rename member.Check.d_name) scheme.members)
+    (List.assoc_opt name catalog)
+
 let occupied globals catalog name =
   Option.is_some (Global.find name globals)
   || Option.is_some (Global.find_family name globals)
@@ -214,6 +238,57 @@ let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~
   declare_group_elaborated ~budget ~members:(List.map (fun member _globals -> Ok member) members)
     globals catalog ~arity families
 
+(** Dependencies contribute raw, renamed syntax.  The ordered group checker
+    certifies the complete result under the new universe scope. *)
+let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name dependencies =
+  let* () = poll budget in
+  if occupied globals catalog name then Error (collision name)
+  else if arity < 0 then Error (Error.Universe "a universe parameter arity must be nonnegative")
+  else
+    let* _aliases, groups = List.fold_left (fun acc (source, levels, as_name) ->
+      let* aliases, groups = acc in
+      let* () = poll budget in
+      let* scheme = List.assoc_opt source catalog |> Option.to_result
+        ~none:(Error.Unbound ("unknown family universe schema " ^ source)) in
+      match () with
+      | () when String.equal as_name name || List.mem as_name aliases
+          || occupied globals catalog as_name -> Error (collision as_name)
+      | () when List.length levels <> scheme.arity ->
+          Error (Error.Universe (Printf.sprintf
+            "the family schema %s expects %d universe arguments, got %d"
+            source scheme.arity (List.length levels)))
+      | () when not (List.for_all (Level.in_scope arity) levels) -> Error scope_error
+      | () ->
+          let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
+          let rename n = Ok (rename_instance scheme ~name:source ~as_name n) in
+          let* families = map_list (fun (family, ctors) ->
+            map_family budget level rename family ctors)
+            ((scheme.family, scheme.ctors) :: scheme.companions) in
+          let* definitions = map_list (map_member budget level rename) scheme.members in
+          let generated = List.map (fun (family, _ctors) -> family.Check.fam_name) families
+            @ List.map (fun definition -> definition.Check.d_name) definitions in
+          Ok (as_name :: generated @ aliases, (families, definitions) :: groups))
+      (Ok ([], [])) dependencies in
+    let groups = List.rev groups in
+    let families = List.concat_map fst groups in
+    let definitions = List.concat_map snd groups in
+    let* () = if List.exists (fun (family, _ctors) ->
+        String.equal name family.Check.fam_name) families then Error (collision name)
+      else Ok () in
+    let members = List.map (fun member _globals -> Ok member) definitions @ members in
+    let members = List.map (fun elaborate symbolic ->
+      let* declaration = elaborate symbolic in
+      if String.equal declaration.Check.d_name name then Error (collision name)
+      else Ok declaration) members in
+    match families with
+    | [] -> Error (Error.Mismatch "a family schema group must be nonempty")
+    | (family, _ctors) :: _rest ->
+        let* checked =
+          declare_group_elaborated ~budget ~members globals catalog ~arity families in
+        let* scheme = List.assoc_opt family.Check.fam_name checked
+          |> Option.to_result ~none:(Error.Cannot_infer "composition returned no schema") in
+        Ok ((name, scheme) :: catalog)
+
 let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog
     |> Option.to_result ~none:(Error.Unbound ("unknown family universe schema " ^ name)) in
@@ -227,13 +302,7 @@ let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_n
       Error (Error.Universe "universe arguments must be closed")
   | () ->
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
-      let rename n = Ok (match () with
-        | () when String.equal n name -> as_name
-        | () when List.exists (fun (f, _ctors) -> String.equal f.Check.fam_name n)
-            scheme.companions -> as_name ^ "_" ^ n
-        | () when List.exists (fun d -> String.equal d.Check.d_name n) scheme.members ->
-            as_name ^ "_" ^ n
-        | () -> n) in
+      let rename n = Ok (rename_instance scheme ~name ~as_name n) in
       let* families = map_list (fun (family, ctors) ->
         map_family budget level rename family ctors)
         ((scheme.family, scheme.ctors) :: scheme.companions) in

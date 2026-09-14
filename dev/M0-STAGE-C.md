@@ -69,6 +69,10 @@ across separate universe pairs and source-type parity remain open.
 The template checking increment removes a repeated symbolic member
 check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
 rechecking and all existing gate predicates.
+Template composition imports preceding family templates at symbolic
+universe arguments and checks their members in one group; see
+dev/M0-STAGE-C-COMPOSITION.md.  It supplies a prerequisite for the
+category prelude at separate universe pairs.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

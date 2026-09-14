@@ -867,3 +867,31 @@ into a new copy.  The report is
 control C-CONG-M1 to C-CONG-M12 killed.  The replay output is
 retained outside the repository, in the review directory of the
 round.
+
+## Stage C template composition (2026-09-13)
+
+`dev/composition-mutations.py` builds a separate copy for seven
+controls.  Each control must compile, exit with its named suite
+failure, and restore to a passing suite.  Compile failures and
+unexpected diagnostics do not count as killed mutants.
+
+| Control | Change | Required detection |
+| --- | --- | --- |
+| C-COMP-M1 | Keep an imported primary family name | Name collision |
+| C-COMP-M2 | Drop imported definitions | Missing Left_unbox |
+| C-COMP-M3 | Accept duplicate prefixes | Disjoint prefix refusal |
+| C-COMP-M4 | Accept the group name as a member | Raw name refusal |
+| C-COMP-M5 | Drop the group's own definitions | Missing P_transfer |
+| C-COMP-M6 | Reverse universe arguments | Nested type mismatch |
+| C-COMP-M7 | Forget generated name reservations | Prefix refusal |
+
+The first replay rejected all six initial mutants, but M1 reached
+an earlier collision than its diagnostic expected.  The control now
+pins that collision.  Review then added the generated-name guard
+and M7.  The inherited twelve congruence controls are also replayed.
+Final reports, source hashes and output streams are retained under
+`dev/validation/stage-c-composition/`.
+
+Review round 2 replayed the seven composition controls and the twelve
+congruence controls with no anchor change.  Both replays report every
+control killed.

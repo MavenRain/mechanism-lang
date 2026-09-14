@@ -189,3 +189,9 @@ exports on three hosts.  See `dev/PORT-UAT-U1-LEFT-KAN.md`.
 
 Functors across separate universe pairs and source-type parity
 remain open.
+
+Template composition can import category templates under separate
+universe arguments.  The composition fixture checks a functor shape
+between those categories.  This is a source-layer prerequisite;
+the public category prelude still uses its existing universe pair.
+See `dev/M0-STAGE-C-COMPOSITION.md`.

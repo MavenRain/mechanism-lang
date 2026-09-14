@@ -216,6 +216,11 @@ See `dev/PORT-UAT-U1-LEFT-KAN.md` for the contracts and validation.
 
 Stage C remains open on functors across separate universe pairs
 and checked source-type parity.
+Checked template composition now supplies a prerequisite for that
+work.  A `poly (...) group NAME where ... end` block imports preceding
+family templates at symbolic universe arguments, then checks its
+members.  Closed specialization prefixes and rechecks the complete
+group.  See `dev/M0-STAGE-C-COMPOSITION.md` for syntax and limits.
 The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.

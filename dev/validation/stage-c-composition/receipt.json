@@ -1,0 +1,14 @@
+{
+  "base": "bfc398b8fde83cc8787c87bf4907f636fdf3b897",
+  "vendor_pin": "936a43a92dd59a04698648f24fa5ae94cdb532df",
+  "artifacts": {
+    "gates.log": "5ec407e8d2dad4a20dd74e6ce6d5188f5af213bf21774a21d786c5927a3d4ef9",
+    "gates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gates.json": "d4ac3a81d20a75a901a11176a4f3b51ec535dca892a2246b72c1396f49fb0fe0",
+    "battery-inputs.json": "7e51f13a86a058655c4fb7abdf510a296e80c7bbbef183be72e5e4d227b8c5e3",
+    "final-checks.json": "2dcc3cd1c4949156ed4a28acd53fa857c423d5eb16137263b9a7ec3cd61f52b1",
+    "composition-mutations.json": "dff450a6a31ba2f599c5495ef345b281cde768ed25764ba1ca6bb44a52371693",
+    "congruence-mutations.json": "de237844410465d41b0aed9478d3590df53f4ab92939e300b600082d2c0a0397",
+    "prefix-collision.mech": "dd0ac3e8f277ee9d0399cc0856896b6f027992bfe274f6c88c1b942bf6a9bcce"
+  }
+}

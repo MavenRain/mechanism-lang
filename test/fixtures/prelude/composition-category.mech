@@ -1,0 +1,54 @@
+poly (uc, vc, ud, vd) group CategoryPair where
+specialize MechCategory (uc, vc) as Source
+specialize MechCategory (ud, vd) as Target
+
+def Functor : (0 C : Sort (succ uc)) -> (0 D : Sort (succ ud)) ->
+    Source_Category C -> Target_Category D ->
+    Sort (max (max (succ uc) (succ ud)) (max (succ vc) (succ vd))) :=
+  fun (0 C : Sort (succ uc)) (0 D : Sort (succ ud))
+      (c : Source_Category C) (d : Target_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Source_Hom C c x y ->
+      Target_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Target (Target_Hom D d (obj x) (obj x))
+      (map x x (Source_id C c x)) (Target_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y z) ->
+      Target (Target_Hom D d (obj x) (obj z))
+        (map x z (Source_comp C c x y z f g))
+        (Target_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def objectMap : (0 C : Sort (succ uc)) -> (0 D : Sort (succ ud)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ uc)) (0 D : Sort (succ ud))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.1
+
+def arrowMap : (0 C : Sort (succ uc)) -> (0 D : Sort (succ ud)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (0 x : C) -> (0 y : C) -> Source_Hom C c x y -> Target_Hom D d (F.1 x) (F.1 y) :=
+  fun (0 C : Sort (succ uc)) (0 D : Sort (succ ud))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.1
+end
+
+specialize CategoryPair (0, 1, 2, 3) as First
+specialize CategoryPair (3, 2, 1, 0) as Second
+
+def firstObjects : (0 C : Sort 1) -> (0 D : Sort 3) ->
+    (c : First_Source_Category C) -> (d : First_Target_Category D) ->
+    First_Functor C D c d -> C -> D := First_objectMap
+
+def firstSourceHom : (0 C : Sort 1) -> (c : First_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Sort 2 := First_Source_Hom
+
+def firstTargetHom : (0 D : Sort 3) -> (d : First_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Sort 4 := First_Target_Hom
+
+def secondObjects : (0 C : Sort 4) -> (0 D : Sort 2) ->
+    (c : Second_Source_Category C) -> (d : Second_Target_Category D) ->
+    Second_Functor C D c d -> C -> D := Second_objectMap
+
+def secondSourceHom : (0 C : Sort 4) -> (c : Second_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Sort 3 := Second_Source_Hom
+
+def secondTargetHom : (0 D : Sort 2) -> (d : Second_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Sort 1 := Second_Target_Hom

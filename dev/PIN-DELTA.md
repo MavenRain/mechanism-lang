@@ -57,11 +57,11 @@ names are checked before the immutable program result is returned.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 331 |
-| surface/token.ml | 10 |
-| surface/lexer.ml | 5 |
-| surface/syntax.ml | 49 |
-| surface/parser.ml | 151 |
+| surface/elab.ml | 371 |
+| surface/token.ml | 12 |
+| surface/lexer.ml | 6 |
+| surface/syntax.ml | 60 |
+| surface/parser.ml | 185 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 
@@ -90,3 +90,9 @@ check each member in one ordered pass.  The surface supplies raw member
 syntax through callbacks.  Scope validation and the kernel judgment run
 before a member becomes visible to later callbacks.  Closed instances
 still recheck every member.  The surface overlay loses four delta lines.
+
+Template composition adds a named source group with explicit template
+dependencies at symbolic universe arguments.  The surface checks the
+imported names and preserves their nested prefixes at specialization.
+The family catalog reuses its existing raw traversal and ordered
+checker.  Kernel, erasure, encoder and vendor sources keep their bytes.

@@ -58,7 +58,7 @@ let kind_starts_atom (k : Token.kind) : bool =
      never inside a term, so it starts no atom either. *)
   | Token.KReturn | Token.KWith | Token.KAbsurd | Token.KLet | Token.KIn | Token.KMu
   | Token.KAnd | Token.KRec | Token.KMatch | Token.KMutual | Token.KEnd | Token.Eof
-  | Token.KPoly | Token.KSpecialize | Token.KWhere ->
+  | Token.KPoly | Token.KGroup | Token.KSpecialize | Token.KWhere ->
       false
 
 let starts_atom (ts : Token.t list) : bool =
@@ -668,12 +668,27 @@ let rec universe_names ts acc =
         | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "',' or ')' after a universe binder" rest))
   | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "a universe binder" ts
 
-let rec universe_arguments ts acc =
+let rec universe_arguments_with parse_level ts acc =
   let* u, rest = parse_level ts in
   match rest with
-  | { Token.kind = Token.Comma; loc = _ } :: rest -> universe_arguments rest (u :: acc)
+  | { Token.kind = Token.Comma; loc = _ } :: rest -> universe_arguments_with parse_level rest (u :: acc)
   | { Token.kind = Token.RParen; loc = _ } :: rest -> Ok (List.rev (u :: acc), rest)
   | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "',' or ')' after a universe argument" rest
+
+let universe_arguments = universe_arguments_with parse_level
+
+let specialization parse_level ts = match ts with
+  | { Token.kind = Token.KSpecialize; loc = _ }
+    :: { Token.kind = Token.Ident name; loc = _ }
+    :: { Token.kind = Token.LParen; loc = _ } :: rest ->
+      let* levels, rest = universe_arguments_with parse_level rest [] in
+      (match rest with
+      | { Token.kind = Token.KAs; loc = _ }
+        :: { Token.kind = Token.Ident as_name; loc = _ } :: rest ->
+          Ok ((name, levels, as_name), rest)
+      | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "'as' and a fresh name" rest)
+  | ({ Token.kind = _; loc = _ } :: _ | []) ->
+      expected "'specialize NAME (LEVELS) as NAME'" ts
 
 let parse_decl ts =
   match ts with
@@ -694,7 +709,7 @@ let parse_decl ts =
             | Syntax.DDef (name, ty, body) ->
                 members rest ({ Syntax.rd_name = name; rd_ty = ty; rd_body = body } :: acc)
             | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ | Syntax.DPoly _
-            | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DSpecialize _ ->
+            | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DPolyCompose _ | Syntax.DSpecialize _ ->
                 expected "a nonrecursive member definition" ts)
         | { Token.kind = Token.KEnd; loc = _ } :: rest ->
             (match acc with
@@ -703,6 +718,24 @@ let parse_decl ts =
         | ({ Token.kind = _; loc = _ } :: _ | []) ->
             expected "'def' or 'end' in family members" ts in
       (match rest with
+      | { Token.kind = Token.KGroup; loc = _ }
+        :: { Token.kind = Token.Ident name; loc = _ }
+        :: { Token.kind = Token.KWhere; loc = _ } :: rest ->
+          let rec dependencies ts acc = match ts with
+            | { Token.kind = Token.KSpecialize; loc = _ } :: _rest ->
+                let* dependency, rest = specialization P.parse_level ts in
+                dependencies rest (dependency :: acc)
+            | ({ Token.kind = _; loc = _ } :: _ | []) ->
+                (match acc with
+                | [] -> expected "at least one template specialization in a group" ts
+                | _first :: _rest -> Ok (List.rev acc, ts)) in
+          let* dependencies, rest = dependencies rest [] in
+          let* definitions, rest = match rest with
+            | { Token.kind = Token.KEnd; loc = _ } :: rest -> Ok ([], rest)
+            | ({ Token.kind = _; loc = _ } :: _ | []) -> members rest [] in
+          Ok (Syntax.DPolyCompose (arity, name, dependencies, definitions), rest)
+      | { Token.kind = Token.KGroup; loc = _ } :: _rest ->
+          expected "'group NAME where' after universe binders" rest
       | { Token.kind = Token.KMu; loc = _ } :: rest ->
           let* group, rest = P.parse_fam_group rest [] in
           let* definitions, rest = match rest with
@@ -718,7 +751,7 @@ let parse_decl ts =
           (match decl with
           | Syntax.DDef (name, ty, body) -> Ok (Syntax.DPoly (arity, name, ty, body), rest)
           | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ | Syntax.DPoly _
-          | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DSpecialize _ ->
+          | Syntax.DPolyMu _ | Syntax.DPolyGroup _ | Syntax.DPolyCompose _ | Syntax.DSpecialize _ ->
               expected "a nonrecursive definition or single family after universe binders" ts))
   | { Token.kind = Token.KSpecialize; loc = _ }
     :: { Token.kind = Token.Ident name; loc = _ }

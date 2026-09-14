@@ -1,0 +1,8 @@
+poly (u) mu Box : Sort (succ u) with | box : Box
+poly (u) group A where specialize Box (u) as One end
+poly (u) group B where specialize Box (u) as Two end
+poly (u) group Group where
+specialize A (u) as X
+specialize B (u) as X_One
+end
+specialize Group (0) as G

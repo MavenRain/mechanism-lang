@@ -1,0 +1,31 @@
+poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with
+| box : A -> Box A
+where
+def unbox : (0 A : Sort (succ u)) -> Box A -> A :=
+  fun (0 A : Sort (succ u)) (value : Box A) =>
+    case value as self in Box return A with
+    | box (item : A) => item
+end
+
+poly (u, v) group Pair where
+specialize Box (u) as Left
+specialize Box (v) as Right
+def transfer : (0 A : Sort (succ u)) -> (0 B : Sort (succ v)) ->
+    (A -> B) -> Left A -> Right B :=
+  fun (0 A : Sort (succ u)) (0 B : Sort (succ v))
+      (f : A -> B) (value : Left A) => box (f (Left_unbox A value))
+end
+
+poly (w) group Nested where
+specialize Pair (w, (succ w)) as Inner
+def project : (0 A : Sort (succ (succ w))) -> Inner_Right A -> A :=
+  fun (0 A : Sort (succ (succ w))) => Inner_Right_unbox A
+end
+
+poly (u, v) group Maximum where
+specialize Box ((max u v)) as Item
+end
+
+poly (u, v) group Impredicative where
+specialize Box ((imax u v)) as Item
+end

@@ -1,0 +1,174 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-COMP-M1",
+      "path": "surface/family_poly.ml",
+      "old": "String.equal n scheme.family.Check.fam_name\n      || List.exists",
+      "new": "List.exists",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "f1f398f1ed225169730bd065aaa5a94dc9cf9de149b3c007056f7ff0d74253f9",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL mismatch: the name Left is already declared",
+      "killed": true,
+      "C-COMP-M1": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL mismatch: the name Left is already declared\n",
+        "stderr": ""
+      },
+      "C-COMP-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M2",
+      "path": "surface/family_poly.ml",
+      "old": "let definitions = List.concat_map snd groups in",
+      "new": "let definitions = [] in",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "6c121fd43c75e5a09bf9efecb804f79dfe9451d66a997d51368d6cc90687c0b2",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL unbound: Left_unbox",
+      "killed": true,
+      "C-COMP-M2": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL unbound: Left_unbox\n",
+        "stderr": ""
+      },
+      "C-COMP-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M3",
+      "path": "surface/family_poly.ml",
+      "old": "String.equal as_name name || List.mem as_name aliases",
+      "new": "String.equal as_name name",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "8e0cb575daa4ec2246ee2b66bf9257f50a5c685c28a86033ed33829a263eb39d",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL duplicate-disjoint-prefix: expected refusal: mismatch: the name Shared is already declared",
+      "killed": true,
+      "C-COMP-M3": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL duplicate-disjoint-prefix: expected refusal: mismatch: the name Shared is already declared\n",
+        "stderr": ""
+      },
+      "C-COMP-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M4",
+      "path": "surface/family_poly.ml",
+      "old": "if String.equal declaration.Check.d_name name then Error (collision name)",
+      "new": "if false then Error (collision name)",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "bcad7db1ee9836e0cafeba305d092c78cdce2cbbf2b7c54fc8ce4aa3d91abb8e",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL raw-group-name: expected refusal: mismatch: the name Composed is already declared",
+      "killed": true,
+      "C-COMP-M4": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL raw-group-name: expected refusal: mismatch: the name Composed is already declared\n",
+        "stderr": ""
+      },
+      "C-COMP-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M5",
+      "path": "surface/family_poly.ml",
+      "old": "let members = List.map (fun member _globals -> Ok member) definitions @ members in",
+      "new": "let members = List.map (fun member _globals -> Ok member) definitions in",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "28bd0d2ec56b35c369c795e115583b32352f004abefb92e9b5a6622f53ff8217",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL unbound: P_transfer",
+      "killed": true,
+      "C-COMP-M5": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL unbound: P_transfer\n",
+        "stderr": ""
+      },
+      "C-COMP-M5-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M6",
+      "path": "surface/family_poly.ml",
+      "old": "          let level l = Level.subst levels l |> Option.to_result ~none:scope_error in",
+      "new": "          let level l = Level.subst (List.rev levels) l |> Option.to_result ~none:scope_error in",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "3d5d806d4a307f8d95ee636cfce72c9a8e05ef98a8a4b7cf35168e9814be9797",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL mismatch: the term has type",
+      "killed": true,
+      "C-COMP-M6": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL mismatch: the term has type Type (u0 + 2) and the expected type is Type (u0 + 1)\n",
+        "stderr": ""
+      },
+      "C-COMP-M6-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-COMP-M7",
+      "path": "surface/family_poly.ml",
+      "old": "Ok (as_name :: generated @ aliases, (families, definitions) :: groups))",
+      "new": "Ok (as_name :: List.filter (fun _name -> false) generated @ aliases, (families, definitions) :: groups))",
+      "source_sha256": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+      "mutant_sha256": "4a065fb24dd9a78f4e140cf58bd9ad18a965c94ba186e38346ab3ac9a998f26a",
+      "exit_code": 1,
+      "diagnostic": "TEMPLATE-COMPOSITION-FAIL prefix-generated-family: expected refusal: mismatch: the name X_One is already declared",
+      "killed": true,
+      "C-COMP-M7": {
+        "stdout": "TEMPLATE-COMPOSITION-FAIL prefix-generated-family: expected refusal: mismatch: the name X_One is already declared\n",
+        "stderr": ""
+      },
+      "C-COMP-M7-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "suite_sha256": "63e4e4edf38c9e086c0d061b7771b315cc2ff5e156b5089c2fa6787391b99b22",
+  "restoration": {
+    "baseline-build": {
+      "stdout": "OK build: 0 errors, 0 warnings\n",
+      "stderr": ""
+    },
+    "restored-build": {
+      "stdout": "OK build: 0 errors, 0 warnings\n",
+      "stderr": ""
+    },
+    "baseline": {
+      "stdout": "TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10\n",
+      "stderr": ""
+    },
+    "restored": {
+      "stdout": "TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10\n",
+      "stderr": ""
+    }
+  },
+    "review_delta": {
+      "date": "2026-09-13",
+      "reason": "The review fix rounds 1 and 2 edited these sources after this capture. The close ladder of the review reran the checks on the final tree. See the review block of dev/M0-BUILD-LOG.md.",
+      "paths": [
+        {
+          "path": "surface/family_poly.ml",
+          "captured": "2aa5c8a986ce6416fcd28380dc75b739d903b41f24736989a91e17629d984daf",
+          "final": "5a8b5ddd0a5a6f99d2b1e739fb3bad18ca62404fe63edf4c64698e56737d9895"
+        },
+        {
+          "path": "test/template_composition.ml",
+          "captured": "63e4e4edf38c9e086c0d061b7771b315cc2ff5e156b5089c2fa6787391b99b22",
+          "final": "4b51741e88d5d8ae63b52ae30c30118cf145422ae8b6e42443b0d85aad9cfd24",
+          "field": "suite_sha256"
+        }
+      ]
+    }
+}

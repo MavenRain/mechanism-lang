@@ -67,8 +67,8 @@ Instantiation requires exactly the declared number of closed universe
 arguments and a fresh output name.  It substitutes through every term,
 shape payload, address, motive and branch, then rechecks the result before
 installing an ordinary global.  The existing Term.Global constructor
-still holds one string.  Import syntax for references between templates
-belongs to Stage B.  Family templates belong to the prelude work;
+still holds one string.  Standalone definition-template dependencies
+remain unavailable.  Family templates belong to the prelude work;
 Stage A requires closed family universes.  The large-elimination rule
 also requires universal positivity before treating a level as non-Prop.
 
@@ -202,7 +202,9 @@ entry points, including Prop's erased data-index exception.
 
 A template result universe must be definitely zero or definitely positive.
 Templates whose result can alternate between Prop and Type, mutual
-templates and references between templates are not supported yet.
+templates and ordinary term references to template names are not
+supported.  Composed groups can import preceding templates through
+explicit symbolic specializations, as specified below.
 Instantiation requires exactly the declared number of closed levels and a
 fresh name.  Every raw level occurrence and self-family reference is
 substituted, including eliminator motive metadata.  Closed instances are
@@ -406,6 +408,37 @@ See `dev/M0-STAGE-C-PRENEX-GROUPS.md`.
 
 The callback checking contract and cost measurements are described in
 `dev/M0-STAGE-C-TEMPLATE-CHECKING.md`.
+
+### Composed templates
+
+```text
+poly-compose ::= 'poly' '(' universes ')' 'group' NAME 'where'
+                 dependency+ member* 'end'
+dependency   ::= 'specialize' NAME '(' levels ')' 'as' NAME
+```
+
+`group` is reserved.  A dependency names a preceding family template
+or composed group.  Its universe arguments use the group's scope.
+All dependencies precede the nonrecursive member definitions.
+The imported families check in order, then imported definitions and
+new members check in order.  Their raw syntax is traversed and kernel
+checked under the new scope.  Only the completed schema enters the
+catalog; no symbolic global escapes.
+
+Specializing a composed group uses the output name as a prefix.
+For a dependency imported as Local, its primary family becomes
+OUTPUT_Local, and its member value becomes OUTPUT_Local_value.
+Nested groups retain all dependency prefixes.  New members become
+OUTPUT_MEMBER.  The output prefix is not itself a family or global.
+The closed families and definitions recheck against current globals.
+Constructor labels retain their names and repeated imports retain
+distinct nominal families.  Existing name reservations and budgets
+apply.  Empty groups, escaping levels, duplicate prefixes, unknown
+dependencies, axioms and recursive members are refused.
+
+The TEMPLATE-COMPOSITION and TEMPLATE-COMPOSITION-RUNTIME gates check
+the source contract and evaluation on three hosts.  See
+`dev/M0-STAGE-C-COMPOSITION.md` for validation and remaining limits.
 
 ### Checked categories
 

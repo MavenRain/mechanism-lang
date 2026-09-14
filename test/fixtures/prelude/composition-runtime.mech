@@ -1,0 +1,17 @@
+specialize Pair (0, 0) as Runtime
+specialize Nested (0) as Higher
+
+def compositionInput : Nat := 37
+def payload : Runtime_Left Nat := box compositionInput
+def addTwo : Nat -> Nat := fun (x : Nat) => natAdd x 2
+def double : Nat -> Nat := fun (x : Nat) => natMul x 2
+
+def forward : Nat := Runtime_Right_unbox Nat
+  (Runtime_transfer Nat Nat (fun (x : Nat) => double (addTwo x)) payload)
+def reverse : Nat := Runtime_Right_unbox Nat
+  (Runtime_transfer Nat Nat (fun (x : Nat) => addTwo (double x)) payload)
+
+def higherPayload : Higher_Inner_Left Nat := box (double compositionInput)
+def nestedCarrier : Higher_Inner_Right Type := box Nat
+def nested : Nat :=
+  Higher_Inner_Left_unbox (Higher_project Type nestedCarrier) higherPayload

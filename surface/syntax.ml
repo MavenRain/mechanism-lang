@@ -135,6 +135,7 @@ type decl =
   | DPoly of int * string * t * t
   | DPolyMu of int * fam
   | DPolyGroup of int * fam * fam list * rec_def list
+  | DPolyCompose of int * string * (string * Universe.t list * string) list * rec_def list
   | DSpecialize of string * Universe.t list * string
   | DDef of string * t * t
   | DAxiom of string * t
@@ -311,6 +312,16 @@ let decl_text (d : decl) : string =
   | DSpecialize (name, levels, as_name) ->
       Printf.sprintf "specialize %s (%s) as %s\n" name
         (String.concat ", " (List.map Universe.text levels)) as_name
+  | DPolyCompose (arity, name, dependencies, members) ->
+      let names = List.init arity (fun i -> "u" ^ string_of_int i) in
+      "poly (" ^ String.concat ", " names ^ ") group " ^ name ^ " where\n"
+      ^ String.concat "" (List.map (fun (source, levels, as_name) ->
+          Printf.sprintf "specialize %s (%s) as %s\n" source
+            (String.concat ", " (List.map Universe.text levels)) as_name) dependencies)
+      ^ String.concat "" (List.map (fun m ->
+          Printf.sprintf "def %s : %s := %s\n" m.rd_name (at 0 m.rd_ty)
+            (at 0 m.rd_body)) members)
+      ^ "end\n"
   | DDef (name, ty, def) ->
       Printf.sprintf "def %s : %s := %s\n" name (at 0 ty) (at 0 def)
   | DAxiom (name, ty) -> Printf.sprintf "axiom %s : %s\n" name (at 0 ty)

@@ -121,6 +121,11 @@
  (modules Template_cost)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
+(executable
+ (name template_composition)
+ (modules Template_composition)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))
+
 (copy_files ../vendor/kanon/test/wasm.ml)
 (copy_files ../vendor/kanon/test/sl_surface.ml)
 (copy_files ../vendor/kanon/test/sys_io.ml)
