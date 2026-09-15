@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "checks": [
+    {
+      "name": "heterogeneous-nattrans-runtime",
+      "argv": [
+        "python3",
+        "-I",
+        "test/heterogeneous_nattrans_runtime.py"
+      ],
+      "outer_timeout_seconds": 120,
+      "elapsed_ms": 110327,
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-v2ab17bc/41/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-v2ab17bc/41', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested']' timed out after 34.96452037477866 seconds\n",
+      "stderr": "",
+      "passed": false
+    },
+    {
+      "name": "composable-functors",
+      "argv": [
+        "_build/default/test/prelude_composable_functors.exe",
+        "."
+      ],
+      "outer_timeout_seconds": 120,
+      "elapsed_ms": 120075,
+      "exit_code": 124,
+      "stdout": "",
+      "stderr": "",
+      "passed": false
+    }
+  ],
+  "sources": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "test/heterogeneous_nattrans_runtime.py": "4e4595eea773a27246fbb07ecb9e681838c586a2cf50bd7db468be0c6e9f5900",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a",
+    "_build/default/test/prelude_composable_functors.exe": "956e300f61357f9833575f96c2ae87bbe7913c81d56665fdea9bc8ab3c60763d"
+  }
+}

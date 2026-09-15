@@ -1,0 +1,86 @@
+mu Point : Type 1 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechHeterogeneousNatTrans (0, 1, 1, 0) as Run
+def heterogeneousNatInput : Nat := 37
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Run_Base_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * ((0 A : Type 0) -> Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (0 A : Type 0) (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (0 A : Type 0) (n : Nat) => g.2 A (f.2 A n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 h : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))))
+
+def DoubleEnd : Run_Base_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat -> Nat) * (Nat -> Nat)),
+   ((fun (0 x : Point) => ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat -> Nat) * (Nat -> Nat))
+          (g : (Nat -> Nat) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => g.1 (f.1 n)), (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat -> Nat) * (Nat -> Nat))
+            (0 g : (Nat -> Nat) * (Nat -> Nat))
+            (0 h : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))))
+def Constant : Run_Base_Functor Nat Point IndexedEnd DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+       ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Components : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => x), (fun (n : Nat) => n))
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components y) (Components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components right) (Components x) with
+    | same => categoryRefl
+def Alpha : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  (Components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+     componentLaw x y f.1))
+def BetaComponents : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => natAdd n x), (fun (n : Nat) => x))
+def betaComponentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (BetaComponents y) (BetaComponents x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (BetaComponents right) (BetaComponents x) with
+    | same => categoryRefl
+def Beta : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  (BetaComponents,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+     betaComponentLaw x y f.1))
+
+def componentValue : Nat :=
+  (Run_natApp Nat Point IndexedEnd DoubleEnd Constant Constant Alpha heterogeneousNatInput).1 0
+def identityValue : Nat :=
+  ((Run_idNat Nat Point IndexedEnd DoubleEnd Constant).1 0).1
+    (natAdd heterogeneousNatInput 5)
+def verticalForward : Nat :=
+  ((Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta).1 heterogeneousNatInput).1 0
+def verticalReverse : Nat :=
+  ((Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Beta Alpha).1 heterogeneousNatInput).1 0
+def verticalNested : Nat :=
+  ((Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    (Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta)
+    Beta).1 heterogeneousNatInput).1 0
+def naturalityWitness : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Alpha.1 0) (Alpha.1 0) :=
+  Run_naturality Nat Point IndexedEnd DoubleEnd Constant Constant Alpha 0 0
+    (same, (fun (0 A : Type 0) (n : Nat) => n))

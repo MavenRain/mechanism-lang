@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "base": "d89fe5142c0dbe4b2ae1af0ecbc4298654e2ef6d",
+  "checks": [
+    {
+      "name": "build",
+      "command": "zsh dev/dunecho.sh build",
+      "exit_code": 0,
+      "stdout_sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "name": "kernel",
+      "command": "_build/default/test/prelude_heterogeneous_nattrans.exe . --trace",
+      "exit_code": 0,
+      "stdout_sha256": "0ea064d702f6ea870a71e55215a9fc5202b5468a27d2734b9865ab8b61caf551",
+      "stderr_sha256": "98a9e40fb4ee644c0b8f3f4d8603b44193163474bec1dcf0aee39f3b71db4b4c",
+      "stdout_bytes": 86,
+      "stderr_bytes": 957274,
+      "outer_timeout_ms": 900000,
+      "trace_note": "Optional trace records phases and refusal diagnostics on stderr."
+    },
+    {
+      "name": "runtime",
+      "command": "python3 -I test/heterogeneous_nattrans_runtime.py",
+      "exit_code": 0,
+      "stdout_sha256": "a9e9269b81ac383f981db7f9eb5f05e8f169b4648cd860d02bebf1e47a9921c1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 69,
+      "stderr_bytes": 0,
+      "runtime_harness_sha256": "4e4595eea773a27246fbb07ecb9e681838c586a2cf50bd7db468be0c6e9f5900"
+    },
+    {
+      "name": "mutations",
+      "command": "python3 -I dev/heterogeneous-nattrans-mutations.py OUTPUT.json",
+      "exit_code": 0,
+      "stdout_sha256": "c959cbff26b76f4bcccf6f48d31d25d159c3438760e6820c99d64f964552fa7b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 324,
+      "stderr_bytes": 0
+    },
+    {
+      "name": "gates",
+      "command": "zsh dev/gates.sh",
+      "exit_code": 1,
+      "stdout_sha256": "823f47408d6aba1b9824a736359effa94570665b921d21542427183c6e3ad9d0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 8276,
+      "stderr_bytes": 0,
+      "runtime_harness_sha256": "4e4595eea773a27246fbb07ecb9e681838c586a2cf50bd7db468be0c6e9f5900"
+    }
+  ],
+  "runtime_harness_revision": {
+    "before_sha256": "4e4595eea773a27246fbb07ecb9e681838c586a2cf50bd7db468be0c6e9f5900",
+    "after_sha256": "b7a04d8c229ba74f09cb77ea096187e114d0987c29c4820f4079bd95a5dc1c96",
+    "note": "Both payloads share one checked program. All ten kernel and twenty WASM comparisons and the 110/120-second deadlines remain."
+  },
+  "runtime_final": {
+    "name": "heterogeneous-nattrans-runtime-final",
+    "argv": [
+      "timeout",
+      "120",
+      "python3",
+      "-I",
+      "test/heterogeneous_nattrans_runtime.py"
+    ],
+    "outer_timeout_seconds": 120,
+    "internal_budget_seconds": 110,
+    "elapsed_ms": 111538,
+    "exit_code": 1,
+    "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-7osv98ki/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-7osv98ki', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'componentValue_41', 'identityValue_41', 'verticalForward_41', 'verticalReverse_41', 'verticalNested_41']' timed out after 109.77372158318758 seconds\n",
+    "stderr": "",
+    "passed": false
+  },
+  "runtime_diagnostic": {
+    "name": "runtime-diagnostic",
+    "outer_timeout_seconds": 930,
+    "internal_budget_seconds": 900,
+    "host_timeout_seconds": 10,
+    "elapsed_ms": 63103,
+    "exit_code": 0,
+    "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME OK cases=5 hosts=3 mutation=1\n",
+    "stderr": "",
+    "passed": true
+  },
+  "runtime_confirmation": {
+    "name": "heterogeneous-nattrans-runtime-final",
+    "argv": [
+      "timeout",
+      "120",
+      "python3",
+      "-I",
+      "test/heterogeneous_nattrans_runtime.py"
+    ],
+    "outer_timeout_seconds": 120,
+    "internal_budget_seconds": 110,
+    "elapsed_ms": 110298,
+    "exit_code": 1,
+    "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-dsgyowvj/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-dsgyowvj', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'componentValue_41', 'identityValue_41', 'verticalForward_41', 'verticalReverse_41', 'verticalNested_41']' timed out after 109.99887562496588 seconds\n",
+    "stderr": "",
+    "passed": false
+  },
+  "executables": {
+    "_build/default/bin/mech.exe": "ab8b603cf3cc5acac8e9cf9c07f3e5e6a01fab526a4c9bb59999dc4fb85e1162",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a",
+    "_build/default/test/prelude_heterogeneous_nattrans.exe": "e1ed0daa6432ac67bd60220c05d16638e0566e402e0ca98da9d508721f399a88"
+  },
+  "gate_summary": {
+    "pass": 41,
+    "total": 53,
+    "failed": [
+      "FAIL PRELUDE-COMPOSABLE-FUNCTORS",
+      "FAIL PRELUDE-NATTRANS",
+      "FAIL PRELUDE-LEFT-KAN",
+      "FAIL PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "FAIL PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME",
+      "FAIL PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+      "FAIL PRELUDE-CATEGORY-RUNTIME",
+      "FAIL PRELUDE-CATEGORY-ACCESSORS",
+      "FAIL PRELUDE-FUNCTOR-RUNTIME",
+      "FAIL PRELUDE-NATTRANS-RUNTIME",
+      "FAIL PRELUDE-LEFT-KAN-RUNTIME",
+      "FAIL TRUSTED-LINES"
+    ],
+    "phase": "before runtime harness batching"
+  },
+  "measurements": {
+    "BUILD": {
+      "tier": "SLOW",
+      "elapsed_ms": 2417.128,
+      "exit_code": 0
+    },
+    "PIN": {
+      "tier": "FAST",
+      "elapsed_ms": 156.109,
+      "exit_code": 0
+    },
+    "PIN-DELTA": {
+      "tier": "MED",
+      "elapsed_ms": 2981.401,
+      "exit_code": 0
+    },
+    "R0-COUNT": {
+      "tier": "FAST",
+      "elapsed_ms": 145.041,
+      "exit_code": 0
+    },
+    "R0-AUDIT": {
+      "tier": "FAST",
+      "elapsed_ms": 345.353,
+      "exit_code": 0
+    },
+    "SUITE-KERNEL": {
+      "tier": "SUITE",
+      "elapsed_ms": 1340.953,
+      "exit_code": 0
+    },
+    "LEVELS": {
+      "tier": "FAST",
+      "elapsed_ms": 265.371,
+      "exit_code": 0
+    },
+    "PRENEX": {
+      "tier": "FAST",
+      "elapsed_ms": 99.429,
+      "exit_code": 0
+    },
+    "PRENEX-FAMILIES": {
+      "tier": "FAST",
+      "elapsed_ms": 73.507,
+      "exit_code": 0
+    },
+    "PRENEX-GROUPS": {
+      "tier": "FAST",
+      "elapsed_ms": 135.072,
+      "exit_code": 0
+    },
+    "TEMPLATE-COMPOSITION": {
+      "tier": "MED",
+      "elapsed_ms": 5986.738,
+      "exit_code": 0
+    },
+    "SUITE-SURFACE": {
+      "tier": "FAST",
+      "elapsed_ms": 43.586,
+      "exit_code": 0
+    },
+    "SUITE-WASM": {
+      "tier": "SUITE",
+      "elapsed_ms": 9971.272,
+      "exit_code": 0
+    },
+    "IMPORT-GRAMMAR": {
+      "tier": "MED",
+      "elapsed_ms": 2337.633,
+      "exit_code": 0
+    },
+    "IMPORT-CLI": {
+      "tier": "FAST",
+      "elapsed_ms": 766.301,
+      "exit_code": 0
+    },
+    "CORPUS-UAT": {
+      "tier": "MED",
+      "elapsed_ms": 15041.861,
+      "exit_code": 0
+    },
+    "PARITY-COUNTS": {
+      "tier": "MED",
+      "elapsed_ms": 1852.263,
+      "exit_code": 0
+    },
+    "PRELUDE": {
+      "tier": "FAST",
+      "elapsed_ms": 52.969,
+      "exit_code": 0
+    },
+    "EQUALITY": {
+      "tier": "FAST",
+      "elapsed_ms": 30.741,
+      "exit_code": 0
+    },
+    "FAMILY-POLY": {
+      "tier": "FAST",
+      "elapsed_ms": 32.545,
+      "exit_code": 0
+    },
+    "PRELUDE-POLY": {
+      "tier": "FAST",
+      "elapsed_ms": 34.542,
+      "exit_code": 0
+    },
+    "FAMILY-MEMBERS": {
+      "tier": "FAST",
+      "elapsed_ms": 27.19,
+      "exit_code": 0
+    },
+    "PRELUDE-TRANSPORT": {
+      "tier": "FAST",
+      "elapsed_ms": 36.09,
+      "exit_code": 0
+    },
+    "PRELUDE-EQUALITY-OPS": {
+      "tier": "FAST",
+      "elapsed_ms": 53.395,
+      "exit_code": 0
+    },
+    "PRELUDE-DEPENDENT": {
+      "tier": "FAST",
+      "elapsed_ms": 38.476,
+      "exit_code": 0
+    },
+    "FAMILY-GROUPS": {
+      "tier": "FAST",
+      "elapsed_ms": 28.072,
+      "exit_code": 0
+    },
+    "PRELUDE-CONGRUENCE": {
+      "tier": "FAST",
+      "elapsed_ms": 63.806,
+      "exit_code": 0
+    },
+    "TEMPLATE-COST": {
+      "tier": "MED",
+      "elapsed_ms": 121.892,
+      "exit_code": 0
+    },
+    "PRELUDE-CATEGORY": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 524119.533,
+      "exit_code": 0
+    },
+    "PRELUDE-FUNCTOR": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 589548.22,
+      "exit_code": 0
+    },
+    "PRELUDE-HETEROGENEOUS-FUNCTOR": {
+      "tier": "SLOW",
+      "elapsed_ms": 13898.22,
+      "exit_code": 0
+    },
+    "PRELUDE-HETEROGENEOUS-NATTRANS": {
+      "tier": "SLOW",
+      "elapsed_ms": 50815.314,
+      "exit_code": 0
+    },
+    "PRELUDE-COMPOSABLE-FUNCTORS": {
+      "tier": "SLOW",
+      "elapsed_ms": 120153.324,
+      "exit_code": 124
+    },
+    "PRELUDE-NATTRANS": {
+      "tier": "SUITE",
+      "elapsed_ms": 300141.849,
+      "exit_code": 124
+    },
+    "PRELUDE-LEFT-KAN": {
+      "tier": "SUITE",
+      "elapsed_ms": 300351.356,
+      "exit_code": 124
+    },
+    "EQUALITY-RUNTIME": {
+      "tier": "MED",
+      "elapsed_ms": 3854.667,
+      "exit_code": 0
+    },
+    "PRENEX-RUNTIME": {
+      "tier": "MED",
+      "elapsed_ms": 1874.805,
+      "exit_code": 0
+    },
+    "PRENEX-FAMILIES-RUNTIME": {
+      "tier": "MED",
+      "elapsed_ms": 3221.014,
+      "exit_code": 0
+    },
+    "PRENEX-GROUPS-RUNTIME": {
+      "tier": "MED",
+      "elapsed_ms": 1839.326,
+      "exit_code": 0
+    },
+    "TEMPLATE-COMPOSITION-RUNTIME": {
+      "tier": "SLOW",
+      "elapsed_ms": 7406.102,
+      "exit_code": 0
+    },
+    "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME": {
+      "tier": "SLOW",
+      "elapsed_ms": 30249.099,
+      "exit_code": 1
+    },
+    "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME": {
+      "tier": "SLOW",
+      "elapsed_ms": 110591.688,
+      "exit_code": 1
+    },
+    "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME": {
+      "tier": "SLOW",
+      "elapsed_ms": 31936.331,
+      "exit_code": 1
+    },
+    "PRELUDE-CATEGORY-RUNTIME": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 210712.078,
+      "exit_code": 2
+    },
+    "PRELUDE-CATEGORY-ACCESSORS": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 210683.864,
+      "exit_code": 2
+    },
+    "DEPENDENT-CLOSURE-RUNTIME": {
+      "tier": "MED",
+      "elapsed_ms": 13305.054,
+      "exit_code": 0
+    },
+    "PRELUDE-FUNCTOR-RUNTIME": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 210304.023,
+      "exit_code": 2
+    },
+    "PRELUDE-NATTRANS-RUNTIME": {
+      "tier": "CATEGORY",
+      "elapsed_ms": 210585.186,
+      "exit_code": 2
+    },
+    "PRELUDE-LEFT-KAN-RUNTIME": {
+      "tier": "SUITE",
+      "elapsed_ms": 210321.104,
+      "exit_code": 2
+    },
+    "AXIOMS": {
+      "tier": "FAST",
+      "elapsed_ms": 381.151,
+      "exit_code": 0
+    },
+    "MAP-INVENTORY": {
+      "tier": "MED",
+      "elapsed_ms": 4670.295,
+      "exit_code": 0
+    },
+    "TRUSTED-LINES": {
+      "tier": "FAST",
+      "elapsed_ms": 61.578,
+      "exit_code": 1
+    },
+    "DENOMINATORS": {
+      "tier": "MED",
+      "elapsed_ms": 91.635,
+      "exit_code": 0
+    }
+  },
+  "rechecks": [
+    {
+      "name": "heterogeneous-nattrans-runtime",
+      "exit_code": 1,
+      "elapsed_ms": 110327,
+      "passed": false
+    },
+    {
+      "name": "composable-functors",
+      "exit_code": 124,
+      "elapsed_ms": 120075,
+      "passed": false
+    }
+  ],
+  "evidence_sha256": {
+    "build.log": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b",
+    "gates.log": "823f47408d6aba1b9824a736359effa94570665b921d21542427183c6e3ad9d0",
+    "gates.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kernel.log": "0ea064d702f6ea870a71e55215a9fc5202b5468a27d2734b9865ab8b61caf551",
+    "mutations.json": "1d5477c19849e38a31c408d395d2c45fc08e7175048263476f5d6a8c2430c19d",
+    "mutations.log": "c959cbff26b76f4bcccf6f48d31d25d159c3438760e6820c99d64f964552fa7b",
+    "reruns.json": "3203bc0b41f651e509da9dc7b11030ce7c009eac8877fbfd51397317273fbdb2",
+    "runtime-confirmation.json": "904b854d0763a8dc6cc562aaf1963216bfbd98836f48c98a1c9ce7a776b9c2fd",
+    "runtime-confirmation.log": "9b698e0fa5faa60fdd4ba50f495a284d8a1223e98c707d61002bae25cf932139",
+    "runtime-diagnostic.json": "8433e0dab9b592c16d3622566ebde1bd8f3227c7c3c7c2b805a9d5e3d55a18d9",
+    "runtime-diagnostic.log": "a9e9269b81ac383f981db7f9eb5f05e8f169b4648cd860d02bebf1e47a9921c1",
+    "runtime-diagnostic.py": "52655f964bb8e1ea366ae2b18398a2011e3d22177ad04475c78b6af8d29df824",
+    "runtime-final.json": "ccb46c3e709155bc6cee26d8a2b6ddc892316f1068c63e1244f5084f07051942",
+    "runtime-final.log": "f06895966ac62129165cde70f50c8ee374682073a0d3c21b06bdd58e7f331385",
+    "runtime-harness-before.txt": "4e4595eea773a27246fbb07ecb9e681838c586a2cf50bd7db468be0c6e9f5900",
+    "runtime.log": "a9e9269b81ac383f981db7f9eb5f05e8f169b4648cd860d02bebf1e47a9921c1",
+    "sources.sha256": "d414b9578bf36663c20794ec924e6657ae146e7894600ed6d95a383314af8e71",
+    "static.json": "b52f2b2feb4c4158926684dea3d5441e65c8290b031f8c21a438f37c235e2739"
+  }
+}

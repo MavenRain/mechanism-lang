@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sources": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "test/fixtures/prelude/heterogeneous-nattrans-runtime.mech": "1a6f3cd51d9ed3312b66064ad5b4257e85fda7ed2f8f27ec5c9f78518d7bdaf5",
+    "test/heterogeneous_nattrans_runtime.py": "b7a04d8c229ba74f09cb77ea096187e114d0987c29c4820f4079bd95a5dc1c96",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a"
+  },
+  "check": {
+    "name": "heterogeneous-nattrans-runtime-final",
+    "argv": [
+      "timeout",
+      "120",
+      "python3",
+      "-I",
+      "test/heterogeneous_nattrans_runtime.py"
+    ],
+    "outer_timeout_seconds": 120,
+    "internal_budget_seconds": 110,
+    "elapsed_ms": 111538,
+    "exit_code": 1,
+    "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-7osv98ki/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-nattrans-7osv98ki', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'componentValue_41', 'identityValue_41', 'verticalForward_41', 'verticalReverse_41', 'verticalNested_41']' timed out after 109.77372158318758 seconds\n",
+    "stderr": "",
+    "passed": false
+  }
+}

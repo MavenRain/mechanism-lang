@@ -64,8 +64,13 @@ The first U1 increment adds functors, identity and composition within
 one category group instance; see dev/PORT-UAT-U1.md.  The next U1
 increment adds natural transformations, identity, vertical composition
 and whiskering; see dev/PORT-UAT-U1-NATTRANS.md.  Left Kan extensions
-and desc_unique follow in dev/PORT-UAT-U1-LEFT-KAN.md.  Functors
-across separate universe pairs and source-type parity remain open.
+and desc_unique follow in dev/PORT-UAT-U1-LEFT-KAN.md.  Heterogeneous functors and their composition follow in
+dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md and
+dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md. Natural transformations at
+separate universe pairs follow in
+dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md. General instance reuse,
+heterogeneous whiskering and left Kan extensions, and source-type
+parity remain open.
 The template checking increment removes a repeated symbolic member
 check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
 rechecking and all existing gate predicates.

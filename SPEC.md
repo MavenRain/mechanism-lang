@@ -501,5 +501,21 @@ lanUniq read that solution.  desc_unique derives pointwise
 equality of two mediators that factor the same cocone, by
 symmetry and transitivity.
 See `dev/PORT-UAT-U1-LEFT-KAN.md` for the representation and tests.
-Functors across separate universe pairs and source-type parity
-remain open.
+MechHeterogeneousFunctor specializes two category cores with independent
+source and target object/hom universe pairs. MechComposableFunctors
+shares three category cores for two input functors and their composite.
+Both preservation laws are checked source definitions.
+
+MechHeterogeneousNatTrans specializes MechHeterogeneousFunctor once as
+Base and adds NatTrans, natApp, naturality, idNat, vcomp and the proof
+helpers targetEqSymm and vcompLaw. At levels `(u, v, w, z)`, NatTrans
+has sort `Sort (max (succ u) (succ z))`. Components retain their object
+argument; naturality is a proposition in the target equality family.
+Vertical composition applies alpha then beta using the same middle
+functor and category records. Equal universe levels do not identify
+distinct nominal category or equality families.
+
+See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the contract and
+validation. General instance reuse, general identity and repeated
+functor composition, heterogeneous whiskering and left Kan extensions,
+and source-type parity remain open.

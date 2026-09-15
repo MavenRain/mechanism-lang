@@ -1,0 +1,10 @@
+identity-proof: killed=True
+first-naturality: killed=True
+second-naturality: killed=True
+component-order: killed=True
+component-object: killed=True
+beta-action: killed=True
+component-universe: killed=True
+negative-corpus: killed=True
+controls distinct=True
+HETEROGENEOUS-NATTRANS-MUTATIONS passed=True controls=8 restored=1

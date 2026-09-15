@@ -1,0 +1,7 @@
+def bad : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    (other : Mixed_Base_Target_Category D) -> (F : Mixed_Base_Functor C D c d) ->
+    Mixed_Base_Functor C D c other :=
+  fun (0 C : Type 0) (0 D : Type 2) (c : Mixed_Base_Source_Category C)
+      (d : Mixed_Base_Target_Category D) (other : Mixed_Base_Target_Category D)
+      (F : Mixed_Base_Functor C D c d) => F

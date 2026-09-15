@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "sources": {
+    "test/heterogeneous_nattrans_runtime.py": "b7a04d8c229ba74f09cb77ea096187e114d0987c29c4820f4079bd95a5dc1c96",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "test/fixtures/prelude/heterogeneous-nattrans-runtime.mech": "1a6f3cd51d9ed3312b66064ad5b4257e85fda7ed2f8f27ec5c9f78518d7bdaf5",
+    "_build/default/test/prelude_runtime.exe": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a"
+  },
+  "check": {
+    "name": "runtime-diagnostic",
+    "outer_timeout_seconds": 930,
+    "internal_budget_seconds": 900,
+    "host_timeout_seconds": 10,
+    "elapsed_ms": 63103,
+    "exit_code": 0,
+    "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME OK cases=5 hosts=3 mutation=1\n",
+    "stderr": "",
+    "passed": true
+  },
+  "runner_sha256": "52655f964bb8e1ea366ae2b18398a2011e3d22177ad04475c78b6af8d29df824",
+  "transformation": "Only the two integer budget constants change from 110 to 900 in memory."
+}

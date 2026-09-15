@@ -1,0 +1,3 @@
+def bad : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  (Components, (fun (0 x : Nat) (0 y : Nat)
+    (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))

@@ -1,0 +1,40 @@
+-- The two signatures make each component universe dominate once.
+specialize MechHeterogeneousNatTrans (0, 1, 2, 3) as Mixed
+specialize MechHeterogeneousNatTrans (4, 3, 2, 1) as Wide
+specialize MechHeterogeneousNatTrans (0, 0, 0, 0) as Equal
+
+def MixedNatSort : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    Mixed_Base_Functor C D c d -> Mixed_Base_Functor C D c d -> Type 3 := Mixed_NatTrans
+def MixedSourceHom : (0 C : Type 0) -> (c : Mixed_Base_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 1 := Mixed_Base_Source_Hom
+def MixedTargetHom : (0 D : Type 2) -> (d : Mixed_Base_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 3 := Mixed_Base_Target_Hom
+
+def WideNatSort : (0 C : Type 4) -> (0 D : Type 2) ->
+    (c : Wide_Base_Source_Category C) -> (d : Wide_Base_Target_Category D) ->
+    Wide_Base_Functor C D c d -> Wide_Base_Functor C D c d -> Type 4 := Wide_NatTrans
+def WideSourceHom : (0 C : Type 4) -> (c : Wide_Base_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 3 := Wide_Base_Source_Hom
+def WideTargetHom : (0 D : Type 2) -> (d : Wide_Base_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 1 := Wide_Base_Target_Hom
+
+def genericVertical : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    (F : Mixed_Base_Functor C D c d) -> (G : Mixed_Base_Functor C D c d) ->
+    (H : Mixed_Base_Functor C D c d) ->
+    Mixed_NatTrans C D c d F G -> Mixed_NatTrans C D c d G H -> Mixed_NatTrans C D c d F H :=
+  Mixed_vcomp
+def genericIdentity : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    (F : Mixed_Base_Functor C D c d) -> Mixed_NatTrans C D c d F F := Mixed_idNat
+def genericNaturality : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    (F : Mixed_Base_Functor C D c d) -> (G : Mixed_Base_Functor C D c d) ->
+    (alpha : Mixed_NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Mixed_Base_Source_Hom C c x y) ->
+    Mixed_Base_Target (Mixed_Base_Target_Hom D d (F.1 x) (G.1 y))
+      (Mixed_Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+        (Mixed_Base_functorMap C D c d F x y f) (alpha.1 y))
+      (Mixed_Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (Mixed_Base_functorMap C D c d G x y f)) := Mixed_naturality

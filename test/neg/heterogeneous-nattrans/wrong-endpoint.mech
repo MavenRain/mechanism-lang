@@ -1,0 +1,18 @@
+def bad : (0 Cend : Type 0) -> (0 Dend : Type 2) ->
+    (cend : Mixed_Base_Source_Category Cend) ->
+    (dend : Mixed_Base_Target_Category Dend) ->
+    (Fend : Mixed_Base_Functor Cend Dend cend dend) ->
+    (Gend : Mixed_Base_Functor Cend Dend cend dend) ->
+    (Hend : Mixed_Base_Functor Cend Dend cend dend) ->
+    Mixed_NatTrans Cend Dend cend dend Fend Gend ->
+    Mixed_NatTrans Cend Dend cend dend Gend Hend ->
+    Mixed_NatTrans Cend Dend cend dend Fend Gend :=
+  fun (0 Cend : Type 0) (0 Dend : Type 2)
+      (cend : Mixed_Base_Source_Category Cend)
+      (dend : Mixed_Base_Target_Category Dend)
+      (Fend : Mixed_Base_Functor Cend Dend cend dend)
+      (Gend : Mixed_Base_Functor Cend Dend cend dend)
+      (Hend : Mixed_Base_Functor Cend Dend cend dend)
+      (alphaEnd : Mixed_NatTrans Cend Dend cend dend Fend Gend)
+      (betaEnd : Mixed_NatTrans Cend Dend cend dend Gend Hend) =>
+    Mixed_vcomp Cend Dend cend dend Fend Gend Hend alphaEnd betaEnd

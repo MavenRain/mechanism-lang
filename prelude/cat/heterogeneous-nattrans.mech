@@ -1,0 +1,138 @@
+-- Load category-core.mech and heterogeneous-functor.mech first.
+-- Both functors share one source and one target category instance.
+poly (u, v, w, z) group MechHeterogeneousNatTrans where
+specialize MechHeterogeneousFunctor (u, v, w, z) as Base
+
+def targetEqSymm : (0 A : Sort (succ z)) -> (0 x : A) -> (0 y : A) ->
+    Base_Target A x y -> Base_Target A y x :=
+  fun (0 A : Sort (succ z)) (0 x : A) (0 y : A)
+      (proof : Base_Target A x y) =>
+    match proof as self in Base_Target right return Base_Target A right x with
+    | categoryRefl => categoryRefl
+
+-- Components can inspect their object.  The naturality field erases.
+-- A naturality proof can inspect its morphism during proof construction.
+def NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    Base_Functor C D c d -> Base_Functor C D c d -> Sort (max (succ u) (succ z)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d) =>
+    (app : (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x)) *
+    ((0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+      Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+        (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+          (Base_functorMap C D c d F x y f) (app y))
+        (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+          (app x) (Base_functorMap C D c d G x y f)))
+
+def natApp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    NatTrans C D c d F G -> (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.1
+
+def naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    (alpha : NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+    Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+      (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+        (Base_functorMap C D c d F x y f) (alpha.1 y))
+      (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (Base_functorMap C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.2
+
+def idNat : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> NatTrans C D c d F F :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D) (F : Base_Functor C D c d) =>
+    ((fun (x : C) => Base_Target_id D d (F.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Base_Source_Hom C c x y) =>
+       Base_Target_eqTrans (Base_Target_Hom D d (F.1 x) (F.1 y))
+       (Base_Target_comp D d (F.1 x) (F.1 y) (F.1 y) (Base_functorMap C D c d F x y f) (Base_Target_id D d (F.1 y)))
+       (Base_functorMap C D c d F x y f)
+       (Base_Target_comp D d (F.1 x) (F.1 x) (F.1 y) (Base_Target_id D d (F.1 x)) (Base_functorMap C D c d F x y f))
+       (Base_Target_compId D d (F.1 x) (F.1 y) (Base_functorMap C D c d F x y f))
+       (targetEqSymm (Base_Target_Hom D d (F.1 x) (F.1 y))
+       (Base_Target_comp D d (F.1 x) (F.1 x) (F.1 y) (Base_Target_id D d (F.1 x)) (Base_functorMap C D c d F x y f))
+       (Base_functorMap C D c d F x y f) (Base_Target_idComp D d (F.1 x) (F.1 y) (Base_functorMap C D c d F x y f)))))
+
+-- Two naturality squares compose using the category laws.
+def vcompLaw : (0 D : Sort (succ w)) -> (d : Base_Target_Category D) ->
+    (0 fx : D) -> (0 fy : D) -> (0 gx : D) -> (0 gy : D) -> (0 hx : D) -> (0 hy : D) ->
+    (0 fm : Base_Target_Hom D d fx fy) -> (0 gm : Base_Target_Hom D d gx gy) -> (0 hm : Base_Target_Hom D d hx hy) ->
+    (0 ax : Base_Target_Hom D d fx gx) -> (0 ay : Base_Target_Hom D d fy gy) ->
+    (0 bx : Base_Target_Hom D d gx hx) -> (0 by : Base_Target_Hom D d gy hy) ->
+    Base_Target (Base_Target_Hom D d fx gy) (Base_Target_comp D d fx fy gy fm ay) (Base_Target_comp D d fx gx gy ax gm) ->
+    Base_Target (Base_Target_Hom D d gx hy) (Base_Target_comp D d gx gy hy gm by) (Base_Target_comp D d gx hx hy bx hm) ->
+    Base_Target (Base_Target_Hom D d fx hy)
+      (Base_Target_comp D d fx fy hy fm (Base_Target_comp D d fy gy hy ay by))
+      (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm) :=
+  fun (0 D : Sort (succ w)) (d : Base_Target_Category D)
+      (0 fx : D) (0 fy : D) (0 gx : D) (0 gy : D) (0 hx : D) (0 hy : D)
+      (0 fm : Base_Target_Hom D d fx fy) (0 gm : Base_Target_Hom D d gx gy) (0 hm : Base_Target_Hom D d hx hy)
+      (0 ax : Base_Target_Hom D d fx gx) (0 ay : Base_Target_Hom D d fy gy)
+      (0 bx : Base_Target_Hom D d gx hx) (0 by : Base_Target_Hom D d gy hy)
+      (first : Base_Target (Base_Target_Hom D d fx gy)
+        (Base_Target_comp D d fx fy gy fm ay) (Base_Target_comp D d fx gx gy ax gm))
+      (second : Base_Target (Base_Target_Hom D d gx hy)
+        (Base_Target_comp D d gx gy hy gm by) (Base_Target_comp D d gx hx hy bx hm)) =>
+    Base_Target_eqTrans (Base_Target_Hom D d fx hy)
+      (Base_Target_comp D d fx fy hy fm (Base_Target_comp D d fy gy hy ay by))
+      (Base_Target_comp D d fx gy hy (Base_Target_comp D d fx fy gy fm ay) by)
+      (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm)
+      (targetEqSymm (Base_Target_Hom D d fx hy)
+        (Base_Target_comp D d fx gy hy (Base_Target_comp D d fx fy gy fm ay) by)
+        (Base_Target_comp D d fx fy hy fm (Base_Target_comp D d fy gy hy ay by))
+        (Base_Target_assoc D d fx fy gy hy fm ay by))
+      (Base_Target_eqTrans (Base_Target_Hom D d fx hy)
+        (Base_Target_comp D d fx gy hy (Base_Target_comp D d fx fy gy fm ay) by)
+        (Base_Target_comp D d fx gy hy (Base_Target_comp D d fx gx gy ax gm) by)
+        (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm)
+        (Base_Target_eqCongr (Base_Target_Hom D d fx gy) (Base_Target_Hom D d fx hy)
+          (fun (h : Base_Target_Hom D d fx gy) => Base_Target_comp D d fx gy hy h by)
+          (Base_Target_comp D d fx fy gy fm ay) (Base_Target_comp D d fx gx gy ax gm) first)
+        (Base_Target_eqTrans (Base_Target_Hom D d fx hy)
+          (Base_Target_comp D d fx gy hy (Base_Target_comp D d fx gx gy ax gm) by)
+          (Base_Target_comp D d fx gx hy ax (Base_Target_comp D d gx gy hy gm by))
+          (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm)
+          (Base_Target_assoc D d fx gx gy hy ax gm by)
+          (Base_Target_eqTrans (Base_Target_Hom D d fx hy)
+            (Base_Target_comp D d fx gx hy ax (Base_Target_comp D d gx gy hy gm by))
+            (Base_Target_comp D d fx gx hy ax (Base_Target_comp D d gx hx hy bx hm))
+            (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm)
+            (Base_Target_eqCongr (Base_Target_Hom D d gx hy) (Base_Target_Hom D d fx hy)
+              (fun (h : Base_Target_Hom D d gx hy) => Base_Target_comp D d fx gx hy ax h)
+              (Base_Target_comp D d gx gy hy gm by) (Base_Target_comp D d gx hx hy bx hm) second)
+            (targetEqSymm (Base_Target_Hom D d fx hy)
+              (Base_Target_comp D d fx hx hy (Base_Target_comp D d fx gx hx ax bx) hm)
+              (Base_Target_comp D d fx gx hy ax (Base_Target_comp D d gx hx hy bx hm))
+              (Base_Target_assoc D d fx gx hx hy ax bx hm)))))
+
+-- Vertical composition applies alpha first, then beta.
+def vcomp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    (H : Base_Functor C D c d) -> NatTrans C D c d F G ->
+    NatTrans C D c d G H -> NatTrans C D c d F H :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d) (H : Base_Functor C D c d)
+      (alpha : NatTrans C D c d F G) (beta : NatTrans C D c d G H) =>
+    ((fun (x : C) =>
+       Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) (alpha.1 x) (beta.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Base_Source_Hom C c x y) =>
+       vcompLaw D d (F.1 x) (F.1 y) (G.1 x) (G.1 y) (H.1 x) (H.1 y)
+         (Base_functorMap C D c d F x y f) (Base_functorMap C D c d G x y f)
+         (Base_functorMap C D c d H x y f) (alpha.1 x) (alpha.1 y) (beta.1 x) (beta.1 y)
+         (naturality C D c d F G alpha x y f) (naturality C D c d G H beta x y f)))
+end

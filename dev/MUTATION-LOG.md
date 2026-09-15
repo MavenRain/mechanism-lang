@@ -936,3 +936,34 @@ passed. The object and arrow mutations retain checked functor laws,
 so their failures exercise the value assertions. Replay results and
 input hashes are in
 `dev/validation/port-uat-u1-composable-functors/mutations.json`.
+
+
+## Stage C / U1 heterogeneous natural transformations (2026-09-14)
+
+`dev/heterogeneous-nattrans-mutations.py` replays eight controls against
+the compiled kernel suite in a temporary source directory:
+
+- identity-proof removes the target right-identity proof from idNat.
+- first-naturality and second-naturality remove each input square in vcomp.
+- component-order swaps alpha and beta at the component composition.
+- component-object replaces the first component's object with zero.
+- beta-action replaces addition by multiplication in the first component of Beta.
+- source-hom-universe lowers the wide source Hom sort from Type 3 to Type 2.
+- negative-corpus replaces the missing-proof fixture with a valid Nat definition.
+
+All eight controls failed at their required diagnostic prefixes. Their
+complete stdout values were distinct, and the restored suite passed.
+The replay binds its copied sources and test executable by SHA-256.
+See `dev/validation/port-uat-u1-heterogeneous-nattrans/mutations.json`.
+
+Review round 1 (2026-09-14) replayed the controls after the review fixes.
+Five expectations became recorded 260-character diagnostics, so a kill now
+binds to the mutated law and not to the generic `mismatch:` prefix. The
+former component-universe control duplicated the wrong-nat-sort negative and
+now lowers the wide source Hom sort instead, under the name
+source-hom-universe. The control count stays at eight.
+
+Review round 2 (2026-09-14) replayed the same eight controls after the
+evidence re-bind of `sources.sha256`. No control, no anchor and no negative
+changed, so the replay is a control of the round: all eight controls are
+killed, the stdouts stay pairwise distinct and the restored tree exits 0.

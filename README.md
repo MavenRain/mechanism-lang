@@ -41,13 +41,15 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-The focused composition checks and mutation controls pass. The full
+The heterogeneous natural transformation kernel checks and all eight
+mutation controls pass. Its final runtime check times out at the unchanged
+110-second budget. The full
 battery remains red; its validation record lists every failed gate.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 The latest full battery and its failed checks are recorded in
-`dev/validation/port-uat-u1-composable-functors/`.
+`dev/validation/port-uat-u1-heterogeneous-nattrans/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -223,9 +225,13 @@ See `dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md` for usage and validation.
 levels. Its input and result functors share three category instances;
 the two inputs use the same middle record. Both preservation laws are
 checked source proofs. See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`.
+`prelude/cat/heterogeneous-nattrans.mech` reuses the heterogeneous functor
+template and adds components, naturality, identity and vertical composition.
+Its source and target universe pairs are independent. See
+`dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`.
 Stage C remains open on reuse across separate template instances,
-general identity and repeated composition APIs, heterogeneous natural
-transformations and left Kan extensions, and checked source-type parity.
+general identity and repeated composition APIs, heterogeneous whiskering
+and left Kan extensions, and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

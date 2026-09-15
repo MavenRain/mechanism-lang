@@ -1,0 +1,77 @@
+[
+  {
+    "check": "python-syntax",
+    "path": "test/heterogeneous_nattrans_runtime.py",
+    "passed": true
+  },
+  {
+    "check": "python-syntax",
+    "path": "dev/heterogeneous-nattrans-mutations.py",
+    "passed": true
+  },
+  {
+    "check": "python-syntax",
+    "path": "dev/validation/port-uat-u1-heterogeneous-nattrans/runtime-diagnostic.py",
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "identity-proof",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "first-naturality",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "second-naturality",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "component-order",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "component-object",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "beta-action",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "component-universe",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "mutation-anchor",
+    "name": "negative-corpus",
+    "count": 1,
+    "passed": true
+  },
+  {
+    "check": "payload-equality-and-punctuation",
+    "passed": true
+  },
+  {
+    "check": "whitespace",
+    "passed": true
+  },
+  {
+    "check": "trusted-and-mapping-sources-unchanged",
+    "passed": true
+  }
+]

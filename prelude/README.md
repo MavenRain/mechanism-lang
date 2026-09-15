@@ -241,3 +241,26 @@ families. This API shares instances within a three-category group;
 general reuse between groups and repeated composition remain due.
 See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md` for the full contract,
 generic signatures, negative fixtures and runtime checks.
+
+## Heterogeneous natural transformations
+
+Load `cat/category-core.mech`, `cat/heterogeneous-functor.mech`, then
+`cat/heterogeneous-nattrans.mech`:
+
+```text
+specialize MechHeterogeneousNatTrans (0, 1, 2, 3) as N
+```
+
+`N_Base_Functor C D c d` uses `N_Base_Source_Category C` and
+`N_Base_Target_Category D`. For two such functors F and G,
+`N_NatTrans C D c d F G` pairs runtime components with naturality
+in target equality. `N_natApp` and `N_naturality` project those fields.
+`N_idNat C D c d F` supplies identity. Apply
+`N_vcomp C D c d F G H alpha beta` for alpha followed by beta.
+Nested vertical composition uses these same functor types.
+
+The template reuses MechHeterogeneousFunctor through one Base
+specialization. Separate group instances retain distinct nominal
+families. Heterogeneous whiskering and left Kan extensions remain due.
+See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the signatures,
+universe rule and validation contract.

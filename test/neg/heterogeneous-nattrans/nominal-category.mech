@@ -1,0 +1,2 @@
+def bad : (0 C : Type 0) -> Equal_Base_Source_Category C -> Equal_Base_Target_Category C :=
+  fun (0 C : Type 0) (c : Equal_Base_Source_Category C) => c

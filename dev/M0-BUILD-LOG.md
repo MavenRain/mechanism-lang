@@ -2765,3 +2765,112 @@ COMPOSABLE-FUNCTORS-MUTATIONS passed=True controls=8 restored=1
 Pin: vendor/kanon at 936a43a92dd59a04698648f24fa5ae94cdb532df.
 
 Staged paths: 30 before this review block, 30 after.
+
+
+## M0 Stage C / U1: heterogeneous natural transformations (2026-09-14)
+
+Base: d89fe51. The new MechHeterogeneousNatTrans group reuses
+one MechHeterogeneousFunctor instance as Base. It adds components,
+naturality, identity and vertical composition across four independent
+universe levels. Target symmetry and square-composition helpers are
+checked source proofs. No kernel, surface, encoder, vendor or mapping
+source changes are needed.
+
+Validation:
+
+- Build: zero errors and warnings.
+- Kernel: 150 entries, four specializations, five computations, 13 refusals.
+- Earlier runtime harness: five exports, three hosts, payloads 37 and 41 passed.
+- Final runtime harness, initial check under shipped deadlines: FAIL (exit 1, 111538 ms).
+- Separate 900-second runtime diagnostic: PASS (exit 0, 63103 ms).
+- Subsequent runtime confirmation under unchanged shipped deadlines: FAIL (exit 1, 110298 ms).
+- Mutation replay: eight distinct required failures and a passing restoration.
+- Full battery before runtime harness batching: 41 of 53 PASS.
+
+Failed battery rows:
+
+- FAIL PRELUDE-COMPOSABLE-FUNCTORS
+- FAIL PRELUDE-NATTRANS
+- FAIL PRELUDE-LEFT-KAN
+- FAIL PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME
+- FAIL PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME
+- FAIL PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME
+- FAIL PRELUDE-CATEGORY-RUNTIME
+- FAIL PRELUDE-CATEGORY-ACCESSORS
+- FAIL PRELUDE-FUNCTOR-RUNTIME
+- FAIL PRELUDE-NATTRANS-RUNTIME
+- FAIL PRELUDE-LEFT-KAN-RUNTIME
+- FAIL TRUSTED-LINES
+
+Watchdog timeouts (exit 124): PRELUDE-COMPOSABLE-FUNCTORS, PRELUDE-NATTRANS, PRELUDE-LEFT-KAN.
+
+
+Bounded rechecks after the battery, before runtime harness batching:
+
+- heterogeneous-nattrans-runtime: FAIL (exit 1, 110327 ms)
+- composable-functors: FAIL (exit 124, 120075 ms)
+
+Initial probes encountered contention and timeouts, documented in the
+validation README. The shipped runtime harness retains a 110-second
+total deadline, with compilation sharing that budget. Both new gate
+legs use the existing SLOW watchdog. All earlier gate bounds remain.
+The final harness checks both payloads in one program and preserves all
+ten kernel results and twenty WASM comparisons. The longer diagnostic
+does not count as a pass within the shipped gate budget.
+
+The design is `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`.
+Reproduction commands, source hashes and captured results are under
+`dev/validation/port-uat-u1-heterogeneous-nattrans/`. U1 and Stage C remain
+open on general category-instance reuse, general identity and repeated
+functor composition, heterogeneous whiskering and left Kan extensions,
+and source-type parity. Typed mapping and PRELUDE-CHECKED remain due.
+
+## Stage C / U1 heterogeneous natural transformations review (2026-09-14)
+
+- L2-1: wrong-middle and wrong-endpoint got distinct binder names and longer
+  `.err` prefixes, and `test/prelude_heterogeneous_nattrans.ml` replaced the
+  length floor by a pairwise prefix check. Leg PRELUDE-HETEROGENEOUS-NATTRANS.
+- L2-2: missing-law.err names the expected naturality component type. Leg
+  PRELUDE-HETEROGENEOUS-NATTRANS.
+- L2-3: identityValue reads `natAdd heterogeneousNatInput 5` through the
+  identity component and is 42, so it differs from componentValue. Legs
+  PRELUDE-HETEROGENEOUS-NATTRANS and the mutation replay.
+- L2-4: the test stanza drops the unused mechanism_prelude library. Leg BUILD.
+- L3-1: five replay controls expect recorded 260-character diagnostics. Leg
+  HETEROGENEOUS-NATTRANS-MUTATIONS.
+- L3-2: component-universe became source-hom-universe and lowers the wide
+  source Hom sort. Leg HETEROGENEOUS-NATTRANS-MUTATIONS.
+- L3-4: dev/MUTATION-LOG.md names the first component of Beta.
+- L2-3 follow-on: `test/heterogeneous_nattrans_runtime.py` expects
+  `payload + 5` for identityValue at both payloads. Leg
+  PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME.
+- ND-1-1: ten `sources.sha256` rows of
+  `dev/validation/port-uat-u1-heterogeneous-nattrans/` are re-bound to the
+  staged blobs of the round 1 fixes. No gate leg reads that file, so the
+  control is `probes/hash-check.py`, which goes from BAD 16 to BAD 7. The
+  seven rows that stay are captures: six `mutations.json` source rows and the
+  `checks.json` row of `sources.sha256`.
+- GATE-1: not fixed. The only red leg is TRUSTED-LINES, kernel 4208 against
+  the inherited bound 3000 and encoder 246 against 900. A green leg needs a
+  bound move, which the D-A-1 rule refuses.
+
+Review close: the close ladder (RUNNER-EXIT 0, 20:30 to 21:16 at load 60 to
+80) prints PASS 44 of 53, EXIT 1, nine FAIL rows: the inherited TRUSTED-LINES
+row (kernel 4208 against the bound 3000, encoder 246 against 900, no kernel
+file edited) plus eight legs that expired under load, each PASS in rounds 1
+and 2 on the same code: PRELUDE-HETEROGENEOUS-FUNCTOR (exit=124),
+PRELUDE-CATEGORY-RUNTIME (exit=2), PRELUDE-CATEGORY-ACCESSORS (exit=2),
+DEPENDENT-CLOSURE-RUNTIME (exit=124), PRELUDE-FUNCTOR-RUNTIME (exit=2),
+PRELUDE-NATTRANS-RUNTIME (exit=2), PRELUDE-LEFT-KAN-RUNTIME (exit=2),
+MAP-INVENTORY (exit=124). A recheck ladder (RUNNER-EXIT 0, 21:31 to 22:20 at
+load 15 to 41) prints PASS 52 of 53 with TRUSTED-LINES as the sole FAIL row;
+all eight legs pass. Every heterogeneous-nattrans leg passes in both ladders:
+kernel suite line
+`PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=150 instances=4 computations=5
+negatives=13`, runtime line
+`PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME OK cases=5 hosts=3 mutation=1`, and
+replay line `HETEROGENEOUS-NATTRANS-MUTATIONS passed=True controls=8
+restored=1`. Prior rounds: round 1 PASS 52 of 53, round 2 (fix-2) PASS 52 of
+53, both with TRUSTED-LINES as the sole red leg. Pin: vendor/kanon at
+936a43a92dd59a04698648f24fa5ae94cdb532df. Staged count before the close 58
+paths, after the close 58 paths (no new path added at close).

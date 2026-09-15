@@ -1,0 +1,18 @@
+def bad : (0 Cmid : Type 0) -> (0 Dmid : Type 2) ->
+    (cmid : Mixed_Base_Source_Category Cmid) ->
+    (dmid : Mixed_Base_Target_Category Dmid) ->
+    (Fmid : Mixed_Base_Functor Cmid Dmid cmid dmid) ->
+    (Gmid : Mixed_Base_Functor Cmid Dmid cmid dmid) ->
+    (Hmid : Mixed_Base_Functor Cmid Dmid cmid dmid) ->
+    Mixed_NatTrans Cmid Dmid cmid dmid Fmid Gmid ->
+    Mixed_NatTrans Cmid Dmid cmid dmid Fmid Hmid ->
+    Mixed_NatTrans Cmid Dmid cmid dmid Fmid Hmid :=
+  fun (0 Cmid : Type 0) (0 Dmid : Type 2)
+      (cmid : Mixed_Base_Source_Category Cmid)
+      (dmid : Mixed_Base_Target_Category Dmid)
+      (Fmid : Mixed_Base_Functor Cmid Dmid cmid dmid)
+      (Gmid : Mixed_Base_Functor Cmid Dmid cmid dmid)
+      (Hmid : Mixed_Base_Functor Cmid Dmid cmid dmid)
+      (alphaMid : Mixed_NatTrans Cmid Dmid cmid dmid Fmid Gmid)
+      (betaMid : Mixed_NatTrans Cmid Dmid cmid dmid Fmid Hmid) =>
+    Mixed_vcomp Cmid Dmid cmid dmid Fmid Gmid Hmid alphaMid betaMid
