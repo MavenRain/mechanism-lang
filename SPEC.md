@@ -517,5 +517,5 @@ distinct nominal category or equality families.
 
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the contract and
 validation. General instance reuse, general identity and repeated
-functor composition, heterogeneous whiskering and left Kan extensions,
-and source-type parity remain open.
+functor composition, heterogeneous left Kan extensions, and
+source-type parity remain open.

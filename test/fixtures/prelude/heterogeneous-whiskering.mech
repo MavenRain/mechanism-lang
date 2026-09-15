@@ -1,0 +1,75 @@
+-- Each component universe dominates in one of these signatures.
+specialize MechHeterogeneousWhiskering (0, 1, 2, 3, 4, 5) as Mixed
+specialize MechHeterogeneousWhiskering (5, 4, 3, 2, 1, 0) as Wide
+specialize MechHeterogeneousWhiskering (0, 0, 0, 0, 0, 0) as Equal
+
+def MixedSourceHom : (0 C : Type 0) -> (c : Mixed_Base_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 1 := Mixed_Base_Source_Hom
+def MixedMiddleHom : (0 C : Type 2) -> (c : Mixed_Base_Middle_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 3 := Mixed_Base_Middle_Hom
+def MixedTargetHom : (0 C : Type 4) -> (c : Mixed_Base_Target_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 5 := Mixed_Base_Target_Hom
+def MixedFirstNatSort : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Middle_Category D) ->
+    Mixed_Base_First_Functor C D c d -> Mixed_Base_First_Functor C D c d ->
+    Type 3 := Mixed_First_NatTrans
+def MixedSecondNatSort : (0 C : Type 2) -> (0 D : Type 4) ->
+    (c : Mixed_Base_Middle_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    Mixed_Base_Second_Functor C D c d -> Mixed_Base_Second_Functor C D c d ->
+    Type 5 := Mixed_Second_NatTrans
+def MixedCompositeNatSort : (0 C : Type 0) -> (0 D : Type 4) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Target_Category D) ->
+    Mixed_Base_Composite_Functor C D c d -> Mixed_Base_Composite_Functor C D c d ->
+    Type 5 := Mixed_Composite_NatTrans
+def MixedRight : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Middle_Category D) ->
+    (e : Mixed_Base_Target_Category E) ->
+    (F : Mixed_Base_Second_Functor D E d e) -> (G : Mixed_Base_Second_Functor D E d e) ->
+    Mixed_Second_NatTrans D E d e F G -> (K : Mixed_Base_First_Functor C D c d) ->
+    Mixed_Composite_NatTrans C E c e
+      (Mixed_Base_compFunctor C D E c d e K F) (Mixed_Base_compFunctor C D E c d e K G) :=
+  Mixed_whiskerRight
+def MixedLeft : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Middle_Category D) ->
+    (e : Mixed_Base_Target_Category E) ->
+    (H : Mixed_Base_Second_Functor D E d e) ->
+    (F : Mixed_Base_First_Functor C D c d) -> (G : Mixed_Base_First_Functor C D c d) ->
+    Mixed_First_NatTrans C D c d F G ->
+    Mixed_Composite_NatTrans C E c e
+      (Mixed_Base_compFunctor C D E c d e F H) (Mixed_Base_compFunctor C D E c d e G H) :=
+  Mixed_whiskerLeft
+def WideSourceHom : (0 C : Type 5) -> (c : Wide_Base_Source_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 4 := Wide_Base_Source_Hom
+def WideMiddleHom : (0 C : Type 3) -> (c : Wide_Base_Middle_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 2 := Wide_Base_Middle_Hom
+def WideTargetHom : (0 C : Type 1) -> (c : Wide_Base_Target_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 0 := Wide_Base_Target_Hom
+def WideFirstNatSort : (0 C : Type 5) -> (0 D : Type 3) ->
+    (c : Wide_Base_Source_Category C) -> (d : Wide_Base_Middle_Category D) ->
+    Wide_Base_First_Functor C D c d -> Wide_Base_First_Functor C D c d ->
+    Type 5 := Wide_First_NatTrans
+def WideSecondNatSort : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : Wide_Base_Middle_Category C) -> (d : Wide_Base_Target_Category D) ->
+    Wide_Base_Second_Functor C D c d -> Wide_Base_Second_Functor C D c d ->
+    Type 3 := Wide_Second_NatTrans
+def WideCompositeNatSort : (0 C : Type 5) -> (0 D : Type 1) ->
+    (c : Wide_Base_Source_Category C) -> (d : Wide_Base_Target_Category D) ->
+    Wide_Base_Composite_Functor C D c d -> Wide_Base_Composite_Functor C D c d ->
+    Type 5 := Wide_Composite_NatTrans
+def WideRight : (0 C : Type 5) -> (0 D : Type 3) -> (0 E : Type 1) ->
+    (c : Wide_Base_Source_Category C) -> (d : Wide_Base_Middle_Category D) ->
+    (e : Wide_Base_Target_Category E) ->
+    (F : Wide_Base_Second_Functor D E d e) -> (G : Wide_Base_Second_Functor D E d e) ->
+    Wide_Second_NatTrans D E d e F G -> (K : Wide_Base_First_Functor C D c d) ->
+    Wide_Composite_NatTrans C E c e
+      (Wide_Base_compFunctor C D E c d e K F) (Wide_Base_compFunctor C D E c d e K G) :=
+  Wide_whiskerRight
+def WideLeft : (0 C : Type 5) -> (0 D : Type 3) -> (0 E : Type 1) ->
+    (c : Wide_Base_Source_Category C) -> (d : Wide_Base_Middle_Category D) ->
+    (e : Wide_Base_Target_Category E) ->
+    (H : Wide_Base_Second_Functor D E d e) ->
+    (F : Wide_Base_First_Functor C D c d) -> (G : Wide_Base_First_Functor C D c d) ->
+    Wide_First_NatTrans C D c d F G ->
+    Wide_Composite_NatTrans C E c e
+      (Wide_Base_compFunctor C D E c d e F H) (Wide_Base_compFunctor C D E c d e G H) :=
+  Wide_whiskerLeft

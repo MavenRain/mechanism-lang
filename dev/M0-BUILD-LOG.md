@@ -2874,3 +2874,107 @@ restored=1`. Prior rounds: round 1 PASS 52 of 53, round 2 (fix-2) PASS 52 of
 53, both with TRUSTED-LINES as the sole red leg. Pin: vendor/kanon at
 936a43a92dd59a04698648f24fa5ae94cdb532df. Staged count before the close 58
 paths, after the close 58 paths (no new path added at close).
+
+## Stage C / U1 heterogeneous whiskering (2026-09-15)
+
+Base: c7e95c3. Added MechHeterogeneousWhiskering over one shared
+MechComposableFunctors instance at six independent universe levels.
+First, Second and Composite natural transformations expose component and
+naturality accessors. whiskerRight precomposes by a First functor;
+whiskerLeft postcomposes by a Second functor. Both return Composite
+transformations between the actual compFunctor results, with checked proofs.
+
+The suite checks all three canonical mirrors, opposite universe orderings,
+all-zero nominal separation, fourteen structural refusals and budget
+exhaustion. Explicit endpoint calls give distinct refusal prefixes. The
+middle-record refusal places the mismatched record in the whiskering call;
+its result annotation uses a valid functor. Runtime exports distinguish the
+object map and both target arrow fields at two payloads on all three hosts.
+
+Validation:
+
+- Kernel suite: PASS, contract 274 entries, four instances,
+  four computations and 15 refusals.
+- Runtime: PASS, four exports on three hosts at two payloads.
+- CLI arity refusal: PASS.
+- Mutations: 9 of 9 caught, restored suite PASS.
+- Full battery: 54 of 55 PASS, exit 1.
+
+Failed battery rows:
+
+- FAIL TRUSTED-LINES
+
+The kernel, checker, encoder and vendor sources are unchanged. Existing
+watchdogs and the TRUSTED-LINES bound are unchanged. Sources, executable
+hashes, mutation results and full battery output are recorded under
+`dev/validation/port-uat-u1-heterogeneous-whiskering/`. The design is
+`dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`.
+
+Two refusal-prefix files lost trailing spaces after validation. Their
+String.trim results are identical; original and final hashes are retained
+in the evidence's source_normalizations records.
+
+Stage C and U1 remain open on category-instance reuse, general identity and
+repeated functor composition, heterogeneous left Kan extensions and source-type
+parity. Typed mapping and PRELUDE-CHECKED remain due.
+
+## Stage C / U1 heterogeneous whiskering review (2026-09-15)
+
+The suite adds a universe-arity control that specializes
+MechHeterogeneousWhiskering at five universe arguments and compares the
+refusal text with the message of the CLI probe. The refusal count of
+PRELUDE-HETEROGENEOUS-WHISKERING moves from 15 to 16, and the suite leg of
+dev/gates.sh now pins the whole OK line.
+
+H maps a middle arrow to that arrow in both target slots, and
+whiskerLeftFirst reads the first slot of the component at the payload
+object. The export therefore measures the whiskering. The arrow-map
+mutation control replaces both slots with the identity and it now fails on
+whiskerLeftFirst.
+
+Review findings, the fixes and the legs that prove them:
+
+- L4-2 (medium): SPEC.md and dev/M0-STAGE-C.md no longer list heterogeneous
+  whiskering as open work. Proof: the staged diff of both files.
+- L2-3 (low): the PRELUDE-HETEROGENEOUS-WHISKERING leg of dev/gates.sh pins
+  the whole OK line. Proof: the leg is PASS in the review battery, and a
+  negatives=15 line fails it.
+- L2-1 (low): the suite gains the universe-arity refusal control, so the
+  refusal count moves from 15 to 16. Proof: the suite item of the review
+  ladder prints negatives=16.
+- L3-3 (low): H maps a middle arrow to both target slots, so the export
+  whiskerLeftFirst measures the whiskering. Proof: the runtime leg is PASS,
+  and an identity in the first slot fails on whiskerLeftFirst.
+- L3-2 (low): the replay prints the count of timeouts on its own line.
+  Proof: the replay item of the review ladder prints count=0.
+- L4-3 (low): the Reproduce block of the evidence README runs as written.
+  Proof: the staged diff of that README.
+- L4-5 (low): the Evidence list names the two empty files and the two
+  post-capture keys. Proof: the staged diff of that README.
+- HV-1-1 (low): the arity row of the evidence README wraps at 67 columns.
+  Proof: a column count of the file.
+- ND-1-1 (medium): the evidence README names rows 5, 8, 9 and 10 of
+  sources.sha256 as the rows the fixes changed. Proof: a rehash of the 39
+  rows against the index.
+- ND-1-2 (medium): dev/MUTATION-LOG.md records the rerun replay under the
+  author's block. Proof: the replay item of the review ladder.
+- HV-2-1 (low): this block gives one line per finding id. Proof: this list.
+- GATE-1 and GATE-2: bound only. The review battery holds 55 legs, 54 PASS,
+  and the single FAIL is TRUSTED-LINES, the inherited kernel bound.
+
+Gate result, from the round 2 review ladder (ladder-HW-2.log,
+gates-HW-2.log). Battery start load 17.88. The battery holds 55 legs, 54
+PASS. The sole FAIL is TRUSTED-LINES: kernel=4208/3000 encoder=246/900
+FAIL. That leg stays red until the user rules D-A-1; the bound is
+inherited, not moved by this review.
+
+The three OK lines, verbatim from ladder-HW-2.log:
+
+PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4
+negatives=16
+PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME OK cases=4 hosts=3 mutation=1
+HETEROGENEOUS-WHISKERING-MUTATIONS passed=True controls=9 restored=1
+
+Pin: vendor/kanon at 936a43a92dd59a04698648f24fa5ae94cdb532df.
+
+Staging: 52 paths staged before the close, 52 paths staged after it.

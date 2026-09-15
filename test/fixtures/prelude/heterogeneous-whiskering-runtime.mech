@@ -1,0 +1,140 @@
+-- Source homs have an erased type argument; target homs are pairs of functions.
+mu Point : Type 1 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechHeterogeneousWhiskering (0, 1, 0, 0, 1, 0) as Run
+def heterogeneousWhiskerInput : Nat := 37
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Run_Base_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * ((0 A : Type 0) -> Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (0 A : Type 0) (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (0 A : Type 0) (n : Nat) => g.2 A (f.2 A n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 h : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))))
+
+def DoubleEnd : Run_Base_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat -> Nat) * (Nat -> Nat)),
+   ((fun (0 x : Point) => ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat -> Nat) * (Nat -> Nat))
+          (g : (Nat -> Nat) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => g.1 (f.1 n)), (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat -> Nat) * (Nat -> Nat))
+            (0 g : (Nat -> Nat) * (Nat -> Nat))
+            (0 h : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))))
+def IndexedPlain : Run_Base_Middle_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat))
+            (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def Constant : Run_Base_Second_Functor Nat Point IndexedPlain DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def Components : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => x), (fun (n : Nat) => natAdd n x))
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components y) (Components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components right) (Components x) with
+    | same => categoryRefl
+def Alpha : Run_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  (Components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+     componentLaw x y f.1))
+
+def pathShift : (0 x : Nat) -> (0 y : Nat) -> Path x y -> Path (natAdd x 5) (natAdd y 5) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return Path (natAdd x 5) (natAdd right 5) with
+    | same => same
+def Shift : Run_Base_First_Functor Nat Nat IndexedEnd IndexedPlain :=
+  ((fun (x : Nat) => natAdd x 5),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+       (pathShift x y f.1, f.2 Nat)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+          (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Drop : Run_Base_First_Functor Nat Nat IndexedEnd IndexedPlain :=
+  ((fun (x : Nat) => 0),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+       (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+          (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Lift : Run_Base_Second_Functor Nat Point IndexedPlain DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+       (f.2, f.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat))
+          (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def FirstComponents : (x : Nat) -> (Path 0 0) * (Nat -> Nat) :=
+  fun (x : Nat) => (same, (fun (n : Nat) => natAdd n x))
+def firstComponentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Middle ((Path 0 0) * (Nat -> Nat)) (FirstComponents y) (FirstComponents x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Middle ((Path 0 0) * (Nat -> Nat)) (FirstComponents right) (FirstComponents x) with
+    | same => categoryRefl
+def FirstAlpha : Run_First_NatTrans Nat Nat IndexedEnd IndexedPlain Drop Drop :=
+  (FirstComponents,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+     firstComponentLaw x y f.1))
+
+def RightFunctor : Run_Base_Composite_Functor Nat Point IndexedEnd DoubleEnd :=
+  Run_Base_compFunctor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Shift Constant
+def LeftFunctor : Run_Base_Composite_Functor Nat Point IndexedEnd DoubleEnd :=
+  Run_Base_compFunctor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Drop Lift
+def RightResult : Run_Composite_NatTrans Nat Point IndexedEnd DoubleEnd RightFunctor RightFunctor :=
+  Run_whiskerRight Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Constant Constant Alpha Shift
+def LeftResult : Run_Composite_NatTrans Nat Point IndexedEnd DoubleEnd LeftFunctor LeftFunctor :=
+  Run_whiskerLeft Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Lift Drop Drop FirstAlpha
+def whiskerRightFirst : Nat :=
+  (Run_Composite_natApp Nat Point IndexedEnd DoubleEnd RightFunctor RightFunctor
+    RightResult heterogeneousWhiskerInput).1 0
+def whiskerRightSecond : Nat :=
+  (Run_Composite_natApp Nat Point IndexedEnd DoubleEnd RightFunctor RightFunctor
+    RightResult heterogeneousWhiskerInput).2 2
+def whiskerLeftFirst : Nat :=
+  (Run_Composite_natApp Nat Point IndexedEnd DoubleEnd LeftFunctor LeftFunctor
+    LeftResult heterogeneousWhiskerInput).1 9
+def whiskerLeftSecond : Nat :=
+  (Run_Composite_natApp Nat Point IndexedEnd DoubleEnd LeftFunctor LeftFunctor
+    LeftResult heterogeneousWhiskerInput).2 11
+def rightNaturalityWitness : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (RightResult.1 0) (RightResult.1 0) :=
+  Run_Composite_naturality Nat Point IndexedEnd DoubleEnd RightFunctor RightFunctor RightResult 0 0
+    (same, (fun (0 A : Type 0) (n : Nat) => n))
+def leftNaturalityWitness : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (LeftResult.1 0) (LeftResult.1 0) :=
+  Run_Composite_naturality Nat Point IndexedEnd DoubleEnd LeftFunctor LeftFunctor LeftResult 0 0
+    (same, (fun (0 A : Type 0) (n : Nat) => n))

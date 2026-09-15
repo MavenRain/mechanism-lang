@@ -41,15 +41,14 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-The heterogeneous natural transformation kernel checks and all eight
-mutation controls pass. Its final runtime check times out at the unchanged
-110-second budget. The full
-battery remains red; its validation record lists every failed gate.
+Heterogeneous whiskering adds kernel and runtime gates with nine mutation
+controls. Its validation record lists the results and every failed gate
+from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 The latest full battery and its failed checks are recorded in
-`dev/validation/port-uat-u1-heterogeneous-nattrans/`.
+`dev/validation/port-uat-u1-heterogeneous-whiskering/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -229,9 +228,14 @@ checked source proofs. See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`.
 template and adds components, naturality, identity and vertical composition.
 Its source and target universe pairs are independent. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`.
+`prelude/cat/heterogeneous-whiskering.mech` adds precomposition and
+postcomposition across a shared three-category group at six independent
+universe levels. Both operations return natural transformations between
+the actual composite functors. See
+`dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`.
 Stage C remains open on reuse across separate template instances,
-general identity and repeated composition APIs, heterogeneous whiskering
-and left Kan extensions, and checked source-type parity.
+general identity and repeated composition APIs, heterogeneous left Kan
+extensions, and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

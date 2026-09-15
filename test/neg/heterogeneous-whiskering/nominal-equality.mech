@@ -1,0 +1,3 @@
+def bad : (0 A : Type 0) -> (0 x : A) -> (0 y : A) ->
+    Equal_Base_Source A x y -> Equal_Base_Middle A x y :=
+  fun (0 A : Type 0) (0 x : A) (0 y : A) (proof : Equal_Base_Source A x y) => proof

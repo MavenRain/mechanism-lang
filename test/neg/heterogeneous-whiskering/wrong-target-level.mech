@@ -1,0 +1,2 @@
+def bad : (0 C : Type 4) -> (c : Mixed_Base_Target_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 4 := Mixed_Base_Target_Hom

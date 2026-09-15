@@ -69,8 +69,8 @@ dev/PORT-UAT-U1-HETEROGENEOUS-FUNCTOR.md and
 dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md. Natural transformations at
 separate universe pairs follow in
 dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md. General instance reuse,
-heterogeneous whiskering and left Kan extensions, and source-type
-parity remain open.
+heterogeneous left Kan extensions, and source-type parity remain
+open.
 The template checking increment removes a repeated symbolic member
 check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
 rechecking and all existing gate predicates.

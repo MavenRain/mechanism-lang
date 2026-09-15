@@ -967,3 +967,44 @@ Review round 2 (2026-09-14) replayed the same eight controls after the
 evidence re-bind of `sources.sha256`. No control, no anchor and no negative
 changed, so the replay is a control of the round: all eight controls are
 killed, the stdouts stay pairwise distinct and the restored tree exits 0.
+
+## Stage C / U1 heterogeneous whiskering mutations (2026-09-15)
+
+`dev/heterogeneous-whiskering-mutations.py` runs nine controls against
+the compiled kernel suite using temporary source copies. It records
+partial results on timeout and never counts a timeout as a caught mutation.
+
+| Control | Result | Elapsed ms |
+| --- | --- | ---: |
+| right-naturality | caught | 33707 |
+| left-naturality | caught | 18545 |
+| left-composition-law | caught | 15399 |
+| object-map | caught | 92157 |
+| arrow-map | caught | 88238 |
+| negative-corpus | caught | 72430 |
+| canonical-mirror | caught | 18 |
+| second-mirror | caught | 18 |
+| composite-mirror | caught | 16 |
+
+The object-map control shifts by six instead of five while keeping its path
+proof well typed. At capture the arrow-map control replaced Lift's second
+field by an identity function. The proof controls remove right
+naturality, left naturality and one use of the postcomposing
+functor's composition law. The other controls
+replace the missing-law fixture by a valid definition and alter each mirror.
+
+Final replay: passed=True, 9 of 9 controls caught,
+restored suite PASS. The evidence is
+`dev/validation/port-uat-u1-heterogeneous-whiskering/mutations.json`.
+
+Review round 1 (2026-09-15) retargeted the arrow-map control after the
+review fixes. Its anchor is now the pair `(f.2, f.2)` of
+`test/fixtures/prelude/heterogeneous-whiskering-runtime.mech`, which
+occurs once. The control replaces both slots of that pair by identity
+functions, and the expected kill text is
+`PRELUDE-HETEROGENEOUS-WHISKERING-FAIL wrong computation:
+whiskerLeftFirst`, not the first-field text of the capture. The other
+eight controls, their anchors and the negatives did not change. The
+replay of the round gives passed=True, controls=9, restored=1: all nine
+controls are killed, the stdouts stay pairwise distinct and the
+restored tree exits 0.

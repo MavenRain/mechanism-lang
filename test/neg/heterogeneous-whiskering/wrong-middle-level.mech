@@ -1,0 +1,2 @@
+def bad : (0 C : Type 2) -> (c : Mixed_Base_Middle_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 2 := Mixed_Base_Middle_Hom

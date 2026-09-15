@@ -261,6 +261,32 @@ Nested vertical composition uses these same functor types.
 
 The template reuses MechHeterogeneousFunctor through one Base
 specialization. Separate group instances retain distinct nominal
-families. Heterogeneous whiskering and left Kan extensions remain due.
+families. Heterogeneous left Kan extensions remain due.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the signatures,
 universe rule and validation contract.
+
+## Heterogeneous whiskering
+
+Load `cat/category-core.mech`, `cat/composable-functors.mech` and
+`cat/heterogeneous-whiskering.mech`, then specialize
+`MechHeterogeneousWhiskering (u, v, w, z, p, q) as W`.
+The universe arguments are Source, Middle and Target object/hom pairs.
+`W_Base_` exposes one shared MechComposableFunctors instance.
+
+`W_First_NatTrans`, `W_Second_NatTrans` and `W_Composite_NatTrans`
+are transformations on its three functor edges. Each edge has
+`natApp` and `naturality` accessors. Components retain their object
+argument, while naturality erases its two endpoints.
+
+`W_whiskerRight C D E c d e F G alpha K` precomposes the Second
+transformation alpha by the First functor K. `W_whiskerLeft C D E
+c d e H F G alpha` postcomposes the First transformation alpha by
+the Second functor H. Both return Composite transformations between
+the corresponding `W_Base_compFunctor` results, with checked proofs.
+
+The two PRELUDE-HETEROGENEOUS-WHISKERING gates check their contracts
+and compare four exports on the kernel, Node and Wasmtime at two
+payloads. The group shares categories internally; separate
+specializations still have distinct nominal families. See
+`dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md` for the full contract
+and remaining U1 work.

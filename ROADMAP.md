@@ -42,14 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-14
+## Position on 2026-09-15
 
-The base is d89fe51, following committed composable functors.
-The current increment adds heterogeneous natural transformations
-with components, naturality, identity and vertical composition.
-It reuses one heterogeneous functor instance at four independent
-universe levels. Its laws are checked source proofs.
-See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`.
+The base is c7e95c3, following committed heterogeneous natural transformations.
+The current increment adds heterogeneous whiskering in both directions
+over one shared composable-functor instance at six independent universe
+levels. It returns natural transformations between composite functors
+with checked naturality proofs.
+See `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -62,8 +62,8 @@ Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
 open on reuse across separate category template instances, general
-identity and repeated composition APIs, heterogeneous whiskering
-and left Kan extensions, and source-type parity.
+identity and repeated composition APIs, heterogeneous left Kan extensions,
+and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -73,6 +73,9 @@ and their runtime gates. PRELUDE-COMPOSABLE-FUNCTORS and its runtime
 gate check composition within a shared three-category group. The
 PRELUDE-HETEROGENEOUS-NATTRANS gates check natural transformations
 within a shared source/target pair and compare their runtime results.
+The PRELUDE-HETEROGENEOUS-WHISKERING gates check both whiskering
+operations over a shared three-category group and compare four exports
+on the kernel, Node and Wasmtime at two payloads.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
@@ -133,10 +136,11 @@ stay under `ports/` (D-UAT-3).
   three-category group is specified in
   `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md`. Natural transformations
   at independent universe pairs are specified in
-  `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`. U1 remains open on general
-  reuse across separate category instances, identity and repeated
-  composition APIs, heterogeneous whiskering and left Kan extensions,
-  and source-type parity.
+  `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`. Both heterogeneous
+  whiskering operations over a shared three-category group are specified
+  in `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`. U1 remains open on
+  general reuse across separate category instances, identity and repeated
+  composition APIs, heterogeneous left Kan extensions and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

@@ -1,0 +1,13 @@
+def bad : (0 CRight : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Base_Source_Category CRight) -> (d : Mixed_Base_Middle_Category D) ->
+    (e : Mixed_Base_Target_Category E) ->
+    (F : Mixed_Base_Second_Functor D E d e) -> (G : Mixed_Base_Second_Functor D E d e) ->
+    Mixed_Second_NatTrans D E d e F G -> (K : Mixed_Base_First_Functor CRight D c d) ->
+    Mixed_Composite_NatTrans CRight E c e
+      (Mixed_Base_compFunctor CRight D E c d e K F) (Mixed_Base_compFunctor CRight D E c d e K F) :=
+  fun (0 CRight : Type 0) (0 D : Type 2) (0 E : Type 4)
+      (c : Mixed_Base_Source_Category CRight) (d : Mixed_Base_Middle_Category D)
+      (e : Mixed_Base_Target_Category E)
+      (F : Mixed_Base_Second_Functor D E d e) (G : Mixed_Base_Second_Functor D E d e)
+      (alpha : Mixed_Second_NatTrans D E d e F G) (K : Mixed_Base_First_Functor CRight D c d) =>
+    Mixed_whiskerRight CRight D E c d e F G alpha K

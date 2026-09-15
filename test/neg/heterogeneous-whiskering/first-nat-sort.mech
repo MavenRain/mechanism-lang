@@ -1,0 +1,4 @@
+def bad : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Base_Source_Category C) -> (d : Mixed_Base_Middle_Category D) ->
+    Mixed_Base_First_Functor C D c d -> Mixed_Base_First_Functor C D c d ->
+    Type 2 := Mixed_First_NatTrans

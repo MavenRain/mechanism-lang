@@ -1,0 +1,2 @@
+def bad : (0 x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (0 x : Nat) => Components x

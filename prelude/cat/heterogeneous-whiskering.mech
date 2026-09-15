@@ -1,0 +1,204 @@
+-- Load category-core.mech and composable-functors.mech first.
+-- All three edges share one composable-functor group instance.
+poly (u, v, w, z, p, q) group MechHeterogeneousWhiskering where
+specialize MechComposableFunctors (u, v, w, z, p, q) as Base
+
+-- Natural transformations on the first edge.
+def First_NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Middle_Category D) ->
+    Base_First_Functor C D c d -> Base_First_Functor C D c d -> Sort (max (succ u) (succ z)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Middle_Category D)
+      (F : Base_First_Functor C D c d) (G : Base_First_Functor C D c d) =>
+    (app : (x : C) -> Base_Middle_Hom D d (F.1 x) (G.1 x)) *
+    ((0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+      Base_Middle (Base_Middle_Hom D d (F.1 x) (G.1 y))
+        (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+          (Base_First_functorMap C D c d F x y f) (app y))
+        (Base_Middle_comp D d (F.1 x) (G.1 x) (G.1 y)
+          (app x) (Base_First_functorMap C D c d G x y f)))
+
+def First_natApp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Middle_Category D) ->
+    (F : Base_First_Functor C D c d) -> (G : Base_First_Functor C D c d) ->
+    First_NatTrans C D c d F G -> (x : C) -> Base_Middle_Hom D d (F.1 x) (G.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Middle_Category D)
+      (F : Base_First_Functor C D c d) (G : Base_First_Functor C D c d)
+      (alpha : First_NatTrans C D c d F G) => alpha.1
+
+def First_naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Middle_Category D) ->
+    (F : Base_First_Functor C D c d) -> (G : Base_First_Functor C D c d) ->
+    (alpha : First_NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+    Base_Middle (Base_Middle_Hom D d (F.1 x) (G.1 y))
+      (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+        (Base_First_functorMap C D c d F x y f) (alpha.1 y))
+      (Base_Middle_comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (Base_First_functorMap C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Middle_Category D)
+      (F : Base_First_Functor C D c d) (G : Base_First_Functor C D c d)
+      (alpha : First_NatTrans C D c d F G) => alpha.2
+
+-- Natural transformations on the second edge.
+def Second_NatTrans : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Middle_Category C) -> (d : Base_Target_Category D) ->
+    Base_Second_Functor C D c d -> Base_Second_Functor C D c d -> Sort (max (succ w) (succ q)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Base_Middle_Category C) (d : Base_Target_Category D)
+      (F : Base_Second_Functor C D c d) (G : Base_Second_Functor C D c d) =>
+    (app : (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x)) *
+    ((0 x : C) -> (0 y : C) -> (f : Base_Middle_Hom C c x y) ->
+      Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+        (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+          (Base_Second_functorMap C D c d F x y f) (app y))
+        (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+          (app x) (Base_Second_functorMap C D c d G x y f)))
+
+def Second_natApp : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Middle_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Second_Functor C D c d) -> (G : Base_Second_Functor C D c d) ->
+    Second_NatTrans C D c d F G -> (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Base_Middle_Category C) (d : Base_Target_Category D)
+      (F : Base_Second_Functor C D c d) (G : Base_Second_Functor C D c d)
+      (alpha : Second_NatTrans C D c d F G) => alpha.1
+
+def Second_naturality : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Middle_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Second_Functor C D c d) -> (G : Base_Second_Functor C D c d) ->
+    (alpha : Second_NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Base_Middle_Hom C c x y) ->
+    Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+      (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+        (Base_Second_functorMap C D c d F x y f) (alpha.1 y))
+      (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (Base_Second_functorMap C D c d G x y f)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Base_Middle_Category C) (d : Base_Target_Category D)
+      (F : Base_Second_Functor C D c d) (G : Base_Second_Functor C D c d)
+      (alpha : Second_NatTrans C D c d F G) => alpha.2
+
+-- Natural transformations on the composite edge.
+def Composite_NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    Base_Composite_Functor C D c d -> Base_Composite_Functor C D c d -> Sort (max (succ u) (succ q)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Composite_Functor C D c d) (G : Base_Composite_Functor C D c d) =>
+    (app : (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x)) *
+    ((0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+      Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+        (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+          (Base_Composite_functorMap C D c d F x y f) (app y))
+        (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+          (app x) (Base_Composite_functorMap C D c d G x y f)))
+
+def Composite_natApp : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Composite_Functor C D c d) -> (G : Base_Composite_Functor C D c d) ->
+    Composite_NatTrans C D c d F G -> (x : C) -> Base_Target_Hom D d (F.1 x) (G.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Composite_Functor C D c d) (G : Base_Composite_Functor C D c d)
+      (alpha : Composite_NatTrans C D c d F G) => alpha.1
+
+def Composite_naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Composite_Functor C D c d) -> (G : Base_Composite_Functor C D c d) ->
+    (alpha : Composite_NatTrans C D c d F G) ->
+    (0 x : C) -> (0 y : C) -> (f : Base_Source_Hom C c x y) ->
+    Base_Target (Base_Target_Hom D d (F.1 x) (G.1 y))
+      (Base_Target_comp D d (F.1 x) (F.1 y) (G.1 y)
+        (Base_Composite_functorMap C D c d F x y f) (alpha.1 y))
+      (Base_Target_comp D d (F.1 x) (G.1 x) (G.1 y)
+        (alpha.1 x) (Base_Composite_functorMap C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Composite_Functor C D c d) (G : Base_Composite_Functor C D c d)
+      (alpha : Composite_NatTrans C D c d F G) => alpha.2
+
+def targetEqSymm : (0 A : Sort (succ q)) -> (0 x : A) -> (0 y : A) ->
+    Base_Target A x y -> Base_Target A y x :=
+  fun (0 A : Sort (succ q)) (0 x : A) (0 y : A)
+      (proof : Base_Target A x y) =>
+    match proof as self in Base_Target right return Base_Target A right x with
+    | categoryRefl => categoryRefl
+
+-- Precomposition evaluates a second-edge component at K's object.
+def whiskerRight : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Base_Source_Category C) ->
+    (d : Base_Middle_Category D) -> (e : Base_Target_Category E) ->
+    (F : Base_Second_Functor D E d e) -> (G : Base_Second_Functor D E d e) ->
+    Second_NatTrans D E d e F G -> (K : Base_First_Functor C D c d) ->
+    Composite_NatTrans C E c e
+      (Base_compFunctor C D E c d e K F) (Base_compFunctor C D E c d e K G) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Base_Source_Category C) (d : Base_Middle_Category D) (e : Base_Target_Category E)
+      (F : Base_Second_Functor D E d e) (G : Base_Second_Functor D E d e)
+      (alpha : Second_NatTrans D E d e F G) (K : Base_First_Functor C D c d) =>
+    ((fun (x : C) => alpha.1 (K.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Base_Source_Hom C c x y) =>
+       Second_naturality D E d e F G alpha (K.1 x) (K.1 y)
+         (Base_First_functorMap C D c d K x y f)))
+
+-- Postcomposition maps a first-edge component through H.
+-- Its proof crosses the Middle/Target equality boundary by congruence.
+def whiskerLeft : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Base_Source_Category C) ->
+    (d : Base_Middle_Category D) -> (e : Base_Target_Category E) ->
+    (H : Base_Second_Functor D E d e) ->
+    (F : Base_First_Functor C D c d) -> (G : Base_First_Functor C D c d) ->
+    First_NatTrans C D c d F G ->
+    Composite_NatTrans C E c e
+      (Base_compFunctor C D E c d e F H) (Base_compFunctor C D E c d e G H) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Base_Source_Category C) (d : Base_Middle_Category D) (e : Base_Target_Category E)
+      (H : Base_Second_Functor D E d e)
+      (F : Base_First_Functor C D c d) (G : Base_First_Functor C D c d)
+      (alpha : First_NatTrans C D c d F G) =>
+    ((fun (x : C) => Base_Second_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)),
+     (fun (0 x : C) (0 y : C) (f : Base_Source_Hom C c x y) =>
+       Base_Target_eqTrans (Base_Target_Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+         (Base_Target_comp E e (H.1 (F.1 x)) (H.1 (F.1 y)) (H.1 (G.1 y))
+           (Base_Second_functorMap D E d e H (F.1 x) (F.1 y) (Base_First_functorMap C D c d F x y f))
+           (Base_Second_functorMap D E d e H (F.1 y) (G.1 y) (alpha.1 y)))
+         (Base_Second_functorMap D E d e H (F.1 x) (G.1 y)
+           (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+             (Base_First_functorMap C D c d F x y f) (alpha.1 y)))
+         (Base_Target_comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (G.1 y))
+           (Base_Second_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x))
+           (Base_Second_functorMap D E d e H (G.1 x) (G.1 y) (Base_First_functorMap C D c d G x y f)))
+         (targetEqSymm (Base_Target_Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+           (Base_Second_functorMap D E d e H (F.1 x) (G.1 y)
+             (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+               (Base_First_functorMap C D c d F x y f) (alpha.1 y)))
+           (Base_Target_comp E e (H.1 (F.1 x)) (H.1 (F.1 y)) (H.1 (G.1 y))
+             (Base_Second_functorMap D E d e H (F.1 x) (F.1 y) (Base_First_functorMap C D c d F x y f))
+             (Base_Second_functorMap D E d e H (F.1 y) (G.1 y) (alpha.1 y)))
+           (Base_Second_functorMapComp D E d e H (F.1 x) (F.1 y) (G.1 y)
+             (Base_First_functorMap C D c d F x y f) (alpha.1 y)))
+         (Base_Target_eqTrans (Base_Target_Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+           (Base_Second_functorMap D E d e H (F.1 x) (G.1 y)
+             (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+               (Base_First_functorMap C D c d F x y f) (alpha.1 y)))
+           (Base_Second_functorMap D E d e H (F.1 x) (G.1 y)
+             (Base_Middle_comp D d (F.1 x) (G.1 x) (G.1 y)
+               (alpha.1 x) (Base_First_functorMap C D c d G x y f)))
+           (Base_Target_comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (G.1 y))
+             (Base_Second_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x))
+             (Base_Second_functorMap D E d e H (G.1 x) (G.1 y) (Base_First_functorMap C D c d G x y f)))
+           (Base_Second_eqCongr (Base_Middle_Hom D d (F.1 x) (G.1 y))
+             (Base_Target_Hom E e (H.1 (F.1 x)) (H.1 (G.1 y)))
+             (fun (h : Base_Middle_Hom D d (F.1 x) (G.1 y)) =>
+               Base_Second_functorMap D E d e H (F.1 x) (G.1 y) h)
+             (Base_Middle_comp D d (F.1 x) (F.1 y) (G.1 y)
+               (Base_First_functorMap C D c d F x y f) (alpha.1 y))
+             (Base_Middle_comp D d (F.1 x) (G.1 x) (G.1 y)
+               (alpha.1 x) (Base_First_functorMap C D c d G x y f))
+             (First_naturality C D c d F G alpha x y f))
+           (Base_Second_functorMapComp D E d e H (F.1 x) (G.1 x) (G.1 y)
+             (alpha.1 x) (Base_First_functorMap C D c d G x y f)))))
+end
