@@ -1,0 +1,3 @@
+def bad : (0 C : Type 0) -> EqualSource_Category C ->
+    EqualMiddle_Category C :=
+  fun (0 C : Type 0) (c : EqualSource_Category C) => c

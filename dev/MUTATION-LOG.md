@@ -1008,3 +1008,41 @@ eight controls, their anchors and the negatives did not change. The
 replay of the round gives passed=True, controls=9, restored=1: all nine
 controls are killed, the stdouts stay pairwise distinct and the
 restored tree exits 0.
+
+## Stage C / U1 heterogeneous left Kan mutations (2026-09-15)
+
+dev/heterogeneous-left-kan-mutations.py checks nine controls in
+temporary source copies, with exact edit counts, a 120-second timeout
+for each control and the 300-second SUITE allowance for the restored
+suite. Timeouts never count as caught controls. The table below is the
+author's eight-control capture and keeps its measured rows.
+
+| Control | Result | Elapsed ms |
+| --- | --- | ---: |
+| uniqueness-proof | caught | 20182 |
+| factor-projection | caught | 17529 |
+| solution-sort | caught | 8682 |
+| unit-projection | caught | 17071 |
+| functor-map | caught | 62401 |
+| mediator-component | caught | 54457 |
+| cocone-selection | caught | 56395 |
+| negative-corpus | caught | 62146 |
+
+The first four controls remove the uniqueness proof, replace factor
+and unit projections, and lower the solution sort. The runtime
+controls change the mapped arrow, a mediator component and the
+selected cocone. The corpus control replaces a negative fixture
+with a valid definition. All eight failures have distinct stdout.
+The original suite passes after restoration, and all copied source
+hashes match. Evidence:
+dev/validation/port-uat-u1-heterogeneous-left-kan/mutations.json.
+
+Review round 1 adds the ninth control, fixture-solution-pin. It
+raises the Wide solution-sort pin of
+test/fixtures/prelude/heterogeneous-left-kan.mech from Type 3 to
+Type 4, so an upward loosening of that pin no longer survives the
+replay. The control run exits 1 with an empty stderr and a stdout
+that starts `PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch: the term
+has type (Ran SPi 0 J Type 6`. Capture:
+`probes/fix/L3-2/stdout.txt` under
+`/Users/oobi/Documents/mechanism-lang-uat-u1-heterogeneous-left-kan-review`.

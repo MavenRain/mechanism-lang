@@ -2978,3 +2978,153 @@ HETEROGENEOUS-WHISKERING-MUTATIONS passed=True controls=9 restored=1
 Pin: vendor/kanon at 936a43a92dd59a04698648f24fa5ae94cdb532df.
 
 Staging: 52 paths staged before the close, 52 paths staged after it.
+
+## Stage C / U1 heterogeneous left Kan extensions (2026-09-15)
+
+Base: 171513f. The design is
+dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md.
+
+MechHeterogeneousLeftKan imports one shared whiskering instance at
+six independent universe levels. Seventeen new definitions supply
+cocones, factorization, universal solutions, candidate records,
+accessors and desc_unique. Each solution carries a mediator, its
+factorization proof and pointwise uniqueness against every other
+mediator that factors the same cocone.
+
+LanCocone expands the composite maps. Generic contracts check its
+conversion to the existing Composite natural transformation and
+compare factorization with whiskerRight. The record projections use
+separate functor and cocone carrier levels. The runtime solver is
+generic in its target category and functor, and uses an arrow lift
+whose image computes to the original middle arrow.
+
+The suite checks 294 definitions: three left Kan specializations,
+two lightweight category cores and the fixtures. It checks exact
+inventories, positive completed families, unchanged builtins, no
+new axioms, four computations and fifteen refusals. The nominal
+check uses only its two category cores, avoiding a fourth unused
+left Kan specialization. The runtime gate compares four exports at
+two payloads on the kernel, Node and Wasmtime.
+
+Validation on the final sources:
+
+- Build: PASS, zero warnings.
+- PRELUDE-HETEROGENEOUS-LEFT-KAN: PASS, entries=294, instances=3,
+  computations=4, negatives=15.
+- PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME: PASS, cases=4, hosts=3,
+  mutation=1.
+- CLI arity refusal: PASS.
+- Mutation replay: eight controls caught, zero timeouts, restored
+  hashes and suite PASS, distinct diagnostics.
+- Full battery: 55 of 57 PASS, exit 1. The new kernel gate
+  exceeded its initial 120-second tier. TRUSTED-LINES also failed:
+  kernel=4208/3000, encoder=246/900, the inherited D-A-1 bound.
+- Kernel recheck: PASS under the final 300-second SUITE tier. This
+  resolves its timeout and leaves TRUSTED-LINES as the remaining
+  failure across 56 validated gates of 57.
+
+The new kernel gate uses the existing SUITE tier, like the original
+left Kan suite. Its recheck took 81830.000 ms. The runtime gate
+uses SLOW and took 79688.763 ms in the full battery. The two
+gate-source hashes and the separate recheck are retained as evidence.
+The complete logs and SHA-256 bindings are under
+dev/validation/port-uat-u1-heterogeneous-left-kan/.
+
+Stage C and U1 remain open on general instance reuse, identity and
+repeated composition APIs, and source-type parity. Typed mapping
+and PRELUDE-CHECKED remain due.
+
+## Stage C / U1 heterogeneous left Kan extensions review (2026-09-15)
+
+Review findings, the fixes and the legs that prove them:
+
+- L3-1 (medium): the replay ran the restored full suite under the same
+  120-second bound that the battery had already proved too small for that
+  suite. run() now takes a per-call budget. The eight author controls keep
+  120 s, and the restored suite gets the 300-second SUITE allowance of its
+  gate leg. No control bound and no gate tier moves. Proof: the replay item
+  of the review ladder prints TIMEOUTS count=0.
+- L4-2 (low): the "56 of 57 gates" sentence of the validation README named no
+  basis. It now states that the recheck resolves the kernel leg and that the
+  count holds across the battery capture and the recheck. No count, bound or
+  tier moves.
+- L3-2 (low): no control targeted the generic fixture. The replay adds the
+  ninth control fixture-solution-pin, which raises the Wide solution-sort pin
+  of test/fixtures/prelude/heterogeneous-left-kan.mech from Type 3 to Type 4.
+  The control exits 1 with an empty stderr and a distinct diagnostic. The
+  control count moves from eight to nine in README.md, dev/MUTATION-LOG.md
+  and dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md. The author's capture rows
+  stay as captured. Proof: the replay item of the review ladder.
+- L4-1 (low): the battery paragraph of README.md held one 86-column line and
+  a singular pronoun for a plural subject. The paragraph is re-wrapped and
+  reads "Their validation record". No number, bound or tier moves.
+- L3-3 (low): uniqueWitness of the runtime fixture instantiates the
+  uniqueness rule reflexively. A comment above it states that limit and names
+  MixedUniqueContract and WideUniqueContract as the pins of the two-mediator
+  statement. The fixture text is otherwise unchanged. Proof: the suite and
+  runtime items of the review ladder.
+
+The fixture comment and the new control tuple change the sha256 of
+test/fixtures/prelude/heterogeneous-left-kan-runtime.mech and
+dev/heterogeneous-left-kan-mutations.py against the captured rows of
+dev/validation/port-uat-u1-heterogeneous-left-kan/sources.sha256,
+mutations.json and checks.json. The captured rows stay as captured.
+test/fixtures/prelude/heterogeneous-left-kan.mech is unchanged, because
+the new control mutates only the temporary copy of that fixture.
+
+TRUSTED-LINES stays red on the inherited D-A-1 bound. This review moved no
+bound and no gate tier.
+
+Gate result: the review ladder printed PASS count 56 of 57, load at that
+item 8.88 14.32 17.07. The one FAIL row is
+TRUSTED-LINES kernel=4208/3000 encoder=246/900, the inherited bound.
+
+The three OK lines the ladder printed, verbatim:
+
+```
+PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4
+negatives=15
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME OK cases=4 hosts=3 mutation=1
+HETEROGENEOUS-LEFT-KAN-MUTATIONS passed=True controls=9 restored=1
+```
+
+Gate tier: the kernel leg stays at SUITE=300. gate-tier-change.json binds
+dev/gates.sh before sha256
+ea1cbc049611458515ee1e0fd8a3a1513ec3a3db155f5755098e741ecdd6fe47 and
+after sha256 ff46fb94f32a8dbe8557fa2e496724fd162cc94a5f5bb9e08c239cc08c8840a4.
+
+Pin: vendor/kanon stays at 936a43a92dd59a04698648f24fa5ae94cdb532df.
+
+Staged counts: 61 paths before this round, 61 paths after. The round
+edited files already staged from the fix round and added no new path.
+
+Evidence delta: sources.sha256, checks.json and mutations.json each keep
+their captured rows for
+test/fixtures/prelude/heterogeneous-left-kan-runtime.mech and
+dev/heterogeneous-left-kan-mutations.py. checks.json and mutations.json
+each carry a new review_delta key with the 2026-09-15 date, the reason,
+and the captured and the final sha256 of both paths. The hash-check
+prints TOTAL 88 BAD 5; the review-delta-check explains all five rows;
+the fifth row is the evidence row of mutations.json, moved by its own
+review_delta key and listed as a third path in checks.json; that
+checks.json entry was added at 23:35Z during the close ladder, which no
+ladder item reads (item 9 prints the hash-check only, and verify-final
+recomputes from the staged blobs).
+See dev/validation/port-uat-u1-heterogeneous-left-kan/README.md.
+
+Close ladder (2026-09-15 23:28Z, ladder-HLK-close.log in the review
+workspace): RUNNER-EXIT 0, but item 4 (the runtime harness with its
+shipped 110 s budget) timed out at load 35.74. The battery of the same
+ladder passed its runtime leg at load 24.07, so the item 4 result is a
+load flake of the same class as the HW close. A recheck ladder
+(2026-09-16 00:24Z, ladder-HLK-recheck.log) printed
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME OK cases=4 hosts=3 mutation=1 at
+load 21.43, battery 56 of 57 at load 21.95 (TRUSTED-LINES only), replay
+passed=True controls=9 restored=1, hash check TOTAL 88 BAD 5 (the five
+rows above). The final verification reads both ladder logs and the
+recheck-round gates and replay files: VERIFY-FINAL rc=0.
+
+Run record: finders and the fixer ran on opus medium, the judge and the
+verifier ran on opus high, the final verifier died on the account
+five-hour rate limit so main verified the five judged items by hand, and
+the closer ran on sonnet medium.

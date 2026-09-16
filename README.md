@@ -41,14 +41,14 @@ trusted sources and the pin delta are checked by the same battery.
 The import foundation adds grammar, corpus, count and CLI gates.
 The prelude mapping gate remains due in a later M0 stage.
 
-Heterogeneous whiskering adds kernel and runtime gates with nine mutation
-controls. Its validation record lists the results and every failed gate
-from the full battery.
+Heterogeneous left Kan extensions add kernel and runtime gates
+with nine mutation controls. Their validation record lists the
+results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 The latest full battery and its failed checks are recorded in
-`dev/validation/port-uat-u1-heterogeneous-whiskering/`.
+`dev/validation/port-uat-u1-heterogeneous-left-kan/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -233,9 +233,13 @@ postcomposition across a shared three-category group at six independent
 universe levels. Both operations return natural transformations between
 the actual composite functors. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`.
+`prelude/cat/heterogeneous-left-kan.mech` adds left Kan extensions
+over that shared group. Cocones use the existing composite natural
+transformations, and each mediator carries factorization and pointwise
+uniqueness proofs. See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 Stage C remains open on reuse across separate template instances,
-general identity and repeated composition APIs, heterogeneous left Kan
-extensions, and checked source-type parity.
+general identity and repeated composition APIs, and checked
+source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

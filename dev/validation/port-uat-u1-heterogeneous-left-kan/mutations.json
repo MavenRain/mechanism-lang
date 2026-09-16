@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "passed": true,
+  "controls": [
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch: the constructor categoryRefl of Base_Base_Target gives the index (Out SPi w x C (APt w y) (Elim SPi w app (Ran SPi w x C (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) H as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 x D (Ran SPi 0 y D Type (u5 + 1))) d as self return (Ran SPi 0 x D...\n",
+      "stderr": "",
+      "elapsed_ms": 20182,
+      "name": "uniqueness-proof",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch:",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch: the constructor categoryRefl expects family Base_Base_Middle\n",
+      "stderr": "",
+      "elapsed_ms": 17529,
+      "name": "factor-projection",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch:",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL universe: the former lives at max(max(0, max((u2 + 1), (u5 + 1))), max(max(0, 0), imax(max((u2 + 1), (u5 + 1)), imax(0, imax((u2 + 1), 0))))) and the expected universe is (u5 + 1)\n",
+      "stderr": "",
+      "elapsed_ms": 8682,
+      "name": "solution-sort",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL universe: the former lives at ",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch: the term has type (Ran SPi w G (Lan SPi w obj (Ran SPi w _ C D) (Lan SPi w map (Ran SPi 0 x C (Ran SPi 0 y C (Ran SPi w _ (Out SPi 0 y C (APt 0 y) (Out SPi 0 x C (APt 0 x) (Elim SPi w hom (Ran SPi 0 x C (Ran SPi 0 y C Type (u3 + 1))) c as self return (Ran SPi 0 x C (Ran SPi 0 y C Type (u3 + 1))) with | (ALeg 0) x y => x))) (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w y) obj)) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) obj)) (Elim SPi w hom (Ran SPi 0 x D (Ran SPi 0 y D Type (u5 + 1))) d as self...\n",
+      "stderr": "",
+      "elapsed_ms": 17071,
+      "name": "unit-projection",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch:",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanMapResult\n",
+      "stderr": "",
+      "elapsed_ms": 62401,
+      "name": "functor-map",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanMapResult",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanDescFirst\n",
+      "stderr": "",
+      "elapsed_ms": 54457,
+      "name": "mediator-component",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanDescFirst",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanDescSecond\n",
+      "stderr": "",
+      "elapsed_ms": 56395,
+      "name": "cocone-selection",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL wrong computation: lanDescSecond",
+      "killed": true
+    },
+    {
+      "exit_code": 1,
+      "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL missing-factor: expected refusal\n",
+      "stderr": "",
+      "elapsed_ms": 62146,
+      "name": "negative-corpus",
+      "expected": "PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL missing-factor: expected refusal",
+      "killed": true
+    }
+  ],
+  "executable_sha256": "ce0844e81ce9a6f05ba5aede920d2fecc5078ae4a2a0fce8e11e6da3e6eafb75",
+  "sources": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "test/fixtures/prelude/heterogeneous-left-kan.mech": "d41eec41716c867e97d43e039f92e43813fb9100935a7c77c84395d1a235e2f0",
+    "test/fixtures/prelude/heterogeneous-left-kan-runtime.mech": "8f6ed5c5edf864bdc4f5673221f6276e1bff70be2e2ad5142ec1c30e583711d1",
+    "test/prelude_heterogeneous_left_kan.ml": "2b63ee80f8b97054688b8e2b6e429d3117ab2db925ef91fe5415e210e38be8c6",
+    "dev/heterogeneous-left-kan-mutations.py": "d6d1a2ccb5254cc4604e6185ef992d9dcb6296678192331c99969371c68d0fd6",
+    "test/neg/heterogeneous-left-kan/cocone-endpoint.err": "1f5eeb0ecffcc1b576ad91efef7333cebbb97940cc175345c9be834c95586978",
+    "test/neg/heterogeneous-left-kan/cocone-endpoint.mech": "a4c74a648d323099b870cf4901b69f7a20413488419d85c6849ce3149c8d790c",
+    "test/neg/heterogeneous-left-kan/cocone-sort.err": "9aad6fc8e317e5827ad43b7085a2129c3f882d8fccb434e0e2055918c5f00ddb",
+    "test/neg/heterogeneous-left-kan/cocone-sort.mech": "3f41151fc18a50d3fa72ccf00211e808911bd8fd82d8abc68ceaf707edc90bcc",
+    "test/neg/heterogeneous-left-kan/extension-sort.err": "c41477346302d625f0d038709d46cef6a71319a5456f3a3d2e2b68138f76a681",
+    "test/neg/heterogeneous-left-kan/extension-sort.mech": "65b6367f5312867251f7f3a7ea1e0434cc9566bd596fc2a7a0239448d4b5b2b3",
+    "test/neg/heterogeneous-left-kan/middle-level.err": "92611018cbca4e33f8d962ef4c3bc6b53f2b6d9efaefdf4f5a0bba61effa166d",
+    "test/neg/heterogeneous-left-kan/middle-level.mech": "630b9e0e4ddd9763691f476a8fcce979c58190b29e247cddc6e38caa7ab4243e",
+    "test/neg/heterogeneous-left-kan/missing-factor.err": "a714311352a9e5ad3d26796a294f14ff87bc6d1dde23bf4c6c26e793cce6b376",
+    "test/neg/heterogeneous-left-kan/missing-factor.mech": "ebb8673993164a1398a8cc7cdbece9fd32a7a96983d0186f0cb3fa9327affc7c",
+    "test/neg/heterogeneous-left-kan/missing-uniqueness.err": "1b026e1f3429385628de56ca4d2ef208e0a1231d7039a5322ce3372e02214a5c",
+    "test/neg/heterogeneous-left-kan/missing-uniqueness.mech": "b5c7891e599d7690e683f5fd081926324cfaa3adef34985ca71b8e17d34bc3db",
+    "test/neg/heterogeneous-left-kan/nominal-category.err": "9d0b2bbe9f3f1b03e2c014e75d9e0ddf84a221b6467a19530532cca8c896306c",
+    "test/neg/heterogeneous-left-kan/nominal-category.mech": "0a9b1dcb12a1e39c1c311f58d59e91191b9e54a7665a78465671dc42d4c00c32",
+    "test/neg/heterogeneous-left-kan/solution-sort.err": "89c49869e47c386a2442f3a18218113bffa54b8f5cefaca5c4106e087e5ba79f",
+    "test/neg/heterogeneous-left-kan/solution-sort.mech": "e06f438fd5b81812f08489c3fa43ba43f0ae68d38d40a14b261c0bb27e1cf8d3",
+    "test/neg/heterogeneous-left-kan/source-level.err": "e06f4dd1f38e8cd0a3a70ed4667e4d920ecc7d68a8012ebd17bc7b1b219b122b",
+    "test/neg/heterogeneous-left-kan/source-level.mech": "5cbdc4049289f0fe1a0bc373b8c4f33cae42a91774fc8dcc382d9faf648f325e",
+    "test/neg/heterogeneous-left-kan/tail-sort.err": "cbbf282dc6a700d5b3ab3312155a533994e57853ee225290f9dd1d762229aabc",
+    "test/neg/heterogeneous-left-kan/tail-sort.mech": "3d026654df9c5d10403073aede557a691f523d58b6090fc4ed2d37d5efe52e28",
+    "test/neg/heterogeneous-left-kan/target-level.err": "b8e5f7824cff745604fb11bc49b27e9820a311b4b9f23ca2d787ab2b77e80cc1",
+    "test/neg/heterogeneous-left-kan/target-level.mech": "a99c41b59c53de494314d2ff69e3039ff5e5fc17df003151be938e2a87a2105f",
+    "test/neg/heterogeneous-left-kan/uniqueness-endpoint.err": "4e5b15985d5e8f752785df2b3705d4962f235ee5855d01bfc1f321e74911204f",
+    "test/neg/heterogeneous-left-kan/uniqueness-endpoint.mech": "1d2f0daeb9050f2e92a3dd728ebe3d20114e45382beeaf279e8917fe19a15fed",
+    "test/neg/heterogeneous-left-kan/wrong-factor.err": "65046453c9cb3acd3172ea4b518dfba4506a7f3fa6fe86bbc74db288b95e9992",
+    "test/neg/heterogeneous-left-kan/wrong-factor.mech": "eb8d6394b21014668f64f1b39f50e53602db4be358299966ad6752ce597b31b0"
+  },
+  "restored": {
+    "exit_code": 0,
+    "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15\n",
+    "stderr": "",
+    "elapsed_ms": 99193
+  },
+  "distinct": true,
+  "sources_restored": true,
+  "review_delta": {
+    "date": "2026-09-15",
+    "reason": "The review fixture comment and the ninth mutation control moved the sha256 of two captured sources past their captured rows.",
+    "paths": [
+      {
+        "path": "test/fixtures/prelude/heterogeneous-left-kan-runtime.mech",
+        "captured": "8f6ed5c5edf864bdc4f5673221f6276e1bff70be2e2ad5142ec1c30e583711d1",
+        "final": "ef581c4af20db540b688177b33ba0c9f482f3028de3a4ffd9d8a7b762f18fa9f"
+      },
+      {
+        "path": "dev/heterogeneous-left-kan-mutations.py",
+        "captured": "d6d1a2ccb5254cc4604e6185ef992d9dcb6296678192331c99969371c68d0fd6",
+        "final": "5e9620eff26b9445f69efbc3ad97e3108be15ef0e638652fd086bd1787e7f7e6"
+      }
+    ]
+  }
+}

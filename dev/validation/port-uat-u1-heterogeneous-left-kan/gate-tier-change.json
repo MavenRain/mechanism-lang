@@ -1,0 +1,8 @@
+{
+  "path": "dev/gates.sh",
+  "before_sha256": "ea1cbc049611458515ee1e0fd8a3a1513ec3a3db155f5755098e741ecdd6fe47",
+  "after_sha256": "ff46fb94f32a8dbe8557fa2e496724fd162cc94a5f5bb9e08c239cc08c8840a4",
+  "before": "SLOW=120",
+  "after": "SUITE=300",
+  "reason": "The new universal-property suite needs the existing left Kan suite watchdog tier."
+}

@@ -44,12 +44,11 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-15
 
-The base is c7e95c3, following committed heterogeneous natural transformations.
-The current increment adds heterogeneous whiskering in both directions
-over one shared composable-functor instance at six independent universe
-levels. It returns natural transformations between composite functors
-with checked naturality proofs.
-See `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`.
+The base is 171513f, following committed heterogeneous whiskering.
+The current increment adds heterogeneous left Kan extensions over
+one shared category triple at six independent universe levels.
+Each mediator carries checked factorization and pointwise uniqueness
+proofs. See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -62,8 +61,7 @@ Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
 open on reuse across separate category template instances, general
-identity and repeated composition APIs, heterogeneous left Kan extensions,
-and source-type parity.
+identity and repeated composition APIs, and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -75,7 +73,9 @@ PRELUDE-HETEROGENEOUS-NATTRANS gates check natural transformations
 within a shared source/target pair and compare their runtime results.
 The PRELUDE-HETEROGENEOUS-WHISKERING gates check both whiskering
 operations over a shared three-category group and compare four exports
-on the kernel, Node and Wasmtime at two payloads.
+on the kernel, Node and Wasmtime at two payloads. The
+PRELUDE-HETEROGENEOUS-LEFT-KAN gates check universal mediators over
+that shared triple and compare four exports at two payloads.
 TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
@@ -138,9 +138,11 @@ stay under `ports/` (D-UAT-3).
   at independent universe pairs are specified in
   `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md`. Both heterogeneous
   whiskering operations over a shared three-category group are specified
-  in `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`. U1 remains open on
-  general reuse across separate category instances, identity and repeated
-  composition APIs, heterogeneous left Kan extensions and source-type parity.
+  in `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`. Heterogeneous left
+  Kan extensions over that shared group are specified in
+  `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`. U1 remains open on general
+  reuse across separate category instances, identity and repeated
+  composition APIs, and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

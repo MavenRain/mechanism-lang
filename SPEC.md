@@ -516,6 +516,17 @@ functor and category records. Equal universe levels do not identify
 distinct nominal category or equality families.
 
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the contract and
-validation. General instance reuse, general identity and repeated
-functor composition, heterogeneous left Kan extensions, and
-source-type parity remain open.
+validation.
+
+MechHeterogeneousLeftKan specializes MechHeterogeneousWhiskering once
+as Base at six independent universe levels. LanCocone is the composite
+natural transformation from F to K followed by G. LanFactor uses the
+target equality family. LanSolution pairs a second-edge mediator with
+factorization and pointwise uniqueness; LeftKanExtension stores a
+second-edge functor, a unit and a solver for every cocone.
+The functor and cocone projections preserve their separate carrier
+and field universe levels. desc_unique uses both factorization proofs
+to compare arbitrary mediators. See
+`dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md` for the exact sorts and
+validation contract. General instance reuse, general identity and
+repeated functor composition, and source-type parity remain open.

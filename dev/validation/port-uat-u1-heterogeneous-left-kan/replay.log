@@ -1,0 +1,10 @@
+uniqueness-proof: killed=True
+factor-projection: killed=True
+solution-sort: killed=True
+unit-projection: killed=True
+functor-map: killed=True
+mediator-component: killed=True
+cocone-selection: killed=True
+negative-corpus: killed=True
+HETEROGENEOUS-LEFT-KAN-MUTATIONS-TIMEOUTS count=0
+HETEROGENEOUS-LEFT-KAN-MUTATIONS passed=True controls=8 restored=1

@@ -248,6 +248,9 @@ leg SLOW PRELUDE-HETEROGENEOUS-NATTRANS '^PRELUDE-HETEROGENEOUS-NATTRANS-OK entr
 leg SLOW PRELUDE-HETEROGENEOUS-WHISKERING \
   '^PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16$' \
   $ROOT/_build/default/test/prelude_heterogeneous_whiskering.exe $ROOT
+leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
+  '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
+  $ROOT/_build/default/test/prelude_heterogeneous_left_kan.exe $ROOT
 leg SLOW PRELUDE-COMPOSABLE-FUNCTORS '^PRELUDE-COMPOSABLE-FUNCTORS-OK entries=' \
   $ROOT/_build/default/test/prelude_composable_functors.exe $ROOT
 leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
@@ -274,6 +277,9 @@ leg SLOW PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME \
 leg SLOW PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME \
   '^PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/heterogeneous_whiskering_runtime.py
+leg SLOW PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME \
+  '^PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME OK cases=4 hosts=3 mutation=1$' \
+  python3 -I $ROOT/test/heterogeneous_left_kan_runtime.py
 leg SLOW PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME \
   '^PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/composable_functors_runtime.py

@@ -1,0 +1,6 @@
+def bad : (0 J : Type 0) ->
+    (c : Mixed_Base_Base_Source_Category J) ->
+    (0 x : J) -> (0 y : J) -> Type 0 :=
+  fun (0 J : Type 0)
+    (c : Mixed_Base_Base_Source_Category J)
+    (0 x : J) (0 y : J) => Mixed_Base_Base_Source_Hom J c x y

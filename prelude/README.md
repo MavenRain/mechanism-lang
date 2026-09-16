@@ -261,7 +261,8 @@ Nested vertical composition uses these same functor types.
 
 The template reuses MechHeterogeneousFunctor through one Base
 specialization. Separate group instances retain distinct nominal
-families. Heterogeneous left Kan extensions remain due.
+families. The shared three-category API below supplies left Kan
+extensions at independent universe levels.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the signatures,
 universe rule and validation contract.
 
@@ -290,3 +291,32 @@ payloads. The group shares categories internally; separate
 specializations still have distinct nominal families. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md` for the full contract
 and remaining U1 work.
+
+## Heterogeneous left Kan extensions
+
+Load `cat/category-core.mech`, `cat/composable-functors.mech`,
+`cat/heterogeneous-whiskering.mech`, then
+`cat/heterogeneous-left-kan.mech`:
+
+```text
+specialize MechHeterogeneousLeftKan (0, 1, 2, 3, 4, 5) as L
+```
+
+`L_Base_` exposes the shared whiskering instance; `L_Base_Base_`
+exposes its categories and functors. For K on the First edge and F
+on the Composite edge, `L_LeftKanExtension J C D j c d K F` stores
+a Second-edge functor H, a cocone from F to K followed by H, and a
+solver for each cocone from F to K followed by G.
+
+`L_lanFunctor` and `L_lanUnit` read the candidate. `L_lanSolve`
+returns a `L_LanSolution`; `L_lanDesc`, `L_lanFac` and `L_lanUniq`
+read its mediator and proofs. `L_desc_unique` compares two mediators
+that factor the same cocone, pointwise in target equality.
+`L_LanCocone` is directly a `L_Base_Composite_NatTrans`, and its
+factorization agrees with `L_Base_whiskerRight`.
+
+Both PRELUDE-HETEROGENEOUS-LEFT-KAN gates check this API and four
+exports on three hosts at two payloads. Separate specializations
+retain their nominal families. General instance reuse, identity
+and repeated composition APIs, and source-type parity remain open.
+See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.

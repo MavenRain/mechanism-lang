@@ -1,0 +1,221 @@
+-- Load category-core, composable-functors and heterogeneous-whiskering first.
+-- One shared category triple supplies the functors and natural transformations.
+poly (u, v, w, z, p, q) group MechHeterogeneousLeftKan where
+specialize MechHeterogeneousWhiskering (u, v, w, z, p, q) as Base
+
+-- Projections retain the independent carrier and field universe levels.
+def recordFirst : (0 A : Sort (max (max (succ w) (succ z)) (max (succ p) (succ q)))) ->
+    (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q))))) -> ((a : A) * B a) -> A :=
+  fun (0 A : Sort (max (max (succ w) (succ z)) (max (succ p) (succ q)))) (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))))
+      (packed : (a : A) * B a) => packed.1
+def recordSecond : (0 A : Sort (max (max (succ w) (succ z)) (max (succ p) (succ q)))) ->
+    (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q))))) ->
+    (packed : (a : A) * B a) -> B (recordFirst A B packed) :=
+  fun (0 A : Sort (max (max (succ w) (succ z)) (max (succ p) (succ q)))) (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))))
+      (packed : (a : A) * B a) => packed.2
+
+def coconeFirst : (0 A : Sort (max (succ u) (succ q))) ->
+    (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q))))) -> ((a : A) * B a) -> A :=
+  fun (0 A : Sort (max (succ u) (succ q))) (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))))
+      (packed : (a : A) * B a) => packed.1
+def coconeSecond : (0 A : Sort (max (succ u) (succ q))) ->
+    (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q))))) ->
+    (packed : (a : A) * B a) -> B (coconeFirst A B packed) :=
+  fun (0 A : Sort (max (succ u) (succ q))) (0 B : A -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))))
+      (packed : (a : A) * B a) => packed.2
+
+-- Expand the composite maps to avoid rechecking a composed functor here.
+-- The generic fixtures check conversion to the existing Composite NatTrans.
+def LanCocone : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    Base_Base_First_Functor J C j c -> Base_Base_Composite_Functor J D j d ->
+    Base_Base_Second_Functor C D c d -> Sort (max (succ u) (succ q)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D) (K : Base_Base_First_Functor J C j c)
+      (F : Base_Base_Composite_Functor J D j d) (G : Base_Base_Second_Functor C D c d) =>
+    (app : (x : J) -> Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x))) *
+    ((0 x : J) -> (0 y : J) -> (f : Base_Base_Source_Hom J j x y) ->
+      Base_Base_Target (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 y)))
+        (Base_Base_Target_comp D d (F.1 x) (F.1 y) (G.1 (K.1 y))
+          (Base_Base_Composite_functorMap J D j d F x y f) (app y))
+        (Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (G.1 (K.1 y))
+          (app x) (Base_Base_Second_functorMap C D c d G (K.1 x) (K.1 y)
+            (Base_Base_First_functorMap J C j c K x y f))))
+
+-- The unit followed by a mediator at K's object equals the cocone.
+def LanFactor : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> (G : Base_Base_Second_Functor C D c d) ->
+    LanCocone J C D j c d K F H -> LanCocone J C D j c d K F G ->
+    Base_Second_NatTrans C D c d H G -> Prop :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d)
+      (H : Base_Base_Second_Functor C D c d) (G : Base_Base_Second_Functor C D c d)
+      (eta : LanCocone J C D j c d K F H)
+      (alpha : LanCocone J C D j c d K F G)
+      (beta : Base_Second_NatTrans C D c d H G) =>
+    (x : J) -> Base_Base_Target (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (Base_Base_Target_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+        (eta.1 x) (beta.1 (K.1 x))) (alpha.1 x)
+
+-- Package each mediator with its factorization and uniqueness proofs.
+def LanSolution : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> (G : Base_Base_Second_Functor C D c d) ->
+    LanCocone J C D j c d K F H -> LanCocone J C D j c d K F G ->
+    Sort (max (succ w) (succ q)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d)
+      (H : Base_Base_Second_Functor C D c d) (G : Base_Base_Second_Functor C D c d)
+      (eta : LanCocone J C D j c d K F H)
+      (alpha : LanCocone J C D j c d K F G) =>
+    (beta : Base_Second_NatTrans C D c d H G) *
+    (fac : LanFactor J C D j c d K F H G eta alpha beta) *
+    ((other : Base_Second_NatTrans C D c d H G) ->
+      LanFactor J C D j c d K F H G eta alpha other ->
+      (y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+        (other.1 y) (beta.1 y))
+
+def LanTail : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d) (H : Base_Base_Second_Functor C D c d) =>
+    (eta : LanCocone J C D j c d K F H) *
+    ((G : Base_Base_Second_Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+      LanSolution J C D j c d K F H G eta alpha)
+
+def LeftKanExtension : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    Sort (max (succ u) (max (max (succ w) (succ z)) (max (succ p) (succ q)))) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d) =>
+    (H : Base_Base_Second_Functor C D c d) * LanTail J C D j c d K F H
+
+def lanFunctor : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Base_Source_Category J) -> (0 c : Base_Base_Middle_Category C) ->
+    (0 d : Base_Base_Target_Category D) -> (0 K : Base_Base_First_Functor J C j c) -> (0 F : Base_Base_Composite_Functor J D j d) ->
+    LeftKanExtension J C D j c d K F -> Base_Base_Second_Functor C D c d :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (0 j : Base_Base_Source_Category J) (0 c : Base_Base_Middle_Category C) (0 d : Base_Base_Target_Category D)
+      (0 K : Base_Base_First_Functor J C j c) (0 F : Base_Base_Composite_Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordFirst (Base_Base_Second_Functor C D c d)
+      (fun (H : Base_Base_Second_Functor C D c d) => LanTail J C D j c d K F H) L
+
+def lanTail : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Base_Source_Category J) -> (0 c : Base_Base_Middle_Category C) ->
+    (0 d : Base_Base_Target_Category D) -> (0 K : Base_Base_First_Functor J C j c) -> (0 F : Base_Base_Composite_Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> LanTail J C D j c d K F (lanFunctor J C D j c d K F L)
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (0 j : Base_Base_Source_Category J) (0 c : Base_Base_Middle_Category C) (0 d : Base_Base_Target_Category D)
+      (0 K : Base_Base_First_Functor J C j c) (0 F : Base_Base_Composite_Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    recordSecond (Base_Base_Second_Functor C D c d)
+      (fun (H : Base_Base_Second_Functor C D c d) => LanTail J C D j c d K F H) L
+
+def lanUnit : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Base_Source_Category J) -> (0 c : Base_Base_Middle_Category C) ->
+    (0 d : Base_Base_Target_Category D) -> (0 K : Base_Base_First_Functor J C j c) -> (0 F : Base_Base_Composite_Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> LanCocone J C D j c d K F (lanFunctor J C D j c d K F
+    L) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (0 j : Base_Base_Source_Category J) (0 c : Base_Base_Middle_Category C) (0 d : Base_Base_Target_Category D)
+      (0 K : Base_Base_First_Functor J C j c) (0 F : Base_Base_Composite_Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    coconeFirst (LanCocone J C D j c d K F (lanFunctor J C D j c d K F L))
+      (fun (eta : LanCocone J C D j c d K F (lanFunctor J C D j c d K F L)) =>
+        (G : Base_Base_Second_Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+          LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G eta alpha)
+      (lanTail J C D j c d K F L)
+
+def lanSolve : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Base_Source_Category J) -> (0 c : Base_Base_Middle_Category C) ->
+    (0 d : Base_Base_Target_Category D) -> (0 K : Base_Base_First_Functor J C j c) -> (0 F : Base_Base_Composite_Functor J D j d) ->
+    (L : LeftKanExtension J C D j c d K F) -> (G : Base_Base_Second_Functor C D c d) ->
+    (alpha : LanCocone J C D j c d K F G) ->
+    LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G (lanUnit J C D j c d K F L) alpha
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (0 j : Base_Base_Source_Category J) (0 c : Base_Base_Middle_Category C) (0 d : Base_Base_Target_Category D)
+      (0 K : Base_Base_First_Functor J C j c) (0 F : Base_Base_Composite_Functor J D j d) (L : LeftKanExtension J C D j c d K F) =>
+    coconeSecond (LanCocone J C D j c d K F (lanFunctor J C D j c d K F L))
+      (fun (eta : LanCocone J C D j c d K F (lanFunctor J C D j c d K F L)) =>
+        (G : Base_Base_Second_Functor C D c d) -> (alpha : LanCocone J C D j c d K F G) ->
+          LanSolution J C D j c d K F (lanFunctor J C D j c d K F L) G eta alpha)
+      (lanTail J C D j c d K F L)
+
+def lanDesc : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Base_Source_Category J) -> (0 c : Base_Base_Middle_Category C) ->
+    (0 d : Base_Base_Target_Category D) -> (0 K : Base_Base_First_Functor J C j c) -> (0 F : Base_Base_Composite_Functor J D j d) ->
+    (0 H : Base_Base_Second_Functor C D c d) -> (0 G : Base_Base_Second_Functor C D c d) ->
+    (0 eta : LanCocone J C D j c d K F H) -> (0 alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> Base_Second_NatTrans C D c d H G :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (0 j : Base_Base_Source_Category J) (0 c : Base_Base_Middle_Category C) (0 d : Base_Base_Target_Category D)
+      (0 K : Base_Base_First_Functor J C j c) (0 F : Base_Base_Composite_Functor J D j d) (0 H : Base_Base_Second_Functor C D c d) (0 G : Base_Base_Second_Functor C D c d)
+      (0 eta : LanCocone J C D j c d K F H) (0 alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.1
+
+def lanFac : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> (G : Base_Base_Second_Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> LanFactor J C D j c d K F H G eta alpha (s.1)
+    :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d) (H : Base_Base_Second_Functor C D c d) (G : Base_Base_Second_Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.2.1
+
+def lanUniq : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> (G : Base_Base_Second_Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) -> (beta : Base_Second_NatTrans C D c d H G) ->
+    LanFactor J C D j c d K F H G eta alpha beta ->
+    (y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (beta.1 y) ((s.1).1 y) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d) (H : Base_Base_Second_Functor C D c d) (G : Base_Base_Second_Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha) => s.2.2
+
+-- Two mediators that factor the same cocone agree at every object.
+def desc_unique : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) -> (c : Base_Base_Middle_Category C) ->
+    (d : Base_Base_Target_Category D) -> (K : Base_Base_First_Functor J C j c) -> (F : Base_Base_Composite_Functor J D j d) ->
+    (H : Base_Base_Second_Functor C D c d) -> (G : Base_Base_Second_Functor C D c d) ->
+    (eta : LanCocone J C D j c d K F H) -> (alpha : LanCocone J C D j c d K F G) ->
+    (s : LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : Base_Second_NatTrans C D c d H G) -> (beta2 : Base_Second_NatTrans C D c d H G) ->
+    LanFactor J C D j c d K F H G eta alpha beta1 ->
+    LanFactor J C D j c d K F H G eta alpha beta2 ->
+    (y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (beta1.1 y) (beta2.1 y) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C) (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Functor J C j c) (F : Base_Base_Composite_Functor J D j d) (H : Base_Base_Second_Functor C D c d) (G : Base_Base_Second_Functor C D c d)
+      (eta : LanCocone J C D j c d K F H) (alpha : LanCocone J C D j c d K F G)
+      (s : LanSolution J C D j c d K F H G eta alpha)
+      (beta1 : Base_Second_NatTrans C D c d H G) (beta2 : Base_Second_NatTrans C D c d H G)
+      (h1 : LanFactor J C D j c d K F H G eta alpha beta1)
+      (h2 : LanFactor J C D j c d K F H G eta alpha beta2) (y : C) =>
+    Base_Base_Target_eqTrans (Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (beta1.1 y) ((s.1).1 y) (beta2.1 y)
+      (lanUniq J C D j c d K F H G eta alpha s beta1 h1 y)
+      (Base_targetEqSymm (Base_Base_Target_Hom D d (H.1 y) (G.1 y)) (beta2.1 y) ((s.1).1 y)
+        (lanUniq J C D j c d K F H G eta alpha s beta2 h2 y))
+end
