@@ -1,0 +1,84 @@
+-- Distinct nominal categories share their families across template instances.
+specialize MechCategoryCore (0, 0) as Source
+specialize MechCategoryCore (0, 0) as Middle
+specialize MechCategoryCore (0, 0) as Target
+specialize MechHeterogeneousFunctor (0, 0, 0, 0) as First
+  with (Source := Source, Target := Middle)
+specialize MechHeterogeneousFunctor (0, 0, 0, 0) as Second
+  with (Source := Middle, Target := Target)
+specialize MechHeterogeneousFunctor (0, 0, 0, 0) as Third
+  with (Source := Target, Target := Target)
+specialize MechComposableFunctors (0, 0, 0, 0, 0, 0) as Run
+  with (Source := Source, Middle := Middle, Target := Target)
+specialize MechComposableFunctors (0, 0, 0, 0, 0, 0) as Again
+  with (Source := Source, Middle := Target, Target := Target)
+specialize MechIdentityFunctor (0, 0) as Identity with (Base := Target)
+
+def reuseInput : Nat := 37
+
+def SourceCategory : Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def MiddleCategory : Middle_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def TargetCategory : Target_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def Lift : First_Functor Nat Nat SourceCategory MiddleCategory :=
+  ((fun (x : Nat) => natAdd x 2),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Raise : Second_Functor Nat Nat MiddleCategory TargetCategory :=
+  ((fun (x : Nat) => natMul x 2),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Shift : Third_Functor Nat Nat TargetCategory TargetCategory :=
+  ((fun (x : Nat) => natAdd x 5),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+
+def Composed : Run_Composite_Functor Nat Nat SourceCategory TargetCategory :=
+  Run_compFunctor Nat Nat Nat SourceCategory MiddleCategory TargetCategory Lift Raise
+def Repeated : Again_Composite_Functor Nat Nat SourceCategory TargetCategory :=
+  Again_compFunctor Nat Nat Nat SourceCategory TargetCategory TargetCategory Composed Shift
+def repeatedObject : Nat :=
+  Again_Composite_functorObj Nat Nat SourceCategory TargetCategory Repeated reuseInput
+def repeatedArrow : Nat :=
+  Again_Composite_functorMap Nat Nat SourceCategory TargetCategory Repeated 0 2
+    (Source_comp Nat SourceCategory 0 1 2
+      (fun (n : Nat) => natAdd n 3) (fun (n : Nat) => natMul n 2)) reuseInput
+def identityObject : Nat :=
+  Third_functorObj Nat Nat TargetCategory TargetCategory
+    (Identity_idFunctor Nat TargetCategory) reuseInput
+def identityArrow : Nat :=
+  Third_functorMap Nat Nat TargetCategory TargetCategory
+    (Identity_idFunctor Nat TargetCategory) 0 1
+      (fun (n : Nat) => natAdd n 7) reuseInput

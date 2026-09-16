@@ -1,0 +1,14 @@
+{
+  "base": "2ff1eb96038042807d4b46b87d181a619e9a68dd",
+  "elapsed_seconds": 110.2454117918387,
+  "exit_code": 1,
+  "input_sha256": {
+    "test/heterogeneous_left_kan_runtime.py": "f25b3dc83f547d939aa6a3f8bbee92c4cbea64e03115cb4cadc9f06ceb1bf055",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "test/fixtures/prelude/heterogeneous-left-kan-runtime.mech": "ef581c4af20db540b688177b33ba0c9f482f3028de3a4ffd9d8a7b762f18fa9f"
+  },
+  "executable_sha256": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a"
+}

@@ -1,0 +1,108 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-REUSE-M1",
+      "path": "surface/family_poly.ml",
+      "old": "| () when level_ok && actual = leveled -> Ok globals",
+      "new": "| () when level_ok && actual = actual -> Ok globals",
+      "source_sha256": "88002a1e74fb673a0b1a46150133bf01632d37c27de70c5479cbcc1c46faa71d",
+      "mutant_sha256": "d2f01cd3e286acdb3ee307f87d786568bbbe804fa10ac7dd168b2d48d6753503",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-REUSE-FAIL wrong-constructor: wrong refusal: missing branch: the elimination of Other has no branch at other",
+      "killed": true,
+      "C-REUSE-M1": {
+        "stdout": "TEMPLATE-REUSE-FAIL wrong-constructor: wrong refusal: missing branch: the elimination of Other has no branch at other\n",
+        "stderr": ""
+      },
+      "C-REUSE-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-REUSE-M2",
+      "path": "surface/family_poly.ml",
+      "old": "(fun (c : Positivity.ctor) -> { c with Positivity.c_self_rec = false })",
+      "new": "(fun (c : Positivity.ctor) -> c)",
+      "source_sha256": "88002a1e74fb673a0b1a46150133bf01632d37c27de70c5479cbcc1c46faa71d",
+      "mutant_sha256": "d1843144051d9ea702094ea12f91f29e78642e86d874fd662ff8580e48a634f9",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-REUSE-FAIL mutual-group-member: wrong refusal: mismatch: the reused family B does not match the template",
+      "killed": true,
+      "C-REUSE-M2": {
+        "stdout": "TEMPLATE-REUSE-FAIL mutual-group-member: wrong refusal: mismatch: the reused family B does not match the template\n",
+        "stderr": ""
+      },
+      "C-REUSE-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-REUSE-M3",
+      "path": "surface/family_poly.ml",
+      "old": "  let* level_ok = Level.equal_budget budget\n    actual.Positivity.f_level expected.Positivity.f_level in",
+      "new": "  let* level_ok = Ok (actual.Positivity.f_level = expected.Positivity.f_level) in",
+      "source_sha256": "88002a1e74fb673a0b1a46150133bf01632d37c27de70c5479cbcc1c46faa71d",
+      "mutant_sha256": "0c837e68ce1b5fb40d161397a741f0583ab61e244726fb95c460335f081a5eac",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-REUSE-FAIL mismatch: the reused family E does not match the template",
+      "killed": true,
+      "C-REUSE-M3": {
+        "stdout": "TEMPLATE-REUSE-FAIL mismatch: the reused family E does not match the template\n",
+        "stderr": ""
+      },
+      "C-REUSE-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-REUSE-M4",
+      "path": "surface/elab.ml",
+      "old": "          let* () = match () with\n            | () when reuse = [] -> Ok ()\n            | () when Option.is_none (Poly.arity catalog name) -> Ok ()\n            | () -> Error (Error.Not_yet \"family reuse requires a family template\") in",
+      "new": "          let* () = if reuse = [] then Ok ()\n            else Error (Error.Not_yet \"family reuse requires a family template\") in",
+      "source_sha256": "17fb4bfddad38757bbc457fa5be180b72971f20552727224193a04213678ee63",
+      "mutant_sha256": "18456994ebb2256aac06fc67da6cee568205f025badf42a642443e7547a4cf97",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-REUSE-FAIL unknown-template-name: wrong refusal: not yet: family reuse requires a family template",
+      "killed": true,
+      "C-REUSE-M4": {
+        "stdout": "TEMPLATE-REUSE-FAIL unknown-template-name: wrong refusal: not yet: family reuse requires a family template\n",
+        "stderr": ""
+      },
+      "C-REUSE-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-REUSE-M5",
+      "path": "test/template_reuse.ml",
+      "old": "    { original with Positivity.f_ctors = [] }] in",
+      "new": "    ] in",
+      "source_sha256": "47570ef820b9058538f9b522247c5ddc0c0feaa42dfcbe925b5563f29aa4e056",
+      "mutant_sha256": "f407db783ede08d20a72bc088a57b3ea275bc46d4373304ebda83076121b7e62",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "diagnostic": "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=5",
+      "killed": true,
+      "C-REUSE-M5": {
+        "stdout": "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=5\n",
+        "stderr": ""
+      },
+      "C-REUSE-M5-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "baseline_stdout": "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6\n",
+  "restored_stdout": "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6\n",
+  "suite_sha256": "47570ef820b9058538f9b522247c5ddc0c0feaa42dfcbe925b5563f29aa4e056"
+}

@@ -1256,7 +1256,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
       let names = match d with
         | Syntax.DDef (name, _, _) | Syntax.DAxiom (name, _)
         | Syntax.DPoly (_, name, _, _) | Syntax.DPolyCompose (_, name, _, _)
-        | Syntax.DSpecialize (_, _, name) -> [name]
+        | Syntax.DSpecialize (_, _, name, _) -> [name]
         | Syntax.DPolyMu (_, fm) | Syntax.DPolyGroup (_, fm, _, _) -> [fm.Syntax.fm_name]
         | Syntax.DMu fams -> List.map (fun fm -> fm.Syntax.fm_name) fams
         | Syntax.DRec members -> List.map (fun m -> m.Syntax.rd_name) members in
@@ -1284,7 +1284,7 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
         else Ok ()) names) |> Result.map (fun _checks -> ()) in
       let reserved_by_ctor = match d with
         | Syntax.DPoly (_, name, _, _) | Syntax.DPolyCompose (_, name, _, _)
-        | Syntax.DSpecialize (_, _, name) -> [name]
+        | Syntax.DSpecialize (_, _, name, _) -> [name]
         | Syntax.DPolyMu (_, fm) | Syntax.DPolyGroup (_, fm, _, _) -> [fm.Syntax.fm_name]
         | Syntax.DDef _ | Syntax.DAxiom _ | Syntax.DMu _ | Syntax.DRec _ -> [] in
       let* () = Rules.all_ok (List.map (fun name ->
@@ -1308,17 +1308,17 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
           let* families = elab_composition ~budget g families catalog ~arity ~name
             dependencies members in
           Ok (g, catalog, families, rows)
-      | Syntax.DSpecialize (name, levels, as_name) ->
+      | Syntax.DSpecialize (name, levels, as_name, reuse) ->
           let* levels = Rules.all_ok (List.map Universe.lower levels) in
           if Option.is_some (Family_poly.arity families name) then
-            let* family_names, members = Family_poly.instance_names families ~name ~as_name
+            let* family_names, members = Family_poly.instance_names ~reuse families ~name ~as_name
               |> Option.to_result ~none:(Error.Unbound ("unknown family universe schema " ^ name)) in
             let generated = as_name :: family_names @ members in
             let* () = Rules.all_ok (List.map (fun n ->
               if Option.is_some (Poly.arity catalog n) || Option.is_some (find_ctor n g) then
                 Error (Error.Mismatch ("the name " ^ n ^ " is already declared"))
               else Ok ()) generated) |> Result.map (fun _checks -> ()) in
-            let* installed = Family_poly.instantiate ~budget g families ~name ~levels ~as_name in
+            let* installed = Family_poly.instantiate ~budget ~reuse g families ~name ~levels ~as_name in
             let* instances = Rules.all_ok (List.map (fun n ->
               Global.find_family n installed |> Option.to_result
                 ~none:(Error.Cannot_infer "specialization returned no family"))
@@ -1348,6 +1348,13 @@ let elab_program_in ?(budget : Budget.t = Budget.unlimited) (globals : Global.t)
             let rows = List.rev_append member_rows rows in
             Ok (installed, catalog, families, rows)
           else
+          (* SC-L2-3, review round 1:  a name that no template holds must
+             report the unbound name of Poly.instantiate, so the reuse
+             refusal speaks only for a definition template. *)
+          let* () = match () with
+            | () when reuse = [] -> Ok ()
+            | () when Option.is_none (Poly.arity catalog name) -> Ok ()
+            | () -> Error (Error.Not_yet "family reuse requires a family template") in
           let* g, _term = Poly.instantiate ~budget g catalog ~name ~levels ~as_name in
           let* entry = Global.find as_name g |> Option.to_result
             ~none:(Error.Cannot_infer "specialization returned no global entry") in

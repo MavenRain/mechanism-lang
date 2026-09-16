@@ -1,0 +1,290 @@
+{
+  "date": "2026-09-15",
+  "recorded_at_utc": "2026-09-16T04:58:32.791512+00:00",
+  "base": "2ff1eb96038042807d4b46b87d181a619e9a68dd",
+  "vendor_pin": "936a43a92dd59a04698648f24fa5ae94cdb532df",
+  "final_sources_sha256": {
+    "surface/elab.ml": "17fb4bfddad38757bbc457fa5be180b72971f20552727224193a04213678ee63",
+    "surface/family_poly.ml": "88002a1e74fb673a0b1a46150133bf01632d37c27de70c5479cbcc1c46faa71d",
+    "surface/family_poly.mli": "4247f4f588eed7f58d0222edc73827fe5fda925f8c1d69b3583d4fbae767c909",
+    "surface/parser.ml": "65575bda3a088e12022726cbf590621dc340471f8d12d823a6c04653267b9d4b",
+    "surface/syntax.ml": "3e7b8f1e1ad124f5c536c9a2aa01895a151c5d69a41c6f91feb8a5d07b5a3a89",
+    "dev/gates.sh": "b9a54745735515d1f09c1de57728f43764af936760e917c574b9ad61e4c7bb6f",
+    "dev/PIN-DELTA.md": "f6d1eceb99784a85db7f6818befe10bc2f2f4e5adf03dec5545e6840b2219f44",
+    "test/dune": "abd8ec2a2e11a87956cf02a4546f9d90f3d871ba9ef1a32cddd7a81f9ca92ae8",
+    "test/template_reuse.ml": "47570ef820b9058538f9b522247c5ddc0c0feaa42dfcbe925b5563f29aa4e056",
+    "test/reuse_runtime.py": "c149a5fb26b7c98008b3be45cba8479c032a98eaf2ed849f6fb64299c004623f",
+    "test/fixtures/prelude/reuse-contracts.mech": "fe3c3e42d50332d830101f0e74010d595ef580a078ccb416e04cee088a4181f3",
+    "test/fixtures/prelude/reuse-functors.mech": "3a2d4623f443c63eb242232fd6d827cb624f2ff3c9e530258b04674092fc14a3",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/identity-functor.mech": "c55c864c9ffd0dcc9d4a6efafd6a31dfc39cfc3c2aae15ec699728e588312c04",
+    "dev/reuse-mutations.py": "e0a1ef730990f097aeaf0da4bc4000c677dd4b4d9c82d59bcca6014ec238b1ed",
+    "dev/validation/stage-c-reuse/reuse-mutations.json": "d6fd551f0188570d3f872331f64ab617f2a37c2c8a953b09cd0bf91403ab6c46"
+  },
+  "executables_sha256": {
+    "_build/default/bin/mech.exe": "5d90cf4495c0461a1ffc81d69cfd98e2a7fd30a426efbfacc0ba3ab7cbe3cd68",
+    "_build/default/test/template_reuse.exe": "1c56e3ccb491e67acf8697e1a463a3818dd5ca51645cf6a7633f974e6696c9ae",
+    "_build/default/test/prelude_runtime.exe": "8fe2ac5cc9873c18096fb6f13248fbfc9dcd5ec35b4bbdf6182cd2117dd522f1"
+  },
+  "captures": [
+    {
+      "name": "build",
+      "streams": {
+        "stdout": {
+          "path": "build.stdout",
+          "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+        },
+        "stderr": {
+          "path": "build.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "kernel-recheck",
+      "streams": {
+        "stdout": {
+          "path": "kernel-recheck.stdout",
+          "sha256": "76271e462d4e3f0a06e857f8975ec5267ff3073bfa625ac42812aa4017718d1c"
+        },
+        "stderr": {
+          "path": "kernel-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "runtime",
+      "streams": {
+        "stdout": {
+          "path": "runtime.stdout",
+          "sha256": "861392a544a9402e32b0988f40416693523ef6430a181a02e07edca462ebff79"
+        },
+        "stderr": {
+          "path": "runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "pin-delta-recheck",
+      "streams": {
+        "stdout": {
+          "path": "pin-delta-recheck.stdout",
+          "sha256": "626b6507f1e62686bdd6e706a3daf1d00daf68de36a57fa2f72f8d80720c6ed2"
+        },
+        "stderr": {
+          "path": "pin-delta-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "gates",
+      "streams": {
+        "stdout": {
+          "path": "gates.stdout",
+          "sha256": "e5477cf6781b1207ea34f61f9f3e44cec3b76637c7aa8fc2acf4306348f5bf31"
+        },
+        "stderr": {
+          "path": "gates.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "baseline-left-kan-runtime",
+      "streams": {
+        "stdout": {
+          "path": "baseline-left-kan-runtime.stdout",
+          "sha256": "910c8068dfd4574523f05fc96cfc38f964efcbf0d1777549dfab24195e1fe8da"
+        },
+        "stderr": {
+          "path": "baseline-left-kan-runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "prelude-heterogeneous-left-kan-runtime-recheck",
+      "streams": {
+        "stdout": {
+          "path": "prelude-heterogeneous-left-kan-runtime-recheck.stdout",
+          "sha256": "705ee6237d519dbc4ac14d4b9f59f05e1be0121827725c265e1f169dc9c9f29c"
+        },
+        "stderr": {
+          "path": "prelude-heterogeneous-left-kan-runtime-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "prelude-category-runtime-recheck",
+      "streams": {
+        "stdout": {
+          "path": "prelude-category-runtime-recheck.stdout",
+          "sha256": "ae7a9c2d496f2c44905b55408d6c6deb1162c8b9637d9031ee3e536c12c91d82"
+        },
+        "stderr": {
+          "path": "prelude-category-runtime-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "prelude-functor-runtime-recheck",
+      "streams": {
+        "stdout": {
+          "path": "prelude-functor-runtime-recheck.stdout",
+          "sha256": "2eaa6200bd66b34d8bc2be68a07badaaee8f724b85a71f9abfaae366a653ce56"
+        },
+        "stderr": {
+          "path": "prelude-functor-runtime-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "baseline_comparison_sha256": "896be850038f621787080725ec063ef4cec914cb65fcb51bfe0ef3807afa5b32",
+  "baseline_left_kan_runtime": {
+    "base": "2ff1eb96038042807d4b46b87d181a619e9a68dd",
+    "elapsed_seconds": 110.2454117918387,
+    "exit_code": 1,
+    "input_sha256": {
+      "test/heterogeneous_left_kan_runtime.py": "f25b3dc83f547d939aa6a3f8bbee92c4cbea64e03115cb4cadc9f06ceb1bf055",
+      "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+      "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+      "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+      "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+      "test/fixtures/prelude/heterogeneous-left-kan-runtime.mech": "ef581c4af20db540b688177b33ba0c9f482f3028de3a4ffd9d8a7b762f18fa9f"
+    },
+    "executable_sha256": "5eb48f42e02d973c104dd97d28f300ad9ea061e9ef1c953f1a3dcfaa2458f02a"
+  },
+  "metadata_sha256": {
+    "baseline-comparison.json": "896be850038f621787080725ec063ef4cec914cb65fcb51bfe0ef3807afa5b32",
+    "baseline-left-kan-runtime.json": "2f699c4604467ee4934be1f3eb1c7d2db023bc429a378cab782e9ce01ce5cb78",
+    "prelude-category-runtime-recheck.json": "cdb9f4bfa11a0f7148d4ee49e2c5111b891d6ae7958032ca26605cc7b53678ae",
+    "prelude-functor-runtime-recheck.json": "43a0cf7202a575c97ce973f2db1972fff928d04bf5b32b92895d9c5788b326d9",
+    "prelude-heterogeneous-left-kan-runtime-recheck.json": "1129cb08b642bfc60f2087f32e91ad5b81ed674bc3475664df2c1fc619a64e55"
+  },
+  "runtime_recheck_results": {
+    "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME": {
+      "name": "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+      "command": [
+        "python3",
+        "-I",
+        "test/heterogeneous_left_kan_runtime.py"
+      ],
+      "watchdog_seconds": 120,
+      "elapsed_seconds": 110.34215729217976,
+      "exit_code": 1,
+      "passed": false
+    },
+    "PRELUDE-CATEGORY-RUNTIME": {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "command": [
+        "python3",
+        "-P",
+        "test/prenex_runtime.py",
+        "--category"
+      ],
+      "watchdog_seconds": 900,
+      "elapsed_seconds": 239.73245825013146,
+      "exit_code": 0,
+      "passed": true
+    },
+    "PRELUDE-FUNCTOR-RUNTIME": {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "command": [
+        "python3",
+        "-P",
+        "test/functor_runtime.py"
+      ],
+      "watchdog_seconds": 900,
+      "elapsed_seconds": 274.84199687466025,
+      "exit_code": 0,
+      "passed": true
+    }
+  },
+  "battery": {
+    "passed": [
+      "BUILD",
+      "PIN",
+      "R0-COUNT",
+      "R0-AUDIT",
+      "SUITE-KERNEL",
+      "LEVELS",
+      "PRENEX",
+      "PRENEX-FAMILIES",
+      "PRENEX-GROUPS",
+      "TEMPLATE-COMPOSITION",
+      "TEMPLATE-REUSE",
+      "SUITE-SURFACE",
+      "SUITE-WASM",
+      "IMPORT-GRAMMAR",
+      "IMPORT-CLI",
+      "CORPUS-UAT",
+      "PARITY-COUNTS",
+      "PRELUDE",
+      "EQUALITY",
+      "FAMILY-POLY",
+      "PRELUDE-POLY",
+      "FAMILY-MEMBERS",
+      "PRELUDE-TRANSPORT",
+      "PRELUDE-EQUALITY-OPS",
+      "PRELUDE-DEPENDENT",
+      "FAMILY-GROUPS",
+      "PRELUDE-CONGRUENCE",
+      "TEMPLATE-COST",
+      "PRELUDE-CATEGORY",
+      "PRELUDE-FUNCTOR",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "PRELUDE-HETEROGENEOUS-NATTRANS",
+      "PRELUDE-HETEROGENEOUS-WHISKERING",
+      "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+      "PRELUDE-COMPOSABLE-FUNCTORS",
+      "PRELUDE-NATTRANS",
+      "PRELUDE-LEFT-KAN",
+      "EQUALITY-RUNTIME",
+      "PRENEX-RUNTIME",
+      "PRENEX-FAMILIES-RUNTIME",
+      "PRENEX-GROUPS-RUNTIME",
+      "TEMPLATE-COMPOSITION-RUNTIME",
+      "TEMPLATE-REUSE-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME",
+      "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+      "PRELUDE-CATEGORY-ACCESSORS",
+      "DEPENDENT-CLOSURE-RUNTIME",
+      "PRELUDE-NATTRANS-RUNTIME",
+      "PRELUDE-LEFT-KAN-RUNTIME",
+      "AXIOMS",
+      "MAP-INVENTORY",
+      "DENOMINATORS"
+    ],
+    "failed": [
+      "PIN-DELTA",
+      "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+      "PRELUDE-CATEGORY-RUNTIME",
+      "PRELUDE-FUNCTOR-RUNTIME",
+      "TRUSTED-LINES"
+    ],
+    "unresolved_after_rechecks": [
+      "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+      "TRUSTED-LINES"
+    ]
+  },
+  "rechecks": [
+    "PIN-DELTA passed after recording surface deltas 373, 64 and 208.",
+    "TEMPLATE-REUSE passed after adding the dependent-family refusal, tightening the nominal diagnostic and testing identity at distinct object/hom levels (2, 3). The battery ran negatives=13; the suite of 2026-09-15 ran negatives=14; the delivered suite runs negatives=17 parser=6 raw=6.",
+    "TEMPLATE-REUSE leg-level recheck (review round 2, 2026-09-16): a standalone run of the staged gate predicate `^TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6$` of dev/gates.sh:207 exited 0 and matched. The capture pair is template-reuse-recheck-2.stdout and template-reuse-recheck-2.stderr.",
+    "The executables_sha256 rows are the build of 2026-09-15. The review rounds rebuilt the tree, so those rows describe that build and not the delivered executables; final_sources_sha256 and sources.sha256 were re-recorded over the delivered sources.",
+    "The production OCaml and prelude sources did not change after the full battery started. Final source hashes describe the delivered tree; the final suite and gate predicate include the strengthened check.",
+    "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME: standalone recheck failed with unchanged watchdogs.",
+    "PRELUDE-CATEGORY-RUNTIME: standalone recheck passed with unchanged watchdogs.",
+    "PRELUDE-FUNCTOR-RUNTIME: standalone recheck passed with unchanged watchdogs."
+  ]
+}

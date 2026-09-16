@@ -204,6 +204,8 @@ leg FAST PRENEX-GROUPS '^PRENEX-GROUPS-OK families=' \
   $ROOT/_build/default/test/prenex_groups.exe $ROOT
 leg MED TEMPLATE-COMPOSITION '^TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10$' \
   $ROOT/_build/default/test/template_composition.exe $ROOT
+leg SLOW TEMPLATE-REUSE '^TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6$' \
+  $ROOT/_build/default/test/template_reuse.exe $ROOT
 leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
   python3 -P $ROOT/dev/wasm-gates.py
@@ -268,6 +270,8 @@ leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
 leg SLOW TEMPLATE-COMPOSITION-RUNTIME \
   '^TEMPLATE-COMPOSITION-RUNTIME OK cases=3 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/composition_runtime.py
+leg SLOW TEMPLATE-REUSE-RUNTIME '^TEMPLATE-REUSE-RUNTIME OK cases=4 hosts=3 mutation=1$' \
+  python3 -I $ROOT/test/reuse_runtime.py
 leg SLOW PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME \
   '^PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME OK cases=3 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/heterogeneous_functor_runtime.py

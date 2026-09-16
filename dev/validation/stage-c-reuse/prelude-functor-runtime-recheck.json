@@ -1,0 +1,12 @@
+{
+  "name": "PRELUDE-FUNCTOR-RUNTIME",
+  "command": [
+    "python3",
+    "-P",
+    "test/functor_runtime.py"
+  ],
+  "watchdog_seconds": 900,
+  "elapsed_seconds": 274.84199687466025,
+  "exit_code": 0,
+  "passed": true
+}

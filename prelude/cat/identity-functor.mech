@@ -1,0 +1,26 @@
+-- Load category-core.mech first. Reuse Base to share a checked category family.
+poly (u, v) group MechIdentityFunctor where
+specialize MechCategoryCore (u, v) as Base
+
+def Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ u)) ->
+    Base_Category C -> Base_Category D -> Sort (max (succ u) (succ v)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ u))
+      (c : Base_Category C) (d : Base_Category D) =>
+    (obj : C -> D) *
+    (map : (0 x : C) -> (0 y : C) -> Base_Hom C c x y -> Base_Hom D d (obj x) (obj y)) *
+    (mapId : (0 x : C) -> Base (Base_Hom D d (obj x) (obj x))
+      (map x x (Base_id C c x)) (Base_id D d (obj x))) *
+    ((0 x : C) -> (0 y : C) -> (0 z : C) ->
+      (0 f : Base_Hom C c x y) -> (0 g : Base_Hom C c y z) ->
+      Base (Base_Hom D d (obj x) (obj z))
+        (map x z (Base_comp C c x y z f g))
+        (Base_comp D d (obj x) (obj y) (obj z) (map x y f) (map y z g)))
+
+def idFunctor : (0 C : Sort (succ u)) -> (c : Base_Category C) -> Functor C C c c :=
+  fun (0 C : Sort (succ u)) (c : Base_Category C) =>
+    ((fun (x : C) => x),
+     ((fun (0 x : C) (0 y : C) (f : Base_Hom C c x y) => f),
+      ((fun (0 x : C) => categoryRefl),
+       (fun (0 x : C) (0 y : C) (0 z : C)
+            (0 f : Base_Hom C c x y) (0 g : Base_Hom C c y z) => categoryRefl))))
+end

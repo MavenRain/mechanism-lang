@@ -528,5 +528,30 @@ The functor and cocone projections preserve their separate carrier
 and field universe levels. desc_unique uses both factorization proofs
 to compare arbitrary mediators. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md` for the exact sorts and
-validation contract. General instance reuse, general identity and
-repeated functor composition, and source-type parity remain open.
+validation contract. Closed family reuse now supports independent functors,
+identity and repeated composition. Symbolic reuse inside group dependencies,
+additional shared category APIs and source-type parity remain open.
+
+## Stage C closed family reuse
+
+Closed family specialization accepts an optional suffix:
+
+```text
+specialize TEMPLATE (LEVELS) as PREFIX with (LOCAL1 := EXISTING1, LOCAL2 := EXISTING2)
+```
+
+Bindings must be nonempty, with distinct template-internal family names.
+Targets are existing caller families. Each substituted and renamed family
+declaration is kernel checked in a temporary table and its complete
+certificate must match the target exactly, including binder names. The
+original target is retained; its local prefixed alias is not created.
+Unbound families and all members keep fresh prefixed names and are checked
+against the actual caller environment. Reuse is explicit, budgeted and
+atomic on failure. Ordinary specializations remain nominally distinct.
+
+The source clause applies to closed family templates only. Nested flattened
+family names are accepted; clauses in symbolic dependencies and standalone
+definition templates are refused. Existing namespace checks still apply.
+MechIdentityFunctor uses one category core and supplies a checked identity
+functor compatible with shared heterogeneous functors. See
+`dev/M0-STAGE-C-REUSE.md` for the API, validation and exact-match boundary.

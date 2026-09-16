@@ -1,0 +1,12 @@
+{
+  "name": "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+  "command": [
+    "python3",
+    "-I",
+    "test/heterogeneous_left_kan_runtime.py"
+  ],
+  "watchdog_seconds": 120,
+  "elapsed_seconds": 110.34215729217976,
+  "exit_code": 1,
+  "passed": false
+}

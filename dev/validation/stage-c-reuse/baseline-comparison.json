@@ -1,0 +1,29 @@
+{
+  "input_sha256": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "test/prelude_composable_functors.ml": "daa633879de1e71a1ea1d5eaa0534c65c032b127dffdfc24be4f9cc9aa367c61",
+    "test/fixtures/prelude/composable-functors.mech": "ffe787ca74ba1640bfeb19d7d3e98cdb2e25c758b9fb6df4abbc0c8f62d7ea19",
+    "test/fixtures/prelude/composable-functors-runtime.mech": "44e69515638da3ab9f044e55e26aa37f7edca726d5c27ccd75f48b1e86dfe3c1"
+  },
+  "results": [
+    {
+      "label": "baseline",
+      "exit_code": 0,
+      "stdout": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12\n",
+      "executable_sha256": "956e300f61357f9833575f96c2ae87bbe7913c81d56665fdea9bc8ab3c60763d",
+      "wall_seconds": 22.080606542062014,
+      "cpu_seconds": 15.044618
+    },
+    {
+      "label": "current",
+      "exit_code": 0,
+      "stdout": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12\n",
+      "executable_sha256": "489ef59eb91f829d45c5609fafc215ebf72b3bd7bd2cd58f9f703231a9e87804",
+      "wall_seconds": 15.813200333155692,
+      "cpu_seconds": 14.230387
+    }
+  ],
+  "wall_ratio": 0.7161578783188156,
+  "cpu_ratio": 0.9458789182949012
+}

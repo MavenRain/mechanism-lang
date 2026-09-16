@@ -1,0 +1,27 @@
+specialize MechCategoryCore (0, 1) as Source
+specialize MechCategoryCore (1, 0) as Middle
+specialize MechCategoryCore (2, 3) as Target
+specialize MechHeterogeneousFunctor (0, 1, 1, 0) as First
+  with (Source := Source, Target := Middle)
+specialize MechHeterogeneousFunctor (1, 0, 2, 3) as Second
+  with (Source := Middle, Target := Target)
+specialize MechHeterogeneousFunctor (2, 3, 2, 3) as Third
+  with (Source := Target, Target := Target)
+specialize MechComposableFunctors (0, 1, 1, 0, 2, 3) as Run
+  with (Source := Source, Middle := Middle, Target := Target)
+specialize MechComposableFunctors (0, 1, 2, 3, 2, 3) as Again
+  with (Source := Source, Middle := Target, Target := Target)
+specialize MechIdentityFunctor (2, 3) as Identity with (Base := Target)
+
+-- Both compositions accept functors from separately specialized templates.
+def repeatContract : (0 C : Type 0) -> (0 D : Type 1) -> (0 E : Type 2) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (e : Target_Category E) ->
+    First_Functor C D c d -> Second_Functor D E d e -> Third_Functor E E e e ->
+    Again_Composite_Functor C E c e :=
+  fun (0 C : Type 0) (0 D : Type 1) (0 E : Type 2)
+      (c : Source_Category C) (d : Middle_Category D) (e : Target_Category E)
+      (f : First_Functor C D c d) (g : Second_Functor D E d e) (h : Third_Functor E E e e) =>
+    Again_compFunctor C E E c e e (Run_compFunctor C D E c d e f g) h
+
+def identityContract : (0 C : Type 2) -> (c : Target_Category C) -> Third_Functor C C c c :=
+  fun (0 C : Type 2) (c : Target_Category C) => Identity_idFunctor C c

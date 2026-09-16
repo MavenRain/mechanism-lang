@@ -44,11 +44,11 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-15
 
-The base is 171513f, following committed heterogeneous whiskering.
-The current increment adds heterogeneous left Kan extensions over
-one shared category triple at six independent universe levels.
-Each mediator carries checked factorization and pointwise uniqueness
-proofs. See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
+The base is 2ff1eb9, following committed heterogeneous left Kan
+extensions. The current increment adds checked family reuse at closed
+specialization. Independent functor templates can share category cores,
+compose their results again and use a lightweight identity functor.
+See `dev/M0-STAGE-C-REUSE.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -60,8 +60,8 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
-open on reuse across separate category template instances, general
-identity and repeated composition APIs, and source-type parity.
+open on symbolic reuse inside template groups, additional shared
+category APIs and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -76,7 +76,9 @@ operations over a shared three-category group and compare four exports
 on the kernel, Node and Wasmtime at two payloads. The
 PRELUDE-HETEROGENEOUS-LEFT-KAN gates check universal mediators over
 that shared triple and compare four exports at two payloads.
-TRUSTED-LINES stays red at
+TEMPLATE-REUSE checks closed family sharing and mixed-universe functor
+contracts; TEMPLATE-REUSE-RUNTIME compares repeated composition and
+identity on three hosts at two payloads. TRUSTED-LINES stays red at
 kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
 
 ## Port tracks
@@ -140,9 +142,11 @@ stay under `ports/` (D-UAT-3).
   whiskering operations over a shared three-category group are specified
   in `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md`. Heterogeneous left
   Kan extensions over that shared group are specified in
-  `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`. U1 remains open on general
-  reuse across separate category instances, identity and repeated
-  composition APIs, and source-type parity.
+  `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`. Closed family sharing,
+  identity and repeated composition between independent functors are
+  specified in `dev/M0-STAGE-C-REUSE.md`. U1 remains open on symbolic
+  sharing inside template groups, additional shared category APIs and
+  source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

@@ -71,9 +71,10 @@ separate universe pairs follow in
 dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md. Heterogeneous whiskering
 and left Kan extensions follow in
 dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md and
-dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md. General instance reuse,
-identity and repeated composition APIs, and source-type parity
-remain open.
+dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md. Closed family reuse,
+identity and repeated composition across separately specialized functors
+follow in dev/M0-STAGE-C-REUSE.md. Symbolic reuse inside groups,
+additional shared category APIs and source-type parity remain open.
 The template checking increment removes a repeated symbolic member
 check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
 rechecking and all existing gate predicates.

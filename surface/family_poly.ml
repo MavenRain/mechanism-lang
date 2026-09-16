@@ -38,10 +38,12 @@ let rename_instance scheme ~name ~as_name n = match () with
       as_name ^ "_" ^ n
   | () -> n
 
-let instance_names catalog ~name ~as_name =
+let instance_names ?(reuse = []) catalog ~name ~as_name =
   Option.map (fun scheme ->
     let rename = rename_instance scheme ~name ~as_name in
-    List.map (fun (family, _ctors) -> rename family.Check.fam_name)
+    List.filter_map (fun (family, _ctors) ->
+      if List.mem_assoc family.Check.fam_name reuse then None
+      else Some (rename family.Check.fam_name))
       ((scheme.family, scheme.ctors) :: scheme.companions),
     List.map (fun member -> rename member.Check.d_name) scheme.members)
     (List.assoc_opt name catalog)
@@ -289,7 +291,65 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
           |> Option.to_result ~none:(Error.Cannot_infer "composition returned no schema") in
         Ok ((name, scheme) :: catalog)
 
-let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_name =
+(** The recheck of a reused family runs under the single group name of
+    that family, so a constructor of a mutual group that mentions a
+    sibling family holds a different [c_self_rec] flag than the stored
+    certificate.  Two certificates that agree on every other field show
+    that cause, and the refusal reports it. *)
+let self_rec_only (actual : Positivity.family) (expected : Positivity.family) =
+  let erase (f : Positivity.family) =
+    { f with Positivity.f_ctors = List.map
+        (fun (c : Positivity.ctor) -> { c with Positivity.c_self_rec = false })
+        f.Positivity.f_ctors } in
+  erase actual = erase expected
+
+(** Recheck a reused family's complete declaration in a temporary table.
+    Exact certificate equality is deliberately conservative, including binder
+    names.  A family of a mutual group is refused with the cause, because
+    the recheck knows one name only.  The caller's family and all entries
+    remain unchanged. *)
+let check_reuse budget globals family ctors =
+  let name = family.Check.fam_name in
+  let* actual = Global.find_family name globals |> Option.to_result
+    ~none:(Error.Unbound ("unknown reused family " ^ name)) in
+  let temporary = { globals with
+    Global.families = Global.StringMap.remove name globals.Global.families } in
+  let* provisional = Check.declare_family ~budget temporary family in
+  let* checked = Check.define_ctors ~budget provisional ~group:[name] ~name ctors in
+  let* expected = Global.find_family name checked |> Option.to_result
+    ~none:(Error.Cannot_infer "reuse rechecking returned no family") in
+  let* () = poll budget in
+  (* SC-L1-2, review round 1:  Level.subst keeps the raw constructor, so
+     the level of the certificate needs the kernel test.  A level argument
+     that is not normal is legal and must not refuse the reuse. *)
+  let* level_ok = Level.equal_budget budget
+    actual.Positivity.f_level expected.Positivity.f_level in
+  let leveled = { expected with Positivity.f_level = actual.Positivity.f_level } in
+  match () with
+  | () when level_ok && actual = leveled -> Ok globals
+  | () when level_ok && self_rec_only actual leveled ->
+      Error (Error.Mismatch ("the reused family " ^ name ^
+        " is a member of a mutual group, which family reuse does not support"))
+  | () -> Error (Error.Mismatch ("the reused family " ^ name ^ " does not match the template"))
+
+(** SC-L1-2, review round 2:  a closed level argument that is not normal,
+    like (max 0 0), reaches the parameter, the index and the constructor
+    telescopes through Level.subst, where the certificate match compares
+    the terms as written.  The normal form of a closed level argument is
+    the natural number the semantic test accepts, so the search asks the
+    kernel test for each candidate and keeps the first answer.  A level
+    above the search bound keeps its written form and refuses as before,
+    which stays conservative. *)
+let normal_level (level : Level.t) : Level.t =
+  List.init 64 Level.of_int
+  |> List.find_map (fun candidate ->
+    Option.bind candidate (fun written ->
+      match () with
+      | () when Level.equal level written -> Some written
+      | () -> None))
+  |> Option.value ~default:level
+
+let instantiate ?(budget = Budget.unlimited) ?(reuse = []) globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog
     |> Option.to_result ~none:(Error.Unbound ("unknown family universe schema " ^ name)) in
   match () with
@@ -301,15 +361,34 @@ let instantiate ?(budget = Budget.unlimited) globals catalog ~name ~levels ~as_n
   | () when not (List.for_all (Level.in_scope 0) levels) ->
       Error (Error.Universe "universe arguments must be closed")
   | () ->
+      let* () = poll budget in
+      let levels = List.map normal_level levels in
+      let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
+      let* _bound = List.fold_left (fun acc (local, existing) ->
+        let* bound = acc in
+        let* () = poll budget in
+        match () with
+        | () when List.mem local bound ->
+          Error (Error.Mismatch ("the family " ^ local ^ " is bound more than once"))
+        | () when not (List.exists (fun (family, _ctors) ->
+            String.equal family.Check.fam_name local) raw_families) ->
+          Error (Error.Unbound ("unknown template family " ^ local))
+        | () when Option.is_none (Global.find_family existing globals) ->
+          Error (Error.Unbound ("unknown reused family " ^ existing))
+        | () -> Ok (local :: bound)) (Ok []) reuse in
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
-      let rename n = Ok (rename_instance scheme ~name ~as_name n) in
+      let rename n = Ok (List.assoc_opt n reuse |> Option.value
+        ~default:(rename_instance scheme ~name ~as_name n)) in
       let* families = map_list (fun (family, ctors) ->
-        map_family budget level rename family ctors)
-        ((scheme.family, scheme.ctors) :: scheme.companions) in
+        let* mapped = map_family budget level rename family ctors in
+        Ok (List.mem_assoc family.Check.fam_name reuse, mapped)) raw_families in
       let* members = map_list (map_member budget level rename) scheme.members in
-      let* installed = List.fold_left (fun acc (family, ctors) ->
+      let* installed = List.fold_left (fun acc (reused, (family, ctors)) ->
         let* globals = acc in
-        if occupied globals catalog family.Check.fam_name then Error (collision family.fam_name)
+        let* () = poll budget in
+        if reused then
+          check_reuse budget globals family ctors
+        else if occupied globals catalog family.Check.fam_name then Error (collision family.fam_name)
         else
           let* provisional = Check.declare_family ~budget globals family in
           Check.define_ctors ~budget provisional ~group:[family.fam_name]

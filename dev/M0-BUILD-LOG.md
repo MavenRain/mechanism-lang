@@ -3128,3 +3128,251 @@ Run record: finders and the fixer ran on opus medium, the judge and the
 verifier ran on opus high, the final verifier died on the account
 five-hour rate limit so main verified the five judged items by hand, and
 the closer ran on sonnet medium.
+
+## Stage C checked family reuse (2026-09-15)
+
+Base: 2ff1eb9. The design is dev/M0-STAGE-C-REUSE.md.
+
+Closed specializations accept explicit bindings from internal template
+families to existing caller families. Each selected declaration is kernel
+rechecked in a temporary table and compared exactly with the existing
+certificate. The caller keeps its original families, and all fresh members
+check against them. Independent heterogeneous functors can therefore share
+category cores and compose their results again. MechIdentityFunctor adds a
+lightweight checked identity API over one reusable category core.
+
+The final suite passes 14 source refusals, six parser refusals and five raw
+API controls. Positive cases cover exact inventories, preserved families,
+partial/nested/dependent reuse, computations and mixed-universe functor
+contracts. Runtime validation compares object composition, arrow
+composition, identity objects and identity arrows at two payloads on the
+kernel, Node and Wasmtime. All four cases pass on all three hosts.
+
+Validation:
+
+- Build: PASS, zero warnings.
+- TEMPLATE-REUSE of 2026-09-15: PASS, negatives=14 parser=6 raw=5. The
+  battery row for TEMPLATE-REUSE ran the battery-era suite
+  (negatives=13); dev/validation/stage-c-reuse/kernel-recheck.stdout
+  captures the negatives=14 predicate of that day. The review rounds
+  superseded both counts: the delivered suite prints negatives=17
+  parser=6 raw=6.
+- TEMPLATE-REUSE-RUNTIME: PASS, cases=4 hosts=3 mutation=1.
+- Full battery: 54 of 59 PASS. Failed rows: PIN-DELTA, PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME, PRELUDE-CATEGORY-RUNTIME, PRELUDE-FUNCTOR-RUNTIME, TRUSTED-LINES.
+- PIN-DELTA recheck: PASS after recording surface deltas 373/64/208.
+- PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME: FAIL on a standalone recheck.
+- PRELUDE-CATEGORY-RUNTIME: PASS on a standalone recheck.
+- PRELUDE-FUNCTOR-RUNTIME: PASS on a standalone recheck.
+- Unresolved after rechecks: PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME, TRUSTED-LINES.
+
+The battery ran the initial 13-refusal suite. A final recheck covers the
+added dependent-family refusal, exact nominal diagnostic and identity at
+object/hom levels (2, 3); production
+code did not change. The full logs, final source and executable hashes,
+and recheck details are under dev/validation/stage-c-reuse/.
+
+The left Kan runtime timeout reproduced on committed base 2ff1eb9 with
+byte-identical inputs and the unchanged runner limit. The category and
+functor runtime rechecks passed with their original watchdogs. The failed
+left Kan recheck and its baseline reproduction remain in the record.
+
+The inherited TRUSTED-LINES failure remains kernel=4208/3000,
+encoder=246/900, pending D-A-1. Existing gate predicates, watchdogs, kernel,
+encoder, vendor pin, mapping verdicts and denominators are unchanged.
+The new reuse gate predicate was strengthened with the added refusal.
+Stage C and U1 remain open on symbolic reuse inside groups, additional
+shared category APIs and source-type parity. Typed mapping and M0 exit
+remain due.
+
+## Stage C checked family reuse review (2026-09-16)
+
+Review round 1 on base 2ff1eb9 fixed seven judged items. In the middle of
+review round 1 the kernel suite printed TEMPLATE-REUSE-OK negatives=17
+parser=6 raw=5. The L1-3 fix of the same round added one raw case, so the
+delivered suite prints TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6. The
+whole line pin of dev/gates.sh, the counts of dev/M0-STAGE-C-REUSE.md and
+the counts of dev/validation/stage-c-reuse/README.md carry the delivered
+numbers.
+
+L1-1 (medium, surface/family_poly.ml): check_reuse rechecks a reused
+family under the single group name, so a family of a mutual group whose
+constructor mentions a sibling could never match the template. The new
+helper self_rec_only finds that cause, the refusal reports it, and
+surface/family_poly.mli states the restriction. The negative case
+mutual-group-member pins the text.
+
+L1-2 (low, surface/family_poly.ml): check_reuse compares f_level with
+Level.equal_budget and keeps the structural test for every other field,
+so a level argument that is not normal, for example (max 0 0), is
+accepted. The positive check level_reuse covers it.
+
+L2-1 (low, test/template_reuse.ml): raw () returns the number of
+scenarios that it runs and the suite prints that number with %d, as
+test/template_composition.ml does. The number is five, as before.
+
+L2-3 (low, surface/elab.ml): the reuse refusal speaks only for a name
+that Poly.arity resolves, so a misspelled template name with a reuse list
+reports the unbound name. The negative case unknown-template-name pins
+it.
+
+L2-2 (low, test/template_reuse.ml): the check partial_dependent covers
+reuse of one member of a mutual group with a fresh companion, and the
+negative case partial-reverse pins the refusal of the reverse binding.
+
+L2-4 (low, dev/reuse-mutations.py): a mutation driver over
+_build/default/test/template_reuse.exe on a copy outside the repository,
+with its record in dev/validation/stage-c-reuse/reuse-mutations.json.
+
+L3-1 (low, documentation): the evidence README and the block above now
+say that the battery row for TEMPLATE-REUSE ran the pre strengthening
+suite.
+
+The edits of surface/, test/template_reuse.ml and dev/gates.sh re-open the
+stale hash class of dev/validation/stage-c-reuse/sources.sha256. The
+captured rows stay unchanged.
+
+Review round 2 (2026-09-16), one builder, six judged findings.
+
+L3-1 (medium, evidence): the bundle described a superseded suite. The
+headline of dev/validation/stage-c-reuse/README.md now says that the 54
+of 59 battery ran the battery-era suite, in which TEMPLATE-REUSE ran
+negatives=13, the count sentences of that README, of checks.json and of
+the validation block above name the delivered counts negatives=17
+parser=6 raw=6, and a new rechecks row of checks.json records a
+standalone run of the staged gate predicate. The capture pair is
+template-reuse-recheck-2.stdout, which holds that line, and its empty
+stderr. sources.sha256 and final_sources_sha256 are re-recorded over the
+delivered bytes and hold two added rows for dev/reuse-mutations.py and
+dev/validation/stage-c-reuse/reuse-mutations.json. A new rechecks row
+records that the executables_sha256 rows stay the rows of the build of
+2026-09-15.
+
+L1-2 (low, documentation): surface/family_poly.mli said that the
+semantic level test accepts every level of the certificate that is not
+normal. A control with the delivered mech.exe refuses
+`specialize R ((max 0 0)) as Y with (R := E)` with `mismatch: the reused
+family E does not match the template`, and accepts `specialize R (0)`,
+because check_reuse compares the family level with Level.equal_budget and
+every other field structurally. The interface sentence now names the
+family level and says that a level argument that is not normal in a
+parameter type refuses the reuse. The comparison keeps its conservative
+behaviour, so no count and no refusal changes.
+
+L1-3 (low, test): the raw API count of test/template_reuse.ml was
+`2 + List.length replacements`, so the deletion of three of the six raw
+checks left the count unchanged. Every raw check is now one row of a
+labelled list, the suite prints the length of that list, and the
+delivered line is TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6. The
+whole-line pin of leg SLOW TEMPLATE-REUSE at dev/gates.sh, the counts of
+dev/validation/stage-c-reuse/README.md and checks.json, the count
+sentence of dev/M0-STAGE-C-REUSE.md and the sentences above move with it.
+
+L2-4 (low, evidence): dev/validation/stage-c-reuse/reuse-mutations.json
+shipped `"passed": false`, because control C-REUSE-M1 expected the
+wrong-level verdict while that mutant defeats the whole structural
+comparison and the suite stops at the wrong-constructor scenario. The
+control of dev/reuse-mutations.py now expects the verdict that the suite
+prints, and control C-REUSE-M5 expects raw=5 after the deletion of one
+replacement, which is the count of the shortened list. A rerun of the
+driver in a work directory outside the repository, with no ladder
+running, printed {"passed": true, "killed": 5, "controls": 5} with
+baseline and restored lines TEMPLATE-REUSE-OK negatives=17 parser=6
+raw=6. That results.json is the delivered record.
+
+L3-2 (low, documentation): dev/M0-STAGE-C-REUSE.md named a per-payload
+cap of 50 seconds. The runtime driver caps the kernel and emit step at 50
+seconds and each host run at 10 seconds, both inside the 110-second total
+budget, and the sentence now names those steps. No value of
+test/reuse_runtime.py changes.
+
+L3-3 (low, documentation): three lines of the evidence README were up to
+164 columns wide. Lines 5 to 7 are rewrapped at the 76-column width of
+the file, and no count changes with the rewrap.
+
+The edits of test/template_reuse.ml, surface/family_poly.mli,
+dev/gates.sh, dev/PIN-DELTA.md and dev/reuse-mutations.py re-open the
+stale hash class of dev/validation/stage-c-reuse/sources.sha256, which
+this round re-records. The captured stdout and stderr rows of the bundle
+stay unchanged.
+
+Review round 2 fixed three more judged items on the same base. L3-1 and
+ND-1-1 name one false sentence of this block, which dated the counts of
+the middle of round 1. The block now states the delivered counts
+negatives=17 parser=6 raw=6. L1-2 makes the reuse accept a closed level
+argument that is not normal in a parameter type, an index type or a
+constructor argument: surface/family_poly.ml normalizes each closed level
+argument once, before it maps the template, so the mapped telescopes carry
+the same written level as the reused family. A closed level above the
+search bound keeps its written form and refuses, as before. The new
+positive case param_level_reuse of test/template_reuse.ml specializes the
+parameterized template R with the level argument (max 0 0) and requires
+the reused family E to stay unchanged. The case adds no refusal and no raw
+control, so the suite line stays TEMPLATE-REUSE-OK negatives=17 parser=6
+raw=6 and no pin moves. ND-1-2 re-records the ledger row of
+surface/elab.ml in dev/PIN-DELTA.md as 378, the delivered diff, so that
+zsh dev/pin-delta.sh ends PIN-DELTA OK. The round-2 edits of
+surface/family_poly.ml, surface/family_poly.mli and test/template_reuse.ml
+re-open the stale hash class of dev/validation/stage-c-reuse/sources.sha256.
+The captured stdout and stderr rows of the bundle stay unchanged.
+
+Review round 3 closed the three rows that round 2 left open, on the same
+base and with no ladder running. ND-2-3 rewrapped dev/M0-STAGE-C-REUSE.md
+to the 76-column width of the file, and no count or claim changes with the
+rewrap.
+
+ND-2-4 re-ran dev/reuse-mutations.py on the delivered sources in a work
+directory outside the repository. The first run killed 4 of the 5
+controls: C-REUSE-M3, which replaces the budgeted level test
+Level.equal_budget of surface/family_poly.ml with OCaml structural
+equality of the two written levels, survived the suite. The survivor is
+separable, not an equivalent mutant: surface/elab.ml stores the declared
+universe in fam_level as written (elab_univ and elab_fam_decl, lines 913
+to 937), lib/check.ml copies it into f_level (line 461) and Level.max is a
+plain constructor (lib/level.ml line 7), so a family whose own declaration
+names the non-normal level (max (succ 0) (succ 0)) keeps that form. The
+delivered compiler accepts the reuse of such a family by a template that
+instantiates to succ 0 (rc 0), and a compiled M3 mutant refuses it with
+"mismatch: the reused family E does not match the template" (rc 1). The
+new positive case decl_level_reuse of test/template_reuse.ml runs that
+reuse and requires the reused family E to stay unchanged. The case adds no
+refusal, no parser case and no raw control, so the suite line stays
+TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6, the gate predicate of
+dev/gates.sh:207 is unchanged and no pin moves. No control of
+dev/reuse-mutations.py was removed, no expected diagnostic was edited and
+no scenario was reordered or weakened. The driver re-run on the round-3
+sources printed {"passed": true, "killed": 5, "controls": 5} with baseline
+and restored lines TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6, and that
+results.json is the delivered dev/validation/stage-c-reuse/
+reuse-mutations.json.
+
+L3-1 (hash half), with ND-2-1 and ND-2-2, re-records the bundle over the
+delivered bytes: all 18 rows of dev/validation/stage-c-reuse/sources.sha256
+and all 18 keys of final_sources_sha256 in
+dev/validation/stage-c-reuse/checks.json are set from the staged blobs,
+after the new record was staged, and a row-by-row check of both files
+against the staged blobs prints sources ok=18 bad=0. No other key of
+checks.json changes.
+
+test/template_reuse.ml is the only OCaml source that round 3 changes; the
+production sources of surface/ and lib/ are untouched, and the close
+ladder is the proof for the changed suite.
+
+Close. Two workflow passes ran over the same four cached finder results.
+Pass 1 kept seven findings (L1-1 medium, L2-1 medium, L1-2 low, L2-3 low,
+L2-2 low, L2-4 low, L3-1 low) and dropped L1-3 as a duplicate of L2-1; all
+seven were fixed in round 1. Pass 2, after a resume that re-ran verify and
+judge on the fixed tree, kept six findings (L3-1 medium, L1-2 low, L1-3
+low, L2-4 low, L3-2 low, L3-3 low) and refuted L2-5 and L3-4 in both
+passes; all six were fixed in round 2. Check 1 of round 2 added ND-1-1,
+ND-1-2 and the GATE-1 PIN-DELTA leg, all fixed in round 2. Check 2 of
+round 2 confirmed eight of nine fixed findings, found L3-1 not fixed in
+its hash half, and added ND-2-1, ND-2-2, ND-2-3 and ND-2-4, all closed by
+hand in round 3 and round 3b. Round 3b ruled the round-3 survivor
+C-REUSE-M3 SEPARABLE, not an equivalent mutant, and added the positive
+case decl_level_reuse of test/template_reuse.ml as the separating case; no
+production source changed in round 3b. The suite line stays
+TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6 and the gate predicate of
+dev/gates.sh:207 is unchanged. The close ladder launched after this
+paragraph is the proof of the round 3 and round 3b state; its verdict is
+recorded in WORK/ladder-CR-close.log and WORK/review-CR-report.md, not in
+this file.

@@ -1,0 +1,13 @@
+{
+  "name": "PRELUDE-CATEGORY-RUNTIME",
+  "command": [
+    "python3",
+    "-P",
+    "test/prenex_runtime.py",
+    "--category"
+  ],
+  "watchdog_seconds": 900,
+  "elapsed_seconds": 239.73245825013146,
+  "exit_code": 0,
+  "passed": true
+}

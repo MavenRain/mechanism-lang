@@ -57,11 +57,11 @@ names are checked before the immutable program result is returned.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 371 |
+| surface/elab.ml | 378 |
 | surface/token.ml | 12 |
 | surface/lexer.ml | 6 |
-| surface/syntax.ml | 60 |
-| surface/parser.ml | 185 |
+| surface/syntax.ml | 64 |
+| surface/parser.ml | 208 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 
@@ -96,3 +96,9 @@ dependencies at symbolic universe arguments.  The surface checks the
 imported names and preserves their nested prefixes at specialization.
 The family catalog reuses its existing raw traversal and ordered
 checker.  Kernel, erasure, encoder and vendor sources keep their bytes.
+
+The checked-family reuse increment adds optional closed family bindings to
+specialization syntax and routes them through Family_poly. Existing
+families are kernel rechecked in a temporary table, compared exactly, then
+preserved in the caller. Family_poly is a mechanism-only helper and has no
+vendored counterpart. Kernel, encoder and vendor sources are unchanged.

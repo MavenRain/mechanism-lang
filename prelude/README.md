@@ -187,13 +187,13 @@ and pointwise uniqueness proofs.  PRELUDE-LEFT-KAN checks these
 contracts and misuse cases.  PRELUDE-LEFT-KAN-RUNTIME checks six
 exports on three hosts.  See `dev/PORT-UAT-U1-LEFT-KAN.md`.
 
-Functors across separate universe pairs and source-type parity
-remain open.
+Heterogeneous functors and checked family reuse are described below.
+Source-type parity remains open.
 
 Template composition can import category templates under separate
 universe arguments.  The composition fixture checks a functor shape
-between those categories.  This is a source-layer prerequisite;
-the public category prelude still uses its existing universe pair.
+between those categories. The heterogeneous category prelude below
+uses this source foundation.
 See `dev/M0-STAGE-C-COMPOSITION.md`.
 
 ## Functors across independent universe pairs
@@ -236,11 +236,38 @@ has object and arrow accessors, both law accessors and congruence.
 The laws transport the first functor's preservation proofs through
 the second functor before composing proofs in Target equality.
 
-Separate template specializations still have distinct nominal
-families. This API shares instances within a three-category group;
-general reuse between groups and repeated composition remain due.
+Ordinary template specializations have distinct nominal families.
+An explicit family reuse clause can share category cores across groups,
+allowing the result of one composition to enter another. See the checked
+family reuse section below.
 See `dev/PORT-UAT-U1-COMPOSABLE-FUNCTORS.md` for the full contract,
 generic signatures, negative fixtures and runtime checks.
+
+## Checked family reuse and identity
+
+Load `cat/category-core.mech`, `cat/heterogeneous-functor.mech`,
+`cat/composable-functors.mech` and `cat/identity-functor.mech`:
+
+```text
+specialize MechCategoryCore (0, 1) as C
+specialize MechCategoryCore (2, 3) as D
+specialize MechHeterogeneousFunctor (0, 1, 2, 3) as F
+  with (Source := C, Target := D)
+specialize MechIdentityFunctor (2, 3) as I with (Base := D)
+```
+
+F_Source_Category uses C's family and F_Target_Category uses D's family.
+I_idFunctor supplies identity on a D category. Each selected family's full
+checked declaration must match exactly. The selected families keep their
+existing names, with no F_Source, F_Target or I_Base aliases. The category
+and functor operations retain their prefixed names.
+
+Bind Source, Middle and Target in MechComposableFunctors to the cores
+used by the input functors. Bind another composition group to the result's
+endpoints to compose again. The mixed-universe example is
+`test/fixtures/prelude/reuse-contracts.mech`; the executable example is
+`test/fixtures/prelude/reuse-functors.mech`. TEMPLATE-REUSE and
+TEMPLATE-REUSE-RUNTIME check this API. See `dev/M0-STAGE-C-REUSE.md`.
 
 ## Heterogeneous natural transformations
 
@@ -260,7 +287,7 @@ in target equality. `N_natApp` and `N_naturality` project those fields.
 Nested vertical composition uses these same functor types.
 
 The template reuses MechHeterogeneousFunctor through one Base
-specialization. Separate group instances retain distinct nominal
+specialization. By default, group instances retain distinct nominal
 families. The shared three-category API below supplies left Kan
 extensions at independent universe levels.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the signatures,
@@ -287,8 +314,9 @@ the corresponding `W_Base_compFunctor` results, with checked proofs.
 
 The two PRELUDE-HETEROGENEOUS-WHISKERING gates check their contracts
 and compare four exports on the kernel, Node and Wasmtime at two
-payloads. The group shares categories internally; separate
-specializations still have distinct nominal families. See
+payloads. The group shares categories internally. Ordinary
+specializations create distinct nominal families; explicit closed
+bindings can reuse them. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-WHISKERING.md` for the full contract
 and remaining U1 work.
 
@@ -316,7 +344,8 @@ that factor the same cocone, pointwise in target equality.
 factorization agrees with `L_Base_whiskerRight`.
 
 Both PRELUDE-HETEROGENEOUS-LEFT-KAN gates check this API and four
-exports on three hosts at two payloads. Separate specializations
-retain their nominal families. General instance reuse, identity
-and repeated composition APIs, and source-type parity remain open.
+exports on three hosts at two payloads. Ordinary specializations
+retain distinct nominal families. Closed family reuse and functor
+identity/composition are described above. Shared natural-transformation
+and Kan-extension convenience APIs and source-type parity remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.

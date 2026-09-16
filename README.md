@@ -48,7 +48,7 @@ The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 The latest full battery and its failed checks are recorded in
-`dev/validation/port-uat-u1-heterogeneous-left-kan/`.
+`dev/validation/stage-c-reuse/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -237,9 +237,21 @@ the actual composite functors. See
 over that shared group. Cocones use the existing composite natural
 transformations, and each mediator carries factorization and pointwise
 uniqueness proofs. See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
-Stage C remains open on reuse across separate template instances,
-general identity and repeated composition APIs, and checked
-source-type parity.
+Closed specializations can reuse checked families explicitly:
+
+```text
+specialize MechCategoryCore (0, 1) as C
+specialize MechCategoryCore (2, 3) as D
+specialize MechHeterogeneousFunctor (0, 1, 2, 3) as F
+  with (Source := C, Target := D)
+```
+
+This lets independently specialized functors share category types and
+participate in repeated composition. `prelude/cat/identity-functor.mech` supplies
+identity over an existing core. See `dev/M0-STAGE-C-REUSE.md` for the exact
+matching rule and limits. Stage C remains open on symbolic reuse inside
+template groups, additional shared category APIs and checked source-type
+parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

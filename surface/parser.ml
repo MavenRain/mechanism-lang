@@ -690,6 +690,29 @@ let specialization parse_level ts = match ts with
   | ({ Token.kind = _; loc = _ } :: _ | []) ->
       expected "'specialize NAME (LEVELS) as NAME'" ts
 
+(* Closed specializations can bind template families to existing nominal
+   identities. Dependencies inside symbolic groups retain fresh imports. *)
+let reuse_bindings ts =
+  let rec bindings ts acc = match ts with
+    | { Token.kind = Token.Ident local; loc = _ }
+      :: { Token.kind = Token.ColonEq; loc = _ }
+      :: { Token.kind = Token.Ident existing; loc = _ } :: rest ->
+        (match rest with
+        | { Token.kind = Token.Comma; loc = _ } :: rest ->
+            bindings rest ((local, existing) :: acc)
+        | { Token.kind = Token.RParen; loc = _ } :: rest ->
+            Ok (List.rev ((local, existing) :: acc), rest)
+        | ({ Token.kind = _; loc = _ } :: _ | []) ->
+            expected "',' or ')' after a family binding" rest)
+    | ({ Token.kind = _; loc = _ } :: _ | []) ->
+        expected "a family binding 'LOCAL := EXISTING'" ts in
+  match ts with
+  | { Token.kind = Token.KWith; loc = _ }
+    :: { Token.kind = Token.LParen; loc = _ } :: rest -> bindings rest []
+  | { Token.kind = Token.KWith; loc = _ } :: rest ->
+      expected "'(' and a nonempty list of family bindings" rest
+  | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ([], ts)
+
 let parse_decl ts =
   match ts with
   | { Token.kind = Token.KPoly; loc = _ }
@@ -760,7 +783,8 @@ let parse_decl ts =
       (match rest with
       | { Token.kind = Token.KAs; loc = _ }
         :: { Token.kind = Token.Ident as_name; loc = _ } :: rest ->
-          Ok (Syntax.DSpecialize (name, levels, as_name), rest)
+          let* reuse, rest = reuse_bindings rest in
+          Ok (Syntax.DSpecialize (name, levels, as_name, reuse), rest)
       | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "'as' and a fresh name" rest)
   (* SC-D4:  a malformed poly or specialize declaration names its own
      keyword.  The lexer reads the two characters "()" as one Unit
