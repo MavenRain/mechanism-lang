@@ -159,3 +159,8 @@
  (name template_reuse)
  (modules Template_reuse)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
+ (name template_symbolic_reuse)
+ (modules Template_symbolic_reuse)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))

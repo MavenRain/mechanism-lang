@@ -415,6 +415,8 @@ The callback checking contract and cost measurements are described in
 poly-compose ::= 'poly' '(' universes ')' 'group' NAME 'where'
                  dependency+ member* 'end'
 dependency   ::= 'specialize' NAME '(' levels ')' 'as' NAME
+                 [ 'with' '(' binding (',' binding)* ')' ]
+binding      ::= NAME ':=' NAME
 ```
 
 `group` is reserved.  A dependency names a preceding family template
@@ -529,8 +531,9 @@ and field universe levels. desc_unique uses both factorization proofs
 to compare arbitrary mediators. See
 `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md` for the exact sorts and
 validation contract. Closed family reuse now supports independent functors,
-identity and repeated composition. Symbolic reuse inside group dependencies,
-additional shared category APIs and source-type parity remain open.
+identity and repeated composition. Symbolic reuse also shares families
+inside group dependencies. Additional shared category APIs and source-type
+parity remain open.
 
 ## Stage C closed family reuse
 
@@ -549,9 +552,29 @@ Unbound families and all members keep fresh prefixed names and are checked
 against the actual caller environment. Reuse is explicit, budgeted and
 atomic on failure. Ordinary specializations remain nominally distinct.
 
-The source clause applies to closed family templates only. Nested flattened
-family names are accepted; clauses in symbolic dependencies and standalone
-definition templates are refused. Existing namespace checks still apply.
+Nested flattened family names are accepted. Standalone definition templates
+refuse family bindings. Existing namespace checks still apply.
 MechIdentityFunctor uses one category core and supplies a checked identity
 functor compatible with shared heterogeneous functors. See
 `dev/M0-STAGE-C-REUSE.md` for the API, validation and exact-match boundary.
+
+## Stage C symbolic family reuse
+
+Dependencies inside `poly (...) group NAME where ... end` accept the same
+`with` clause. A target must be a caller family or a family imported by an
+earlier dependency. Targets introduced by the current or a later dependency
+are refused. Duplicate bindings and bindings to member definitions are
+refused before the group enters the catalog.
+
+Certificate rechecking uses the group's full universe scope. Family levels
+use semantic universe equality; telescopes and constructors retain their
+structural comparison. Reused families are omitted from the stored schema,
+and every reference in imported members is renamed to the shared family.
+At least one fresh family must remain. The complete group checks before
+its catalog entry becomes available; symbolic globals never escape.
+
+Later closed specialization preserves sharing and can reuse the surviving
+families again. `MechSharedFunctorChain` has six universe parameters and
+three surviving category families, Source, Middle and Target. Its First,
+Second and Third functors compose through Run and Again, with Identity at
+the target category. See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`.

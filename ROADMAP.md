@@ -42,13 +42,13 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-15
+## Position on 2026-09-16
 
-The base is 2ff1eb9, following committed heterogeneous left Kan
-extensions. The current increment adds checked family reuse at closed
-specialization. Independent functor templates can share category cores,
-compose their results again and use a lightweight identity functor.
-See `dev/M0-STAGE-C-REUSE.md`.
+The base is 65faa7e, following committed checked family reuse. The current
+increment shares families inside symbolic template groups and packages a
+functor chain over shared category cores. Universal checking precedes
+closed specialization, including repeated composition and identity.
+See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -60,8 +60,7 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
-open on symbolic reuse inside template groups, additional shared
-category APIs and source-type parity.
+open on additional shared category APIs and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -78,8 +77,11 @@ PRELUDE-HETEROGENEOUS-LEFT-KAN gates check universal mediators over
 that shared triple and compare four exports at two payloads.
 TEMPLATE-REUSE checks closed family sharing and mixed-universe functor
 contracts; TEMPLATE-REUSE-RUNTIME compares repeated composition and
-identity on three hosts at two payloads. TRUSTED-LINES stays red at
-kernel=4208/3000 and encoder=246/900 until the user rules D-A-1.
+identity on three hosts at two payloads. TEMPLATE-SYMBOLIC-REUSE checks
+symbolic sharing and mixed-universe category contracts, and its runtime
+gate repeats the four exports through one shared group.
+TRUSTED-LINES stays red at kernel=4208/3000 and encoder=246/900 until
+the user rules D-A-1.
 
 ## Port tracks
 
@@ -144,9 +146,9 @@ stay under `ports/` (D-UAT-3).
   Kan extensions over that shared group are specified in
   `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`. Closed family sharing,
   identity and repeated composition between independent functors are
-  specified in `dev/M0-STAGE-C-REUSE.md`. U1 remains open on symbolic
-  sharing inside template groups, additional shared category APIs and
-  source-type parity.
+  specified in `dev/M0-STAGE-C-REUSE.md`. Symbolic sharing inside template
+  groups follows in `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. U1 remains open on
+  additional shared category APIs and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

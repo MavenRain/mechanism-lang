@@ -56,16 +56,20 @@ val declare_group_elaborated : ?budget:Budget.t ->
   arity:int -> (Check.family_decl * Check.ctor_decl list) list -> (t, Error.t) result
 
 (** Compose a nonempty list of preceding family templates.  Each dependency
-    is [(template, universe_arguments, local_prefix)].  Arguments may use
+    is [(template, universe_arguments, local_prefix, reuse)]. Arguments may use
     the new group's universe scope.  Imported families and definitions are
     renamed, traversed and checked again before the callbacks run.  Members
     see all dependencies and earlier members.  The group name and dependency
     prefixes must be fresh.  Only the complete schema enters the catalog;
     dependency aliases and symbolic globals do not escape.  Nested composed
-    templates are flattened in dependency order. *)
+    templates are flattened in dependency order. Reuse binds local families
+    to caller families or families of earlier dependencies. Certificates
+    must agree under the full universe scope, and reused families are omitted
+    from the new schema. At least one fresh family must remain. *)
 val compose : ?budget:Budget.t ->
   members:(Global.t -> (Check.decl, Error.t) result) list -> Global.t -> t ->
-  arity:int -> name:string -> (string * Level.t list * string) list ->
+  arity:int -> name:string ->
+  (string * Level.t list * string * (string * string) list) list ->
   (t, Error.t) result
 
 (** Specialize all universe occurrences and self references using exactly

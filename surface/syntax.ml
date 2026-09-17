@@ -135,7 +135,8 @@ type decl =
   | DPoly of int * string * t * t
   | DPolyMu of int * fam
   | DPolyGroup of int * fam * fam list * rec_def list
-  | DPolyCompose of int * string * (string * Universe.t list * string) list * rec_def list
+  | DPolyCompose of int * string *
+      (string * Universe.t list * string * (string * string) list) list * rec_def list
   | DSpecialize of string * Universe.t list * string * (string * string) list
   | DDef of string * t * t
   | DAxiom of string * t
@@ -286,6 +287,11 @@ let fam_text (word : string) (fm : fam) : string =
     (at 0 fm.fm_ty)
     (String.concat "" (List.map fam_ctor_text fm.fm_ctors))
 
+let reuse_text = function
+  | [] -> ""
+  | first :: rest -> " with (" ^ String.concat ", "
+      (List.map (fun (local, existing) -> local ^ " := " ^ existing) (first :: rest)) ^ ")"
+
 (* SC-D5:  the poly arm and the specialize arm print a parenthesized
    list, and the parser fills that list with one item or more.
    universe_names and universe_arguments each refuse an empty list, so
@@ -310,18 +316,15 @@ let decl_text (d : decl) : string =
             Printf.sprintf "def %s : %s := %s\n" m.rd_name (at 0 m.rd_ty)
               (at 0 m.rd_body)) members) ^ "end\n")
   | DSpecialize (name, levels, as_name, reuse) ->
-      let bindings = match reuse with
-        | [] -> ""
-        | _first :: _rest -> " with (" ^ String.concat ", "
-            (List.map (fun (local, existing) -> local ^ " := " ^ existing) reuse) ^ ")" in
       Printf.sprintf "specialize %s (%s) as %s%s\n" name
-        (String.concat ", " (List.map Universe.text levels)) as_name bindings
+        (String.concat ", " (List.map Universe.text levels)) as_name (reuse_text reuse)
   | DPolyCompose (arity, name, dependencies, members) ->
       let names = List.init arity (fun i -> "u" ^ string_of_int i) in
       "poly (" ^ String.concat ", " names ^ ") group " ^ name ^ " where\n"
-      ^ String.concat "" (List.map (fun (source, levels, as_name) ->
-          Printf.sprintf "specialize %s (%s) as %s\n" source
-            (String.concat ", " (List.map Universe.text levels)) as_name) dependencies)
+      ^ String.concat "" (List.map (fun (source, levels, as_name, reuse) ->
+          Printf.sprintf "specialize %s (%s) as %s%s\n" source
+            (String.concat ", " (List.map Universe.text levels)) as_name
+            (reuse_text reuse)) dependencies)
       ^ String.concat "" (List.map (fun m ->
           Printf.sprintf "def %s : %s := %s\n" m.rd_name (at 0 m.rd_ty)
             (at 0 m.rd_body)) members)

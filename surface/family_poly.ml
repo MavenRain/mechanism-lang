@@ -208,20 +208,72 @@ let declare ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity
           Ok () in
     Ok ((family.fam_name, { arity; family; ctors; companions = []; members }) :: catalog)
 
-let declare_group_elaborated ?(budget = Budget.unlimited) ~members globals catalog
-    ~arity families =
+(** A mutual group's recursion flags can differ when rechecked alone. *)
+let self_rec_only (actual : Positivity.family) (expected : Positivity.family) =
+  let erase (f : Positivity.family) =
+    { f with Positivity.f_ctors = List.map
+        (fun (c : Positivity.ctor) -> { c with Positivity.c_self_rec = false })
+        f.Positivity.f_ctors } in
+  erase actual = erase expected
+
+(** Recheck in a temporary table at the caller's universe scope. The complete
+    certificate, including binder names, must agree. The table never escapes. *)
+let check_reuse ?(arity = 0) budget globals family ctors =
+  let name = family.Check.fam_name in
+  let* actual = Global.find_family name globals |> Option.to_result
+    ~none:(Error.Unbound ("unknown reused family " ^ name)) in
+  let temporary = { globals with
+    Global.families = Global.StringMap.remove name globals.Global.families } in
+  let* provisional = Check.declare_family_at ~arity budget temporary family in
+  let* checked = Check.define_ctors_at ~arity budget provisional ~group:[name] ~name ctors in
+  let* expected = Global.find_family name checked |> Option.to_result
+    ~none:(Error.Cannot_infer "reuse rechecking returned no family") in
+  let* () = poll budget in
+  (* Family levels use the kernel equality test, including symbolic levels.
+     Telescopes retain the conservative structural certificate comparison. *)
+  let* level_ok = Level.equal_budget budget
+    actual.Positivity.f_level expected.Positivity.f_level in
+  let leveled = { expected with Positivity.f_level = actual.Positivity.f_level } in
+  match () with
+  | () when level_ok && actual = leveled -> Ok globals
+  | () when level_ok && self_rec_only actual leveled ->
+      Error (Error.Mismatch ("the reused family " ^ name ^
+        " is a member of a mutual group, which family reuse does not support"))
+  | () -> Error (Error.Mismatch ("the reused family " ^ name ^ " does not match the template"))
+
+let check_bindings budget ~available families reuse =
+  let* _bound = List.fold_left (fun acc (local, existing) ->
+    let* bound = acc in
+    let* () = poll budget in
+    match () with
+    | () when List.mem local bound ->
+        Error (Error.Mismatch ("the family " ^ local ^ " is bound more than once"))
+    | () when not (List.exists (fun (family, _ctors) ->
+        String.equal family.Check.fam_name local) families) ->
+        Error (Error.Unbound ("unknown template family " ^ local))
+    | () when not (available existing) ->
+        Error (Error.Unbound ("unknown reused family " ^ existing))
+    | () -> Ok (local :: bound)) (Ok []) reuse in
+  Ok ()
+
+let declare_group_with_reuse ~budget ~members globals catalog ~arity imports =
+  let families = List.filter_map (fun (reused, family) ->
+    if reused then None else Some family) imports in
   match families with
   | [] -> Error (Error.Mismatch "a family schema group must be nonempty")
   | (family, ctors) :: companions ->
       (* Ordered families may refer to predecessors, never to successors.
          The symbolic environment is discarded after universal checking. *)
-      let* symbolic = List.fold_left (fun acc (family, ctors) ->
+      let* symbolic = List.fold_left (fun acc (reused, (family, ctors)) ->
         let* symbolic = acc in
-        let* _checked = declare ~budget symbolic catalog ~arity family ctors in
-        let* provisional = Check.declare_family_at ~arity budget symbolic family in
-        Check.define_ctors_at ~arity budget provisional
-          ~group:[family.Check.fam_name] ~name:family.fam_name ctors)
-        (Ok globals) families in
+        let* () = poll budget in
+        if reused then check_reuse ~arity budget symbolic family ctors
+        else
+          let* _checked = declare ~budget symbolic catalog ~arity family ctors in
+          let* provisional = Check.declare_family_at ~arity budget symbolic family in
+          Check.define_ctors_at ~arity budget provisional
+            ~group:[family.Check.fam_name] ~name:family.fam_name ctors)
+        (Ok globals) imports in
       let name n = if List.mem_assoc n catalog then
           Error (Error.Not_yet "references between family schemas are not supported")
         else Ok n in
@@ -236,6 +288,11 @@ let declare_group_elaborated ?(budget = Budget.unlimited) ~members globals catal
       let members = List.rev reversed in
       Ok ((family.fam_name, { arity; family; ctors; companions; members }) :: catalog)
 
+let declare_group_elaborated ?(budget = Budget.unlimited) ~members globals catalog
+    ~arity families =
+  declare_group_with_reuse ~budget ~members globals catalog ~arity
+    (List.map (fun family -> false, family) families)
+
 let declare_group ?(budget = Budget.unlimited) ?(members = []) globals catalog ~arity families =
   declare_group_elaborated ~budget ~members:(List.map (fun member _globals -> Ok member) members)
     globals catalog ~arity families
@@ -247,8 +304,9 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
   if occupied globals catalog name then Error (collision name)
   else if arity < 0 then Error (Error.Universe "a universe parameter arity must be nonnegative")
   else
-    let* _aliases, groups = List.fold_left (fun acc (source, levels, as_name) ->
-      let* aliases, groups = acc in
+    let* _aliases, _available, groups =
+      List.fold_left (fun acc (source, levels, as_name, reuse) ->
+      let* aliases, available, groups = acc in
       let* () = poll budget in
       let* scheme = List.assoc_opt source catalog |> Option.to_result
         ~none:(Error.Unbound ("unknown family universe schema " ^ source)) in
@@ -261,20 +319,25 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
             source scheme.arity (List.length levels)))
       | () when not (List.for_all (Level.in_scope arity) levels) -> Error scope_error
       | () ->
+          let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
+          let* () = check_bindings budget raw_families reuse ~available:(fun existing ->
+            List.mem existing available || Option.is_some (Global.find_family existing globals)) in
           let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
-          let rename n = Ok (rename_instance scheme ~name:source ~as_name n) in
+          let rename n = Ok (List.assoc_opt n reuse |> Option.value
+            ~default:(rename_instance scheme ~name:source ~as_name n)) in
           let* families = map_list (fun (family, ctors) ->
-            map_family budget level rename family ctors)
-            ((scheme.family, scheme.ctors) :: scheme.companions) in
+            let* mapped = map_family budget level rename family ctors in
+            Ok (List.mem_assoc family.Check.fam_name reuse, mapped)) raw_families in
           let* definitions = map_list (map_member budget level rename) scheme.members in
-          let generated = List.map (fun (family, _ctors) -> family.Check.fam_name) families
-            @ List.map (fun definition -> definition.Check.d_name) definitions in
-          Ok (as_name :: generated @ aliases, (families, definitions) :: groups))
-      (Ok ([], [])) dependencies in
+          let fresh = List.filter_map (fun (reused, (family, _ctors)) ->
+            if reused then None else Some family.Check.fam_name) families in
+          let generated = fresh @ List.map (fun definition -> definition.Check.d_name) definitions in
+          Ok (as_name :: generated @ aliases, fresh @ available,
+            (families, definitions) :: groups)) (Ok ([], [], [])) dependencies in
     let groups = List.rev groups in
     let families = List.concat_map fst groups in
     let definitions = List.concat_map snd groups in
-    let* () = if List.exists (fun (family, _ctors) ->
+    let* () = if List.exists (fun (_reused, (family, _ctors)) ->
         String.equal name family.Check.fam_name) families then Error (collision name)
       else Ok () in
     let members = List.map (fun member _globals -> Ok member) definitions @ members in
@@ -282,55 +345,14 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
       let* declaration = elaborate symbolic in
       if String.equal declaration.Check.d_name name then Error (collision name)
       else Ok declaration) members in
-    match families with
+    match List.filter_map (fun (reused, family) -> if reused then None else Some family) families with
     | [] -> Error (Error.Mismatch "a family schema group must be nonempty")
     | (family, _ctors) :: _rest ->
         let* checked =
-          declare_group_elaborated ~budget ~members globals catalog ~arity families in
+          declare_group_with_reuse ~budget ~members globals catalog ~arity families in
         let* scheme = List.assoc_opt family.Check.fam_name checked
           |> Option.to_result ~none:(Error.Cannot_infer "composition returned no schema") in
         Ok ((name, scheme) :: catalog)
-
-(** The recheck of a reused family runs under the single group name of
-    that family, so a constructor of a mutual group that mentions a
-    sibling family holds a different [c_self_rec] flag than the stored
-    certificate.  Two certificates that agree on every other field show
-    that cause, and the refusal reports it. *)
-let self_rec_only (actual : Positivity.family) (expected : Positivity.family) =
-  let erase (f : Positivity.family) =
-    { f with Positivity.f_ctors = List.map
-        (fun (c : Positivity.ctor) -> { c with Positivity.c_self_rec = false })
-        f.Positivity.f_ctors } in
-  erase actual = erase expected
-
-(** Recheck a reused family's complete declaration in a temporary table.
-    Exact certificate equality is deliberately conservative, including binder
-    names.  A family of a mutual group is refused with the cause, because
-    the recheck knows one name only.  The caller's family and all entries
-    remain unchanged. *)
-let check_reuse budget globals family ctors =
-  let name = family.Check.fam_name in
-  let* actual = Global.find_family name globals |> Option.to_result
-    ~none:(Error.Unbound ("unknown reused family " ^ name)) in
-  let temporary = { globals with
-    Global.families = Global.StringMap.remove name globals.Global.families } in
-  let* provisional = Check.declare_family ~budget temporary family in
-  let* checked = Check.define_ctors ~budget provisional ~group:[name] ~name ctors in
-  let* expected = Global.find_family name checked |> Option.to_result
-    ~none:(Error.Cannot_infer "reuse rechecking returned no family") in
-  let* () = poll budget in
-  (* SC-L1-2, review round 1:  Level.subst keeps the raw constructor, so
-     the level of the certificate needs the kernel test.  A level argument
-     that is not normal is legal and must not refuse the reuse. *)
-  let* level_ok = Level.equal_budget budget
-    actual.Positivity.f_level expected.Positivity.f_level in
-  let leveled = { expected with Positivity.f_level = actual.Positivity.f_level } in
-  match () with
-  | () when level_ok && actual = leveled -> Ok globals
-  | () when level_ok && self_rec_only actual leveled ->
-      Error (Error.Mismatch ("the reused family " ^ name ^
-        " is a member of a mutual group, which family reuse does not support"))
-  | () -> Error (Error.Mismatch ("the reused family " ^ name ^ " does not match the template"))
 
 (** SC-L1-2, review round 2:  a closed level argument that is not normal,
     like (max 0 0), reaches the parameter, the index and the constructor
@@ -364,18 +386,8 @@ let instantiate ?(budget = Budget.unlimited) ?(reuse = []) globals catalog ~name
       let* () = poll budget in
       let levels = List.map normal_level levels in
       let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
-      let* _bound = List.fold_left (fun acc (local, existing) ->
-        let* bound = acc in
-        let* () = poll budget in
-        match () with
-        | () when List.mem local bound ->
-          Error (Error.Mismatch ("the family " ^ local ^ " is bound more than once"))
-        | () when not (List.exists (fun (family, _ctors) ->
-            String.equal family.Check.fam_name local) raw_families) ->
-          Error (Error.Unbound ("unknown template family " ^ local))
-        | () when Option.is_none (Global.find_family existing globals) ->
-          Error (Error.Unbound ("unknown reused family " ^ existing))
-        | () -> Ok (local :: bound)) (Ok []) reuse in
+      let* () = check_bindings budget raw_families reuse
+        ~available:(fun existing -> Option.is_some (Global.find_family existing globals)) in
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
       let rename n = Ok (List.assoc_opt n reuse |> Option.value
         ~default:(rename_instance scheme ~name ~as_name n)) in

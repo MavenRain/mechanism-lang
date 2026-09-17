@@ -1046,3 +1046,21 @@ that starts `PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL mismatch: the term
 has type (Ran SPi 0 J Type 6`. Capture:
 `probes/fix/L3-2/stdout.txt` under
 `/Users/oobi/Documents/mechanism-lang-uat-u1-heterogeneous-left-kan-review`.
+
+## Stage C symbolic family reuse mutations (2026-09-16)
+
+`dev/reuse-mutations.py WORK --symbolic` compiles and tests four isolated
+controls. All four were detected; baseline and restored suites both passed
+with twelve source refusals, six parser refusals and five raw API controls.
+Build failures and timeouts do not count as killed mutations.
+
+| Control | Change | Detected by |
+| --- | --- | --- |
+| C-SREUSE-M1 | Skip the reused family's certificate check | independent-universes refusal |
+| C-SREUSE-M2 | Recheck a symbolic family at arity zero | positive symbolic sharing |
+| C-SREUSE-M3 | Drop the parsed dependency bindings | positive shared computation |
+| C-SREUSE-M4 | Skip duplicate-binding rejection | duplicate-binding refusal |
+
+The capture is `dev/validation/stage-c-symbolic-reuse/mutations.json`.
+The runtime gate also changes its payload from 37 to 41 and compares all
+four exports on the kernel, Node and Wasmtime.

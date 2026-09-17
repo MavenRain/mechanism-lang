@@ -47,8 +47,9 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The latest full battery and its failed checks are recorded in
-`dev/validation/stage-c-reuse/`.
+The validation record of this slice is an aggregate of one interrupted
+capture, one scoped recheck and one isolated retry. That record and its
+failed checks are in `dev/validation/stage-c-symbolic-reuse/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -249,9 +250,11 @@ specialize MechHeterogeneousFunctor (0, 1, 2, 3) as F
 This lets independently specialized functors share category types and
 participate in repeated composition. `prelude/cat/identity-functor.mech` supplies
 identity over an existing core. See `dev/M0-STAGE-C-REUSE.md` for the exact
-matching rule and limits. Stage C remains open on symbolic reuse inside
-template groups, additional shared category APIs and checked source-type
-parity.
+matching rule and limits. The same clause now shares families with earlier
+dependencies inside a symbolic group. `prelude/cat/shared-functor-chain.mech`
+packages independent functors, repeated composition and identity over three
+shared category cores. See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. Stage C remains
+open on additional shared category APIs and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

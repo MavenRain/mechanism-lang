@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-SREUSE-M1",
+      "path": "surface/family_poly.ml",
+      "old": "if reused then check_reuse ~arity budget symbolic family ctors",
+      "new": "if reused then Ok symbolic",
+      "source_sha256": "53d7baeceeead0180f34cc0dec9974b8ef54daafd9e42bac024c61e6db58be87",
+      "mutant_sha256": "51b89ec9dd0fd717c972cdf7715a6516b8cf7d21c7d6ecead1594e29922c9483",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-SYMBOLIC-REUSE-FAIL independent-universes:",
+      "killed": true,
+      "C-SREUSE-M1": {
+        "stdout": "TEMPLATE-SYMBOLIC-REUSE-FAIL independent-universes: wrong refusal: mismatch: the term has type Type (u1 + 1) and the expected type is Type (u0 + 1)\n",
+        "stderr": ""
+      },
+      "C-SREUSE-M1-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-SREUSE-M2",
+      "path": "surface/family_poly.ml",
+      "old": "if reused then check_reuse ~arity budget symbolic family ctors",
+      "new": "if reused then check_reuse budget symbolic family ctors",
+      "source_sha256": "53d7baeceeead0180f34cc0dec9974b8ef54daafd9e42bac024c61e6db58be87",
+      "mutant_sha256": "de85f5ac53921e73f2a122964513a42131342f7560d4ba0cba0c98eb8b5f0bbc",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-SYMBOLIC-REUSE-FAIL universe:",
+      "killed": true,
+      "C-SREUSE-M2": {
+        "stdout": "TEMPLATE-SYMBOLIC-REUSE-FAIL universe: family universe levels must be closed at M0 Stage A\n",
+        "stderr": ""
+      },
+      "C-SREUSE-M2-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-SREUSE-M3",
+      "path": "surface/parser.ml",
+      "old": "dependencies rest ((source, levels, as_name, reuse) :: acc)",
+      "new": "let _ignored = reuse in dependencies rest ((source, levels, as_name, []) :: acc)",
+      "source_sha256": "3aa6f50d1c8cf88baa6f718683528eabe4301f8d9f585058ac0af9fe83521824",
+      "mutant_sha256": "4df8ecf1fe62247250ceea06c679e741d499fbd5e8e076ceac37aed0251f0251",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-SYMBOLIC-REUSE-FAIL mismatch:",
+      "killed": true,
+      "C-SREUSE-M3": {
+        "stdout": "TEMPLATE-SYMBOLIC-REUSE-FAIL mismatch: the term has type (Lan SMu N_Inner_Base [] (Sec SColl 1 [ => Nat])) and the expected type is (Lan SMu N_Inner_Both_Left [] (Sec SColl 1 [ => Nat]))\n",
+        "stderr": ""
+      },
+      "C-SREUSE-M3-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "C-SREUSE-M4",
+      "path": "surface/family_poly.ml",
+      "old": "| () when List.mem local bound ->",
+      "new": "| () when List.mem local [] ->",
+      "source_sha256": "53d7baeceeead0180f34cc0dec9974b8ef54daafd9e42bac024c61e6db58be87",
+      "mutant_sha256": "81699f2473018affc2d3ecb270bbc0786b3473df60eb46eaed106eba0d14f69b",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "diagnostic": "TEMPLATE-SYMBOLIC-REUSE-FAIL duplicate-binding:",
+      "killed": true,
+      "C-SREUSE-M4": {
+        "stdout": "TEMPLATE-SYMBOLIC-REUSE-FAIL duplicate-binding: expected refusal: mismatch: the family Box is bound more than once\n",
+        "stderr": ""
+      },
+      "C-SREUSE-M4-build": {
+        "stdout": "OK build: 0 errors, 0 warnings\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "baseline_stdout": "TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5\n",
+  "restored_stdout": "TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5\n",
+  "suite_sha256": "388862f361cc292b97bc99602d7e0168a004615b71da239c6c759323b81f1df7"
+}

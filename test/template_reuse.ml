@@ -187,7 +187,7 @@ let parser_cases = [
   "specialize Box (0) as P with (Box Existing)";
   "specialize Box (0) as P with (Box := Existing,)";
   "specialize Box (0) as P with (Box := Existing";
-  "poly (u) group P where specialize Box (u) as B with (Box := Existing) end";
+  "poly (u) group P where specialize Box (u) as B with (Box := Existing,) end";
 ]
 
 let refusals () =

@@ -1,0 +1,19 @@
+-- A composable chain with shared source, middle and target category families.
+-- Load category-core, heterogeneous-functor, composable-functors and
+-- identity-functor before this template.
+poly (u, v, w, x, y, z) group MechSharedFunctorChain where
+  specialize MechCategoryCore (u, v) as Source
+  specialize MechCategoryCore (w, x) as Middle
+  specialize MechCategoryCore (y, z) as Target
+  specialize MechHeterogeneousFunctor (u, v, w, x) as First
+    with (Source := Source, Target := Middle)
+  specialize MechHeterogeneousFunctor (w, x, y, z) as Second
+    with (Source := Middle, Target := Target)
+  specialize MechHeterogeneousFunctor (y, z, y, z) as Third
+    with (Source := Target, Target := Target)
+  specialize MechComposableFunctors (u, v, w, x, y, z) as Run
+    with (Source := Source, Middle := Middle, Target := Target)
+  specialize MechComposableFunctors (u, v, y, z, y, z) as Again
+    with (Source := Source, Middle := Target, Target := Target)
+  specialize MechIdentityFunctor (y, z) as Identity with (Base := Target)
+end

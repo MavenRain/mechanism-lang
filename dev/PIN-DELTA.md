@@ -60,8 +60,8 @@ names are checked before the immutable program result is returned.
 | surface/elab.ml | 378 |
 | surface/token.ml | 12 |
 | surface/lexer.ml | 6 |
-| surface/syntax.ml | 64 |
-| surface/parser.ml | 208 |
+| surface/syntax.ml | 67 |
+| surface/parser.ml | 209 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 
@@ -102,3 +102,9 @@ specialization syntax and routes them through Family_poly. Existing
 families are kernel rechecked in a temporary table, compared exactly, then
 preserved in the caller. Family_poly is a mechanism-only helper and has no
 vendored counterpart. Kernel, encoder and vendor sources are unchanged.
+
+Symbolic family reuse adds bindings to group dependencies, preserves them
+in printed source and omits reused family aliases from name reservation.
+The family catalog checks certificates under the group's universe scope
+and retains only fresh families in the resulting schema. The syntax and
+parser counts above include this increment; the elaborator count stays 378.

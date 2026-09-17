@@ -1,0 +1,95 @@
+REUSED BUILD (passed in the original battery)
+REUSED PIN (passed in the original battery)
+REUSED PIN-DELTA (passed in the original battery)
+REUSED R0-COUNT (passed in the original battery)
+REUSED R0-AUDIT (passed in the original battery)
+REUSED SUITE-KERNEL (passed in the original battery)
+REUSED LEVELS (passed in the original battery)
+REUSED PRENEX (passed in the original battery)
+REUSED PRENEX-FAMILIES (passed in the original battery)
+REUSED PRENEX-GROUPS (passed in the original battery)
+REUSED TEMPLATE-COMPOSITION (passed in the original battery)
+REUSED TEMPLATE-REUSE (passed in the original battery)
+REUSED TEMPLATE-SYMBOLIC-REUSE (passed in the original battery)
+REUSED SUITE-SURFACE (passed in the original battery)
+REUSED SUITE-WASM (passed in the original battery)
+REUSED IMPORT-GRAMMAR (passed in the original battery)
+REUSED IMPORT-CLI (passed in the original battery)
+REUSED CORPUS-UAT (passed in the original battery)
+REUSED PARITY-COUNTS (passed in the original battery)
+REUSED PRELUDE (passed in the original battery)
+REUSED EQUALITY (passed in the original battery)
+REUSED FAMILY-POLY (passed in the original battery)
+REUSED PRELUDE-POLY (passed in the original battery)
+REUSED FAMILY-MEMBERS (passed in the original battery)
+REUSED PRELUDE-TRANSPORT (passed in the original battery)
+REUSED PRELUDE-EQUALITY-OPS (passed in the original battery)
+REUSED PRELUDE-DEPENDENT (passed in the original battery)
+REUSED FAMILY-GROUPS (passed in the original battery)
+REUSED PRELUDE-CONGRUENCE (passed in the original battery)
+REUSED TEMPLATE-COST (passed in the original battery)
+REUSED PRELUDE-CATEGORY (passed in the original battery)
+REUSED PRELUDE-FUNCTOR (passed in the original battery)
+REUSED PRELUDE-HETEROGENEOUS-FUNCTOR (passed in the original battery)
+REUSED PRELUDE-HETEROGENEOUS-NATTRANS (passed in the original battery)
+PASS PRELUDE-HETEROGENEOUS-WHISKERING
+PASS PRELUDE-HETEROGENEOUS-LEFT-KAN
+REUSED PRELUDE-COMPOSABLE-FUNCTORS (passed in the original battery)
+PASS PRELUDE-NATTRANS
+PASS PRELUDE-LEFT-KAN
+PASS EQUALITY-RUNTIME
+PASS PRENEX-RUNTIME
+PASS PRENEX-FAMILIES-RUNTIME
+PASS PRENEX-GROUPS-RUNTIME
+PASS TEMPLATE-COMPOSITION-RUNTIME
+PASS TEMPLATE-REUSE-RUNTIME
+FAIL TEMPLATE-SYMBOLIC-REUSE-RUNTIME
+TEMPLATE-SYMBOLIC-REUSE-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-reuse-1ce5xag2/37/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-reuse-1ce5xag2/37', 'repeatedObject', 'repeatedArrow', 'identityObject', 'identityArrow']' timed out after 50 seconds
+PASS PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME
+FAIL PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-left-kan-5yfsruxy/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-left-kan-5yfsruxy', 'lanUnitResult', 'lanMapResult', 'lanDescFirst', 'lanDescSecond', 'lanUnitResult_41', 'lanMapResult_41', 'lanDescFirst_41', 'lanDescSecond_41']' timed out after 109.9985232502222 seconds
+PASS PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME
+PASS PRELUDE-CATEGORY-RUNTIME
+PASS PRELUDE-CATEGORY-ACCESSORS
+PASS DEPENDENT-CLOSURE-RUNTIME
+PASS PRELUDE-FUNCTOR-RUNTIME
+FAIL PRELUDE-NATTRANS-RUNTIME
+PRELUDE-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-joxoodhl/mutation/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-joxoodhl/mutation', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'rightValue', 'leftValue', 'leftOther']' timed out after 210 seconds
+FAIL PRELUDE-LEFT-KAN-RUNTIME
+PRELUDE-LEFT-KAN-RUNTIME FAIL Command '['/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-qsme1xyi/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-qsme1xyi', 'lanUnitValue', 'lanMapValue', 'lanDescValue', 'lanDescOther', 'lanDescObject', 'lanDescSecond', 'lanUnitValueChanged', 'lanMapValueChanged', 'lanDescValueChanged', 'lanDescOtherChanged', 'lanDescObjectChanged', 'lanDescSecondChanged']' timed out after 210 seconds
+PASS AXIOMS
+PASS MAP-INVENTORY
+FAIL TRUSTED-LINES
+TRUSTED-LINES kernel=4208/3000 encoder=246/900 FAIL
+PASS DENOMINATORS denominators.json: OK
+
+MEASURE PRELUDE-HETEROGENEOUS-WHISKERING tier=SLOW elapsed_ms=111433.037 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-LEFT-KAN tier=SUITE elapsed_ms=282370.931 exit=0
+MEASURE PRELUDE-NATTRANS tier=SUITE elapsed_ms=225304.564 exit=0
+MEASURE PRELUDE-LEFT-KAN tier=SUITE elapsed_ms=203723.288 exit=0
+MEASURE EQUALITY-RUNTIME tier=MED elapsed_ms=2789.266 exit=0
+MEASURE PRENEX-RUNTIME tier=MED elapsed_ms=1991.701 exit=0
+MEASURE PRENEX-FAMILIES-RUNTIME tier=MED elapsed_ms=939.974 exit=0
+MEASURE PRENEX-GROUPS-RUNTIME tier=MED elapsed_ms=932.257 exit=0
+MEASURE TEMPLATE-COMPOSITION-RUNTIME tier=SLOW elapsed_ms=1374.557 exit=0
+MEASURE TEMPLATE-REUSE-RUNTIME tier=SLOW elapsed_ms=67209.205 exit=0
+MEASURE TEMPLATE-SYMBOLIC-REUSE-RUNTIME tier=SLOW elapsed_ms=50277.768 exit=2
+MEASURE PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME tier=SLOW elapsed_ms=18710.312 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME tier=SLOW elapsed_ms=21587.427 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME tier=SLOW elapsed_ms=31932.080 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME tier=SLOW elapsed_ms=110185.529 exit=1
+MEASURE PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME tier=SLOW elapsed_ms=15322.646 exit=0
+MEASURE PRELUDE-CATEGORY-RUNTIME tier=CATEGORY elapsed_ms=210438.667 exit=0
+MEASURE PRELUDE-CATEGORY-ACCESSORS tier=CATEGORY elapsed_ms=239360.647 exit=0
+MEASURE DEPENDENT-CLOSURE-RUNTIME tier=MED elapsed_ms=2126.704 exit=0
+MEASURE PRELUDE-FUNCTOR-RUNTIME tier=CATEGORY elapsed_ms=473920.520 exit=0
+MEASURE PRELUDE-NATTRANS-RUNTIME tier=CATEGORY elapsed_ms=383302.515 exit=2
+MEASURE PRELUDE-LEFT-KAN-RUNTIME tier=SUITE elapsed_ms=211914.432 exit=2
+MEASURE AXIOMS tier=FAST elapsed_ms=552.534 exit=0
+MEASURE MAP-INVENTORY tier=MED elapsed_ms=4414.093 exit=0
+MEASURE TRUSTED-LINES tier=FAST elapsed_ms=94.362 exit=1
+MEASURE DENOMINATORS tier=MED elapsed_ms=166.986 exit=0
+
+GATES-FAIL

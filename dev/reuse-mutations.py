@@ -8,8 +8,12 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-if len(sys.argv) != 2:
-    raise SystemExit("usage: python3 -I dev/reuse-mutations.py NEW_WORK_DIRECTORY")
+if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--symbolic"):
+    raise SystemExit("usage: python3 -I dev/reuse-mutations.py NEW_WORK_DIRECTORY [--symbolic]")
+SYMBOLIC = len(sys.argv) == 3
+SUITE = "template_symbolic_reuse" if SYMBOLIC else "template_reuse"
+OK = b"TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5\n" if SYMBOLIC \
+    else b"TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6\n"
 WORK = Path(sys.argv[1]).resolve()
 if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
     raise SystemExit("the work directory must be new and outside the source repository")
@@ -41,7 +45,7 @@ def build(name):
 
 
 def suite(name):
-    return run(name, [str(COPY / "_build/default/test/template_reuse.exe"), str(COPY)], 900)
+    return run(name, [str(COPY / f"_build/default/test/{SUITE}.exe"), str(COPY)], 900)
 
 
 surface = "surface/family_poly.ml"
@@ -75,9 +79,29 @@ controls = [
      "    ] in", 0, "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=5"),
 ]
 
+if SYMBOLIC:
+    controls = [
+        ("C-SREUSE-M1", surface,
+         "if reused then check_reuse ~arity budget symbolic family ctors",
+         "if reused then Ok symbolic", 1,
+         "TEMPLATE-SYMBOLIC-REUSE-FAIL independent-universes:"),
+        ("C-SREUSE-M2", surface,
+         "if reused then check_reuse ~arity budget symbolic family ctors",
+         "if reused then check_reuse budget symbolic family ctors", 1,
+         "TEMPLATE-SYMBOLIC-REUSE-FAIL universe:"),
+        ("C-SREUSE-M3", "surface/parser.ml",
+         "dependencies rest ((source, levels, as_name, reuse) :: acc)",
+         "let _ignored = reuse in dependencies rest ((source, levels, as_name, []) :: acc)", 1,
+         "TEMPLATE-SYMBOLIC-REUSE-FAIL mismatch:"),
+        ("C-SREUSE-M4", surface,
+         "| () when List.mem local bound ->",
+         "| () when List.mem local [] ->", 1,
+         "TEMPLATE-SYMBOLIC-REUSE-FAIL duplicate-binding:"),
+    ]
+
 build("baseline-build")
 baseline = suite("baseline")
-if baseline.returncode or not baseline.stdout.startswith(b"TEMPLATE-REUSE-OK "):
+if baseline.returncode or baseline.stdout != OK or baseline.stderr:
     raise SystemExit("baseline suite failed")
 reports = []
 for name, relative, old, new, code, diagnostic in controls:
@@ -105,11 +129,11 @@ for name, relative, old, new, code, diagnostic in controls:
 build("restored-build")
 restored = suite("restored")
 passed = all(report["killed"] for report in reports) and restored.returncode == 0
-passed = passed and restored.stdout.startswith(b"TEMPLATE-REUSE-OK ") and not restored.stderr
+passed = passed and restored.stdout == OK and not restored.stderr
 (WORK / "results.json").write_text(json.dumps({"passed": passed, "controls": reports,
     "baseline_stdout": CAPTURES["baseline"]["stdout"],
     "restored_stdout": CAPTURES["restored"]["stdout"],
-    "suite_sha256": hashlib.sha256((COPY / "test/template_reuse.ml").read_bytes()).hexdigest()},
+    "suite_sha256": hashlib.sha256((COPY / f"test/{SUITE}.ml").read_bytes()).hexdigest()},
     indent=2) + "\n")
 print(json.dumps({"passed": passed, "killed": sum(report["killed"] for report in reports),
                   "controls": len(reports)}))

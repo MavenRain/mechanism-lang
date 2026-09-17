@@ -6,18 +6,24 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-GATE = "TEMPLATE-REUSE-RUNTIME"
+SYMBOLIC = sys.argv[1:] == ["--symbolic"]
+GATE = "TEMPLATE-SYMBOLIC-REUSE-RUNTIME" if SYMBOLIC else "TEMPLATE-REUSE-RUNTIME"
 
 
 def main():
-    if len(sys.argv) != 1:
-        print("usage: python3 -I test/reuse_runtime.py", file=sys.stderr)
+    if sys.argv[1:] not in ([], ["--symbolic"]):
+        print("usage: python3 -I test/reuse_runtime.py [--symbolic]", file=sys.stderr)
         return 64
-    source = "\n".join((ROOT / path).read_text() for path in [
+    paths = [
         "prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",
         "prelude/cat/composable-functors.mech", "prelude/cat/identity-functor.mech",
-        "test/fixtures/prelude/reuse-functors.mech",
-    ])
+    ]
+    if SYMBOLIC:
+        paths += ["prelude/cat/shared-functor-chain.mech",
+                  "test/fixtures/prelude/symbolic-reuse-functors.mech"]
+    else:
+        paths += ["test/fixtures/prelude/reuse-functors.mech"]
+    source = "\n".join((ROOT / path).read_text() for path in paths)
     anchor = "def reuseInput : Nat := 37"
     if source.count(anchor) != 1:
         print(f"{GATE} FAIL expected one payload anchor")

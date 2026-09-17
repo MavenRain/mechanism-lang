@@ -1,0 +1,14 @@
+specialize MechSharedFunctorChain (0, 1, 1, 0, 2, 3) as Chain
+
+-- Both compositions accept functors from separately specialized templates.
+def repeatContract : (0 C : Type 0) -> (0 D : Type 1) -> (0 E : Type 2) ->
+    (c : Chain_Source_Category C) -> (d : Chain_Middle_Category D) -> (e : Chain_Target_Category E) ->
+    Chain_First_Functor C D c d -> Chain_Second_Functor D E d e -> Chain_Third_Functor E E e e ->
+    Chain_Again_Composite_Functor C E c e :=
+  fun (0 C : Type 0) (0 D : Type 1) (0 E : Type 2)
+      (c : Chain_Source_Category C) (d : Chain_Middle_Category D) (e : Chain_Target_Category E)
+      (f : Chain_First_Functor C D c d) (g : Chain_Second_Functor D E d e) (h : Chain_Third_Functor E E e e) =>
+    Chain_Again_compFunctor C E E c e e (Chain_Run_compFunctor C D E c d e f g) h
+
+def identityContract : (0 C : Type 2) -> (c : Chain_Target_Category C) -> Chain_Third_Functor C C c c :=
+  fun (0 C : Type 2) (c : Chain_Target_Category C) => Chain_Identity_idFunctor C c

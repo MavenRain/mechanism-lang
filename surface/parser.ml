@@ -690,8 +690,8 @@ let specialization parse_level ts = match ts with
   | ({ Token.kind = _; loc = _ } :: _ | []) ->
       expected "'specialize NAME (LEVELS) as NAME'" ts
 
-(* Closed specializations can bind template families to existing nominal
-   identities. Dependencies inside symbolic groups retain fresh imports. *)
+(* Specializations bind template families to existing nominal identities,
+   including earlier imports inside symbolic groups. *)
 let reuse_bindings ts =
   let rec bindings ts acc = match ts with
     | { Token.kind = Token.Ident local; loc = _ }
@@ -746,8 +746,9 @@ let parse_decl ts =
         :: { Token.kind = Token.KWhere; loc = _ } :: rest ->
           let rec dependencies ts acc = match ts with
             | { Token.kind = Token.KSpecialize; loc = _ } :: _rest ->
-                let* dependency, rest = specialization P.parse_level ts in
-                dependencies rest (dependency :: acc)
+                let* (source, levels, as_name), rest = specialization P.parse_level ts in
+                let* reuse, rest = reuse_bindings rest in
+                dependencies rest ((source, levels, as_name, reuse) :: acc)
             | ({ Token.kind = _; loc = _ } :: _ | []) ->
                 (match acc with
                 | [] -> expected "at least one template specialization in a group" ts

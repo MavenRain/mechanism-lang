@@ -162,7 +162,8 @@ let definition name ty body : Check.decl = {
 let dependency_raw = ["Seed", [Level.zero], "Local"]
 let compose ?(budget = Budget.unlimited) ?(globals = Global.empty) ?(arity = 1)
     ?(dependencies = dependency_raw) ?(members = []) catalog =
-  Families.compose ~budget ~members globals catalog ~arity ~name:"Composed" dependencies
+  Families.compose ~budget ~members globals catalog ~arity ~name:"Composed"
+    (List.map (fun (source, levels, prefix) -> source, levels, prefix, []) dependencies)
 
 let raw_cases catalog = [
   "empty-dependencies", (fun () -> exact (Error.Mismatch "a family schema group must be nonempty")

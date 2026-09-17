@@ -269,6 +269,33 @@ endpoints to compose again. The mixed-universe example is
 `test/fixtures/prelude/reuse-functors.mech`. TEMPLATE-REUSE and
 TEMPLATE-REUSE-RUNTIME check this API. See `dev/M0-STAGE-C-REUSE.md`.
 
+Load `cat/shared-functor-chain.mech` after those four files to package the
+same sharing inside a universally checked group:
+
+```text
+specialize MechSharedFunctorChain (0, 1, 1, 0, 2, 3) as Chain
+```
+
+Only Chain_Source, Chain_Middle and Chain_Target families are created.
+Chain_First and Chain_Second supply the two composable functor APIs;
+Chain_Third is an endofunctor at the target. Chain_Run_compFunctor composes
+the first pair, and Chain_Again_compFunctor composes its result with the
+third. Chain_Identity_idFunctor supplies identity at the target. Ordinary
+operations retain their corresponding prefixes. A closed `with` clause
+can bind Source, Middle and Target to caller families as well.
+
+The template's dependencies use symbolic `with` clauses to share earlier
+imports. `symbolic-reuse-contracts.mech` and `symbolic-reuse-functors.mech`
+under `test/fixtures/prelude/` exercise mixed universes and runtime values.
+TEMPLATE-SYMBOLIC-REUSE and TEMPLATE-SYMBOLIC-REUSE-RUNTIME check them.
+
+The three functors of `symbolic-reuse-functors.mech` map arrows with the
+identity function. Thus the `repeatedArrow` and `identityArrow` exports pin
+the arrow accessors and the chain plumbing only. They keep their value if
+the composition order changes or if an object map changes. The
+`repeatedObject` and `identityObject` exports carry the order property and
+the object maps.
+
 ## Heterogeneous natural transformations
 
 Load `cat/category-core.mech`, `cat/heterogeneous-functor.mech`, then

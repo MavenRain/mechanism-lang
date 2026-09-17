@@ -1,0 +1,70 @@
+specialize MechSharedFunctorChain (0, 0, 0, 0, 0, 0) as Chain
+
+def reuseInput : Nat := 37
+
+def SourceCategory : Chain_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def MiddleCategory : Chain_Middle_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def TargetCategory : Chain_Target_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def Lift : Chain_First_Functor Nat Nat SourceCategory MiddleCategory :=
+  ((fun (x : Nat) => natAdd x 2),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Raise : Chain_Second_Functor Nat Nat MiddleCategory TargetCategory :=
+  ((fun (x : Nat) => natMul x 2),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Shift : Chain_Third_Functor Nat Nat TargetCategory TargetCategory :=
+  ((fun (x : Nat) => natAdd x 5),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => f),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+
+def Composed : Chain_Run_Composite_Functor Nat Nat SourceCategory TargetCategory :=
+  Chain_Run_compFunctor Nat Nat Nat SourceCategory MiddleCategory TargetCategory Lift Raise
+def Repeated : Chain_Again_Composite_Functor Nat Nat SourceCategory TargetCategory :=
+  Chain_Again_compFunctor Nat Nat Nat SourceCategory TargetCategory TargetCategory Composed Shift
+def repeatedObject : Nat :=
+  Chain_Again_Composite_functorObj Nat Nat SourceCategory TargetCategory Repeated reuseInput
+def repeatedArrow : Nat :=
+  Chain_Again_Composite_functorMap Nat Nat SourceCategory TargetCategory Repeated 0 2
+    (Chain_Source_comp Nat SourceCategory 0 1 2
+      (fun (n : Nat) => natAdd n 3) (fun (n : Nat) => natMul n 2)) reuseInput
+def identityObject : Nat :=
+  Chain_Third_functorObj Nat Nat TargetCategory TargetCategory
+    (Chain_Identity_idFunctor Nat TargetCategory) reuseInput
+def identityArrow : Nat :=
+  Chain_Third_functorMap Nat Nat TargetCategory TargetCategory
+    (Chain_Identity_idFunctor Nat TargetCategory) 0 1
+      (fun (n : Nat) => natAdd n 7) reuseInput

@@ -1205,11 +1205,11 @@ let elab_family_group ~budget globals catalog definitions ~arity group members =
     globals catalog ~arity (List.rev reversed)
 
 let elab_composition ~budget globals catalog definitions ~arity ~name dependencies members =
-  let* dependencies = Rules.all_ok (List.map (fun (source, levels, as_name) ->
+  let* dependencies = Rules.all_ok (List.map (fun (source, levels, as_name, reuse) ->
     let* levels = Rules.all_ok (List.map Universe.lower levels) in
-    Ok (source, levels, as_name)) dependencies) in
-  let imported = List.concat_map (fun (source, _levels, as_name) ->
-    let generated = Family_poly.instance_names catalog ~name:source ~as_name
+    Ok (source, levels, as_name, reuse)) dependencies) in
+  let imported = List.concat_map (fun (source, _levels, as_name, reuse) ->
+    let generated = Family_poly.instance_names ~reuse catalog ~name:source ~as_name
       |> Option.fold ~none:[] ~some:(fun (families, members) -> families @ members) in
     as_name :: generated) dependencies in
   let names = imported @ List.map (fun member -> member.Syntax.rd_name) members in
@@ -1219,7 +1219,7 @@ let elab_composition ~budget globals catalog definitions ~arity ~name dependenci
         || Option.is_some (find_ctor local globals) then
       Error (Error.Mismatch ("the name " ^ local ^ " is already declared"))
     else Ok ()) names) |> Result.map (fun _checks -> ()) in
-  let labels = List.concat_map (fun (source, _levels, _as_name) ->
+  let labels = List.concat_map (fun (source, _levels, _as_name, _reuse) ->
     Family_poly.constructors catalog source |> Option.value ~default:[]) dependencies in
   let* () = Rules.all_ok (List.map (fun label ->
     if String.equal label name || List.mem label names

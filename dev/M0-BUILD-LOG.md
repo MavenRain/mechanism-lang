@@ -3376,3 +3376,115 @@ dev/gates.sh:207 is unchanged. The close ladder launched after this
 paragraph is the proof of the round 3 and round 3b state; its verdict is
 recorded in WORK/ladder-CR-close.log and WORK/review-CR-report.md, not in
 this file.
+
+## Stage C: symbolic family reuse (2026-09-16)
+
+Base 65faa7e, the committed checked family reuse increment. The user
+requested continued mechanism-lang development with all changes staged.
+The design is dev/M0-STAGE-C-SYMBOLIC-REUSE.md.
+
+Group dependencies now accept explicit family bindings. Targets can be
+caller families or families imported by earlier dependencies. The family
+catalog checks reused certificates under the group's universe scope,
+retains fresh families only, and rechecks imported and local members
+against the shared table. Nested and closed specialization preserve the
+sharing. Unknown, duplicate, forward, incompatible and colliding bindings
+remain refusals. A group must introduce at least one fresh family.
+
+prelude/cat/shared-functor-chain.mech packages independent functors,
+repeated composition and target identity over three shared category cores
+at six universe parameters. Stage C and U1 remain open on additional
+shared category APIs and source-type parity. No kernel, WASM, vendor,
+mapping verdict or denominator source changes.
+
+The build passes with zero errors and warnings. TEMPLATE-SYMBOLIC-REUSE
+passes twelve precise source refusals, six parser refusals and five raw
+API controls, plus round trips, nested and dependent sharing, exact
+inventories, computations and a mixed-universe category client. Its runtime
+gate compares four exports on the kernel, Node and Wasmtime at 37 and 41.
+All four isolated compiler mutations are detected, with passing baseline
+and restored runs. The obsolete parser refusal for valid symbolic reuse
+becomes a malformed-clause refusal; the new suite covers the accepted form.
+
+The full battery output, command verdicts, mutation captures and source
+hashes are recorded in dev/validation/stage-c-symbolic-reuse/. Existing
+watchdog tiers and the TRUSTED-LINES bounds are unchanged. PIN-DELTA is
+updated to syntax=67 and parser=209; elab remains 378.
+
+The initial battery hit its 30-minute capture limit after 35 passing
+gates and three watchdog timeouts: heterogeneous whiskering at 120 seconds,
+heterogeneous left Kan at 300 seconds and natural transformations at
+300 seconds. System load reached 110.80. The remaining 23 gates had not
+finished. A scoped recheck verifies 383 unchanged source files against the
+tested snapshot, reuses the 35 passing verdicts and runs the 26 failed or
+unfinished gates with their original predicates and watchdog tiers. Both
+attempts are retained in the validation directory.
+
+The scoped recheck completes all 61 gate verdicts in combination with the
+initial passes. An isolated retry of its four runtime timeouts verifies
+the same 383 source files again and passes symbolic reuse, natural
+transformations and left Kan within the original limits. The aggregate
+result is 59/61 passing gates. Heterogeneous left-Kan runtime still times
+out during kernel evaluation and emission at 110 seconds. TRUSTED-LINES
+remains kernel=4208/3000 and encoder=246/900. The runtime retry captures and
+all four detected compiler mutations are retained with source hashes;
+there is no claim of a passing uninterrupted battery.
+
+## Stage C: symbolic family reuse review (2026-09-16)
+
+L1-1, low, test/template_symbolic_reuse.ml. The cancellation check of the
+raw suite used a poll that returns true at once, so the refusal came from
+the entry poll of Family_poly.compose and covered no path of this slice.
+The check now counts the polls, lets the entry poll and the first
+dependency poll pass, and asserts the Budget_exhausted refusal, that no
+member callback ran, and that the refusal came at the third poll. The
+check count stays 5.
+
+L2-1, low, test/template_symbolic_reuse.ml. The refuse-before-members
+check asserted two conditions that hold by construction, because the
+globals table and the catalog are immutable values. Both are deleted. The
+check keeps the exact refusal and the member-callback condition, and it
+adds a condition a failing call could break: a later successful
+composition on the same catalog returns a schema of arity 1.
+
+L4-3, low, prelude/README.md and dev/M0-STAGE-C-SYMBOLIC-REUSE.md. All
+three functors of the runtime fixture map arrows with the identity
+function, so the two arrow exports keep their value if the composition
+order or an object map changes. The two documents now state that the
+arrow exports pin the accessors only. No fixture, no export and no
+runtime budget moves.
+
+L2-3, low, surface/syntax.ml. The reuse_text definition moved above the
+SC-D5 comment, which again sits directly above decl_text, and its
+nonempty arm is a cons pattern instead of a bare variable arm. The
+printed text does not change.
+
+L3-1, low, SPEC.md. The dependency production of a composed template now
+shows the optional with clause and a production for a binding, which the
+parser and the shipped template already accept.
+
+L3-4, low, ROADMAP.md. The added sentence is re-wrapped under 72 columns,
+which is the width of the file.
+
+L3-2, low, README.md. The sentence that called the bundle the latest full
+battery now states that the record is an aggregate of one interrupted
+capture, one scoped recheck and one isolated retry.
+
+L1-1, low, test/template_symbolic_reuse.ml, round 2. The counting poll of
+round 1 still refused inside the mapping code, because the third poll is
+the entry poll of map_family. The cancellation check now searches for the
+smallest poll allowance that reports the certificate mismatch of
+check_reuse, then asserts that one poll less refuses with budget
+exhaustion, that the allowance is larger than three, and that no member
+callback ran. The check count stays 5, so no pin moves.
+
+Close: round 1 fixed L1-1, L2-1, L4-3, L2-3, L3-1, L3-4 and L3-2, all low.
+Round 2 re-fixed L1-1 and closed GATE-1. Gate verdict is BOUND-ONLY:
+TRUSTED-LINES stays kernel=4208/3000 and encoder=246/900, red until the
+user rules D-A-1. The baseline timeouts on PRELUDE-NATTRANS-RUNTIME and
+PRELUDE-LEFT-KAN-RUNTIME both passed exit 0 in the fix-2 ladder, ruled
+load, not a slice regression. checks.json now carries a review_delta key
+recording the captured and final hashes of the two review-edited paths.
+The close ladder launched after this paragraph is the proof of the round
+2 state; its verdict is recorded in WORK/ladder-SR-close.log and
+WORK/review-SR-report.md, not in this file.
