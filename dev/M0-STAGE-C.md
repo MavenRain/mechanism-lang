@@ -75,7 +75,9 @@ dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md. Closed family reuse,
 identity and repeated composition across separately specialized functors
 follow in dev/M0-STAGE-C-REUSE.md. Symbolic reuse inside groups and a
 shared functor-chain API follow in dev/M0-STAGE-C-SYMBOLIC-REUSE.md.
-Additional shared category APIs and source-type parity remain open.
+Shared natural transformations and horizontal composition follow in
+dev/PORT-UAT-U1-SHARED-NATTRANS.md. Shared left Kan APIs and source-type
+parity remain open.
 The template checking increment removes a repeated symbolic member
 check; see dev/M0-STAGE-C-TEMPLATE-CHECKING.md.  It preserves closed
 rechecking and all existing gate predicates.

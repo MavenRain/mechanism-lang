@@ -44,11 +44,12 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-16
 
-The base is 65faa7e, following committed checked family reuse. The current
-increment shares families inside symbolic template groups and packages a
-functor chain over shared category cores. Universal checking precedes
-closed specialization, including repeated composition and identity.
-See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`.
+The base is a168a09, following committed symbolic family reuse. The
+current increment shares natural transformation APIs across three
+category cores. Identity, vertical composition and both whiskering
+operations interoperate with independent functors. Horizontal composition
+combines the checked whiskering and vertical composition definitions.
+See `dev/PORT-UAT-U1-SHARED-NATTRANS.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -79,7 +80,10 @@ TEMPLATE-REUSE checks closed family sharing and mixed-universe functor
 contracts; TEMPLATE-REUSE-RUNTIME compares repeated composition and
 identity on three hosts at two payloads. TEMPLATE-SYMBOLIC-REUSE checks
 symbolic sharing and mixed-universe category contracts, and its runtime
-gate repeats the four exports through one shared group.
+gate repeats the four exports through one shared group. The
+PRELUDE-SHARED-NATTRANS gates check the shared transformation APIs,
+horizontal composition and six refusals, and compare four exports on
+three hosts at two payloads.
 TRUSTED-LINES stays red at kernel=4208/3000 and encoder=246/900 until
 the user rules D-A-1.
 
@@ -147,8 +151,10 @@ stay under `ports/` (D-UAT-3).
   `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`. Closed family sharing,
   identity and repeated composition between independent functors are
   specified in `dev/M0-STAGE-C-REUSE.md`. Symbolic sharing inside template
-  groups follows in `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. U1 remains open on
-  additional shared category APIs and source-type parity.
+  groups follows in `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. Shared natural
+  transformations and horizontal composition follow in
+  `dev/PORT-UAT-U1-SHARED-NATTRANS.md`. U1 remains open on shared left
+  Kan APIs and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

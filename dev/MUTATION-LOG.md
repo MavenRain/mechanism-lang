@@ -1064,3 +1064,24 @@ Build failures and timeouts do not count as killed mutations.
 The capture is `dev/validation/stage-c-symbolic-reuse/mutations.json`.
 The runtime gate also changes its payload from 37 to 41 and compares all
 four exports on the kernel, Node and Wasmtime.
+
+## Shared natural transformation mutations (2026-09-16)
+
+`dev/shared-nattrans-mutations.py WORK` replays six source controls in
+a small isolated fixture tree using the existing built test binary.
+All six are detected. Baseline and restored suites pass; original
+and copied source hashes match. Timeouts and unrelated failures do
+not count as killed controls.
+
+| Control | Change | Detected by |
+| --- | --- | --- |
+| sharing | Omit the shared middle family | symbolic category mismatch |
+| horizontal-endpoint | Precompose beta with F instead of G | endpoint mismatch |
+| horizontal-order | Reverse the two whiskering arguments | endpoint mismatch |
+| component | Multiply by 3 instead of 2 | horizontalSecond computation |
+| vertical-component | Multiply by 5 instead of adding 5 | verticalValue computation |
+| refusal-control | Replace an invalid endpoint with a valid def | missing refusal |
+
+The full result and unchanged source hashes are retained in
+dev/validation/port-uat-u1-shared-nattrans/mutations.json.
+The runtime payload control also compares 37 and 41 on three hosts.

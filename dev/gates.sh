@@ -252,6 +252,12 @@ leg SLOW PRELUDE-HETEROGENEOUS-NATTRANS '^PRELUDE-HETEROGENEOUS-NATTRANS-OK entr
 leg SLOW PRELUDE-HETEROGENEOUS-WHISKERING \
   '^PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16$' \
   $ROOT/_build/default/test/prelude_heterogeneous_whiskering.exe $ROOT
+leg SUITE PRELUDE-SHARED-NATTRANS \
+  '^PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6$' \
+  $ROOT/_build/default/test/prelude_shared_nattrans.exe $ROOT
+leg SUITE PRELUDE-SHARED-NATTRANS-RUNTIME \
+  '^PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
+  python3 -I $ROOT/test/shared_nattrans_runtime.py
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
   $ROOT/_build/default/test/prelude_heterogeneous_left_kan.exe $ROOT

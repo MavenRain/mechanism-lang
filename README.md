@@ -47,9 +47,11 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The validation record of this slice is an aggregate of one interrupted
-capture, one scoped recheck and one isolated retry. That record and its
-failed checks are in `dev/validation/stage-c-symbolic-reuse/`.
+The current shared natural transformation increment adds kernel and
+runtime gates plus six mutation controls. Its commands, results and
+source hashes are in `dev/validation/port-uat-u1-shared-nattrans/`.
+The preceding symbolic reuse record, including its interrupted capture
+and rechecks, remains in `dev/validation/stage-c-symbolic-reuse/`.
 
 The driver inherits check, axioms, emit, run and spec-count.
 Prenex definitions and individual recursive families use textual binders
@@ -253,8 +255,13 @@ identity over an existing core. See `dev/M0-STAGE-C-REUSE.md` for the exact
 matching rule and limits. The same clause now shares families with earlier
 dependencies inside a symbolic group. `prelude/cat/shared-functor-chain.mech`
 packages independent functors, repeated composition and identity over three
-shared category cores. See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. Stage C remains
-open on additional shared category APIs and checked source-type parity.
+shared category cores. See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`.
+`prelude/cat/shared-nattrans.mech` shares natural transformation identity,
+vertical composition and whiskering over three category cores, then
+defines horizontal composition from the checked operations. Independent
+functors participate through closed family reuse. See
+`dev/PORT-UAT-U1-SHARED-NATTRANS.md`. Stage C remains open on shared left
+Kan APIs and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

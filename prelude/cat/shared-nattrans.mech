@@ -1,0 +1,38 @@
+-- Load category-core, heterogeneous-functor, composable-functors,
+-- heterogeneous-nattrans and heterogeneous-whiskering first.
+poly (u, v, w, z, p, q) group MechSharedNatTrans where
+  specialize MechCategoryCore (u, v) as Source
+  specialize MechCategoryCore (w, z) as Middle
+  specialize MechCategoryCore (p, q) as Target
+  specialize MechHeterogeneousNatTrans (u, v, w, z) as First
+    with (Base_Source := Source, Base_Target := Middle)
+  specialize MechHeterogeneousNatTrans (w, z, p, q) as Second
+    with (Base_Source := Middle, Base_Target := Target)
+  specialize MechHeterogeneousNatTrans (u, v, p, q) as Composite
+    with (Base_Source := Source, Base_Target := Target)
+  specialize MechHeterogeneousWhiskering (u, v, w, z, p, q) as Compose
+    with (Base_Source := Source, Base_Middle := Middle, Base_Target := Target)
+
+-- The component is H(alpha x) followed by beta(G x).
+def hcomp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Source_Category C) ->
+    (d : Middle_Category D) -> (e : Target_Category E) ->
+    (F : First_Base_Functor C D c d) -> (G : First_Base_Functor C D c d) ->
+    (H : Second_Base_Functor D E d e) -> (I : Second_Base_Functor D E d e) ->
+    First_NatTrans C D c d F G -> Second_NatTrans D E d e H I ->
+    Composite_NatTrans C E c e
+      (Compose_Base_compFunctor C D E c d e F H)
+      (Compose_Base_compFunctor C D E c d e G I) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Source_Category C) (d : Middle_Category D) (e : Target_Category E)
+      (F : First_Base_Functor C D c d) (G : First_Base_Functor C D c d)
+      (H : Second_Base_Functor D E d e) (I : Second_Base_Functor D E d e)
+      (alpha : First_NatTrans C D c d F G)
+      (beta : Second_NatTrans D E d e H I) =>
+    Composite_vcomp C E c e
+      (Compose_Base_compFunctor C D E c d e F H)
+      (Compose_Base_compFunctor C D E c d e G H)
+      (Compose_Base_compFunctor C D E c d e G I)
+      (Compose_whiskerLeft C D E c d e H F G alpha)
+      (Compose_whiskerRight C D E c d e H I beta G)
+end

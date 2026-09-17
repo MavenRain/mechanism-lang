@@ -1,0 +1,215 @@
+{
+  "base": "a168a095c00b7fbd418e1e4b58230efa7a8020ed",
+  "recorded_utc": "2026-09-17T06:22:42.402578+00:00",
+  "tools": {
+    "ocaml": "5.2.1",
+    "node": "v23.10.0",
+    "wasmtime": "48.0.1"
+  },
+  "captures": {
+    "build": {
+      "command": "zsh dev/dunecho.sh build",
+      "exit": 0
+    },
+    "runtime": {
+      "command": "python3 -I test/shared_nattrans_runtime.py",
+      "exit": 0
+    },
+    "gates": {
+      "command": "zsh dev/gates.sh",
+      "exit": 1
+    }
+  },
+  "suite": {
+    "command": "_build/default/test/prelude_shared_nattrans.exe ROOT",
+    "capture": "mutation-restored.stdout",
+    "exit": 0,
+    "entries": 591,
+    "families": 11,
+    "computations": 4,
+    "negatives": 6
+  },
+  "runtime": {
+    "cases": 4,
+    "payloads": [
+      37,
+      41
+    ],
+    "hosts": [
+      "kernel",
+      "node",
+      "wasmtime"
+    ]
+  },
+  "gates": {
+    "passed": [
+      "BUILD",
+      "PIN",
+      "PIN-DELTA",
+      "R0-COUNT",
+      "R0-AUDIT",
+      "SUITE-KERNEL",
+      "LEVELS",
+      "PRENEX",
+      "PRENEX-FAMILIES",
+      "PRENEX-GROUPS",
+      "TEMPLATE-COMPOSITION",
+      "TEMPLATE-REUSE",
+      "TEMPLATE-SYMBOLIC-REUSE",
+      "SUITE-SURFACE",
+      "SUITE-WASM",
+      "IMPORT-GRAMMAR",
+      "IMPORT-CLI",
+      "CORPUS-UAT",
+      "PARITY-COUNTS",
+      "PRELUDE",
+      "EQUALITY",
+      "FAMILY-POLY",
+      "PRELUDE-POLY",
+      "FAMILY-MEMBERS",
+      "PRELUDE-TRANSPORT",
+      "PRELUDE-EQUALITY-OPS",
+      "PRELUDE-DEPENDENT",
+      "FAMILY-GROUPS",
+      "PRELUDE-CONGRUENCE",
+      "TEMPLATE-COST",
+      "PRELUDE-CATEGORY",
+      "PRELUDE-FUNCTOR",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "PRELUDE-HETEROGENEOUS-NATTRANS",
+      "PRELUDE-HETEROGENEOUS-WHISKERING",
+      "PRELUDE-SHARED-NATTRANS",
+      "PRELUDE-SHARED-NATTRANS-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+      "PRELUDE-COMPOSABLE-FUNCTORS",
+      "PRELUDE-NATTRANS",
+      "PRELUDE-LEFT-KAN",
+      "EQUALITY-RUNTIME",
+      "PRENEX-RUNTIME",
+      "PRENEX-FAMILIES-RUNTIME",
+      "PRENEX-GROUPS-RUNTIME",
+      "TEMPLATE-COMPOSITION-RUNTIME",
+      "TEMPLATE-REUSE-RUNTIME",
+      "TEMPLATE-SYMBOLIC-REUSE-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME",
+      "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+      "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+      "PRELUDE-CATEGORY-RUNTIME",
+      "PRELUDE-CATEGORY-ACCESSORS",
+      "DEPENDENT-CLOSURE-RUNTIME",
+      "PRELUDE-FUNCTOR-RUNTIME",
+      "PRELUDE-NATTRANS-RUNTIME",
+      "PRELUDE-LEFT-KAN-RUNTIME",
+      "AXIOMS",
+      "MAP-INVENTORY",
+      "DENOMINATORS"
+    ],
+    "failed": [
+      "TRUSTED-LINES"
+    ],
+    "total": 63,
+    "inherited_failure": "TRUSTED-LINES kernel=4208/3000 encoder=246/900"
+  },
+  "source_sha256": {
+    "dev/PORT-UAT-U1-SHARED-NATTRANS.md": "baf4af49b03bd2bc77ba618779379a5b99ec517b91418c91c85a02ab4781b4e8",
+    "dev/gates.sh": "5d75e58cc69e8d5428f0407628cecc545775de5e5b8a7aa2899b64772d0e8d1c",
+    "dev/shared-nattrans-mutations.py": "e2906104790f9c2fc47b0634a21a77260df5344447fc0ad376f478b06822bb37",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "test/dune": "7bc63dc228e89bf780218a564c5491350acc60d7aac35e75032c3c09fa3c1017",
+    "test/fixtures/prelude/shared-nattrans-runtime.mech": "77a7e565eab36b24a5bd95fd522e85453a1389b0a718dbbb506b049ac79c18c6",
+    "test/fixtures/prelude/shared-nattrans.mech": "816849713b94a73e025f22fe6f61ee4fe8cf004094a616f28ca2a0b2b84376a1",
+    "test/neg/shared-nattrans/erased-component.err": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "test/neg/shared-nattrans/erased-component.mech": "65e7681f8642080741457d25a2642953874cde4bfadbd7ab1d23928196e4df79",
+    "test/neg/shared-nattrans/first-sort.err": "a3656f5ab673cd19abea6dba0ed56743a8f41271d1a831fee720088716b0eccd",
+    "test/neg/shared-nattrans/first-sort.mech": "cfda1ceba1c5ad5b102f131dd3910b2d9a068af0897720317b9bdb95435177a8",
+    "test/neg/shared-nattrans/horizontal-endpoint.err": "18352ff0bf1cebd6ee551bc1fda760dfb5772a2139ca433e523131dc75ef4d05",
+    "test/neg/shared-nattrans/horizontal-endpoint.mech": "28a2985befd16ac0cb7cc866e086505c2e44305a127be19a7a1acf995d510c94",
+    "test/neg/shared-nattrans/missing-naturality.err": "72ac0254dcc7c06b80fd8d37dd6f425572c034a1b96f3a6b57840955dd84e2a5",
+    "test/neg/shared-nattrans/missing-naturality.mech": "d006a8ae73d2ae6b05a83802814240b0d75ac9399d36bea16594900e6ce0eb91",
+    "test/neg/shared-nattrans/nominal-equality.err": "e273169164d1444baa9dd5df26c493fa07df3d8857314e6955565ff97d9a98e4",
+    "test/neg/shared-nattrans/nominal-equality.mech": "8b80c4779d8d7f3d580d88e2a0ec0b9cd45c77e35171f09173aeae73317b13ca",
+    "test/neg/shared-nattrans/vertical-middle.err": "333f8d74bb42d276e89186990952f3746a316f7419cc7968d16b3f5d7b5353d3",
+    "test/neg/shared-nattrans/vertical-middle.mech": "a37830e1c137723ab8d1ab52dda97027e2ac0d7fa30778bcf536afa794c3925a",
+    "test/prelude_runtime.ml": "e921465446b8163ac386e3c0569c7248e2b0c6364a73623882fd14026fb1f7ca",
+    "test/prelude_shared_nattrans.ml": "261468138cfa138cd140daee5f50b8d9a242706c3ba46db1a99a69e589feba7f",
+    "test/shared_nattrans_runtime.py": "703fa26fb14824eb1803de1903252fea790366ddfe6af93e7911a3c4bfd9cac6"
+  },
+  "executable_sha256": {
+    "_build/default/test/prelude_shared_nattrans.exe": "62c601f9cb11068c134337b5faa9277607fc39e52432bbe17a846817d19eb81b",
+    "_build/default/test/prelude_runtime.exe": "501eb8c0fcd96e8dba172d72a90033884fa85953de3945224343e827cf3955c4"
+  },
+  "static": {
+    "panicscan": "0 findings",
+    "python_syntax": "2 files parsed",
+    "gate_shell_syntax": "passed",
+    "diff_check": "passed"
+  },
+  "review_delta": {
+    "date": "2026-09-17",
+    "reason": "The review fixes of 2026-09-17 (findings J-1 to J-7) edited these staged sources after the captures were recorded. The captured rows of sources.sha256 stay as recorded and each final hash is the staged blob.",
+    "paths": [
+      {
+        "path": "dev/PORT-UAT-U1-SHARED-NATTRANS.md",
+        "captured": "baf4af49b03bd2bc77ba618779379a5b99ec517b91418c91c85a02ab4781b4e8",
+        "final": "8350911be7e710b9586c64ee8f889b27c4f7cafbd42e141736a113d34c018899"
+      },
+      {
+        "path": "dev/gates.sh",
+        "captured": "5d75e58cc69e8d5428f0407628cecc545775de5e5b8a7aa2899b64772d0e8d1c",
+        "final": "a5ee0960bfb972c1faa30a3814731a34807b0820f1eedd7b202b8d8ec388dbe1"
+      },
+      {
+        "path": "dev/shared-nattrans-mutations.py",
+        "captured": "e2906104790f9c2fc47b0634a21a77260df5344447fc0ad376f478b06822bb37",
+        "final": "e9c9b2c294028e072f07ae5e059635d88ac86e61dbdf1efe93c6f6f658ac4457"
+      },
+      {
+        "path": "test/fixtures/prelude/shared-nattrans-runtime.mech",
+        "captured": "77a7e565eab36b24a5bd95fd522e85453a1389b0a718dbbb506b049ac79c18c6",
+        "final": "be5dadb3a767a2ed22d2a5aa1c30567aefd1a9b5999d0bfd1f9093e10669943c"
+      },
+      {
+        "path": "test/fixtures/prelude/shared-nattrans.mech",
+        "captured": "816849713b94a73e025f22fe6f61ee4fe8cf004094a616f28ca2a0b2b84376a1",
+        "final": "f34349416e0e60798460d12830b49eb9763ac2a6d35aa4259852a2302968dcb8"
+      },
+      {
+        "path": "test/neg/shared-nattrans/first-sort.err",
+        "captured": "a3656f5ab673cd19abea6dba0ed56743a8f41271d1a831fee720088716b0eccd",
+        "final": "89c49869e47c386a2442f3a18218113bffa54b8f5cefaca5c4106e087e5ba79f"
+      },
+      {
+        "path": "test/neg/shared-nattrans/first-sort.mech",
+        "captured": "cfda1ceba1c5ad5b102f131dd3910b2d9a068af0897720317b9bdb95435177a8",
+        "final": "13ff41f17fa5d44433d86743f950344b67e6317a646734b8c09cd00b0287346a"
+      },
+      {
+        "path": "test/neg/shared-nattrans/horizontal-endpoint.err",
+        "captured": "18352ff0bf1cebd6ee551bc1fda760dfb5772a2139ca433e523131dc75ef4d05",
+        "final": "16d5f1ffc52e7ef78dbb58545ad20c8c033ed62ce7e227eeda318b5412a20ed4"
+      },
+      {
+        "path": "test/neg/shared-nattrans/vertical-middle.err",
+        "captured": "333f8d74bb42d276e89186990952f3746a316f7419cc7968d16b3f5d7b5353d3",
+        "final": "db65bb054c5952f4eceddbdb944ddb42f9fb112b353b436b9efe37e99ba6e50c"
+      },
+      {
+        "path": "test/prelude_shared_nattrans.ml",
+        "captured": "261468138cfa138cd140daee5f50b8d9a242706c3ba46db1a99a69e589feba7f",
+        "final": "d69886f30724495d1beac40d0af73c104de93397605c8d201101c8f751b3696b"
+      },
+      {
+        "path": "test/shared_nattrans_runtime.py",
+        "captured": "703fa26fb14824eb1803de1903252fea790366ddfe6af93e7911a3c4bfd9cac6",
+        "final": "71da7d2d1888832a60ef8a22432db2c8130581fd50f34ac4bc73702af6c15413"
+      }
+    ]
+  }
+}

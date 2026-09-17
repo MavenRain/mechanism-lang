@@ -1,0 +1,52 @@
+specialize MechSharedNatTrans (0, 1, 2, 3, 4, 5) as Mixed
+specialize MechSharedNatTrans (5, 4, 3, 2, 1, 0) as Wide
+
+def mixedFirstSort : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    Mixed_First_Base_Functor C D c d -> Mixed_First_Base_Functor C D c d -> Type 3 :=
+  Mixed_First_NatTrans
+def mixedSecondSort : (0 D : Type 2) -> (0 E : Type 4) ->
+    (d : Mixed_Middle_Category D) -> (e : Mixed_Target_Category E) ->
+    Mixed_Second_Base_Functor D E d e -> Mixed_Second_Base_Functor D E d e -> Type 5 :=
+  Mixed_Second_NatTrans
+def mixedCompositeSort : (0 C : Type 0) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (e : Mixed_Target_Category E) ->
+    Mixed_Composite_Base_Functor C E c e -> Mixed_Composite_Base_Functor C E c e -> Type 5 :=
+  Mixed_Composite_NatTrans
+
+-- Whiskering results flow directly into the independently shared API.
+def mixedRight : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) ->
+    (H : Mixed_Second_Base_Functor D E d e) -> (I : Mixed_Second_Base_Functor D E d e) ->
+    Mixed_Second_NatTrans D E d e H I -> (F : Mixed_First_Base_Functor C D c d) ->
+    Mixed_Composite_NatTrans C E c e
+      (Mixed_Compose_Base_compFunctor C D E c d e F H)
+      (Mixed_Compose_Base_compFunctor C D E c d e F I) := Mixed_Compose_whiskerRight
+def mixedLeft : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) -> (H : Mixed_Second_Base_Functor D E d e) ->
+    (F : Mixed_First_Base_Functor C D c d) -> (G : Mixed_First_Base_Functor C D c d) ->
+    Mixed_First_NatTrans C D c d F G -> Mixed_Composite_NatTrans C E c e
+      (Mixed_Compose_Base_compFunctor C D E c d e F H)
+      (Mixed_Compose_Base_compFunctor C D E c d e G H) := Mixed_Compose_whiskerLeft
+def mixedHorizontal : (0 C : Type 0) -> (0 D : Type 2) -> (0 E : Type 4) ->
+    (c : Mixed_Source_Category C) -> (d : Mixed_Middle_Category D) ->
+    (e : Mixed_Target_Category E) ->
+    (F : Mixed_First_Base_Functor C D c d) -> (G : Mixed_First_Base_Functor C D c d) ->
+    (H : Mixed_Second_Base_Functor D E d e) -> (I : Mixed_Second_Base_Functor D E d e) ->
+    Mixed_First_NatTrans C D c d F G -> Mixed_Second_NatTrans D E d e H I ->
+    Mixed_Composite_NatTrans C E c e
+      (Mixed_Compose_Base_compFunctor C D E c d e F H)
+      (Mixed_Compose_Base_compFunctor C D E c d e G I) := Mixed_hcomp
+
+-- The reversed universe tuple carries the same contract.
+def wideHorizontal : (0 C : Type 5) -> (0 D : Type 3) -> (0 E : Type 1) ->
+    (c : Wide_Source_Category C) -> (d : Wide_Middle_Category D) ->
+    (e : Wide_Target_Category E) ->
+    (F : Wide_First_Base_Functor C D c d) -> (G : Wide_First_Base_Functor C D c d) ->
+    (H : Wide_Second_Base_Functor D E d e) -> (I : Wide_Second_Base_Functor D E d e) ->
+    Wide_First_NatTrans C D c d F G -> Wide_Second_NatTrans D E d e H I ->
+    Wide_Composite_NatTrans C E c e
+      (Wide_Compose_Base_compFunctor C D E c d e F H)
+      (Wide_Compose_Base_compFunctor C D E c d e G I) := Wide_hcomp

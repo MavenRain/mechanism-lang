@@ -3488,3 +3488,67 @@ recording the captured and final hashes of the two review-edited paths.
 The close ladder launched after this paragraph is the proof of the round
 2 state; its verdict is recorded in WORK/ladder-SR-close.log and
 WORK/review-SR-report.md, not in this file.
+
+## Stage C / U1: shared natural transformations (2026-09-16)
+
+Base: a168a09. MechSharedNatTrans shares Source, Middle and Target
+category families between the First, Second and Composite natural
+transformation APIs and the existing whiskering group. Independently
+specialized functors interoperate through closed reuse. hcomp is a
+checked source definition: it vertically composes H's map of alpha
+with beta at G's object. Its naturality follows from the existing
+checked proofs.
+
+The build passes with zero errors and warnings. The kernel suite
+checks 591 definitions, 11 families, four computations and six
+precise refusals across three universe assignments. Round trips,
+family certificates and the absence of new trusted entries are
+checked. The runtime gate compares four exports on the kernel, Node
+and Wasmtime at payloads 37 and 41. Its horizontal fixture maps the
+first coordinate, then swaps coordinates, and its vertical fixture
+uses noncommuting operations. Both component values and order are
+observable.
+
+Six mutation controls are detected. Baseline and restored suites
+pass, and canonical and copied source hashes remain unchanged. The
+OCaml static audit has no findings, Python and shell syntax checks
+pass, and diff --check is clean. The full battery passes 62 of 63
+gates, with only the inherited TRUSTED-LINES failure at
+kernel=4208/3000 and encoder=246/900. Both new gates pass under the
+existing SUITE tier. No existing tier or predicate changes.
+
+Commands, outputs, replay results and source hashes are retained in
+dev/validation/port-uat-u1-shared-nattrans/. The design is
+dev/PORT-UAT-U1-SHARED-NATTRANS.md. Stage C and U1 remain open on
+shared left Kan APIs and source-type parity. Kernel, WASM, vendor,
+mapping verdicts and frozen denominators are unchanged.
+
+## Stage C / U1: shared natural transformations review (2026-09-16)
+
+A multi-agent workflow reviewed the slice above on base a168a09.  The slice adds `poly (u, v, w, z, p, q) group MechSharedNatTrans` with member hcomp to prelude/cat/shared-nattrans.mech, two fixtures, six negatives under test/neg/shared-nattrans, the kernel suite test/prelude_shared_nattrans.ml, the runtime harness test/shared_nattrans_runtime.py, the mutation driver dev/shared-nattrans-mutations.py with six controls, and two gates.sh legs.  Four finder lenses ran read-only, four adversarial verifies followed, and a judge kept seven findings.  One builder fixed all seven in round one.  The workflow run halted at its gate stage when its ladder process was killed by a signal.  The review was finished by hand: the fix-1 ladder was relaunched under a signal-proof wrapper, and an independent verifier (opus, high effort) checked the seven fixes read-only.
+
+Findings kept by the judge, all fixed in round one:
+
+J-1 (medium, dev/shared-nattrans-mutations.py): the horizontal controls shared one short kill prefix, so a wrong horizontal mutant could pass as killed.  HORIZONTAL_HEAD is now a 161-character head, and the three controls use three distinct predicates: a shared `mismatch: the term has type (Lan SPi w hom` prefix, horizontal-endpoint = HEAD + `F as self`, horizontal-order = HEAD + `G as self`.
+
+J-2 (medium, test/neg/shared-nattrans/first-sort): the pinned error text did not name the sort failure.  first-sort.mech is now eta-expanded and first-sort.err reads `mismatch: the term has type Type 4 and the expected type is Type 3` (66 characters).
+
+J-3 (low, test/neg/shared-nattrans): the vertical-middle and horizontal-endpoint pins were too short to separate the two failures.  vertical-middle.err is now 148 characters and ends `(Ran SPi w _ C D) H as self`.  horizontal-endpoint.err is now 170 characters and ends `G as self`.
+
+J-4 (low, test/fixtures/prelude/shared-nattrans-runtime.mech): horizontalFirst duplicated another computation.  horizontalFirst now applies the composite to (3, sharedNatInput), the harness guard reads `references = 2 if name in {'horizontalFirst', 'identityValue'} else 1`, and the answers are `[payload, payload + 6, payload + 11, payload]`.  The suite computation pin moved 7 to 37.
+
+J-5 (low, test/fixtures/prelude/shared-nattrans.mech): naturalityWitness was reflexive.  It is now quantified over (0 x : Nat) -> (0 y : Nat) -> (f : Run_Composite_Base_Source_Hom Nat IndexedEnd x y) with body Run_Composite_naturality Nat Point IndexedEnd PairEnd FH GI Horizontal.
+
+J-6 (low, dev/gates.sh:258 and test/shared_nattrans_runtime.py): the 210 s runtime budget was one number for everything.  The budgets are now TOTAL_BUDGET 290, EMIT_BUDGET 240, HOST_BUDGET 30, the expiry text reads `timed out after the {TOTAL_BUDGET} s total budget`, and dev/PORT-UAT-U1-SHARED-NATTRANS.md records the three budgets.
+
+J-7 (low, test/fixtures/prelude/shared-nattrans.mech): the Wide instance was inert.  wideHorizontal now instantiates at C : Type 5, D : Type 3, E : Type 1 and is listed in fixture_members.  The definition count moved 590 to 591 in dev/gates.sh:256, test/prelude_shared_nattrans.ml:11, and the evidence bundle.
+
+V-1 (close-stage correction, this file): the block above still read `checks 590 definitions`.  The close stage moved it to `checks 591 definitions` to match the J-7 count.
+
+Kit pin note: the review kit pins the kernel row as `entries=591`, repinned from 590, because fix J-7 adds a fixture entry and the author's own dev/gates.sh pin moved with it.  The kit bounds FLOOR 60, LEGS 63 and BASELINE_PASS 62 never moved.  The kit's repin tool was not applied because its derived floor of 58 would have moved a bound for machine load.
+
+Evidence delta: the seven fixes edited 11 of the 27 hashed sources after the captures were recorded, namely dev/PORT-UAT-U1-SHARED-NATTRANS.md, dev/gates.sh, dev/shared-nattrans-mutations.py, the two fixtures, three negative files, test/prelude_shared_nattrans.ml and test/shared_nattrans_runtime.py.  The captured rows of the evidence sources.sha256 stay as recorded.  The checks.json review_delta key lists each path with its captured and final hash, and the evidence README ends with one sentence that points to it.  The fix-1 ladder's source check read ok=27 bad=0 through that delta.
+
+Ladders: the baseline ladder, before the fixes, exited 0 at 07:55Z on 2026-09-17 and passed 60 of 63 legs; it failed the inherited TRUSTED-LINES leg, plus TEMPLATE-REUSE-RUNTIME and PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME on a timeout at load 35.  TEMPLATE-REUSE-RUNTIME was rechecked by id and cleared.  Mutation replay passed with six of six killed.  The kit verdict read `PASS raw=60 cleared=1 floor=60`.  The fix-1 ladder, after the fixes, exited 0 at 10:24Z on 2026-09-17 and passed 62 of 63 legs, failing only the inherited TRUSTED-LINES leg.  The kernel row read `PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6`, the runtime row read `PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1`, sources read ok=27 bad=0, and mutation replay passed with six of six killed.  The kit verdict read `PASS raw=62 cleared=0 floor=60`, GREEN.  The close ladder runs after this block is written.  Its verdict is in the review kit report and in the commit message.
+
+The inherited TRUSTED-LINES failure predates this slice and is not a regression of this review.

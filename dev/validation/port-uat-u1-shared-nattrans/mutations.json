@@ -1,0 +1,200 @@
+{
+  "passed": true,
+  "killed": 6,
+  "controls": 6,
+  "sources_unchanged": true,
+  "source_sha256": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "test/fixtures/prelude/shared-nattrans.mech": "816849713b94a73e025f22fe6f61ee4fe8cf004094a616f28ca2a0b2b84376a1",
+    "test/fixtures/prelude/shared-nattrans-runtime.mech": "77a7e565eab36b24a5bd95fd522e85453a1389b0a718dbbb506b049ac79c18c6",
+    "test/neg/shared-nattrans/erased-component.err": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "test/neg/shared-nattrans/erased-component.mech": "65e7681f8642080741457d25a2642953874cde4bfadbd7ab1d23928196e4df79",
+    "test/neg/shared-nattrans/first-sort.err": "a3656f5ab673cd19abea6dba0ed56743a8f41271d1a831fee720088716b0eccd",
+    "test/neg/shared-nattrans/first-sort.mech": "cfda1ceba1c5ad5b102f131dd3910b2d9a068af0897720317b9bdb95435177a8",
+    "test/neg/shared-nattrans/horizontal-endpoint.err": "18352ff0bf1cebd6ee551bc1fda760dfb5772a2139ca433e523131dc75ef4d05",
+    "test/neg/shared-nattrans/horizontal-endpoint.mech": "28a2985befd16ac0cb7cc866e086505c2e44305a127be19a7a1acf995d510c94",
+    "test/neg/shared-nattrans/missing-naturality.err": "72ac0254dcc7c06b80fd8d37dd6f425572c034a1b96f3a6b57840955dd84e2a5",
+    "test/neg/shared-nattrans/missing-naturality.mech": "d006a8ae73d2ae6b05a83802814240b0d75ac9399d36bea16594900e6ce0eb91",
+    "test/neg/shared-nattrans/nominal-equality.err": "e273169164d1444baa9dd5df26c493fa07df3d8857314e6955565ff97d9a98e4",
+    "test/neg/shared-nattrans/nominal-equality.mech": "8b80c4779d8d7f3d580d88e2a0ec0b9cd45c77e35171f09173aeae73317b13ca",
+    "test/neg/shared-nattrans/vertical-middle.err": "333f8d74bb42d276e89186990952f3746a316f7419cc7968d16b3f5d7b5353d3",
+    "test/neg/shared-nattrans/vertical-middle.mech": "a37830e1c137723ab8d1ab52dda97027e2ac0d7fa30778bcf536afa794c3925a"
+  },
+  "suite_source_sha256": "261468138cfa138cd140daee5f50b8d9a242706c3ba46db1a99a69e589feba7f",
+  "executable_sha256": "62c601f9cb11068c134337b5faa9277607fc39e52432bbe17a846817d19eb81b",
+  "rows": [
+    {
+      "id": "baseline",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 60.087,
+      "stdout_sha256": "8b82af68678330fb521a3ceeda8a95a3193a62b0bf360460b95c229878a56da5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true,
+      "stdout_bytes": 78,
+      "stdout_truncated": false,
+      "stdout_capture_sha256": "8b82af68678330fb521a3ceeda8a95a3193a62b0bf360460b95c229878a56da5",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "sharing",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 17.798,
+      "stdout_sha256": "562e804e25146a85db05536bbf3e0482e8182c22bb951fbaa9da85887d297d3e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/shared-nattrans.mech",
+      "before_sha256": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+      "mutated_sha256": "220f92b895a974d08fa002f6c60c42d1a8e407bc505dd1376ad1667eb95561be",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL mismatch: the term has type",
+      "killed": true,
+      "stdout_bytes": 5663,
+      "stdout_truncated": true,
+      "stdout_capture_sha256": "45d959f521f42a31e547d73d2f5393fdc355fdcac624934540b14467f54a544d",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "horizontal-endpoint",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 21.41,
+      "stdout_sha256": "4f4800b9ace1a362cf62b6efa5e525df064dcbfd3f08a038b07dcaa05289965a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/shared-nattrans.mech",
+      "before_sha256": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+      "mutated_sha256": "aa4babc97dea7c8b2c48952ee59e26bd4dff2b3b511d45f539353dd934a67b01",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL mismatch: the term has type",
+      "killed": true,
+      "stdout_bytes": 485084,
+      "stdout_truncated": true,
+      "stdout_capture_sha256": "5343847998bf4c39379d20fc3f456c4d98130484a502248f8d95ce1072f48f8a",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "horizontal-order",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 22.819,
+      "stdout_sha256": "852abfcaf536b8dcd38c3c14c816f16fd59c473a930e4fc2d3cd2652b4583403",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/shared-nattrans.mech",
+      "before_sha256": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+      "mutated_sha256": "59221dc838680331019090402a91bfc9e09652564b299b4d119d9261effd5f3e",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL mismatch: the term has type",
+      "killed": true,
+      "stdout_bytes": 485084,
+      "stdout_truncated": true,
+      "stdout_capture_sha256": "39274095eaa3930afe75bafdda1c2c1dee91587cb7d0228dc2a0784d97143d7d",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "component",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 45.504,
+      "stdout_sha256": "f19534cc9d8618dde94803b7cfe8fcfa585a75d514b072cda4fb13de297d1a32",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/shared-nattrans-runtime.mech",
+      "before_sha256": "77a7e565eab36b24a5bd95fd522e85453a1389b0a718dbbb506b049ac79c18c6",
+      "mutated_sha256": "917cc22975280ab596a1629ee4a31cfbe232046c8d461c4272f12cb8f750fa29",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL wrong computation: horizontalSecond",
+      "killed": true,
+      "stdout_bytes": 65,
+      "stdout_truncated": false,
+      "stdout_capture_sha256": "f19534cc9d8618dde94803b7cfe8fcfa585a75d514b072cda4fb13de297d1a32",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "vertical-component",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 63.883,
+      "stdout_sha256": "2131c10d53b12f93fef89848a4a18f6da864d32e3498b6988dc46d5316072fe7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/shared-nattrans-runtime.mech",
+      "before_sha256": "77a7e565eab36b24a5bd95fd522e85453a1389b0a718dbbb506b049ac79c18c6",
+      "mutated_sha256": "9283c4cd0d0ad1b99bdb496811d84abf50e2968cca26a5ed8eaabc2dc8f5e11e",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL wrong computation: verticalValue",
+      "killed": true,
+      "stdout_bytes": 62,
+      "stdout_truncated": false,
+      "stdout_capture_sha256": "2131c10d53b12f93fef89848a4a18f6da864d32e3498b6988dc46d5316072fe7",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "refusal-control",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 50.565,
+      "stdout_sha256": "a54b96e6b647382567647e347f36275a2a69da17206069959ac4c7ad8a3db5ed",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/neg/shared-nattrans/horizontal-endpoint.mech",
+      "before_sha256": "28a2985befd16ac0cb7cc866e086505c2e44305a127be19a7a1acf995d510c94",
+      "mutated_sha256": "2221a1bec92a2c0650a56e280db2aac899548de140416c9557669a5e7af49d95",
+      "expected": "PRELUDE-SHARED-NATTRANS-FAIL horizontal-endpoint: expected refusal",
+      "killed": true,
+      "stdout_bytes": 67,
+      "stdout_truncated": false,
+      "stdout_capture_sha256": "a54b96e6b647382567647e347f36275a2a69da17206069959ac4c7ad8a3db5ed",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "restored",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 66.103,
+      "stdout_sha256": "8b82af68678330fb521a3ceeda8a95a3193a62b0bf360460b95c229878a56da5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true,
+      "stdout_bytes": 78,
+      "stdout_truncated": false,
+      "stdout_capture_sha256": "8b82af68678330fb521a3ceeda8a95a3193a62b0bf360460b95c229878a56da5",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stderr_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

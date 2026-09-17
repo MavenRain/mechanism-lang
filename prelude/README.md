@@ -320,6 +320,37 @@ extensions at independent universe levels.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-NATTRANS.md` for the signatures,
 universe rule and validation contract.
 
+## Shared natural transformations
+
+Load category-core, heterogeneous-functor, composable-functors,
+heterogeneous-nattrans and heterogeneous-whiskering, then
+`cat/shared-nattrans.mech`:
+
+```text
+specialize MechSharedNatTrans (0, 1, 2, 3, 4, 5) as N
+specialize MechHeterogeneousFunctor (0, 1, 2, 3) as External
+  with (Source := N_Source, Target := N_Middle)
+```
+
+Exactly three category families are introduced. `N_First_`,
+`N_Second_` and `N_Composite_` expose NatTrans, natApp, naturality,
+idNat and vcomp. `N_Compose_` exposes both whiskering operations,
+and `N_Compose_Base_compFunctor` composes the shared functors.
+External_Functor works directly as a First functor.
+
+`N_hcomp C D E c d e F G H I alpha beta` horizontally composes
+alpha from F to G and beta from H to I. It returns a Composite
+transformation from H after F to I after G. Its component at x maps
+alpha(x) through H, then composes with beta(G(x)). Its naturality
+proof is built from the checked whiskering and vertical composition
+proofs. See `dev/PORT-UAT-U1-SHARED-NATTRANS.md`.
+
+PRELUDE-SHARED-NATTRANS checks mixed universes, exact inventories,
+runtime computations and six refusals. Its runtime gate compares
+four exports at payloads 37 and 41 on the kernel, Node and Wasmtime.
+The horizontal fixture maps one coordinate of a pair, then swaps
+the coordinates, making arrow mapping and order observable.
+
 ## Heterogeneous whiskering
 
 Load `cat/category-core.mech`, `cat/composable-functors.mech` and

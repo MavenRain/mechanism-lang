@@ -1,0 +1,115 @@
+mu Point : Type 1 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechSharedNatTrans (0, 1, 0, 0, 1, 0) as Run
+specialize MechHeterogeneousFunctor (0, 1, 0, 0) as External
+  with (Source := Run_Source, Target := Run_Middle)
+def sharedNatInput : Nat := 37
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Run_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * ((0 A : Type 0) -> Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (0 A : Type 0) (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+          (g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (0 A : Type 0) (n : Nat) => g.2 A (f.2 A n)))),
+     ((fun (0 x : Nat) (0 y : Nat)
+           (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat)
+            (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 h : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))))
+def End : Run_Middle_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+def PairEnd : Run_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat * Nat) -> Nat * Nat),
+   ((fun (0 x : Point) (n : Nat * Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat * Nat) -> Nat * Nat) (g : (Nat * Nat) -> Nat * Nat)
+          (n : Nat * Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat)
+            (0 h : (Nat * Nat) -> Nat * Nat) => categoryRefl))))))
+
+-- These functors originate outside the natural transformation group.
+def Constant : Nat -> External_Functor Nat Nat IndexedEnd End :=
+  fun (object : Nat) =>
+    ((fun (x : Nat) => object),
+     ((fun (0 x : Nat) (0 y : Nat)
+           (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (n : Nat) => n),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Left : Run_Second_Base_Functor Nat Point End PairEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (f n.1, n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Right : Run_Second_Base_Functor Nat Point End PairEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (n.1, f n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def components : Nat -> Nat -> Nat :=
+  fun (x : Nat) (n : Nat) => natAdd (natMul n 2) x
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Middle (Nat -> Nat) (components y) (components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Middle (Nat -> Nat) (components right) (components x) with
+    | same => categoryRefl
+def Alpha : Run_First_NatTrans Nat Nat IndexedEnd End (Constant 0) (Constant 1) :=
+  (components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+     componentLaw x y f.1))
+def Beta : Run_Second_NatTrans Nat Point End PairEnd Left Right :=
+  ((fun (x : Nat) (n : Nat * Nat) => (n.2, n.1)),
+   (fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => categoryRefl))
+def Gamma : Run_First_NatTrans Nat Nat IndexedEnd End (Constant 1) (Constant 2) :=
+  ((fun (x : Nat) (n : Nat) => natAdd n 5),
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))
+def FH : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd :=
+  Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left
+def GI : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd :=
+  Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right
+def Horizontal : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd FH GI :=
+  Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta
+def Vertical : Run_First_NatTrans Nat Nat IndexedEnd End (Constant 0) (Constant 2) :=
+  Run_First_vcomp Nat Nat IndexedEnd End (Constant 0) (Constant 1) (Constant 2) Alpha Gamma
+def Identity : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd FH FH :=
+  Run_Composite_idNat Nat Point IndexedEnd PairEnd FH
+def horizontalFirst : Nat :=
+  ((Run_Composite_natApp Nat Point IndexedEnd PairEnd FH GI Horizontal sharedNatInput)
+     (3, sharedNatInput)).1
+def horizontalSecond : Nat :=
+  ((Run_Composite_natApp Nat Point IndexedEnd PairEnd FH GI Horizontal sharedNatInput) (3, 7)).2
+def verticalValue : Nat :=
+  Run_First_natApp Nat Nat IndexedEnd End (Constant 0) (Constant 2) Vertical sharedNatInput 3
+def identityValue : Nat :=
+  ((Run_Composite_natApp Nat Point IndexedEnd PairEnd FH FH Identity sharedNatInput) (sharedNatInput, 7)).1
+def naturalityWitness : (0 x : Nat) -> (0 y : Nat) ->
+    (f : Run_Composite_Base_Source_Hom Nat IndexedEnd x y) ->
+    Run_Target (Run_Composite_Base_Target_Hom Point PairEnd (FH.1 x) (GI.1 y))
+      (Run_Composite_Base_Target_comp Point PairEnd (FH.1 x) (FH.1 y) (GI.1 y)
+        (Run_Composite_Base_functorMap Nat Point IndexedEnd PairEnd FH x y f)
+        (Horizontal.1 y))
+      (Run_Composite_Base_Target_comp Point PairEnd (FH.1 x) (GI.1 x) (GI.1 y)
+        (Horizontal.1 x)
+        (Run_Composite_Base_functorMap Nat Point IndexedEnd PairEnd GI x y f)) :=
+  Run_Composite_naturality Nat Point IndexedEnd PairEnd FH GI Horizontal
