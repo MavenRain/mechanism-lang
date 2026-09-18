@@ -5,7 +5,7 @@ let kernel result = Result.map_error Error.to_string result
 let require message condition = if condition then Ok () else Error message
 let io = Mechanism_import.Io.attempt
 
-let run source directory exports =
+let run ~reachable source directory exports =
   let* text = io (fun () -> In_channel.with_open_bin source In_channel.input_all) in
   let* globals, rows = kernel (Mechanism_surface.Elab.check_in Global.initial text) in
   let* () = require "runtime fixture declares axioms"
@@ -19,7 +19,8 @@ let run source directory exports =
     let* answer = match literal with
       | Literal.LInt n -> Ok (Bignum.to_string n)
       | Literal.LString _ -> Error ("not a natural number: " ^ export) in
-    let* bytes = kernel (Mechanism_wasm.Emit.program Global.initial erased ~export) in
+    let* selected = if reachable then Runtime_slice.select erased ~export else Ok erased in
+    let* bytes = kernel (Mechanism_wasm.Emit.program Global.initial selected ~export) in
     let* () = io (fun () -> Out_channel.with_open_bin
       (Filename.concat directory (export ^ ".wasm"))
       (fun channel -> Out_channel.output_string channel bytes)) in
@@ -27,8 +28,12 @@ let run source directory exports =
     Ok ()) (Ok ()) exports
 
 let main arguments = match arguments with
-  | source :: directory :: first :: rest -> run source directory (first :: rest)
-  | [] | [_] | [_; _] -> Error "usage: prelude_runtime SOURCE DIRECTORY EXPORT..."
+  | ["--slice-self-test"] -> Runtime_slice.self_test ()
+  | "--reachable" :: source :: directory :: first :: rest ->
+      run ~reachable:true source directory (first :: rest)
+  | "--reachable" :: _ -> Error "usage: prelude_runtime [--reachable] SOURCE DIRECTORY EXPORT..."
+  | source :: directory :: first :: rest -> run ~reachable:false source directory (first :: rest)
+  | [] | [_] | [_; _] -> Error "usage: prelude_runtime [--reachable] SOURCE DIRECTORY EXPORT..."
 
 let () =
   let arguments = Array.to_list Sys.argv |> List.to_seq |> Seq.drop 1 |> List.of_seq in

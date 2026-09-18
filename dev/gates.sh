@@ -258,6 +258,12 @@ leg SUITE PRELUDE-SHARED-NATTRANS \
 leg SUITE PRELUDE-SHARED-NATTRANS-RUNTIME \
   '^PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_nattrans_runtime.py
+leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
+  '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
+  $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT
+leg CATEGORY PRELUDE-SHARED-LEFT-KAN-RUNTIME \
+  '^PRELUDE-SHARED-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1$' \
+  python3 -I $ROOT/test/shared_left_kan_runtime.py
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
   $ROOT/_build/default/test/prelude_heterogeneous_left_kan.exe $ROOT

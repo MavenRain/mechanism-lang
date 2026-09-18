@@ -404,6 +404,29 @@ factorization agrees with `L_Base_whiskerRight`.
 Both PRELUDE-HETEROGENEOUS-LEFT-KAN gates check this API and four
 exports on three hosts at two payloads. Ordinary specializations
 retain distinct nominal families. Closed family reuse and functor
-identity/composition are described above. Shared natural-transformation
-and Kan-extension convenience APIs and source-type parity remain open.
+identity/composition are described above. Shared natural transformation
+and left Kan APIs are described here; transformation equations and
+source-type parity remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
+
+## Shared left Kan extensions
+
+Load the shared natural transformation prerequisites listed above,
+then `cat/heterogeneous-left-kan.mech` and `cat/shared-left-kan.mech`.
+Specialize `MechSharedLeftKan (u, v, w, z, p, q) as L` for the
+source, middle and target object/hom universe pairs. The only category
+families are `L_Base_Source`, `L_Base_Middle` and `L_Base_Target`.
+
+`L_Base_` supplies the shared natural transformation API. `L_Lan_`
+supplies left Kan extensions, solvers, factorization and uniqueness.
+`L_unitNat` presents the unit as a shared Composite transformation;
+`L_descNat` presents the chosen mediator as a shared Second
+transformation. Independent functors and transformations join by
+reusing those same three families.
+
+The first PRELUDE-SHARED-LEFT-KAN gate checks the mixed-universe
+contracts, the independent clients and the seven refusals on the
+kernel. The second gate compares the six computations on the kernel,
+Node and Wasmtime at two payloads. The runtime client
+chooses two distinct mediators and composes them in an observable
+order. See `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md` for the full API.

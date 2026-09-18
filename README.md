@@ -47,9 +47,11 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The current shared natural transformation increment adds kernel and
-runtime gates plus six mutation controls. Its commands, results and
-source hashes are in `dev/validation/port-uat-u1-shared-nattrans/`.
+The current shared left Kan increment adds kernel and runtime gates
+plus five mutation controls. Its commands, results and source hashes
+are in `dev/validation/port-uat-u1-shared-left-kan/`. The preceding
+shared transformation record remains in
+`dev/validation/port-uat-u1-shared-nattrans/`.
 The preceding symbolic reuse record, including its interrupted capture
 and rechecks, remains in `dev/validation/stage-c-symbolic-reuse/`.
 
@@ -260,8 +262,12 @@ shared category cores. See `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`.
 vertical composition and whiskering over three category cores, then
 defines horizontal composition from the checked operations. Independent
 functors participate through closed family reuse. See
-`dev/PORT-UAT-U1-SHARED-NATTRANS.md`. Stage C remains open on shared left
-Kan APIs and checked source-type parity.
+`dev/PORT-UAT-U1-SHARED-NATTRANS.md`.
+`prelude/cat/shared-left-kan.mech` connects this shared transformation
+API to left Kan extensions, with unit and mediator accessors that
+accept independently specialized functors and transformations. See
+`dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. Stage C remains open on
+transformation equations and checked source-type parity.
 Checked template composition supplies the source foundation.  A `poly (...) group NAME where ... end` block imports preceding
 family templates at symbolic universe arguments, then checks its
 members.  Closed specialization prefixes and rechecks the complete

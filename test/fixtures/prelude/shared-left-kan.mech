@@ -1,0 +1,164 @@
+specialize MechSharedLeftKan (0, 1, 2, 3, 4, 5) as Mixed
+
+def MixedSourceHom : (0 J : Type 0) ->
+    (c : Mixed_Base_Source_Category J) ->
+    (0 x : J) -> (0 y : J) -> Type 1 := Mixed_Base_Source_Hom
+
+def MixedMiddleHom : (0 C : Type 2) ->
+    (c : Mixed_Base_Middle_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 3 := Mixed_Base_Middle_Hom
+
+def MixedTargetHom : (0 D : Type 4) ->
+    (c : Mixed_Base_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 5 := Mixed_Base_Target_Hom
+
+def MixedCoconeSort : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (G : Mixed_Base_Second_Base_Functor C D c d) -> Type 5 := Mixed_Lan_LanCocone
+def MixedSolutionSort : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (H : Mixed_Base_Second_Base_Functor C D c d) -> (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    (eta : Mixed_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Mixed_Lan_LanCocone J C D j c d K F G) ->
+    Type 5 := Mixed_Lan_LanSolution
+def MixedTailSort : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (H : Mixed_Base_Second_Base_Functor C D c d) -> Type 5 := Mixed_Lan_LanTail
+def MixedExtensionSort : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    Type 5 := Mixed_Lan_LeftKanExtension
+
+def MixedCoconeContract : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    Mixed_Base_Composite_NatTrans J D j d F (Mixed_Base_Compose_Base_compFunctor J C D j c d K G) ->
+    Mixed_Lan_LanCocone J C D j c d K F G :=
+  fun (0 J : Type 0) (0 C : Type 2) (0 D : Type 4)
+    (j : Mixed_Base_Source_Category J) (c : Mixed_Base_Middle_Category C)
+    (d : Mixed_Base_Target_Category D) (K : Mixed_Base_First_Base_Functor J C j c)
+    (F : Mixed_Base_Composite_Base_Functor J D j d)
+      (G : Mixed_Base_Second_Base_Functor C D c d)
+      (alpha : Mixed_Base_Composite_NatTrans J D j d F (Mixed_Base_Compose_Base_compFunctor J C D j c d K G)) => alpha
+def MixedFactorContract : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (H : Mixed_Base_Second_Base_Functor C D c d) -> (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    (eta : Mixed_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Mixed_Lan_LanCocone J C D j c d K F G) ->
+    (s : Mixed_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (x : J) -> Mixed_Base_Target (Mixed_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (Mixed_Base_Target_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+        (eta.1 x)
+        ((Mixed_Base_Compose_whiskerRight J C D j c d H G
+          (Mixed_Lan_lanDesc J C D j c d K F H G eta alpha s) K).1 x))
+      (alpha.1 x) := Mixed_Lan_lanFac
+def MixedUniqueContract : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (H : Mixed_Base_Second_Base_Functor C D c d) -> (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    (eta : Mixed_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Mixed_Lan_LanCocone J C D j c d K F G) ->
+    (s : Mixed_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : Mixed_Base_Second_NatTrans C D c d H G) ->
+    (beta2 : Mixed_Base_Second_NatTrans C D c d H G) ->
+    Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta1 ->
+    Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta2 ->
+    (y : C) -> Mixed_Base_Target (Mixed_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (Mixed_Base_Second_natApp C D c d H G beta1 y)
+      (Mixed_Base_Second_natApp C D c d H G beta2 y) := Mixed_Lan_desc_unique
+
+specialize MechSharedLeftKan (5, 4, 3, 2, 1, 0) as Wide
+
+def WideSourceHom : (0 J : Type 5) ->
+    (c : Wide_Base_Source_Category J) ->
+    (0 x : J) -> (0 y : J) -> Type 4 := Wide_Base_Source_Hom
+
+def WideMiddleHom : (0 C : Type 3) ->
+    (c : Wide_Base_Middle_Category C) ->
+    (0 x : C) -> (0 y : C) -> Type 2 := Wide_Base_Middle_Hom
+
+def WideTargetHom : (0 D : Type 1) ->
+    (c : Wide_Base_Target_Category D) ->
+    (0 x : D) -> (0 y : D) -> Type 0 := Wide_Base_Target_Hom
+
+def WideCoconeSort : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Second_Base_Functor C D c d) -> Type 5 := Wide_Lan_LanCocone
+def WideSolutionSort : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Second_Base_Functor C D c d) -> (G : Wide_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Lan_LanCocone J C D j c d K F G) ->
+    Type 3 := Wide_Lan_LanSolution
+def WideTailSort : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Second_Base_Functor C D c d) -> Type 5 := Wide_Lan_LanTail
+def WideExtensionSort : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    Type 5 := Wide_Lan_LeftKanExtension
+
+def WideCoconeContract : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Second_Base_Functor C D c d) ->
+    Wide_Base_Composite_NatTrans J D j d F (Wide_Base_Compose_Base_compFunctor J C D j c d K G) ->
+    Wide_Lan_LanCocone J C D j c d K F G :=
+  fun (0 J : Type 5) (0 C : Type 3) (0 D : Type 1)
+    (j : Wide_Base_Source_Category J) (c : Wide_Base_Middle_Category C)
+    (d : Wide_Base_Target_Category D) (K : Wide_Base_First_Base_Functor J C j c)
+    (F : Wide_Base_Composite_Base_Functor J D j d)
+      (G : Wide_Base_Second_Base_Functor C D c d)
+      (alpha : Wide_Base_Composite_NatTrans J D j d F (Wide_Base_Compose_Base_compFunctor J C D j c d K G)) => alpha
+def WideFactorContract : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Second_Base_Functor C D c d) -> (G : Wide_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Lan_LanCocone J C D j c d K F G) ->
+    (s : Wide_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (x : J) -> Wide_Base_Target (Wide_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (Wide_Base_Target_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+        (eta.1 x)
+        ((Wide_Base_Compose_whiskerRight J C D j c d H G
+          (Wide_Lan_lanDesc J C D j c d K F H G eta alpha s) K).1 x))
+      (alpha.1 x) := Wide_Lan_lanFac
+def WideUniqueContract : (0 J : Type 5) -> (0 C : Type 3) -> (0 D : Type 1) ->
+    (j : Wide_Base_Source_Category J) -> (c : Wide_Base_Middle_Category C) ->
+    (d : Wide_Base_Target_Category D) -> (K : Wide_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Second_Base_Functor C D c d) -> (G : Wide_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Lan_LanCocone J C D j c d K F G) ->
+    (s : Wide_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : Wide_Base_Second_NatTrans C D c d H G) ->
+    (beta2 : Wide_Base_Second_NatTrans C D c d H G) ->
+    Wide_Lan_LanFactor J C D j c d K F H G eta alpha beta1 ->
+    Wide_Lan_LanFactor J C D j c d K F H G eta alpha beta2 ->
+    (y : C) -> Wide_Base_Target (Wide_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (Wide_Base_Second_natApp C D c d H G beta1 y)
+      (Wide_Base_Second_natApp C D c d H G beta2 y) := Wide_Lan_desc_unique
+
+specialize MechCategoryCore (0, 0) as EqualSource
+specialize MechCategoryCore (0, 0) as EqualMiddle

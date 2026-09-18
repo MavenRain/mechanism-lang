@@ -1,0 +1,2 @@
+def bad : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Mediator.1 0) (OtherCocone.1 0) := factorWitness 0

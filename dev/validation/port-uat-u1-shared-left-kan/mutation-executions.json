@@ -1,0 +1,140 @@
+{
+  "passed": false,
+  "killed": 4,
+  "controls": 5,
+  "sources_unchanged": true,
+  "source_sha256": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "prelude/cat/shared-left-kan.mech": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+    "test/fixtures/prelude/shared-left-kan.mech": "3788c9b21d4d01e4d0577daece443730118d63ccfdc6e41301b7d6fdbcbf26b8",
+    "test/fixtures/prelude/shared-left-kan-runtime.mech": "37fff03f6b286fd2bb70c502d0eb860634d7d906298e5871daa22a6c3e54d838",
+    "test/neg/shared-left-kan/cocone-endpoint.err": "1f5eeb0ecffcc1b576ad91efef7333cebbb97940cc175345c9be834c95586978",
+    "test/neg/shared-left-kan/cocone-endpoint.mech": "f1f1606622060075a1f55cc53345b6d163b90ba94d5546f79caedc7dc6d55931",
+    "test/neg/shared-left-kan/extension-sort.err": "c41477346302d625f0d038709d46cef6a71319a5456f3a3d2e2b68138f76a681",
+    "test/neg/shared-left-kan/extension-sort.mech": "65aa63da0a1b7439ea14d63b3826c60c6b09192e74e7d91ac21b1a1eafd8d48d",
+    "test/neg/shared-left-kan/missing-factor.err": "51a28afff261be908c1d69edce40d8863bdf48181a0a78a49b1931afa6eade37",
+    "test/neg/shared-left-kan/missing-factor.mech": "b678de57cb7ed20f973efce3146ec0428f1ac3ca6df068af4423f5f1ca0f35b8",
+    "test/neg/shared-left-kan/missing-uniqueness.err": "1b026e1f3429385628de56ca4d2ef208e0a1231d7039a5322ce3372e02214a5c",
+    "test/neg/shared-left-kan/missing-uniqueness.mech": "5e826efbeab2e901335960cd73f68bc17afdf59d6c0da3f66e308a499f64464f",
+    "test/neg/shared-left-kan/nominal-category.err": "9d0b2bbe9f3f1b03e2c014e75d9e0ddf84a221b6467a19530532cca8c896306c",
+    "test/neg/shared-left-kan/nominal-category.mech": "0a9b1dcb12a1e39c1c311f58d59e91191b9e54a7665a78465671dc42d4c00c32",
+    "test/neg/shared-left-kan/uniqueness-endpoint.err": "72247112857382ffb96460d0a67807a6b1cd5c3131b909c2952d521b46349302",
+    "test/neg/shared-left-kan/uniqueness-endpoint.mech": "1cf357bfbef730a05a29a4abbd12d3f7a66a521bf2eb91fc2620b39800099777",
+    "test/neg/shared-left-kan/wrong-factor.err": "087477f9d282b49af80624b2d44a5bf7bd896ad6dbbda0cf7d53478d5d35cf80",
+    "test/neg/shared-left-kan/wrong-factor.mech": "474a185d587f4ad328da3eb48f2b8463aa7f4d32e12ab62b93b9bcc33e4a6fca"
+  },
+  "suite_source_sha256": "4ab81c10934a3e04fd412ef4857db15d022ad261e38814f5e50c991f70f24c5c",
+  "executable_sha256": "29c7b7956dbcc331ddd8a68b0dc9348a9aac7b7d617ca414ced2dd7e368e2f43",
+  "rows": [
+    {
+      "id": "baseline",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 327.353,
+      "stdout_sha256": "307df73115f253d9bb5a77b4966e6c5319d91fd941c9ef4bbadf2f93eddbbb8e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    },
+    {
+      "id": "sharing",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 434.188,
+      "stdout_sha256": "88f810cd508c0faf0a5b168fae91aac8fada06f7ad416c99f035826edea0115a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/shared-left-kan.mech",
+      "before_sha256": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+      "mutated_sha256": "5e22592b315115e35c36df87ac9eec43491300048d3550ba6b7d124e9bf8f036",
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL mismatch: the term has type (Ran SPi 0 J",
+      "killed": false
+    },
+    {
+      "id": "unit-accessor",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 174.485,
+      "stdout_sha256": "d4c9d8c99bc88ce198d79dc77f5e121f9164fbaa6744031119388eadd99d4a9a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/shared-left-kan.mech",
+      "before_sha256": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+      "mutated_sha256": "a0c81c0eed9be50bb917c2b9936ece0852e2e24f6541eb3345d3bd57950c30eb",
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL mismatch: the term has type (Ran SPi 0 J",
+      "killed": true
+    },
+    {
+      "id": "cocone-component",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 189.09,
+      "stdout_sha256": "077aa7e1159afdaacbe516267db738b73bf4be079ef0a00ab105ffaea19af863",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/shared-left-kan-runtime.mech",
+      "before_sha256": "37fff03f6b286fd2bb70c502d0eb860634d7d906298e5871daa22a6c3e54d838",
+      "mutated_sha256": "14b02c38d1e1f4a7221bf9d8ba1bed8ea7b40ca990786f389f9bf72b7c99cdb9",
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL wrong computation: lanDescSecond",
+      "killed": true
+    },
+    {
+      "id": "vertical-order",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 145.199,
+      "stdout_sha256": "e8c4164eb13b516b5de8c9d25706827079e741be8ef63cf75e890d50b515af2d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/shared-left-kan-runtime.mech",
+      "before_sha256": "37fff03f6b286fd2bb70c502d0eb860634d7d906298e5871daa22a6c3e54d838",
+      "mutated_sha256": "b553a9cb4fab6c7fe028d3710b1e425260225adef92680f1aba426dea3651992",
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL wrong computation: lanVerticalFirst",
+      "killed": true
+    },
+    {
+      "id": "refusal-control",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 259.89,
+      "stdout_sha256": "3753bc575658e791cfa1b67e1549b81a4e457c6ac2d70d2c2eb4933977d17f68",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/neg/shared-left-kan/nominal-category.mech",
+      "before_sha256": "0a9b1dcb12a1e39c1c311f58d59e91191b9e54a7665a78465671dc42d4c00c32",
+      "mutated_sha256": "2221a1bec92a2c0650a56e280db2aac899548de140416c9557669a5e7af49d95",
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL nominal-category: expected refusal",
+      "killed": true
+    },
+    {
+      "id": "restored",
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 429.663,
+      "stdout_sha256": "307df73115f253d9bb5a77b4966e6c5319d91fd941c9ef4bbadf2f93eddbbb8e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    }
+  ]
+}

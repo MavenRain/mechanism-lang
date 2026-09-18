@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "source": "def addBase : Nat -> Nat -> Nat :=\n  fun (base : Nat) (delta : Nat) => natAdd base delta\ndef offset : Nat -> Nat := addBase 37\ndef answer : Nat := offset 5\ndef unrelated : Nat := natMul 1000 1000\n",
+  "hosts": 3,
+  "modes": 2,
+  "self_test": true,
+  "wasm_bytes": {
+    "original": 1832,
+    "reachable": 1816
+  },
+  "rows": [
+    {
+      "command": [
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe",
+        "--slice-self-test"
+      ],
+      "exit": 0,
+      "seconds": 0.035,
+      "stdout": "RUNTIME-SLICE-OK\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/source.mech",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/original",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.033,
+      "stdout": "answer\t42\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "/Users/oobi/Documents/mechanism-lang/dev/run-node.mjs",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/original/answer.wasm",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.161,
+      "stdout": "42\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/run-wasmtime.sh",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/original/answer.wasm",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.204,
+      "stdout": "42\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe",
+        "--reachable",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/source.mech",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/reachable",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.017,
+      "stdout": "answer\t42\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "/Users/oobi/Documents/mechanism-lang/dev/run-node.mjs",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/reachable/answer.wasm",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.075,
+      "stdout": "42\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/run-wasmtime.sh",
+        "/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-runtime-selection-wb00zpe2/reachable/answer.wasm",
+        "answer"
+      ],
+      "exit": 0,
+      "seconds": 0.093,
+      "stdout": "42\n",
+      "stderr": ""
+    }
+  ]
+}

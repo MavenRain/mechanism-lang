@@ -42,14 +42,13 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-16
+## Position on 2026-09-17
 
-The base is a168a09, following committed symbolic family reuse. The
-current increment shares natural transformation APIs across three
-category cores. Identity, vertical composition and both whiskering
-operations interoperate with independent functors. Horizontal composition
-combines the checked whiskering and vertical composition definitions.
-See `dev/PORT-UAT-U1-SHARED-NATTRANS.md`.
+The base is bbebbff, following committed shared natural transformations.
+The current increment connects left Kan extensions to those shared
+APIs. Unit and mediator accessors work with independently specialized
+functors and transformations; the mediators compose through the shared
+vertical composition operation. See `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -61,7 +60,7 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness.  Stage C remains
-open on additional shared category APIs and source-type parity.
+open on transformation equations and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -83,7 +82,9 @@ symbolic sharing and mixed-universe category contracts, and its runtime
 gate repeats the four exports through one shared group. The
 PRELUDE-SHARED-NATTRANS gates check the shared transformation APIs,
 horizontal composition and six refusals, and compare four exports on
-three hosts at two payloads.
+three hosts at two payloads. PRELUDE-SHARED-LEFT-KAN checks shared
+unit and mediator APIs, independent specializations and seven refusals.
+Its runtime gate compares six exports on three hosts at two payloads.
 TRUSTED-LINES stays red at kernel=4208/3000 and encoder=246/900 until
 the user rules D-A-1.
 
@@ -153,8 +154,9 @@ stay under `ports/` (D-UAT-3).
   specified in `dev/M0-STAGE-C-REUSE.md`. Symbolic sharing inside template
   groups follows in `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. Shared natural
   transformations and horizontal composition follow in
-  `dev/PORT-UAT-U1-SHARED-NATTRANS.md`. U1 remains open on shared left
-  Kan APIs and source-type parity.
+  `dev/PORT-UAT-U1-SHARED-NATTRANS.md`. Shared left Kan extensions
+  follow in `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. U1 remains open on
+  transformation equations and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

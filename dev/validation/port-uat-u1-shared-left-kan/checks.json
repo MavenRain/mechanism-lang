@@ -1,0 +1,109 @@
+{
+  "base": "bbebbff",
+  "date": "2026-09-17T14:59:47.612513+00:00",
+  "scope": "Incremental build, new kernel and runtime suites, source mutation replay, static checks and axiom/trusted-line audits. The full battery was not rerun.",
+  "build": {
+    "command": "dune build test/prelude_shared_left_kan.exe",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-7GQG0o"
+  },
+  "kernel": {
+    "command": "gtimeout 300 _build/default/test/prelude_shared_left_kan.exe . --trace",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-YnZAKi",
+    "stdout_sha256": "307df73115f253d9bb5a77b4966e6c5319d91fd941c9ef4bbadf2f93eddbbb8e",
+    "stderr_sha256": "475524b239c7589fb086fee8486e10e34ee83ead50187a367a43ccb2f493c9f7",
+    "stderr_file": "kernel.stderr.gz",
+    "stderr_encoding": "gzip; stderr_sha256 hashes the decompressed bytes"
+  },
+  "runtime_initial": {
+    "command": "python3 -I test/shared_left_kan_runtime.py (initial 240-second emit budget)",
+    "exit": 1,
+    "capture_artifact": ".kanon-exec/run-BDaDam",
+    "stdout_sha256": "1466ce44fbafb868442eb6e6761d64146b7b7457ffb574cc9ca11984f2830957",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime_profile": {
+    "command": "Diagnostic timing wrapper around test/shared_left_kan_runtime.py; emit=720, total=840",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-IIeZiI",
+    "stdout_sha256": "bfca2f9d596863764a63f24a926a57d4bb0497b7fde76ec4421c699a9f899f9f",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime_under_load": {
+    "command": "python3 -I test/shared_left_kan_runtime.py (load average above 40; concurrent mutation replay)",
+    "exit": 1,
+    "capture_artifact": ".kanon-exec/run-IPgh9b",
+    "stdout_sha256": "abdb3e2654c4dd4574ffa7172c255bde3d20b32cbd5ad19d1fdfc14be66ab36d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime_before_selection": {
+    "command": "python3 -I test/shared_left_kan_runtime.py (serial, before reachable function selection)",
+    "exit": 1,
+    "capture_artifact": ".kanon-exec/run-w83hEe",
+    "stdout_sha256": "e82269479417ef925a25941d68ffb8c8ee288b2f8650a75d009b7d1ce13eac33",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime": {
+    "command": "python3 -I test/shared_left_kan_runtime.py (final budgets, opt-in reachable function selection)",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-78xxgO",
+    "stdout_sha256": "555069f3b82f95cb4d3af588344bbd215e180eb5b5975de5a83cca6d8cd09e11",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "runtime_helper_build": {
+    "command": "dune build test/prelude_runtime.exe",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-8VxM5a"
+  },
+  "runtime_selection": {
+    "passed": true,
+    "self_test": true,
+    "hosts": 3,
+    "modes": 2,
+    "wasm_bytes": {
+      "original": 1832,
+      "reachable": 1816
+    },
+    "details": "runtime-selection.json"
+  },
+  "axioms": {
+    "command": "python3 -I dev/prelude-gates.py axioms",
+    "exit": 0,
+    "capture_artifact": ".kanon-exec/run-ga996C",
+    "stdout_sha256": "3a7c2f3948bd032b041cb1472a851afa3a23ff1cbc72af2401cfd97dd83ad50a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "trusted_lines": {
+    "command": "zsh dev/trusted-lines.sh .",
+    "exit": 1,
+    "capture_artifact": ".kanon-exec/run-oCMBeY",
+    "stdout_sha256": "112eb87cc49b3b8eeacc5cbfcc3543df81b01601b88872a08872220649da487a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "classification": "Inherited; the counted source paths are unchanged."
+  },
+  "static": {
+    "passed": true,
+    "existing_gates_unchanged": true,
+    "new_gates": 2,
+    "python_ast": 2,
+    "shell_syntax": true,
+    "diff_check": true,
+    "distinct_refusal_prefixes": 7,
+    "kernel_surface_wasm_map_vendor_unchanged": true
+  },
+  "ocaml_review": {
+    "result_io": true,
+    "no_raise_failwith_assert_or_obj_magic": true,
+    "effscan": "Reports expected test I/O and exit effects, with a segmentation warning on compact let* formatting. No sound-purity verdict is claimed."
+  },
+  "mutations": {
+    "command": "python3 -I dev/shared-left-kan-mutations.py NEW-WORK-DIRECTORY",
+    "execution_record": "mutation-executions.json",
+    "final_predicate_record": "mutation-predicates.json",
+    "passed": true,
+    "killed": 5,
+    "controls": 5,
+    "note": "The original sharing diagnostic pin was incorrect. Retained executions were rechecked against the corrected, pairwise distinct final prefixes with source, executable, mutant and output hashes verified. No semantic source changed."
+  }
+}

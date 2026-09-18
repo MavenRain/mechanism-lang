@@ -1,0 +1,27 @@
+def bad : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (H : Mixed_Base_Second_Base_Functor C D c d) -> (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    (eta : Mixed_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Mixed_Lan_LanCocone J C D j c d K F G) ->
+    (s : Mixed_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (beta1 : Mixed_Base_Second_NatTrans C D c d H G) ->
+    (beta2 : Mixed_Base_Second_NatTrans C D c d H G) ->
+    (h1 : Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta1) ->
+    (h2 : Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta2) ->
+    (y : C) -> Mixed_Base_Target (Mixed_Base_Target_Hom D d (H.1 y) (G.1 y))
+      (Mixed_Base_Second_natApp C D c d H G beta1 y)
+      (Mixed_Base_Second_natApp C D c d H G beta1 y) :=
+  fun (0 J : Type 0) (0 C : Type 2) (0 D : Type 4)
+    (j : Mixed_Base_Source_Category J) (c : Mixed_Base_Middle_Category C)
+    (d : Mixed_Base_Target_Category D) (K : Mixed_Base_First_Base_Functor J C j c)
+    (F : Mixed_Base_Composite_Base_Functor J D j d)
+    (H : Mixed_Base_Second_Base_Functor C D c d) (G : Mixed_Base_Second_Base_Functor C D c d)
+    (eta : Mixed_Lan_LanCocone J C D j c d K F H)
+    (alpha : Mixed_Lan_LanCocone J C D j c d K F G)
+    (s : Mixed_Lan_LanSolution J C D j c d K F H G eta alpha)
+    (beta1 : Mixed_Base_Second_NatTrans C D c d H G)
+    (beta2 : Mixed_Base_Second_NatTrans C D c d H G)
+    (h1 : Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta1)
+    (h2 : Mixed_Lan_LanFactor J C D j c d K F H G eta alpha beta2)(y : C) => Mixed_Lan_desc_unique J C D j c d K F H G eta alpha s beta1 beta2 h1 h2 y

@@ -1,0 +1,206 @@
+-- Source homs have an erased type argument; target homs are pairs of functions.
+mu Point : Type 1 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechSharedLeftKan (0, 1, 0, 0, 1, 0) as Run
+specialize MechHeterogeneousFunctor (0, 1, 0, 0) as ExternalFirst
+  with (Source := Run_Base_Source, Target := Run_Base_Middle)
+specialize MechHeterogeneousFunctor (0, 0, 1, 0) as ExternalSecond
+  with (Source := Run_Base_Middle, Target := Run_Base_Target)
+specialize MechHeterogeneousFunctor (0, 1, 1, 0) as ExternalComposite
+  with (Source := Run_Base_Source, Target := Run_Base_Target)
+specialize MechHeterogeneousNatTrans (0, 0, 1, 0) as ExternalNat
+  with (Base_Source := Run_Base_Middle, Base_Target := Run_Base_Target)
+def sharedLanInput : Nat := 37
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Run_Base_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (0 A : Type 0) -> (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) (0 A : Type 0) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat))
+          (g : (0 A : Type 0) -> (Path y z) * (Nat -> Nat)) (0 A : Type 0) =>
+        (pathTrans x y z (f A).1 (g A).1, (fun (n : Nat) => (g A).2 ((f A).2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (0 A : Type 0) -> (Path w x) * (Nat -> Nat))
+            (0 g : (0 A : Type 0) -> (Path x y) * (Nat -> Nat))
+            (0 h : (0 A : Type 0) -> (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def DoubleEnd : Run_Base_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat -> Nat) * (Nat -> Nat)),
+   ((fun (0 x : Point) => ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat -> Nat) * (Nat -> Nat))
+          (g : (Nat -> Nat) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => g.1 (f.1 n)), (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+         categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat -> Nat) * (Nat -> Nat)) =>
+          categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat -> Nat) * (Nat -> Nat))
+            (0 g : (Nat -> Nat) * (Nat -> Nat))
+            (0 h : (Nat -> Nat) * (Nat -> Nat)) => categoryRefl))))))
+def IndexedPlain : Run_Base_Middle_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat))
+            (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def Constant : ExternalSecond_Functor Nat Point IndexedPlain DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+       ((fun (n : Nat) => n), (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def Components : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => x), (fun (n : Nat) => natAdd n x))
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components y) (Components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (Components right) (Components x) with
+    | same => categoryRefl
+def Alpha : ExternalNat_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  (Components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+     componentLaw x y f.1))
+
+-- Forget the erased type argument. Every middle arrow has a source lift.
+def Forget : ExternalFirst_Functor Nat Nat IndexedEnd IndexedPlain :=
+  ((fun (x : Nat) => x),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat)) =>
+       (f Nat)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat))
+          (0 g : (0 A : Type 0) -> (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def Lift : ExternalSecond_Functor Nat Point IndexedPlain DoubleEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => (f.2, f.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+def OtherComponents : (x : Nat) -> (Nat -> Nat) * (Nat -> Nat) :=
+  fun (x : Nat) => ((fun (n : Nat) => natAdd x 11), (fun (n : Nat) => natAdd (natAdd n x) 4))
+def otherComponentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (OtherComponents y) (OtherComponents x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) (OtherComponents right) (OtherComponents x) with
+    | same => categoryRefl
+def Beta : ExternalNat_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  (OtherComponents,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => otherComponentLaw x y f.1))
+
+-- The candidate works for every target functor, with the cocone supplied to its solver.
+def forgetUnit : (0 D : Type 1) -> (d : Run_Base_Target_Category D) ->
+    (H : ExternalSecond_Functor Nat D IndexedPlain d) ->
+    Run_Lan_LanCocone Nat Nat D IndexedEnd IndexedPlain d Forget
+      (Run_Base_Compose_Base_compFunctor Nat Nat D IndexedEnd IndexedPlain d Forget H) H :=
+  fun (0 D : Type 1) (d : Run_Base_Target_Category D)
+      (H : ExternalSecond_Functor Nat D IndexedPlain d) =>
+    ((fun (x : Nat) => Run_Base_Target_id D d (H.1 x)),
+     (fun (0 x : Nat) (0 y : Nat) (f : (0 A : Type 0) -> (Path x y) * (Nat -> Nat)) =>
+       Run_Base_Target_eqTrans (Run_Base_Target_Hom D d (H.1 x) (H.1 y))
+         (Run_Base_Target_comp D d (H.1 x) (H.1 y) (H.1 y)
+           (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat))
+           (Run_Base_Target_id D d (H.1 y)))
+         (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat))
+         (Run_Base_Target_comp D d (H.1 x) (H.1 x) (H.1 y)
+           (Run_Base_Target_id D d (H.1 x))
+           (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat)))
+         (Run_Base_Target_compId D d (H.1 x) (H.1 y)
+           (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat)))
+         (Run_Base_Composite_targetEqSymm (Run_Base_Target_Hom D d (H.1 x) (H.1 y))
+           (Run_Base_Target_comp D d (H.1 x) (H.1 x) (H.1 y)
+             (Run_Base_Target_id D d (H.1 x))
+             (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat)))
+           (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat))
+           (Run_Base_Target_idComp D d (H.1 x) (H.1 y)
+             (Run_Base_Second_Base_functorMap Nat D IndexedPlain d H x y (f Nat))))))
+def forgetLan : (0 D : Type 1) -> (d : Run_Base_Target_Category D) ->
+    (H : ExternalSecond_Functor Nat D IndexedPlain d) ->
+    Run_Lan_LeftKanExtension Nat Nat D IndexedEnd IndexedPlain d Forget
+      (Run_Base_Compose_Base_compFunctor Nat Nat D IndexedEnd IndexedPlain d Forget H) :=
+  fun (0 D : Type 1) (d : Run_Base_Target_Category D)
+      (H : ExternalSecond_Functor Nat D IndexedPlain d) =>
+    (H, (forgetUnit D d H,
+     (fun (G : ExternalSecond_Functor Nat D IndexedPlain d)
+          (alpha : Run_Lan_LanCocone Nat Nat D IndexedEnd IndexedPlain d Forget
+            (Run_Base_Compose_Base_compFunctor Nat Nat D IndexedEnd IndexedPlain d Forget H) G) =>
+       ((alpha.1,
+         (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) =>
+           alpha.2 x y (fun (0 A : Type 0) => f))),
+        ((fun (x : Nat) => Run_Base_Target_idComp D d (H.1 x) (G.1 x) (alpha.1 x)),
+         (fun (beta : Run_Base_Second_NatTrans Nat D IndexedPlain d H G)
+              (h : Run_Lan_LanFactor Nat Nat D IndexedEnd IndexedPlain d Forget
+                (Run_Base_Compose_Base_compFunctor Nat Nat D IndexedEnd IndexedPlain d Forget H)
+                H G (forgetUnit D d H) alpha beta) (y : Nat) =>
+           Run_Base_Target_eqTrans (Run_Base_Target_Hom D d (H.1 y) (G.1 y))
+             (beta.1 y)
+             (Run_Base_Target_comp D d (H.1 y) (H.1 y) (G.1 y)
+               (Run_Base_Target_id D d (H.1 y)) (beta.1 y)) (alpha.1 y)
+             (Run_Base_Composite_targetEqSymm (Run_Base_Target_Hom D d (H.1 y) (G.1 y))
+               (Run_Base_Target_comp D d (H.1 y) (H.1 y) (G.1 y)
+                 (Run_Base_Target_id D d (H.1 y)) (beta.1 y)) (beta.1 y)
+               (Run_Base_Target_idComp D d (H.1 y) (G.1 y) (beta.1 y))) (h y)))))))
+
+def Original : ExternalComposite_Functor Nat Point IndexedEnd DoubleEnd :=
+  Run_Base_Compose_Base_compFunctor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Constant
+def Extension : Run_Lan_LeftKanExtension Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original :=
+  forgetLan Point DoubleEnd Constant
+def Eta : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Run_unitNat Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension
+def Cocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Constant Constant Alpha Forget
+def OtherCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Constant Constant Beta Forget
+def Chosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone :=
+  Run_Lan_lanSolve Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension Constant Cocone
+def OtherChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta OtherCocone :=
+  Run_Lan_lanSolve Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension Constant OtherCocone
+def Mediator : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  Run_descNat Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Chosen
+def OtherMediator : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  Run_descNat Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta OtherCocone OtherChosen
+def lanUnitResult : Nat := (Eta.1 0).2 (natAdd sharedLanInput 1)
+def lanMapResult : Nat :=
+  (Run_Base_Second_Base_functorMap Nat Point IndexedPlain DoubleEnd
+    (Run_Lan_lanFunctor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget
+      (Run_Base_Compose_Base_compFunctor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Lift)
+      (forgetLan Point DoubleEnd Lift)) 0 0 (same, (fun (n : Nat) => natAdd n 3))).2 sharedLanInput
+def lanDescFirst : Nat := (Mediator.1 (natAdd sharedLanInput 5)).1 0
+def lanDescSecond : Nat := (OtherMediator.1 (natAdd sharedLanInput 7)).2 2
+def factorWitness : Run_Lan_LanFactor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Mediator :=
+  Run_Lan_lanFac Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Chosen
+-- An independently specialized transformation supplies the competing mediator.
+def externalFactorWitness : Run_Lan_LanFactor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Alpha :=
+  fun (x : Nat) => Run_Base_Target_idComp Point DoubleEnd point point (Alpha.1 x)
+def uniqueWitness : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Alpha.1 y) (Mediator.1 y) :=
+  Run_Lan_desc_unique Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Chosen Alpha Mediator externalFactorWitness factorWitness
+def ComposedMediator : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  Run_Base_Second_vcomp Nat Point IndexedPlain DoubleEnd Constant Constant Constant Mediator OtherMediator
+def lanVerticalFirst : Nat := (ComposedMediator.1 sharedLanInput).1 0
+def lanVerticalSecond : Nat := (ComposedMediator.1 sharedLanInput).2 2

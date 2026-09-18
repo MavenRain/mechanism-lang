@@ -1,0 +1,32 @@
+-- Load shared-nattrans and heterogeneous-left-kan with their prerequisites.
+-- The transformation APIs and the universal property share three families.
+poly (u, v, w, z, p, q) group MechSharedLeftKan where
+  specialize MechSharedNatTrans (u, v, w, z, p, q) as Base
+  specialize MechHeterogeneousLeftKan (u, v, w, z, p, q) as Lan
+    with (Base_Base_Source := Base_Source, Base_Base_Middle := Base_Middle,
+          Base_Base_Target := Base_Target)
+
+-- View the unit as a transformation in the shared composite API.
+def unitNat : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Source_Category J) ->
+    (0 c : Base_Middle_Category C) -> (0 d : Base_Target_Category D) ->
+    (0 K : Base_First_Base_Functor J C j c) ->
+    (0 F : Base_Composite_Base_Functor J D j d) ->
+    (L : Lan_LeftKanExtension J C D j c d K F) ->
+    Base_Composite_NatTrans J D j d F
+      (Base_Compose_Base_compFunctor J C D j c d K
+        (Lan_lanFunctor J C D j c d K F L)) := Lan_lanUnit
+
+-- The chosen mediator can use identity, vertical and horizontal composition.
+def descNat : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (0 j : Base_Source_Category J) ->
+    (0 c : Base_Middle_Category C) -> (0 d : Base_Target_Category D) ->
+    (0 K : Base_First_Base_Functor J C j c) ->
+    (0 F : Base_Composite_Base_Functor J D j d) ->
+    (0 H : Base_Second_Base_Functor C D c d) ->
+    (0 G : Base_Second_Base_Functor C D c d) ->
+    (0 eta : Lan_LanCocone J C D j c d K F H) ->
+    (0 alpha : Lan_LanCocone J C D j c d K F G) ->
+    Lan_LanSolution J C D j c d K F H G eta alpha ->
+    Base_Second_NatTrans C D c d H G := Lan_lanDesc
+end

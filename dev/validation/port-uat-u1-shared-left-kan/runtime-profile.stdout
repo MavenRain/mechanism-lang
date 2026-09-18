@@ -1,0 +1,26 @@
+{"command": "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_runtime.exe", "seconds": 278.82, "exit": 0}
+{"command": "node", "seconds": 0.054, "exit": 0}
+{"command": "zsh", "seconds": 0.141, "exit": 0}
+{"command": "node", "seconds": 0.055, "exit": 0}
+{"command": "zsh", "seconds": 0.072, "exit": 0}
+{"command": "node", "seconds": 0.056, "exit": 0}
+{"command": "zsh", "seconds": 0.065, "exit": 0}
+{"command": "node", "seconds": 0.057, "exit": 0}
+{"command": "zsh", "seconds": 0.085, "exit": 0}
+{"command": "node", "seconds": 0.066, "exit": 0}
+{"command": "zsh", "seconds": 0.08, "exit": 0}
+{"command": "node", "seconds": 0.057, "exit": 0}
+{"command": "zsh", "seconds": 0.071, "exit": 0}
+{"command": "node", "seconds": 0.057, "exit": 0}
+{"command": "zsh", "seconds": 0.07, "exit": 0}
+{"command": "node", "seconds": 0.056, "exit": 0}
+{"command": "zsh", "seconds": 0.076, "exit": 0}
+{"command": "node", "seconds": 0.053, "exit": 0}
+{"command": "zsh", "seconds": 0.086, "exit": 0}
+{"command": "node", "seconds": 0.058, "exit": 0}
+{"command": "zsh", "seconds": 0.071, "exit": 0}
+{"command": "node", "seconds": 0.058, "exit": 0}
+{"command": "zsh", "seconds": 0.067, "exit": 0}
+{"command": "node", "seconds": 0.055, "exit": 0}
+{"command": "zsh", "seconds": 0.074, "exit": 0}
+PRELUDE-SHARED-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1

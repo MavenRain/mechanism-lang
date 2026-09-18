@@ -1,0 +1,13 @@
+def bad : (0 J : Type 0) -> (0 C : Type 2) -> (0 D : Type 4) ->
+    (j : Mixed_Base_Source_Category J) -> (c : Mixed_Base_Middle_Category C) ->
+    (d : Mixed_Base_Target_Category D) -> (K : Mixed_Base_First_Base_Functor J C j c) ->
+    (F : Mixed_Base_Composite_Base_Functor J D j d) ->
+    (G : Mixed_Base_Second_Base_Functor C D c d) ->
+    Mixed_Base_Composite_NatTrans J D j d F (Mixed_Base_Compose_Base_compFunctor J C D j c d K G) ->
+    (x : J) -> Mixed_Base_Target_Hom D d (F.1 x) (F.1 x) :=
+  fun (0 J : Type 0) (0 C : Type 2) (0 D : Type 4)
+    (j : Mixed_Base_Source_Category J) (c : Mixed_Base_Middle_Category C)
+    (d : Mixed_Base_Target_Category D) (K : Mixed_Base_First_Base_Functor J C j c)
+    (F : Mixed_Base_Composite_Base_Functor J D j d)
+      (G : Mixed_Base_Second_Base_Functor C D c d)
+      (alpha : Mixed_Base_Composite_NatTrans J D j d F (Mixed_Base_Compose_Base_compFunctor J C D j c d K G)) (x : J) => alpha.1 x

@@ -3552,3 +3552,160 @@ Evidence delta: the seven fixes edited 11 of the 27 hashed sources after the cap
 Ladders: the baseline ladder, before the fixes, exited 0 at 07:55Z on 2026-09-17 and passed 60 of 63 legs; it failed the inherited TRUSTED-LINES leg, plus TEMPLATE-REUSE-RUNTIME and PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME on a timeout at load 35.  TEMPLATE-REUSE-RUNTIME was rechecked by id and cleared.  Mutation replay passed with six of six killed.  The kit verdict read `PASS raw=60 cleared=1 floor=60`.  The fix-1 ladder, after the fixes, exited 0 at 10:24Z on 2026-09-17 and passed 62 of 63 legs, failing only the inherited TRUSTED-LINES leg.  The kernel row read `PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6`, the runtime row read `PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1`, sources read ok=27 bad=0, and mutation replay passed with six of six killed.  The kit verdict read `PASS raw=62 cleared=0 floor=60`, GREEN.  The close ladder runs after this block is written.  Its verdict is in the review kit report and in the commit message.
 
 The inherited TRUSTED-LINES failure predates this slice and is not a regression of this review.
+
+## Stage C / U1: shared left Kan extensions (2026-09-17)
+
+Base bbebbff. `MechSharedLeftKan` reuses exactly three category families
+between the shared natural transformation APIs and heterogeneous left
+Kan extensions. `unitNat` and `descNat` expose the unit and mediator in
+the shared transformation APIs. Independent functors and transformations
+participate through checked reuse. The client chooses two distinct
+mediators, composes them in an observable order, and supplies an external
+transformation to the factorization and uniqueness contracts.
+
+The new kernel suite passes with 944 definitions, 13 checked families,
+six computations and seven refusals. The runtime recheck passes all six
+exports at inputs 37 and 41 on the kernel, Node and Wasmtime. Five
+mutations are detected; baseline and restored suites pass and source
+hashes are unchanged. The sharing diagnostic pin was corrected against
+the retained execution, with all final predicates rechecked and the
+original record preserved.
+
+Two new gates use the existing CATEGORY tier. Emitting the twelve
+exports measured 278.820 seconds in the diagnostic run, above the
+initial 240-second limit. The final limits are 480 seconds for emission,
+540 seconds total and 30 seconds per host. Concurrent and serial
+rechecks expired at the emit limit. The new harness now opts into
+reachable function selection after full checking and erasure. The
+selector preserves type groups and postulates and follows global calls,
+lifted closures, captures and branches. Its self-test passes, and a
+closure fixture agrees on all three hosts in both original and selected
+modes. The final matrix passes with unchanged budgets. Existing
+harnesses retain their original mode. No existing gate predicate or
+watchdog tier changed. Static checks and the axiom audit
+pass. TRUSTED-LINES remains the inherited kernel=4208/3000 and
+encoder=246/900 failure. The full battery was not rerun.
+
+Commands, successful results, timeouts, mutation executions and source
+hashes are in `dev/validation/port-uat-u1-shared-left-kan/`. The contract
+is `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. Stage C and U1 remain open on
+transformation equations and source-type parity. Kernel, elaborator,
+WASM, vendor, mapping verdicts and frozen denominators are unchanged.
+
+## Stage C / U1: shared left Kan extensions review (2026-09-17)
+
+L4-3, medium,
+`dev/validation/port-uat-u1-shared-left-kan/verify-mutations.py`. The
+bundle verifier now reads the rows of `mutation-predicates.json`. It
+compares the row ids with the control ids, and each row against its own
+control: the killed flag, the expected prefix recomputed from the driver,
+the retained output hash, the retained output size and the retained exit
+code. It also checks that the killed total, the control total and the
+number of controls agree, and that the four predicate flags are true.
+
+L3-3, low, `dev/validation/port-uat-u1-shared-left-kan/verify-mutations.py`.
+Each check of that verifier is now a call of a `require` helper that prints
+a `MUTATION-EVIDENCE FAIL` line and exits with status 1. The script no
+longer depends on `assert`, so `python3 -O` keeps every check.
+
+L2-1, low, `test/prelude_shared_left_kan.ml`. The negative block reads the
+seven refusal texts first, then computes the head that all of them share.
+A refusal text must now be longer than 64 characters and longer than that
+shared head. A shortened text can no longer accept a different refusal.
+The suite reports the same counts.
+
+L2-4, low, `test/prelude_runtime.ml`. A `--reachable` command line with
+three words now gives the usage error. Before the fix it fell through to
+the arm for a command line without the option, and it opened a file named
+`--reachable`.
+
+L2-3, low, `prelude/README.md`. The sentence about the two
+PRELUDE-SHARED-LEFT-KAN gates is split. The first gate checks the
+contracts, the clients and the seven refusals on the kernel. The second
+gate compares the six computations on the kernel, Node and Wasmtime at two
+payloads.
+
+L4-1, low, `dev/validation/port-uat-u1-shared-left-kan/checks.json`. The ten
+`capture_artifact` values are now repository-relative `.kanon-exec` paths.
+Eight of them named a directory under an unrelated project root. The output
+hashes of the rows are unchanged.
+
+L3-4, low, `test/shared_left_kan_runtime.py`. The harness gives two
+different messages: `duplicate export name` for a repeated export, and
+`reserved alternate name already present` for a source that already holds
+the alternate name of an export.
+
+The refusal-text floor of `test/prelude_shared_left_kan.ml` and the message
+split of `test/shared_left_kan_runtime.py` are the two behaviour changes of
+this round. The contract sentences are in
+`dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. The hashes of
+`dev/validation/port-uat-u1-shared-left-kan/sources.sha256` and the suite
+hash of `mutation-executions.json` cover the edited paths, so the round
+that follows recomputes those rows.
+
+ND-1-1, medium,
+`dev/validation/port-uat-u1-shared-left-kan/mutation-executions.json`. The
+`suite_source_sha256` row held the hash of `test/prelude_shared_left_kan.ml`
+from before the L2-1 fix, so the bundle verifier of this evidence tree
+exited 1. The row now holds the hash of the file in the tree, and
+`execution_results_sha256` of `mutation-predicates.json` holds the hash of
+the edited executions file. No execution row, no output hash and no
+predicate result changed. The sentence of the bundle `README.md` about an
+immutable report now names the restated row. The documented command
+`python3 -I dev/validation/port-uat-u1-shared-left-kan/verify-mutations.py`
+prints `MUTATION-EVIDENCE OK controls=5 sources=24` and exits 0.
+
+ND-1-2, medium,
+`dev/validation/port-uat-u1-shared-left-kan/sources.sha256`. Six of the 29
+rows held the hash from before the fix round: `dev/M0-BUILD-LOG.md`,
+`dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`, `prelude/README.md`,
+`test/prelude_runtime.ml`, `test/prelude_shared_left_kan.ml` and
+`test/shared_left_kan_runtime.py`. Every row is recomputed from the staged
+file, in the same order and the same format. The gate leg that compares the
+rows counts 29 of 29 again.
+
+HV-2-1, low, `dev/M0-BUILD-LOG.md`. The first line of the L4-3 block of
+the round before was 79 columns. It is rewrapped at 76 columns with the
+same words.
+
+HV-2-2, low, `prelude/README.md`. The line about the shared natural
+transformation and the left Kan API was 109 columns. The paragraph is
+rewrapped at 76 columns with the same words.
+
+ND-2-1, medium,
+`dev/validation/port-uat-u1-shared-left-kan/mutation-executions.json`,
+`executables.sha256`, `mutation-predicates.json` and the bundle
+`README.md`. The `executable_sha256` row and the two rows of
+`executables.sha256` held the hashes of the binaries from before the
+suite fix and the runtime fix, so the report named a binary that did
+not run the restated suite source. The binaries are rebuilt from the
+staged sources with the recipe build, which prints the OK build line
+with 0 errors and 0 warnings. The rows now hold
+`29c7b7956dbcc331ddd8a68b0dc9348a9aac7b7d617ca414ced2dd7e368e2f43` for
+`_build/default/test/prelude_shared_left_kan.exe` and
+`2246172bb2ceaa51bc9da49adb9950c9025d3642f7a677adf698b99948567947` for
+`_build/default/test/prelude_runtime.exe`. The
+`execution_results_sha256` row of `mutation-predicates.json` holds the
+hash of the edited executions file. No execution row, no output hash
+and no predicate result changed. The bundle `README.md` says that the
+review rebuilt the binaries from the staged sources on 2026-09-17. The
+documented command
+`python3 -I dev/validation/port-uat-u1-shared-left-kan/verify-mutations.py`
+prints `MUTATION-EVIDENCE OK controls=5 sources=24` and exits 0. The
+`sources.sha256` rows of `dev/M0-BUILD-LOG.md` and `prelude/README.md`
+are recomputed from the staged blobs in this round.
+
+Close (2026-09-17). Findings kept: L4-3 medium, L3-3 low, L2-1 low, L2-4
+low, L2-3 low, L4-1 low, L3-4 low, ND-1-1 medium, ND-1-2 medium, HV-2-1
+low, HV-2-2 low, ND-2-1 medium; all fixed at the paths recorded above.
+Refuted: L2-2, L4-4. Merged: L3-1 into L4-1. Cut by the finding cap: L4-6,
+L4-2, L4-5, L4-7. Gate verdict BOUND-ONLY, kernel=4208/3000,
+encoder=246/900. The TRUSTED-LINES leg stays red until the user rules
+D-A-1. The gates leg PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME stays red on
+the 110 s per-case emit budget its own driver sets at
+test/heterogeneous_left_kan_runtime.py:63, and three calm rechecks at 1-min
+loads 23.53, 27.01 and 20.93 timed out at 109.998 s. The slice does not
+reach the leg: the harness passes no --reachable flag, the default arm at
+test/prelude_runtime.ml:22 keeps the old expression, the inputs of the leg
+are unstaged, and dev/M0-BUILD-LOG.md:3163 already reported the leg
+unresolved after rechecks before the slice, so no pin moved.

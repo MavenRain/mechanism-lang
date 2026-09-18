@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "controls": 5,
+  "killed": 5,
+  "baseline_passed": true,
+  "restored_passed": true,
+  "sources_unchanged": true,
+  "execution_results_sha256": "9e451115fe6116a9b0f6fa851c0267915ddb630c5641fd1369a3f86b82f78112",
+  "final_driver_sha256": "126ae71669f9f57c1044058b446c837384564359f59ba14cd527be5b24ac817b",
+  "scope": "Re-evaluate retained executions after correcting diagnostic prefixes; no kernel rerun.",
+  "rows": [
+    {
+      "id": "sharing",
+      "killed": true,
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL mismatch: the term has type (Lan SPi w hom (Ran SPi 0 x D (Ran SPi 0 y D Type (u5 + 1)))",
+      "stdout_sha256": "88f810cd508c0faf0a5b168fae91aac8fada06f7ad416c99f035826edea0115a",
+      "stdout_bytes": 5687,
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 434.188
+    },
+    {
+      "id": "unit-accessor",
+      "killed": true,
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL mismatch: the term has type (Ran SPi 0 J Type (u0 + 1) (Ran SPi 0 C Type (u2 + 1) (Ran SPi 0 D Type (u4 + 1)",
+      "stdout_sha256": "d4c9d8c99bc88ce198d79dc77f5e121f9164fbaa6744031119388eadd99d4a9a",
+      "stdout_bytes": 3394846,
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 174.485
+    },
+    {
+      "id": "cocone-component",
+      "killed": true,
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL wrong computation: lanDescSecond",
+      "stdout_sha256": "077aa7e1159afdaacbe516267db738b73bf4be079ef0a00ab105ffaea19af863",
+      "stdout_bytes": 62,
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 189.09
+    },
+    {
+      "id": "vertical-order",
+      "killed": true,
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL wrong computation: lanVerticalFirst",
+      "stdout_sha256": "e8c4164eb13b516b5de8c9d25706827079e741be8ef63cf75e890d50b515af2d",
+      "stdout_bytes": 65,
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 145.199
+    },
+    {
+      "id": "refusal-control",
+      "killed": true,
+      "expected": "PRELUDE-SHARED-LEFT-KAN-FAIL nominal-category: expected refusal",
+      "stdout_sha256": "3753bc575658e791cfa1b67e1549b81a4e457c6ac2d70d2c2eb4933977d17f68",
+      "stdout_bytes": 64,
+      "command": [
+        "_build/default/test/prelude_shared_left_kan.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 259.89
+    }
+  ]
+}
