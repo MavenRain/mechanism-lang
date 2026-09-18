@@ -1,0 +1,141 @@
+PASS BUILD
+PASS PIN pin=a7534cedeac82d396de8e23058ee6bc990560f65 gitlink=a7534cedeac82d396de8e23058ee6bc990560f65 head=a7534cedeac82d396de8e23058ee6bc990560f65 want=a7534cedeac82d396de8e23058ee6bc990560f65
+PASS PIN-DELTA
+PASS R0-COUNT
+PASS R0-AUDIT
+PASS SUITE-KERNEL
+PASS LEVELS
+PASS PRENEX
+PASS PRENEX-FAMILIES
+PASS PRENEX-GROUPS
+PASS TEMPLATE-COMPOSITION
+PASS TEMPLATE-REUSE
+PASS TEMPLATE-SYMBOLIC-REUSE
+PASS SUITE-SURFACE
+PASS SUITE-WASM
+PASS IMPORT-GRAMMAR
+PASS IMPORT-CLI
+PASS CORPUS-UAT
+PASS PARITY-COUNTS
+PASS PRELUDE
+PASS EQUALITY
+PASS FAMILY-POLY
+PASS PRELUDE-POLY
+PASS FAMILY-MEMBERS
+PASS PRELUDE-TRANSPORT
+PASS PRELUDE-EQUALITY-OPS
+PASS PRELUDE-DEPENDENT
+PASS FAMILY-GROUPS
+PASS PRELUDE-CONGRUENCE
+PASS TEMPLATE-COST
+PASS PRELUDE-CATEGORY
+PASS PRELUDE-FUNCTOR
+PASS PRELUDE-HETEROGENEOUS-FUNCTOR
+PASS PRELUDE-HETEROGENEOUS-NATTRANS
+PASS PRELUDE-HETEROGENEOUS-WHISKERING
+PASS PRELUDE-SHARED-NATTRANS
+PASS PRELUDE-SHARED-NATTRANS-RUNTIME
+PASS PRELUDE-SHARED-LEFT-KAN
+PASS PRELUDE-SHARED-LEFT-KAN-RUNTIME
+FAIL PRELUDE-HETEROGENEOUS-LEFT-KAN
+
+PASS PRELUDE-COMPOSABLE-FUNCTORS
+PASS PRELUDE-NATTRANS
+PASS PRELUDE-LEFT-KAN
+PASS EQUALITY-RUNTIME
+PASS PRENEX-RUNTIME
+PASS PRENEX-FAMILIES-RUNTIME
+PASS PRENEX-GROUPS-RUNTIME
+PASS TEMPLATE-COMPOSITION-RUNTIME
+PASS TEMPLATE-REUSE-RUNTIME
+PASS TEMPLATE-SYMBOLIC-REUSE-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME
+PASS PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME
+FAIL PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-left-kan-x59ihs4u/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-heterogeneous-left-kan-x59ihs4u', 'lanUnitResult', 'lanMapResult', 'lanDescFirst', 'lanDescSecond', 'lanUnitResult_41', 'lanMapResult_41', 'lanDescFirst_41', 'lanDescSecond_41']' timed out after 109.99926316691563 seconds
+PASS PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME
+FAIL PRELUDE-CATEGORY-RUNTIME
+PRELUDE-CATEGORY-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-1fo3067l/original.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-1fo3067l', 'categoryPayload', 'categoryOther']' timed out after 210 seconds
+FAIL PRELUDE-CATEGORY-ACCESSORS
+PRELUDE-CATEGORY-ACCESSORS FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-omutftaz/original.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-prenex-omutftaz', 'categoryPayload', 'categoryOther']' timed out after 210 seconds
+PASS DEPENDENT-CLOSURE-RUNTIME
+FAIL PRELUDE-FUNCTOR-RUNTIME
+PRELUDE-FUNCTOR-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-functor-9fpv5kca/original/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-functor-9fpv5kca/original', 'objectIdentity', 'objectForward', 'objectReverse', 'mapIdentity', 'mapForward', 'mapReverse']' timed out after 210 seconds
+FAIL PRELUDE-NATTRANS-RUNTIME
+PRELUDE-NATTRANS-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-het3h861/original/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-nattrans-het3h861/original', 'componentValue', 'identityValue', 'verticalForward', 'verticalReverse', 'verticalNested', 'rightValue', 'leftValue', 'leftOther']' timed out after 210 seconds
+FAIL PRELUDE-LEFT-KAN-RUNTIME
+PRELUDE-LEFT-KAN-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt12/mechanism-veil/_build/default/test/prelude_runtime.exe', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-8w3ma4ed/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-8w3ma4ed', 'lanUnitValue', 'lanMapValue', 'lanDescValue', 'lanDescOther', 'lanDescObject', 'lanDescSecond', 'lanUnitValueChanged', 'lanMapValueChanged', 'lanDescValueChanged', 'lanDescOtherChanged', 'lanDescObjectChanged', 'lanDescSecondChanged']' timed out after 210 seconds
+PASS AXIOMS
+PASS MAP-INVENTORY
+FAIL TRUSTED-LINES
+TRUSTED-LINES kernel=5475/3000 encoder=246/900 FAIL
+PASS DENOMINATORS denominators.json: OK
+
+MEASURE BUILD tier=SLOW elapsed_ms=423.557 exit=0
+MEASURE PIN tier=FAST elapsed_ms=80.818 exit=0
+MEASURE PIN-DELTA tier=MED elapsed_ms=1356.398 exit=0
+MEASURE R0-COUNT tier=FAST elapsed_ms=487.473 exit=0
+MEASURE R0-AUDIT tier=FAST elapsed_ms=193.096 exit=0
+MEASURE SUITE-KERNEL tier=SUITE elapsed_ms=761.845 exit=0
+MEASURE LEVELS tier=FAST elapsed_ms=467.909 exit=0
+MEASURE PRENEX tier=FAST elapsed_ms=361.506 exit=0
+MEASURE PRENEX-FAMILIES tier=FAST elapsed_ms=401.579 exit=0
+MEASURE PRENEX-GROUPS tier=FAST elapsed_ms=379.102 exit=0
+MEASURE TEMPLATE-COMPOSITION tier=MED elapsed_ms=1684.156 exit=0
+MEASURE TEMPLATE-REUSE tier=SLOW elapsed_ms=12687.053 exit=0
+MEASURE TEMPLATE-SYMBOLIC-REUSE tier=SLOW elapsed_ms=15891.285 exit=0
+MEASURE SUITE-SURFACE tier=FAST elapsed_ms=350.995 exit=0
+MEASURE SUITE-WASM tier=SUITE elapsed_ms=4441.774 exit=0
+MEASURE IMPORT-GRAMMAR tier=MED elapsed_ms=2192.631 exit=0
+MEASURE IMPORT-CLI tier=FAST elapsed_ms=348.598 exit=0
+MEASURE CORPUS-UAT tier=MED elapsed_ms=2162.176 exit=0
+MEASURE PARITY-COUNTS tier=MED elapsed_ms=865.318 exit=0
+MEASURE PRELUDE tier=FAST elapsed_ms=332.648 exit=0
+MEASURE EQUALITY tier=FAST elapsed_ms=279.724 exit=0
+MEASURE FAMILY-POLY tier=FAST elapsed_ms=282.184 exit=0
+MEASURE PRELUDE-POLY tier=FAST elapsed_ms=301.854 exit=0
+MEASURE FAMILY-MEMBERS tier=FAST elapsed_ms=308.602 exit=0
+MEASURE PRELUDE-TRANSPORT tier=FAST elapsed_ms=317.721 exit=0
+MEASURE PRELUDE-EQUALITY-OPS tier=FAST elapsed_ms=307.096 exit=0
+MEASURE PRELUDE-DEPENDENT tier=FAST elapsed_ms=298.215 exit=0
+MEASURE FAMILY-GROUPS tier=FAST elapsed_ms=279.138 exit=0
+MEASURE PRELUDE-CONGRUENCE tier=FAST elapsed_ms=312.413 exit=0
+MEASURE TEMPLATE-COST tier=MED elapsed_ms=332.362 exit=0
+MEASURE PRELUDE-CATEGORY tier=CATEGORY elapsed_ms=128497.106 exit=0
+MEASURE PRELUDE-FUNCTOR tier=CATEGORY elapsed_ms=106062.357 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-FUNCTOR tier=SLOW elapsed_ms=5237.202 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-NATTRANS tier=SLOW elapsed_ms=16240.838 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-WHISKERING tier=SLOW elapsed_ms=25985.150 exit=0
+MEASURE PRELUDE-SHARED-NATTRANS tier=SUITE elapsed_ms=43818.330 exit=0
+MEASURE PRELUDE-SHARED-NATTRANS-RUNTIME tier=SUITE elapsed_ms=46274.312 exit=0
+MEASURE PRELUDE-SHARED-LEFT-KAN tier=CATEGORY elapsed_ms=206968.449 exit=0
+MEASURE PRELUDE-SHARED-LEFT-KAN-RUNTIME tier=CATEGORY elapsed_ms=295873.207 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-LEFT-KAN tier=SUITE elapsed_ms=300263.267 exit=124
+MEASURE PRELUDE-COMPOSABLE-FUNCTORS tier=SLOW elapsed_ms=39838.392 exit=0
+MEASURE PRELUDE-NATTRANS tier=SUITE elapsed_ms=174815.567 exit=0
+MEASURE PRELUDE-LEFT-KAN tier=SUITE elapsed_ms=126495.004 exit=0
+MEASURE EQUALITY-RUNTIME tier=MED elapsed_ms=936.138 exit=0
+MEASURE PRENEX-RUNTIME tier=MED elapsed_ms=697.385 exit=0
+MEASURE PRENEX-FAMILIES-RUNTIME tier=MED elapsed_ms=583.001 exit=0
+MEASURE PRENEX-GROUPS-RUNTIME tier=MED elapsed_ms=813.592 exit=0
+MEASURE TEMPLATE-COMPOSITION-RUNTIME tier=SLOW elapsed_ms=901.531 exit=0
+MEASURE TEMPLATE-REUSE-RUNTIME tier=SLOW elapsed_ms=39104.857 exit=0
+MEASURE TEMPLATE-SYMBOLIC-REUSE-RUNTIME tier=SLOW elapsed_ms=46067.661 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME tier=SLOW elapsed_ms=4461.774 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME tier=SLOW elapsed_ms=18179.764 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME tier=SLOW elapsed_ms=22860.808 exit=0
+MEASURE PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME tier=SLOW elapsed_ms=110226.999 exit=1
+MEASURE PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME tier=SLOW elapsed_ms=30279.838 exit=0
+MEASURE PRELUDE-CATEGORY-RUNTIME tier=CATEGORY elapsed_ms=210261.232 exit=2
+MEASURE PRELUDE-CATEGORY-ACCESSORS tier=CATEGORY elapsed_ms=210564.291 exit=2
+MEASURE DEPENDENT-CLOSURE-RUNTIME tier=MED elapsed_ms=5887.708 exit=0
+MEASURE PRELUDE-FUNCTOR-RUNTIME tier=CATEGORY elapsed_ms=210486.557 exit=2
+MEASURE PRELUDE-NATTRANS-RUNTIME tier=CATEGORY elapsed_ms=210677.988 exit=2
+MEASURE PRELUDE-LEFT-KAN-RUNTIME tier=SUITE elapsed_ms=210425.265 exit=2
+MEASURE AXIOMS tier=FAST elapsed_ms=464.303 exit=0
+MEASURE MAP-INVENTORY tier=MED elapsed_ms=4153.439 exit=0
+MEASURE TRUSTED-LINES tier=FAST elapsed_ms=70.940 exit=1
+MEASURE DENOMINATORS tier=MED elapsed_ms=119.647 exit=0
+
+GATES-FAIL

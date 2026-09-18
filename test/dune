@@ -1,8 +1,8 @@
 ; These are copies of the pin's suites linked only to mechanism's
 ; libraries.  The gate passes the pinned fixture directory explicitly.
 (executables
- (names main wasm sl_surface)
- (modules Main Wasm Sl_surface Sys_io Kanon_kernel Kanon_surface Kanon_wasm)
+ (names main wasm sl_surface circuit_bounds)
+ (modules Main Wasm Sl_surface Circuit_bounds Sys_io Kanon_kernel Kanon_surface Kanon_wasm)
  (libraries mechanism_kernel mechanism_surface mechanism_wasm))
 
 (executable
@@ -95,7 +95,13 @@
  (modules Prelude_category)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
-(copy_files ../vendor/kanon/test/main.ml)
+(copy_files ../vendor/veil/test/main.ml)
+(copy_files ../vendor/veil/test/circuit_bounds.ml)
+
+(executable
+ (name veil_templates)
+ (modules Veil_templates)
+ (libraries mechanism_kernel mechanism_surface))
 (executable
  (name prelude_runtime)
  (modules Prelude_runtime Runtime_slice)
@@ -136,9 +142,9 @@
  (modules Prelude_composable_functors)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
-(copy_files ../vendor/kanon/test/wasm.ml)
-(copy_files ../vendor/kanon/test/sl_surface.ml)
-(copy_files ../vendor/kanon/test/sys_io.ml)
+(copy_files ../vendor/veil/test/wasm.ml)
+(copy_files ../vendor/veil/test/sl_surface.ml)
+(copy_files ../vendor/veil/test/sys_io.ml)
 
 (executable
  (name prelude_heterogeneous_nattrans)

@@ -24,7 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: recursive
+          # Mechanism uses Veil's sources, without its local Tot development pin.
+          submodules: true
           persist-credentials: false
       - uses: ocaml/setup-ocaml@v3
         with:
@@ -40,6 +41,18 @@ jobs:
           python -m pip install '.[test]'
       - name: Build the mechanism compiler and certificate checker
         run: opam exec -- zsh dev/dunecho.sh build
+      # The pin leg holds PIN, .gitmodules and the gitlink together, and
+      # the two FAST Veil legs hold their counts.  The values repeat the
+      # oracles of dev/gates.sh, so a kept change of a count moves both.
+      - name: Pin and Veil regression legs
+        run: |
+          opam exec -- zsh dev/gates.sh --leg pin
+          templates=$(_build/default/test/veil_templates.exe)
+          printf '%s\n' "$templates"
+          [ "$templates" = 'VEIL-TEMPLATES OK shapes=4' ]
+          bounds=$(_build/default/test/circuit_bounds.exe | tail -1)
+          printf '%s\n' "$bounds"
+          [ "$bounds" = 'CIRCUIT-BOUNDS 18/18' ]
       - name: Auction and certificate checks
         run: python -P dev/gpu-auction-check.py --category --schemas --record auction-validation.json
       - name: Installed CLI round trip
@@ -55,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: recursive
+          submodules: true
           persist-credentials: false
       # The runner supplies Python >=3.11, zsh, OCaml >=5.3, dune >=3.24,
       # zarith 1.14, and cuOpt 26.08 configured for its NVIDIA driver/CUDA.

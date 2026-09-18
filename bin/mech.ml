@@ -1,7 +1,7 @@
 let usage () =
   prerr_endline "usage: mech import FILE [--out DIR] | diff-parity --export FILE";
   prerr_endline "       mech map-inventory --export FILE [--never]";
-  prerr_endline "       mech check|axioms|emit|run|spec-count (inherited arguments)"
+  prerr_endline "       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)"
 
 let imported path =
   let open Mechanism_import in

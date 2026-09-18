@@ -8,7 +8,7 @@ let identity = "poly (u) def identity : Sort (succ u) := Sort u "
 let plain = "mu Tiny : Type 0 with | zero : Tiny "
 let instance = box ^ "specialize Box (1) as DataBox "
 (* Each row pins the error kind as well as the text.  Error.message
-   erases the constructor (vendor/kanon/lib/error.ml:48-64), so a text
+   erases the constructor (vendor/veil/lib/error.ml:48-64), so a text
    alone leaves a producer free to move to another string arm without
    any suite motion.  The shape is the one of test/prenex.ml:92-107. *)
 let negative_cases = [

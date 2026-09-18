@@ -121,6 +121,13 @@ and map_shape budget level name s =
       let* n = name n in let* args = map_list walk args in Ok (Shape.SMu (n, args))
   | Shape.SNu (n, args) ->
       let* n = name n in let* args = map_list walk args in Ok (Shape.SNu (n, args))
+  | Shape.SZk (q, x, witness) ->
+      Result.map (fun witness -> Shape.SZk (q, x, witness)) (walk witness)
+  | Shape.SFhc level ->
+      Result.map (fun level -> Shape.SFhc level) (walk level)
+  | Shape.SMpc (parties, access) ->
+      let* parties = walk parties in let* access = walk access in
+      Ok (Shape.SMpc (parties, access))
 and map_addr budget level name addr =
   let* () = poll budget in
   match addr with

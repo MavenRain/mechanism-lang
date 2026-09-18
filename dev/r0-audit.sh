@@ -6,7 +6,7 @@
 # Generated wrapper files and binaries are not source audit inputs.
 #
 # Shape names belong only to lib/shape.ml, lib/rules.ml, lib/pp.ml,
-# lib/erase.ml and wasm/emit.ml, retaining the pinned audit's scope.
+# lib/erase.ml, lib/circuit.ml and wasm/emit.ml, retaining Veil's audit scope.
 # A stale build copy is an error, so rebuilding is part of mutation
 # verification too.
 
@@ -18,7 +18,7 @@ setopt null_glob
 root=${1:-${0:A:h}/..}
 root=${root:A}
 build=$root/_build/default
-pattern='SColl|SMu|SNu|SPar|SPi'
+pattern='SColl|SMu|SNu|SPar|SPi|SZk|SFhc|SMpc'
 
 if [[ ! -x $build/bin/mech.exe || ! -f $build/lib/shape.ml \
       || ! -f $build/wasm/gc_encode.ml ]]; then
@@ -33,14 +33,14 @@ for file in $files; do
   rel=${file#$build/}
   source=$root/$rel
   if [[ ! -f $source ]]; then
-    source=$root/vendor/kanon/$rel
+    source=$root/vendor/veil/$rel
   fi
   if [[ ! -f $source ]] || ! cmp -s $source $file; then
     print -r -- "R0-AUDIT STALE $rel: rebuild the effective sources"
     fail=1
   fi
   case $rel in
-    lib/shape.ml|lib/rules.ml|lib/pp.ml|lib/erase.ml|wasm/emit.ml) ;;
+    lib/shape.ml|lib/rules.ml|lib/pp.ml|lib/erase.ml|lib/circuit.ml|wasm/emit.ml) ;;
     *) inputs+=($file) ;;
   esac
 done

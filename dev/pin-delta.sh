@@ -5,14 +5,14 @@
 #   zsh /Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh
 #
 # An overlay row is a mechanism-lang source file whose path under the
-# repository root also exists in the vendored kanon tree at PIN.  The
-# script diffs each one against `git -C vendor/kanon show PIN:PATH`, and
+# repository root also exists in the vendored Veil tree at PIN.  The
+# script diffs each one against `git -C vendor/veil show PIN:PATH`, and
 # it prints one row per file with the changed line count.  It fails when
 # an overlay file has no row in dev/PIN-DELTA.md, when a listed row has
 # no file in the tree, or when a count differs.
 #
 # S0-D6.  The overlay scope is the OCaml source trees lib/, wasm/,
-# surface/ and bin/, because only those can shadow a vendored kanon
+# surface/ and bin/, because only those can shadow a vendored Veil
 # source file.  dev/, test/ and the repository prose are mechanism-lang's
 # own files, not overlays.  At Stage 0 the scope holds no file, so the
 # script folds over zero rows.  The empty case is not a special case in
@@ -33,7 +33,7 @@ setopt null_glob
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
 TABLE=$ROOT/dev/PIN-DELTA.md
-VENDOR=$ROOT/vendor/kanon
+VENDOR=$ROOT/vendor/veil
 PIN_SHA=$(cat $ROOT/PIN)
 # The work directory sits under the repository root, not under the
 # system temp directory, so the script needs no writable path outside the

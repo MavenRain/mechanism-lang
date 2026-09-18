@@ -1,0 +1,448 @@
+{
+  "base": "ba02c070f5b18c0310008d87a123d8de4a0c267e",
+  "veil": "a7534cedeac82d396de8e23058ee6bc990560f65",
+  "scope": "The existing full battery ran on the migration's production sources before three new Veil gate entries were added. The three new gates ran separately after their final build. No production source changed during the battery. A clean checkout of the base commit provided focused comparisons for timed-out tests. The final source hashes include the later documentation and gate wiring.",
+  "checks": [
+    {
+      "name": "veil-nattrans-runtime-recheck",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "python3 -P test/nattrans_runtime.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-RHf5Ad",
+      "argv": [
+        "python3",
+        "-P",
+        "test/nattrans_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-nattrans-runtime-recheck.stdout",
+          "sha256": "a5613b320af659fca1cb88d8ac8b9cd6a8f0cdc0ac9ceea469a3dccfd9118d3d"
+        },
+        "stderr": {
+          "file": "veil-nattrans-runtime-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "veil-left-kan-runtime-recheck",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "python3 -P test/left_kan_runtime.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-7woyqi",
+      "argv": [
+        "python3",
+        "-P",
+        "test/left_kan_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-left-kan-runtime-recheck.stdout",
+          "sha256": "e30973591189205a4ecd2cadda97731a3dc0c4b2080a0989de5a6891d3c54796"
+        },
+        "stderr": {
+          "file": "veil-left-kan-runtime-recheck.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "baseline-nattrans-runtime",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -P test/nattrans_runtime.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-MWymo3",
+      "argv": [
+        "python3",
+        "-P",
+        "test/nattrans_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-nattrans-runtime.stdout",
+          "sha256": "a5613b320af659fca1cb88d8ac8b9cd6a8f0cdc0ac9ceea469a3dccfd9118d3d"
+        },
+        "stderr": {
+          "file": "baseline-nattrans-runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "baseline-left-kan-runtime",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -P test/left_kan_runtime.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-VwE6Mb",
+      "argv": [
+        "python3",
+        "-P",
+        "test/left_kan_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-left-kan-runtime.stdout",
+          "sha256": "e30973591189205a4ecd2cadda97731a3dc0c4b2080a0989de5a6891d3c54796"
+        },
+        "stderr": {
+          "file": "baseline-left-kan-runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "full-battery",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH zsh dev/gates.sh",
+      "exit_code": 1,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-udcAPF",
+      "argv": [
+        "env",
+        "-u",
+        "OPAM_SWITCH_PREFIX",
+        "-u",
+        "CAML_LD_LIBRARY_PATH",
+        "zsh",
+        "dev/gates.sh"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "full-battery.stdout",
+          "sha256": "95ddbf75d04f9ff6f8ff1f56ed3fa8432ef49a2f3c6dc9d15aad636b7d789a6d"
+        },
+        "stderr": {
+          "file": "full-battery.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "build",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH zsh dev/dunecho.sh build",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-HyUcr9",
+      "argv": [
+        "env",
+        "-u",
+        "OPAM_SWITCH_PREFIX",
+        "-u",
+        "CAML_LD_LIBRARY_PATH",
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "build.stdout",
+          "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+        },
+        "stderr": {
+          "file": "build.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "veil-templates",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "_build/default/test/veil_templates.exe",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-gcDe1O",
+      "argv": [
+        "_build/default/test/veil_templates.exe"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-templates.stdout",
+          "sha256": "9bf93241a6a187cbc98d307995cdf617ee94d385b16eb42b51c47dc44fea9f98"
+        },
+        "stderr": {
+          "file": "veil-templates.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "veil-circuit",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "_build/default/test/circuit_bounds.exe",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-RKdu3P",
+      "argv": [
+        "_build/default/test/circuit_bounds.exe"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-circuit.stdout",
+          "sha256": "b1c4b97f0a105e7b5fe36da75c73b18f99ed4481c7fa50df836c8903c9bb471c"
+        },
+        "stderr": {
+          "file": "veil-circuit.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "veil-kernel",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "python3 -I dev/veil-gates.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-X1h7H9",
+      "argv": [
+        "python3",
+        "-I",
+        "dev/veil-gates.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-kernel.stdout",
+          "sha256": "3d6f4945e9d22e5be50e8053c8897396c4c85f479e980dd8f8a6a3ad054383db"
+        },
+        "stderr": {
+          "file": "veil-kernel.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "auction",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "python3 -P dev/gpu-auction-check.py --record .gatework/veil-auction.json",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-xCb742",
+      "argv": [
+        "python3",
+        "-P",
+        "dev/gpu-auction-check.py",
+        "--record",
+        ".gatework/veil-auction.json"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "auction.stdout",
+          "sha256": "4b3b073e953ef90fc57c6cd67f24b6a94668f4f5aec7dad53e161740d218eb6b"
+        },
+        "stderr": {
+          "file": "auction.stderr",
+          "sha256": "fcc09304d7ac7625791bb8e7df8f35ee3b594d663dd2bea5c848dbdfea40f47d"
+        }
+      }
+    },
+    {
+      "name": "baseline-build",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "env -u OPAM_SWITCH_PREFIX -u CAML_LD_LIBRARY_PATH zsh dev/dunecho.sh build",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-KKqQXR",
+      "argv": [
+        "env",
+        "-u",
+        "OPAM_SWITCH_PREFIX",
+        "-u",
+        "CAML_LD_LIBRARY_PATH",
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-build.stdout",
+          "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+        },
+        "stderr": {
+          "file": "baseline-build.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "baseline-heterogeneous-left-kan",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "/usr/bin/time -p gtimeout 300 _build/default/test/prelude_heterogeneous_left_kan.exe . --trace",
+      "exit_code": 124,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-baMGad",
+      "argv": [
+        "/usr/bin/time",
+        "-p",
+        "gtimeout",
+        "300",
+        "_build/default/test/prelude_heterogeneous_left_kan.exe",
+        ".",
+        "--trace"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-heterogeneous-left-kan.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "baseline-heterogeneous-left-kan.stderr",
+          "sha256": "4ba2057076fd8f8afc025b2dd0711fe66d3a6b8f3c3020be24c6945dfb92deae"
+        }
+      }
+    },
+    {
+      "name": "veil-heterogeneous-left-kan",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil",
+      "command": "/usr/bin/time -p gtimeout 300 _build/default/test/prelude_heterogeneous_left_kan.exe . --trace",
+      "exit_code": 124,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil/.kanon-exec/run-bTFYSH",
+      "argv": [
+        "/usr/bin/time",
+        "-p",
+        "gtimeout",
+        "300",
+        "_build/default/test/prelude_heterogeneous_left_kan.exe",
+        ".",
+        "--trace"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-heterogeneous-left-kan.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "veil-heterogeneous-left-kan.stderr",
+          "sha256": "caaa7f920bb223e7853c7a963f893d0924c48e4677fa001277aec6ab6d4560d7"
+        }
+      }
+    },
+    {
+      "name": "baseline-heterogeneous-left-kan-runtime",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -I test/heterogeneous_left_kan_runtime.py",
+      "exit_code": 1,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-ZBFKvG",
+      "argv": [
+        "python3",
+        "-I",
+        "test/heterogeneous_left_kan_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-heterogeneous-left-kan-runtime.stdout",
+          "sha256": "fdea815ef021924fdd63548720b89b67b3c7d6fa0b56d57e4281b33e9d0350fb"
+        },
+        "stderr": {
+          "file": "baseline-heterogeneous-left-kan-runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "baseline-category-runtime",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -P test/prenex_runtime.py --category",
+      "exit_code": 2,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-wKPvIG",
+      "argv": [
+        "python3",
+        "-P",
+        "test/prenex_runtime.py",
+        "--category"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-category-runtime.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "baseline-category-runtime.stderr",
+          "sha256": "2ef4f8639b556360c476b7614a6eee7ad50da89721335fb1cab68e4cc81f0c15"
+        }
+      }
+    },
+    {
+      "name": "baseline-category-accessors",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -P test/prenex_runtime.py --category-accessors",
+      "exit_code": 2,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-QlFkED",
+      "argv": [
+        "python3",
+        "-P",
+        "test/prenex_runtime.py",
+        "--category-accessors"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-category-accessors.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "baseline-category-accessors.stderr",
+          "sha256": "eff35a1f5cad38dc7bede1a4c48b265f266a83c7a8ec8651c4ec796c5ef9fa99"
+        }
+      }
+    },
+    {
+      "name": "baseline-functor-runtime",
+      "cwd": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline",
+      "command": "python3 -P test/functor_runtime.py",
+      "exit_code": 2,
+      "artifact": "/Users/oobi/Documents/gpt12/mechanism-veil-baseline/.kanon-exec/run-pFNMiv",
+      "argv": [
+        "python3",
+        "-P",
+        "test/functor_runtime.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "baseline-functor-runtime.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "baseline-functor-runtime.stderr",
+          "sha256": "d13aa3f2cb558d571e29e2afb05c618d2f6aa91e5d692ee5ee9ebf54442a5fe3"
+        }
+      }
+    },
+    {
+      "name": "veil-upstream-fhc-erasure",
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "command": "/Users/oobi/Documents/veil/_build/default/bin/kanon.exe check --erased /Users/oobi/Documents/veil/test/shapes/fhc-pack.kan",
+      "exit_code": 1,
+      "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-2fSm2E",
+      "argv": [
+        "/Users/oobi/Documents/veil/_build/default/bin/kanon.exe",
+        "check",
+        "--erased",
+        "/Users/oobi/Documents/veil/test/shapes/fhc-pack.kan"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "veil-upstream-fhc-erasure.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "file": "veil-upstream-fhc-erasure.stderr",
+          "sha256": "5bed6d83204e9160fe28cf8653d63eed861760417250337403199166c45acbdd"
+        }
+      }
+    },
+    {
+      "name": "static",
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "command": "python3 -I check-veil-migration.py",
+      "exit_code": 0,
+      "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-scEd71",
+      "argv": [
+        "python3",
+        "-I",
+        "check-veil-migration.py"
+      ],
+      "streams": {
+        "stdout": {
+          "file": "static.stdout",
+          "sha256": "8ef682328740069c41e0d2a169e9185543783eddd6769451a9fe79423b0f51fb"
+        },
+        "stderr": {
+          "file": "static.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ]
+}

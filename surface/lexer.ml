@@ -65,6 +65,20 @@ let keywords : (string * Token.kind) list =
     (* M1 Stage I, SI-D8:  the one word the minimal recursive
        definition production adds, which stands after "def". *)
     ("rec", Token.KRec);
+    (* V1 wave 1, D-9:  the three words of the zk sugar. *)
+    ("zk", Token.KZk);
+    ("prove", Token.KProve);
+    ("verify", Token.KVerify);
+    (* V1 wave 2, D-10:  the four words of the fhc sugar. *)
+    ("fhc", Token.KFhc);
+    ("enc", Token.KEnc);
+    ("eval", Token.KEval);
+    ("dec", Token.KDec);
+    (* V1 wave 3, D-12:  the four words of the mpc sugar. *)
+    ("mpc", Token.KMpc);
+    ("input", Token.KInput);
+    ("share", Token.KShare);
+    ("open", Token.KOpen);
   ]
 
 let ident_kind (s : string) : Token.kind =
@@ -100,10 +114,46 @@ let dot_tokens (loc : Token.loc) (digits : char list) : (Token.t list, Error.t) 
         [ { Token.kind = Token.Dot; loc }; { Token.kind = Token.Nat n; loc = Token.next_col loc } ])
 
 (* mirrors kan-lang-tot-pin/surface/lexer.ml:85-135, arm by arm *)
+let hex_digit (c : char) : int option =
+  match () with
+  | () when c >= '0' && c <= '9' -> Some (Char.code c - Char.code '0')
+  | () when c >= 'a' && c <= 'f' -> Some (10 + Char.code c - Char.code 'a')
+  | () when c >= 'A' && c <= 'F' -> Some (10 + Char.code c - Char.code 'A')
+  | () -> None
+
+(** A byte literal keeps source UTF-8 bytes and decodes only explicit
+    escapes. Newlines must be escaped, so a missing quote is local. *)
+let rec byte_literal (loc : Token.loc) (cs : char list) (acc : int list) :
+    (int list * Token.loc * char list, Error.t) result =
+  match cs with
+  | [] -> lex_err loc "unterminated byte literal"
+  | '"' :: rest -> Ok (List.rev acc, Token.next_col loc, rest)
+  | '\n' :: _rest | '\r' :: _rest -> lex_err loc "unescaped newline in byte literal"
+  | '\\' :: 'x' :: a :: b :: rest ->
+      let decoded = Option.bind (hex_digit a) (fun hi ->
+        Option.map (fun lo -> hi * 16 + lo) (hex_digit b)) in
+      Option.fold
+        ~none:(lex_err loc "byte escape requires two hexadecimal digits")
+        ~some:(fun b -> byte_literal (Token.advance loc 4) rest (b :: acc)) decoded
+  | '\\' :: c :: rest ->
+      let decoded : int option =
+        List.assoc_opt c
+          [ ('n', 10); ('r', 13); ('t', 9); ('0', 0); ('\\', 92); ('"', 34) ]
+      in
+      Option.fold
+        ~none:(lex_err loc (Printf.sprintf "invalid byte escape \\%c" c))
+        ~some:(fun b -> byte_literal (Token.advance loc 2) rest (b :: acc)) decoded
+  | [ '\\' ] -> lex_err loc "unterminated byte escape"
+  | c :: rest -> byte_literal (Token.next_col loc) rest (Char.code c :: acc)
+
 let rec go (loc : Token.loc) (cs : char list) (acc : Token.t list) :
     (Token.t list, Error.t) result =
   match cs with
   | [] -> Ok (List.rev ({ Token.kind = Token.Eof; loc } :: acc))
+  | 'b' :: '"' :: rest ->
+      Result.bind (byte_literal (Token.advance loc 2) rest [])
+        (fun (bytes, loc', rest') ->
+          go loc' rest' ({ Token.kind = Token.Bytes bytes; loc } :: acc))
   | ' ' :: rest | '\t' :: rest | '\r' :: rest -> go (Token.next_col loc) rest acc
   | '\n' :: rest -> go (Token.next_line loc) rest acc
   | '-' :: '-' :: rest -> skip_comment (Token.advance loc 2) rest acc
@@ -121,6 +171,9 @@ let rec go (loc : Token.loc) (cs : char list) (acc : Token.t list) :
   | '*' :: rest -> go (Token.next_col loc) rest ({ Token.kind = Token.Star; loc } :: acc)
   | ',' :: rest -> go (Token.next_col loc) rest ({ Token.kind = Token.Comma; loc } :: acc)
   | '|' :: rest -> go (Token.next_col loc) rest ({ Token.kind = Token.Pipe; loc } :: acc)
+  (* V1 wave 3, D-12:  the brackets of the share type. *)
+  | '[' :: rest -> go (Token.next_col loc) rest ({ Token.kind = Token.LBracket; loc } :: acc)
+  | ']' :: rest -> go (Token.next_col loc) rest ({ Token.kind = Token.RBracket; loc } :: acc)
   | '.' :: rest ->
       let digits, loc', rest' = span is_digit (Token.next_col loc) rest in
       Result.bind (dot_tokens loc digits) (fun tokens ->

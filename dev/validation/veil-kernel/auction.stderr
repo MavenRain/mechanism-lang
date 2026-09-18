@@ -1,0 +1,41 @@
+test_bad_candidate_rejected_before_exact_search (__main__.CandidateTests.test_bad_candidate_rejected_before_exact_search) ... ok
+test_gpu_adapter_all_cases_and_zero_gaps (__main__.CandidateTests.test_gpu_adapter_all_cases_and_zero_gaps) ... ok
+test_missing_cuopt_is_error (__main__.CandidateTests.test_missing_cuopt_is_error) ... ok
+test_rejects_forged_candidates (__main__.CandidateTests.test_rejects_forged_candidates) ... ok
+test_solver_tolerance_and_tie_canonicalization (__main__.CandidateTests.test_solver_tolerance_and_tie_canonicalization) ... ok
+test_invalid_profiles (__main__.InputTests.test_invalid_profiles) ... ok
+test_json_duplicate_keys_nonfinite_and_size (__main__.InputTests.test_json_duplicate_keys_nonfinite_and_size) ... ok
+test_documented_hand_cases (__main__.ResourceTests.test_documented_hand_cases) ... ok
+test_dsic_fixed_xor_menu_and_signed_utility (__main__.ResourceTests.test_dsic_fixed_xor_menu_and_signed_utility) ... ok
+test_hand_combinatorial (__main__.ResourceTests.test_hand_combinatorial) ... ok
+test_interval_endpoints_exclusive_hbm_and_cpu (__main__.ResourceTests.test_interval_endpoints_exclusive_hbm_and_cpu) ... ok
+test_large_integer_values_and_budget (__main__.ResourceTests.test_large_integer_values_and_budget) ... ok
+test_multi_host_and_large_horizon (__main__.ResourceTests.test_multi_host_and_large_horizon) ... ok
+test_random_profiles_against_independent_oracle (__main__.ResourceTests.test_random_profiles_against_independent_oracle) ... ok
+test_second_price_is_special_case (__main__.ResourceTests.test_second_price_is_special_case) ... ok
+test_ties_zeros_empty_and_input_order (__main__.ResourceTests.test_ties_zeros_empty_and_input_order) ... ok
+test_xor_and_all_alternatives_removed (__main__.ResourceTests.test_xor_and_all_alternatives_removed) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.343s
+
+OK
+test_capacity_and_payment_bounds_are_not_vacuous (__main__.KernelTests.test_capacity_and_payment_bounds_are_not_vacuous) ... ok
+test_cli_roundtrip_from_outside_source (__main__.KernelTests.test_cli_roundtrip_from_outside_source) ... ok
+test_closed_certificate_and_exact_exports (__main__.KernelTests.test_closed_certificate_and_exact_exports) ... ok
+test_empty_and_large_values_kernel (__main__.KernelTests.test_empty_and_large_values_kernel) ... ok
+test_export_solve_verify_audit_and_no_overwrite (__main__.KernelTests.test_export_solve_verify_audit_and_no_overwrite) ... ok
+test_failed_optimality_or_kernel_never_publishes (__main__.KernelTests.test_failed_optimality_or_kernel_never_publishes) ... ok
+test_mutated_proofs_rejected (__main__.KernelTests.test_mutated_proofs_rejected) ... ok
+test_source_axiom_and_invalid_exports_rejected (__main__.KernelTests.test_source_axiom_and_invalid_exports_rejected) ... ok
+test_tampered_lp_and_spec_even_with_rehashed_manifest (__main__.KernelTests.test_tampered_lp_and_spec_even_with_rehashed_manifest) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 3.191s
+
+OK
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 12.923s
+
+OK

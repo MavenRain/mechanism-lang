@@ -3709,3 +3709,103 @@ reach the leg: the harness passes no --reachable flag, the default arm at
 test/prelude_runtime.ml:22 keeps the old expression, the inputs of the leg
 are unstaged, and dev/M0-BUILD-LOG.md:3163 already reported the leg
 unresolved after rechecks before the slice, so no pin moved.
+
+## Veil kernel migration (2026-09-17)
+
+At the user's request, the kernel dependency changes from Kanon
+936a43a92dd59a04698648f24fa5ae94cdb532df to the current Veil commit,
+a7534cedeac82d396de8e23058ee6bc990560f65. The new submodule path is
+vendor/veil. Mechanism's universe and family overlays remain active,
+with Veil's checker, circuit reader, erasure, syntax and emitter changes.
+The build, shape audit, pin checks and delta inventory use the new pin.
+The CLI inherits circuit and build, plus Veil's axiom disclosures.
+
+Build, Veil template and circuit regressions, the three private-shape
+examples on Node and Wasmtime, and the CPU auction checks pass. The full
+battery and clean Kanon comparisons retain every failure in
+dev/validation/veil-kernel/. No existing timeout or trusted-source limit
+changes. TRUSTED-LINES now reports kernel=5475/3000 and encoder=246/900,
+including Veil's circuit reader and interface.
+
+See dev/VEIL-KERNEL.md for scope, reproduction and the upstream FHC
+example limitation. The original denominator file and historical
+validation records retain their original source pins.
+
+## Veil kernel migration review (2026-09-17)
+
+L4-1, medium, dev/gates.sh. The VEIL-CIRCUIT oracle held a count-free
+pattern, so a deleted boundary case stayed green. The oracle now holds
+`^CIRCUIT-BOUNDS 18/18$`, the value of Veil's own battery. The suite
+prints `CIRCUIT-BOUNDS 18/18` at exit 0. No tier and no frozen bound
+moves.
+
+L3-2, medium, dev/validation/veil-kernel/README.md. The record did not
+say that it is a capture of the author's runs. A new paragraph names
+the author copy and its baseline sibling as the working directories,
+and names check-veil-migration.py and the Veil build outside this tree
+as tools that the repository does not ship.
+
+L4-3, medium, dev/veil-gates.py and dev/VEIL-KERNEL.md. Veil's HOST and
+HOST-NAT legs, with their fixtures host-nat.kan, nat-bytes.kan and
+zk-instance.kan, are not inherited. The gate comment and the regression
+coverage list now record that cut and name the reactor imports that the
+three pack fixtures alone cover.
+
+L4-2, low, dev/veil-gates.py and dev/VEIL-KERNEL.md. The gate now diffs
+Veil's circuit fixtures mu-dependent-layout and one-fields and its
+test/circuit-spine.kan against their circuit goldens, because the rule
+for a field of an introduction at SMu decides whether those rows read a
+depth or a refusal. The gate line stays `VEIL-KERNEL OK shapes=3
+hosts=2`, because the shape and host counts do not move.
+
+L3-3, low, dev/MUTATION-LOG.md and dev/veil-mutations.py. The three new
+legs landed with no mutation driver. The new driver builds three
+mutants of lib/rules.ml in a copy outside the repository and requires
+VEIL-TEMPLATES or VEIL-CIRCUIT to refuse each one. The log records the
+three controls and states that the replay is not recorded yet, so a
+skipped round is no longer indistinguishable from an unrecorded one.
+
+L1-3, low, dev/veil-gates.py. The gate hardcoded exit 1 for every
+circuit run and treated any stderr byte as the verdict. It now ignores
+the exit code of the circuit command, keeps exit 0 for check, axioms,
+build and the two host runners, compares the golden against stdout, and
+prints a unified diff and stderr in the failure message.
+
+L1-4, low, .github/workflows/gpu-auction.yml. The workflow checked out
+the new submodule but ran no leg. The cpu job now runs the PIN leg and
+the two FAST Veil legs after the build step, so a gitlink that leaves
+PIN_SHA behind is red in CI.
+
+ND-1-1, medium, dev/validation/veil-kernel/README.md. The review round
+adds two changed sources, dev/veil-mutations.py and the modified
+dev/MUTATION-LOG.md, while sources.sha256 keeps its 33 captured rows.
+The README said that the record lists the final changed sources, which
+the two new files made false. The README now says that the record holds
+the 33 author sources and that the two files of the review round stay
+out of the hashed set.
+
+GATE-1, high, no source path. The only red leg beyond TRUSTED-LINES is
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME. The recorded failure is a budget
+expiry of its runtime harness at 110 s under a machine load of 24 to 32,
+not a refusal and not a wrong result. No source changed for it.
+
+Close (2026-09-17). Two fix rounds close eight findings: L4-1
+(medium, dev/gates.sh), L3-2 (medium,
+dev/validation/veil-kernel/README.md), L4-3 (medium,
+dev/veil-gates.py and dev/VEIL-KERNEL.md), L4-2 (low,
+dev/veil-gates.py and dev/VEIL-KERNEL.md), L3-3 (low,
+dev/MUTATION-LOG.md and dev/veil-mutations.py), L1-3 (low,
+dev/veil-gates.py), L1-4 (low,
+.github/workflows/gpu-auction.yml) and ND-1-1 (medium,
+dev/validation/veil-kernel/README.md). GATE-1 (high, the gate
+ladder) closes with no source change: the fix-1 red row was a
+110 second budget expiry of
+PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME under load 24 to 32, and
+the fix-2 recheck passed at load 14. No finding in this slice
+carries a ruled verdict. Ten findings were dropped before the
+fix rounds as refuted or merged: L2-4, L1-1, L2-1, L3-1, L1-2,
+L4-5, L4-4, L2-2, L2-3 and L2-5; their reasons stand in
+review-VK-report.md. The close ladder verdict is BOUND-ONLY:
+kernel=5475/3000, encoder=246/900, PASS 67 of 68, the one
+inherited red leg TRUSTED-LINES. TRUSTED-LINES stays red until
+the user rules D-A-1. No bound moves for it.

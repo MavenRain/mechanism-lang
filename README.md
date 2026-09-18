@@ -1,9 +1,9 @@
 # mechanism-lang
 
 mechanism-lang is a dependently typed language for mechanism design.  It
-is a sibling of kanon, not a kanon milestone.  The kernel of kanon is
-vendored, not forked: vendor/kanon is a git submodule pinned at
-936a43a92dd59a04698648f24fa5ae94cdb532df, the sha in the PIN file.  The
+is a sibling of kanon, with Veil as its kernel dependency.
+vendor/veil is a git submodule pinned at
+a7534cedeac82d396de8e23058ee6bc990560f65, the sha in the PIN file.  The
 submodule is never forked and never rebased.  mechanism-lang adds a
 level overlay in lib/, an importer for the lean4export format in
 import/, and a prelude in prelude/ that states its mapping targets in
@@ -55,7 +55,10 @@ shared transformation record remains in
 The preceding symbolic reuse record, including its interrupted capture
 and rechecks, remains in `dev/validation/stage-c-symbolic-reuse/`.
 
-The driver inherits check, axioms, emit, run and spec-count.
+The driver inherits check, axioms, circuit, emit, build, run and spec-count.
+Veil supplies the SZk, SFhc and SMpc shapes, circuit checking and their
+surface syntax and Wasm erasure. See `dev/VEIL-KERNEL.md` for migration
+scope and validation.
 Prenex definitions and individual recursive families use textual binders
 or the OCaml Poly and Family_poly APIs.  Ordered family groups and their
 members also have source syntax.  The importer

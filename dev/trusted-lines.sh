@@ -5,13 +5,14 @@
 #   zsh /Users/oobi/Documents/mechanism-lang/dev/trusted-lines.sh
 #
 # The trust base of a checked file is the kernel and the encoder.  The
-# kernel is ten logical files: shape.ml, term.ml, rules.ml, check.ml,
-# value.ml, eval.ml, conv.ml, totality.ml, positivity.ml and order.ml,
+# kernel includes shape.ml, term.ml, rules.ml, check.ml,
+# value.ml, eval.ml, conv.ml, totality.ml, positivity.ml, order.ml and
+# Veil's circuit.ml and circuit.mli,
 # each read from its physical lib/ overlay when present and otherwise
-# under vendor/kanon/lib.  Every additional local lib/ source or interface
+# under vendor/veil/lib.  Every additional local lib/ source or interface
 # counts once too.  An overlaid implementation replaces its pinned
 # counterpart in the active kernel and is never counted twice.  The
-# encoder is one file, vendor/kanon/wasm/gc_encode.ml,
+# encoder is one file, vendor/veil/wasm/gc_encode.ml,
 # which writes the bytes of the module.  M0 holds the kernel at 3,000
 # lines and the encoder at 900, from the design verdict's Trusted base
 # (M0-PLAN.md:164, note N2).  No agent moves either number.
@@ -42,19 +43,20 @@ encoder_bound=900
 kernel_names=(
   shape.ml term.ml rules.ml check.ml value.ml eval.ml conv.ml
   totality.ml positivity.ml order.ml
+  circuit.ml circuit.mli
 )
 kernel_files=()
 for name in $kernel_names; do
   if [[ -f $root/lib/$name ]]; then
     kernel_files+=($root/lib/$name)
   else
-    kernel_files+=($root/vendor/kanon/lib/$name)
+    kernel_files+=($root/vendor/veil/lib/$name)
   fi
 done
 kernel_files+=($root/lib/**/*.ml $root/lib/**/*.mli)
 # Unique paths remove the physical replacements already chosen above.
 kernel_files=("${(@u)kernel_files}")
-encoder_file=$root/vendor/kanon/wasm/gc_encode.ml
+encoder_file=$root/vendor/veil/wasm/gc_encode.ml
 
 # wc -l over more than one file ends with a total row, which awk reads.
 kernel_out=$(wc -l $kernel_files)

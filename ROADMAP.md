@@ -85,7 +85,8 @@ horizontal composition and six refusals, and compare four exports on
 three hosts at two payloads. PRELUDE-SHARED-LEFT-KAN checks shared
 unit and mediator APIs, independent specializations and seven refusals.
 Its runtime gate compares six exports on three hosts at two payloads.
-TRUSTED-LINES stays red at kernel=4208/3000 and encoder=246/900 until
+After the Veil kernel migration, TRUSTED-LINES stays red at
+kernel=5475/3000 and encoder=246/900 until
 the user rules D-A-1.
 
 ## Port tracks

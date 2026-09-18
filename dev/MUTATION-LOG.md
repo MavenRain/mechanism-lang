@@ -1085,3 +1085,30 @@ not count as killed controls.
 The full result and unchanged source hashes are retained in
 dev/validation/port-uat-u1-shared-nattrans/mutations.json.
 The runtime payload control also compares 37 and 41 on three hosts.
+
+## Veil kernel migration (2026-09-17)
+
+The slice adds three gate legs: VEIL-TEMPLATES, VEIL-CIRCUIT and
+VEIL-KERNEL.  `dev/veil-mutations.py` is the driver of their mutation
+round.  It copies the repository to a directory outside this tree,
+edits one line of lib/rules.ml for each control, builds that copy, runs
+the suite of the leg that must refuse the control, and then restores
+the line.  The primary source is never mutated.
+
+| Control | File | Change | Suite that must refuse |
+| --- | --- | --- | --- |
+| C-VEIL-M1 | lib/rules.ml | Drop the traversal of the second SMpc argument | test/veil_templates.exe |
+| C-VEIL-M2 | lib/rules.ml | Keep the old SZk payload, so the payload level substitution is lost | test/veil_templates.exe |
+| C-VEIL-M3 | lib/rules.ml | Keep the old SFhc payload, so a free universe stays inside the shape | test/circuit_bounds.exe |
+
+The replay is not recorded yet.  The review round that shipped the
+driver did not run it, because each control needs a full build of the
+copy.  No kill row is written here until a measured run gives one.  The
+command is
+
+```
+python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY
+```
+
+It writes `report.json` with the exit code and the output of each
+control, and prints the counts `passed`, `killed` and `controls`.

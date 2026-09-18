@@ -39,9 +39,9 @@ WORK=$ROOT/.gatework/gates
 MEASURE_FILE=$WORK/measure.txt
 mkdir -p $WORK
 
-# The kanon pin.  The PIN leg reads this literal against the three
-# places that record the sha.  No agent moves this number.
-PIN_SHA=936a43a92dd59a04698648f24fa5ae94cdb532df
+# The Veil pin.  The PIN leg reads this literal against the three
+# places that record the sha. Update it with an authorized kernel pin change.
+PIN_SHA=a7534cedeac82d396de8e23058ee6bc990560f65
 
 # The watchdog.  GNU coreutils ships timeout as gtimeout on stock macOS.
 watchdog=""
@@ -94,14 +94,14 @@ gate_timed () {
 # carries a value.  The battery below runs them through the watchdog as
 # "zsh dev/gates.sh --leg NAME".
 
-# PIN.  The PIN file, the index gitlink for vendor/kanon and the
+# PIN.  The PIN file, the index gitlink for vendor/veil and the
 # submodule HEAD all read the pin (M0-PLAN.md:146, tally
 # dev/gates-tally-m1.sh:127-133).
 leg_pin () {
   local pin gitlink head line
   pin=$(cat $ROOT/PIN)
-  gitlink=$(git -C $ROOT ls-files -s vendor/kanon | awk '{ print $2 }')
-  head=$(git -C $ROOT/vendor/kanon rev-parse HEAD)
+  gitlink=$(git -C $ROOT ls-files -s vendor/veil | awk '{ print $2 }')
+  head=$(git -C $ROOT/vendor/veil rev-parse HEAD)
   line="PIN pin=$pin gitlink=$gitlink head=$head want=$PIN_SHA"
   if [[ $pin == $PIN_SHA && $gitlink == $PIN_SHA && $head == $PIN_SHA ]]; then
     print -r -- "PASS $line"
@@ -195,8 +195,13 @@ leg FAST R0-AUDIT '^R0-AUDIT OK$' zsh $ROOT/dev/r0-audit.sh $ROOT
 # backend.  The pinned fixture files remain the input corpus, while the
 # WASM suite writes its artifacts outside the vendor checkout.
 leg SUITE SUITE-KERNEL '^SUITE-KERNEL OK$' \
-  $ROOT/_build/default/test/main.exe $ROOT/vendor/kanon/test
+  $ROOT/_build/default/test/main.exe $ROOT/vendor/veil/test
 leg FAST LEVELS '^LEVELS-OK$' $ROOT/_build/default/test/levels.exe
+leg FAST VEIL-TEMPLATES '^VEIL-TEMPLATES OK shapes=4$' \
+  $ROOT/_build/default/test/veil_templates.exe
+leg FAST VEIL-CIRCUIT '^CIRCUIT-BOUNDS 18/18$' \
+  $ROOT/_build/default/test/circuit_bounds.exe
+leg SLOW VEIL-KERNEL '^VEIL-KERNEL OK shapes=3 hosts=2$' python3 -I $ROOT/dev/veil-gates.py
 leg FAST PRENEX '^PRENEX-OK entries=' $ROOT/_build/default/test/prenex.exe $ROOT
 leg FAST PRENEX-FAMILIES '^PRENEX-FAMILIES-OK families=' \
   $ROOT/_build/default/test/prenex_families.exe $ROOT

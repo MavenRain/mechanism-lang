@@ -1,13 +1,13 @@
 # PIN delta
 
 Every mechanism-lang OCaml implementation or interface file of lib/,
-wasm/, surface/ and bin/ that overlays a file of the vendored kanon
+wasm/, surface/ and bin/ that overlays a file of the vendored Veil
 tree at PIN has one row here.  Those are the files dev/pin-delta.sh
 reads (dev/pin-delta.sh:50-53).  The build files bin/dune, lib/dune,
 surface/dune and wasm/dune also replace their counterparts at the pin,
 each one wholesale, so none of them carries a delta row.
 dev/pin-delta.sh diffs each file
-against `git -C vendor/kanon show 936a43a92dd59a04698648f24fa5ae94cdb532df:PATH`
+against `git -C vendor/veil show a7534cedeac82d396de8e23058ee6bc990560f65:PATH`
 and compares the changed line count with the expected column.  The count
 is the line count of the `diff` output.  The overlay scope is lib/,
 wasm/, surface/ and bin/ (S0-D6).
@@ -48,6 +48,12 @@ under a temporary symbolic family and specializes through the existing
 closed family checker. Cross-catalog names and specialized constructor
 names are checked before the immutable program result is returned.
 
+The Veil migration rebases the overlays onto its checker, rules, parser,
+elaborator, driver and emitter. Mechanism retains its universe and
+family machinery, closure fixes and prelude behavior. Circuit checking
+is copied from the pin. The family traversal also maps Veil's shape
+payloads during universe substitution and family renaming.
+
 | file | expected |
 | --- | --- |
 | lib/check.ml | 140 |
@@ -61,7 +67,7 @@ names are checked before the immutable program result is returned.
 | surface/token.ml | 12 |
 | surface/lexer.ml | 6 |
 | surface/syntax.ml | 67 |
-| surface/parser.ml | 209 |
+| surface/parser.ml | 214 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 

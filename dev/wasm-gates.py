@@ -28,9 +28,9 @@ def main():
         golden = test / "golden"
         golden.mkdir(parents=True)
         (repo / "dev").symlink_to(ROOT / "dev", target_is_directory=True)
-        (test / "fixtures").symlink_to(ROOT / "vendor/kanon/test/fixtures",
+        (test / "fixtures").symlink_to(ROOT / "vendor/veil/test/fixtures",
                                        target_is_directory=True)
-        pinned = ROOT / "vendor/kanon/test/golden"
+        pinned = ROOT / "vendor/veil/test/golden"
         if not OVERLAYS <= {path.name for path in pinned.iterdir()}:
             print("SUITE-WASM FAIL golden overlay has no pinned original")
             return 1

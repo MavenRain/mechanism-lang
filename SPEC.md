@@ -2,28 +2,28 @@
 
 ## R0 counts
 
-The block below is inherited from kanon at PIN
-(936a43a92dd59a04698648f24fa5ae94cdb532df, pin SPEC.md:176-183) and it
-is copied byte for byte.  M0 changes no row of it.  `mech spec-count`
-prints this block and dev/r0-count.sh diffs the two.  A count that grows
-fails the R0-COUNT gate leg.
+The block below is inherited from Veil at PIN
+(a7534cedeac82d396de8e23058ee6bc990560f65). The kernel migration adds
+Veil's three private-computation shapes. `mech spec-count` prints this
+block and dev/r0-count.sh diffs the two. Any unrecorded change fails
+the R0-COUNT gate leg.
 
 ```
 formers 2: Lan Ran
 schema constructors 4: In Elim Sec Out
-shapes declared 5: SPi SColl SPar SMu SNu
-shapes admitted 3: SPi SColl SMu
-named rules declared 3: proof-irrelevance subsingleton-large-elimination literal-fast-path
+shapes declared 8: SPi SColl SPar SMu SNu SZk SFhc SMpc
+shapes admitted 6: SPi SColl SMu SZk SFhc SMpc
+named rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc
 named rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path
 eta rows 3: Ran-SPi Lan-SPi Ran-SColl
-no eta 3: Lan-SColl Ran-SMu Lan-SMu
+no eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc Lan-SMpc
 ```
 
 Every number in the block is the length of the list printed after it.
 
-The block moves at M2 on exactly two rows, shapes admitted 3 to 4 and no
-eta 3 to 4, when SPar is admitted for Quot (M0-PLAN.md:108).  Any
-earlier growth is an R0-COUNT failure.
+The Veil pin replaces the original Kanon count baseline. SPar remains
+unadmitted. Its planned admission for Quot at M2 would move shapes
+admitted from 6 to 7 and no eta from 9 to 10 (M0-PLAN.md:108).
 
 ## D3: prenex universe levels
 

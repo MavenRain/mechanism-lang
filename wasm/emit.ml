@@ -1020,3 +1020,105 @@ let program (_g : Kanon_kernel.Global.t)
   in
   let* ei = L.func_index l L.entry_fkey in
   Ok (G.encode { G.types; funcs; exports = [ (export, ei) ]; declared = l.L.declared })
+
+(* ---------- reusable module exports ---------- *)
+
+(** Host aggregates use immutable typed envelopes. The payload keeps
+    its existing runtime representation; the extra i32 fields give
+    distinct envelope shapes to the distinct erased representations.
+    Even an empty sum is opaque at this boundary. *)
+type host_handle = {
+  repr : E.repr;
+  index : int;
+  padding : int;
+  payload : G.valtype;
+}
+
+let host_handle (handles : host_handle list) (r : E.repr) :
+    (host_handle, Err.t) result =
+  List.find_opt (fun (h : host_handle) -> same h.repr r) handles
+  |> Option.to_result ~none:(Err.Mismatch ("unsupported host representation " ^ E.print_repr r))
+
+let host_type (handles : host_handle list) (r : E.repr) :
+    (G.valtype, Err.t) result =
+  if same r L.nat_repr then Ok G.I32
+  else Result.map (fun (h : host_handle) -> G.Ref (G.HType h.index)) (host_handle handles r)
+
+let host_argument (handles : host_handle list) (i : int) (r : E.repr) :
+    (G.instr list, Err.t) result =
+  if same r L.nat_repr then
+    Ok [ G.Local_get i; G.I32_const nat_max; G.I32_gt_u;
+         G.If (None, [ G.Unreachable ], []); G.Local_get i; G.Ref_i31 ]
+  else
+    let* h = host_handle handles r in
+    Ok [ G.Local_get i; G.Ref_cast (G.HType h.index); G.Struct_get (h.index, 0) ]
+
+let host_result (handles : host_handle list) (local : int) (r : E.repr) :
+    (G.valtype list * G.instr list, Err.t) result =
+  if same r L.nat_repr then
+    Ok ([ G.I32 ],
+        [ G.Ref_cast G.HI31; G.I31_get_s; G.Local_set local;
+          G.Local_get local; G.I32_const nat_max; G.I32_gt_u;
+          G.If (None, [ G.Unreachable ], []); G.Local_get local ])
+  else
+    let* h = host_handle handles r in
+    Ok ([], List.init h.padding (fun _i -> G.I32_const 0) @ [ G.Struct_new h.index ])
+
+let host_wrapper (l : L.t) (handles : host_handle list) (ftype : int)
+    (name : string) (f : L.fn) : (G.func, Err.t) result =
+  let* fi = L.func_index l (L.fun_fkey name) in
+  let* arguments = L.seq (List.mapi (host_argument handles) f.L.params) in
+  let* locals, result = host_result handles (List.length f.L.params) f.L.result in
+  Ok { G.ftype; locals; body = List.concat arguments @ [ G.Call fi ] @ result }
+
+let host_definition (p : L.prog) (name : string) : (string * L.fn, Err.t) result =
+  List.assoc_opt name p.L.funs
+  |> Option.to_result ~none:(Err.Unbound ("no definition named " ^ name))
+  |> Result.map (fun (f : L.fn) -> (name, f))
+
+let host_representations (defs : (string * L.fn) list) : (E.repr list, Err.t) result =
+  let reprs = List.concat_map (fun ((_name : string), (f : L.fn)) -> f.L.result :: f.L.params) defs in
+  let unique = List.sort_uniq (fun a b -> String.compare (E.print_repr a) (E.print_repr b)) reprs in
+  let supported (r : E.repr) : (E.repr, Err.t) result =
+    match r with
+    | E.RI31 | E.RStruct _ | E.RUnion _ -> Ok r
+    | E.RFunc _ | E.RThunk _ -> Error (Err.Not_yet "host function and thunk values are not supported")
+  in
+  L.seq (List.map supported (List.filter (fun r -> not (same r L.nat_repr)) unique))
+
+(** Build a module with ordinary function exports. This is independent
+    of [program], so the historical single Nat entry ABI is unchanged. *)
+let reactor (rows : (string * Kanon_kernel.Erase.entry) list) ~(exports : string list) :
+    (string, Err.t) result =
+  let* _u =
+    if exports = [] then Error (Err.Mismatch "build needs at least one export")
+    else if List.length (List.sort_uniq String.compare exports) <> List.length exports then
+      Error (Err.Mismatch "duplicate export name")
+    else Ok ()
+  in
+  let* l = L.build rows in
+  let* defs = L.seq (List.map (host_definition l.L.prog) exports) in
+  let* reprs = host_representations defs in
+  let* handles = L.seq (List.mapi (fun padding repr ->
+    let* payload = L.valtype_of l repr in
+    Ok { repr; index = List.length l.L.types + padding; padding; payload }) reprs) in
+  let handle_types = List.map (fun h ->
+    [ G.CStruct (h.payload :: List.init h.padding (fun _i -> G.I32)) ]) handles in
+  let* signatures = L.seq (List.map (fun ((_name : string), (f : L.fn)) ->
+    let* params = L.seq (List.map (host_type handles) f.L.params) in
+    let* result = host_type handles f.L.result in
+    Ok [ G.CFunc (params, [ result ]) ]) defs) in
+  let* types = L.comptype_groups l in
+  let* funcs = L.seq (List.map (fun ((_key : string), (spec : L.fspec)) ->
+    match spec with
+    | L.FSEntry ->
+        let* ftype = L.type_index l L.entry_ty_key in
+        Ok { G.ftype; locals = []; body = [ G.Unreachable ] }
+    | L.FSRuntime _ | L.FSProg _ | L.FSWrap _ | L.FSApply _ | L.FSPapw _ ->
+        one_func l "" spec) l.L.funcs) in
+  let first_signature = List.length l.L.types + List.length handles in
+  let* wrappers = L.seq (List.mapi (fun i (name, f) ->
+    host_wrapper l handles (first_signature + i) name f) defs) in
+  let exports = List.mapi (fun i (name, _f) -> (name, List.length funcs + i)) defs in
+  Ok (G.encode { G.types = types @ handle_types @ signatures;
+                 funcs = funcs @ wrappers; exports; declared = l.L.declared })
