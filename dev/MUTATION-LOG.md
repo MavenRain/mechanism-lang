@@ -1112,3 +1112,26 @@ python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY
 
 It writes `report.json` with the exit code and the output of each
 control, and prints the counts `passed`, `killed` and `controls`.
+
+## Pointwise natural transformation law mutations (2026-09-18)
+
+dev/nattrans-laws-mutations.py WORK replays seven source controls in
+an isolated fixture copy using the built suite. All seven are
+detected. Baseline and restored suites pass, and original and copied
+source hashes agree. A timeout, crash or unexpected diagnostic does
+not count as a killed control.
+
+| Control | Change | Detected by |
+| --- | --- | --- |
+| relation-endpoint | Compare alpha with itself instead of beta | symbolic equality proof mismatch |
+| identity-proof | Replace the abstract category law with reflexivity | constructor index mismatch |
+| associativity-proof | Replace abstract associativity with reflexivity | constructor index mismatch |
+| congruence-proof | Use the first premise for the second component | equality type mismatch |
+| sharing | Omit target category reuse | nominal category mismatch |
+| component | Apply the certified component at x+1 | leftIdentityAt/37 computation |
+| refusal-control | Replace false equality with a valid definition | missing refusal |
+
+The first attempt stopped on an incorrectly escaped mutation anchor
+after two controls. The corrected complete run and its full outputs
+are retained in dev/validation/port-uat-u1-nattrans-laws/. The runtime
+payload check additionally compares 37 and 41 on all three hosts.

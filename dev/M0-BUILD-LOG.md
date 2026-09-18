@@ -3809,3 +3809,110 @@ review-VK-report.md. The close ladder verdict is BOUND-ONLY:
 kernel=5475/3000, encoder=246/900, PASS 67 of 68, the one
 inherited red leg TRUSTED-LINES. TRUSTED-LINES stays red until
 the user rules D-A-1. No bound moves for it.
+
+## Pointwise natural transformation laws (2026-09-18)
+
+Base 59f48f1. MechNatTransLaws adds component equality, reflexivity,
+symmetry, transitivity, both vertical identity laws, associativity
+and vertical composition congruence. Four independent universe
+parameters and checked category reuse connect it to independently
+specialized transformation APIs. The proofs use existing category
+laws and equality operations; no kernel, axiom or mapping change is
+needed. See dev/PORT-UAT-U1-NATTRANS-LAWS.md for the contract.
+
+The compact build reports zero errors and zero warnings. The new
+kernel suite passes with 234 definitions, ten families, twelve
+computations and six refusals. The runtime suite compares six exports
+at two payloads on the kernel, Node and Wasmtime. All seven isolated
+mutation controls are detected, and baseline/restored runs pass with
+unchanged source hashes. The heterogeneous and shared natural
+transformation suites also pass. Shell syntax and diff whitespace
+checks pass.
+
+The first mutation capture stopped after two detected controls
+because a newline in its next anchor was escaped incorrectly.
+The corrected driver was rerun in a fresh directory. Both the
+interrupted attempt and the completed result are identified in
+dev/validation/port-uat-u1-nattrans-laws/.
+
+Validation is scoped to this additive prelude increment; the full
+battery was not rerun. TRUSTED-LINES was rechecked and remains red
+at kernel=5475/3000 and encoder=246/900. The existing limit and all
+watchdog tiers are unchanged. Horizontal and whiskering equations,
+whole-record equality and source-type parity remain open.
+
+## Pointwise natural transformation laws review (2026-09-18)
+
+A review of the staged slice gave seven findings. Round one fixes all
+seven in the sources of the slice.
+
+The suite guard for a recorded refusal prefix moves from 20 to 40
+characters (`test/prelude_nattrans_laws.ml`). A prefix cut back to the
+generic sentence `mismatch: the term has type` is now refused.
+
+The wrong-endpoint negative records 150 characters of its message, which
+holds the functor endpoints of the equation. The trans-middle negative
+records the whole message, because the first 240 characters do not
+separate the two transitivity premises. Both fixture changes keep the
+negative inventory at six.
+
+`test/nattrans_laws_runtime.py` computes the completion guard and the
+counts of the gate row from the function inventory and the payload list.
+The printed row does not change.
+
+`dev/nattrans-laws-mutations.py` lengthens the expected diagnostic of the
+five controls that shared a generic sentence. Each expected string now
+holds the first segment that separates the recorded outputs.
+
+The record of `dev/validation/port-uat-u1-nattrans-laws/` changes in two
+rows. DIFF-WHITESPACE reads the staged slice with
+`git diff --cached --check`. The headline row of PRELUDE-NATTRANS-LAWS
+carries a working directory, an exit code and the captured row.
+`mutations.json` is recaptured. `sources.sha256` is re-pinned for every
+path of this round.
+
+Measured after the fixes:
+
+```
+PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6
+PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2
+{"passed": true, "killed": 7, "controls": 7}
+```
+
+Round two corrects the record defect of round one, and it clears the gate
+ladder of round one.
+
+ND-1-1 (medium, `dev/validation/port-uat-u1-nattrans-laws/checks.json`).
+The record held the digest of the suite executable from before the round
+one edit of `test/prelude_nattrans_laws.ml`. The record now holds
+`bafe802fd4f2f7615b50b49ba56bedb02e3a92fc53bed591868000d4a8fca564` for
+`_build/default/test/prelude_nattrans_laws.exe`. That digest is the
+digest of the file on disk, and it is the digest that `mutations.json`
+holds. The capture time of the block moves to the time of this
+recapture. The three other executable digests do not change. No bound
+and no tier moves.
+
+GATE-1 (high, the gate ladder). Item 5 of round one stopped with the row
+`REPLAY-DIR-REUSED`. The replay driver refuses a working directory that
+exists, and the directory of that round was present before the ladder
+ran. No source of the slice is a cause of that row. Round two runs the
+replay in a fresh working directory, and the ladder of this round
+measures the summary row again.
+
+Close. Four finder lenses raised thirteen raw findings. Adversarial
+verifiers refuted two: L1-2 (nominal-equality body insensitivity is the
+documented nominal/category refusal, confirmed by two body mutants that
+give the same trace row) and L2-3 (the runtime harness fails closed on a
+duplicate erased function; no silent overwrite occurs). The judge kept
+seven and round one fixed all seven: L3-1 (medium), L4-3 (low), L1-3
+(low), L1-1 (low), L4-2 (low), L2-2 (low) and L2-1 (low). Round two fixed
+ND-1-1 (medium), a record defect that the round one source edit
+introduced, and closed GATE-1 (high), a reused replay directory. GATE-2
+is the ladder script's leg parser reading the summary row `FAIL ids:` as
+a leg named `ids:`; it is a script artifact, not a slice defect, and
+carries no fix. No kept finding is left unfixed. The close ladder
+verdict is GREEN (attempt 4, 2026-09-18): battery PASS 69 of 70 at
+FLOOR 68 with the FAIL row TRUSTED-LINES (inherited), the pinned
+budget-bound leg PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME passed,
+mutation replay 7 of 7 controls killed, sources.sha256 ok=41,
+RUNNER-EXIT 0.

@@ -47,9 +47,13 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The current shared left Kan increment adds kernel and runtime gates
-plus five mutation controls. Its commands, results and source hashes
-are in `dev/validation/port-uat-u1-shared-left-kan/`. The preceding
+The current natural transformation laws increment adds pointwise
+equality, vertical identity and associativity laws, and composition
+congruence. Its kernel and runtime gates and seven mutation controls
+are described in `dev/PORT-UAT-U1-NATTRANS-LAWS.md`; the validation
+record is in `dev/validation/port-uat-u1-nattrans-laws/`.
+The preceding shared left Kan increment's commands, results and source
+hashes are in `dev/validation/port-uat-u1-shared-left-kan/`. The preceding
 shared transformation record remains in
 `dev/validation/port-uat-u1-shared-nattrans/`.
 The preceding symbolic reuse record, including its interrupted capture

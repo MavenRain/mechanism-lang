@@ -1,0 +1,126 @@
+-- Load category-core, heterogeneous-functor and heterogeneous-nattrans first.
+-- Equality compares components in the target category's equality family.
+poly (u, v, w, z) group MechNatTransLaws where
+specialize MechHeterogeneousNatTrans (u, v, w, z) as Ops
+
+def NatTransEq : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    Ops_NatTrans C D c d F G -> Ops_NatTrans C D c d F G -> Prop :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (beta : Ops_NatTrans C D c d F G) =>
+    (0 x : C) -> Ops_Base_Target (Ops_Base_Target_Hom D d (F.1 x) (G.1 x))
+      (Ops_natApp C D c d F G alpha x) (Ops_natApp C D c d F G beta x)
+
+def eqRefl : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> NatTransEq C D c d F G alpha alpha :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (0 x : C) => categoryRefl
+
+def eqSymm : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> (beta : Ops_NatTrans C D c d F G) ->
+    NatTransEq C D c d F G alpha beta -> NatTransEq C D c d F G beta alpha :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (beta : Ops_NatTrans C D c d F G)
+      (proof : NatTransEq C D c d F G alpha beta) (0 x : C) =>
+    Ops_targetEqSymm (Ops_Base_Target_Hom D d (F.1 x) (G.1 x))
+      (alpha.1 x) (beta.1 x) (proof x)
+
+def eqTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> (beta : Ops_NatTrans C D c d F G) ->
+    (gamma : Ops_NatTrans C D c d F G) ->
+    NatTransEq C D c d F G alpha beta -> NatTransEq C D c d F G beta gamma ->
+    NatTransEq C D c d F G alpha gamma :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (beta : Ops_NatTrans C D c d F G)
+      (gamma : Ops_NatTrans C D c d F G)
+      (first : NatTransEq C D c d F G alpha beta)
+      (second : NatTransEq C D c d F G beta gamma) (0 x : C) =>
+    Ops_Base_Target_eqTrans (Ops_Base_Target_Hom D d (F.1 x) (G.1 x))
+      (alpha.1 x) (beta.1 x) (gamma.1 x) (first x) (second x)
+
+def idVcomp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> NatTransEq C D c d F G
+      (Ops_vcomp C D c d F F G (Ops_idNat C D c d F) alpha) alpha :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (0 x : C) =>
+    Ops_Base_Target_idComp D d (F.1 x) (G.1 x) (alpha.1 x)
+
+def vcompId : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> NatTransEq C D c d F G
+      (Ops_vcomp C D c d F G G alpha (Ops_idNat C D c d G)) alpha :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (0 x : C) =>
+    Ops_Base_Target_compId D d (F.1 x) (G.1 x) (alpha.1 x)
+
+def vcompAssoc : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (H : Ops_Base_Functor C D c d) -> (I : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> (beta : Ops_NatTrans C D c d G H) ->
+    (gamma : Ops_NatTrans C D c d H I) -> NatTransEq C D c d F I
+      (Ops_vcomp C D c d F H I (Ops_vcomp C D c d F G H alpha beta) gamma)
+      (Ops_vcomp C D c d F G I alpha (Ops_vcomp C D c d G H I beta gamma)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (H : Ops_Base_Functor C D c d) (I : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (beta : Ops_NatTrans C D c d G H)
+      (gamma : Ops_NatTrans C D c d H I) (0 x : C) =>
+    Ops_Base_Target_assoc D d (F.1 x) (G.1 x) (H.1 x) (I.1 x)
+      (alpha.1 x) (beta.1 x) (gamma.1 x)
+
+def vcompCongr : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Ops_Base_Source_Category C) -> (d : Ops_Base_Target_Category D) ->
+    (F : Ops_Base_Functor C D c d) -> (G : Ops_Base_Functor C D c d) ->
+    (H : Ops_Base_Functor C D c d) ->
+    (alpha : Ops_NatTrans C D c d F G) -> (alpha2 : Ops_NatTrans C D c d F G) ->
+    (beta : Ops_NatTrans C D c d G H) -> (beta2 : Ops_NatTrans C D c d G H) ->
+    NatTransEq C D c d F G alpha alpha2 -> NatTransEq C D c d G H beta beta2 ->
+    NatTransEq C D c d F H
+      (Ops_vcomp C D c d F G H alpha beta) (Ops_vcomp C D c d F G H alpha2 beta2) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Ops_Base_Source_Category C) (d : Ops_Base_Target_Category D)
+      (F : Ops_Base_Functor C D c d) (G : Ops_Base_Functor C D c d)
+      (H : Ops_Base_Functor C D c d)
+      (alpha : Ops_NatTrans C D c d F G) (alpha2 : Ops_NatTrans C D c d F G)
+      (beta : Ops_NatTrans C D c d G H) (beta2 : Ops_NatTrans C D c d G H)
+      (first : NatTransEq C D c d F G alpha alpha2)
+      (second : NatTransEq C D c d G H beta beta2) (0 x : C) =>
+    Ops_Base_Target_eqTrans (Ops_Base_Target_Hom D d (F.1 x) (H.1 x))
+      (Ops_Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) (alpha.1 x) (beta.1 x))
+      (Ops_Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) (alpha2.1 x) (beta.1 x))
+      (Ops_Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) (alpha2.1 x) (beta2.1 x))
+      (Ops_Base_Target_eqCongr (Ops_Base_Target_Hom D d (F.1 x) (G.1 x))
+        (Ops_Base_Target_Hom D d (F.1 x) (H.1 x))
+        (fun (f : Ops_Base_Target_Hom D d (F.1 x) (G.1 x)) =>
+          Ops_Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) f (beta.1 x))
+        (alpha.1 x) (alpha2.1 x) (first x))
+      (Ops_Base_Target_eqCongr (Ops_Base_Target_Hom D d (G.1 x) (H.1 x))
+        (Ops_Base_Target_Hom D d (F.1 x) (H.1 x))
+        (fun (f : Ops_Base_Target_Hom D d (G.1 x) (H.1 x)) =>
+          Ops_Base_Target_comp D d (F.1 x) (G.1 x) (H.1 x) (alpha2.1 x) f)
+        (beta.1 x) (beta2.1 x) (second x))
+end

@@ -1,0 +1,83 @@
+specialize MechNatTransLaws (0, 1, 2, 3) as Mixed
+specialize MechNatTransLaws (3, 2, 1, 0) as Wide
+
+-- The relation exposes actual component equality, at every source object.
+def mixedComponents : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (beta : Mixed_Ops_NatTrans C D c d F G) ->
+    Mixed_NatTransEq C D c d F G alpha beta -> (0 x : C) ->
+    Mixed_Ops_Base_Target (Mixed_Ops_Base_Target_Hom D d (F.1 x) (G.1 x))
+      (alpha.1 x) (beta.1 x) :=
+  fun (0 C : Type 0) (0 D : Type 2)
+      (c : Mixed_Ops_Base_Source_Category C) (d : Mixed_Ops_Base_Target_Category D)
+      (F : Mixed_Ops_Base_Functor C D c d) (G : Mixed_Ops_Base_Functor C D c d)
+      (alpha : Mixed_Ops_NatTrans C D c d F G) (beta : Mixed_Ops_NatTrans C D c d F G)
+      (proof : Mixed_NatTransEq C D c d F G alpha beta) => proof
+
+def mixedRefl : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) ->
+    Mixed_NatTransEq C D c d F G alpha alpha := Mixed_eqRefl
+
+def mixedSymm : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (beta : Mixed_Ops_NatTrans C D c d F G) ->
+    Mixed_NatTransEq C D c d F G alpha beta ->
+    Mixed_NatTransEq C D c d F G beta alpha := Mixed_eqSymm
+
+def mixedTrans : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (beta : Mixed_Ops_NatTrans C D c d F G) ->
+    (gamma : Mixed_Ops_NatTrans C D c d F G) ->
+    Mixed_NatTransEq C D c d F G alpha beta -> Mixed_NatTransEq C D c d F G beta gamma ->
+    Mixed_NatTransEq C D c d F G alpha gamma := Mixed_eqTrans
+
+def mixedLeftId : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> Mixed_NatTransEq C D c d F G
+      (Mixed_Ops_vcomp C D c d F F G (Mixed_Ops_idNat C D c d F) alpha) alpha := Mixed_idVcomp
+
+def mixedRightId : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> Mixed_NatTransEq C D c d F G
+      (Mixed_Ops_vcomp C D c d F G G alpha (Mixed_Ops_idNat C D c d G)) alpha := Mixed_vcompId
+
+def mixedAssoc : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (H : Mixed_Ops_Base_Functor C D c d) -> (I : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (beta : Mixed_Ops_NatTrans C D c d G H) ->
+    (gamma : Mixed_Ops_NatTrans C D c d H I) -> Mixed_NatTransEq C D c d F I
+      (Mixed_Ops_vcomp C D c d F H I (Mixed_Ops_vcomp C D c d F G H alpha beta) gamma)
+      (Mixed_Ops_vcomp C D c d F G I alpha (Mixed_Ops_vcomp C D c d G H I beta gamma)) := Mixed_vcompAssoc
+
+def mixedCongr : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (H : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (alpha2 : Mixed_Ops_NatTrans C D c d F G) ->
+    (beta : Mixed_Ops_NatTrans C D c d G H) -> (beta2 : Mixed_Ops_NatTrans C D c d G H) ->
+    Mixed_NatTransEq C D c d F G alpha alpha2 -> Mixed_NatTransEq C D c d G H beta beta2 ->
+    Mixed_NatTransEq C D c d F H
+      (Mixed_Ops_vcomp C D c d F G H alpha beta)
+      (Mixed_Ops_vcomp C D c d F G H alpha2 beta2) := Mixed_vcompCongr
+
+-- The source universe may exceed both the target object and hom universes.
+def wideRelation : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : Wide_Ops_Base_Source_Category C) -> (d : Wide_Ops_Base_Target_Category D) ->
+    (F : Wide_Ops_Base_Functor C D c d) -> (G : Wide_Ops_Base_Functor C D c d) ->
+    Wide_Ops_NatTrans C D c d F G -> Wide_Ops_NatTrans C D c d F G -> Prop := Wide_NatTransEq
+def wideAssoc : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : Wide_Ops_Base_Source_Category C) -> (d : Wide_Ops_Base_Target_Category D) ->
+    (F : Wide_Ops_Base_Functor C D c d) -> (G : Wide_Ops_Base_Functor C D c d) ->
+    (H : Wide_Ops_Base_Functor C D c d) -> (I : Wide_Ops_Base_Functor C D c d) ->
+    (alpha : Wide_Ops_NatTrans C D c d F G) -> (beta : Wide_Ops_NatTrans C D c d G H) ->
+    (gamma : Wide_Ops_NatTrans C D c d H I) -> Wide_NatTransEq C D c d F I
+      (Wide_Ops_vcomp C D c d F H I (Wide_Ops_vcomp C D c d F G H alpha beta) gamma)
+      (Wide_Ops_vcomp C D c d F G I alpha (Wide_Ops_vcomp C D c d G H I beta gamma)) := Wide_vcompAssoc

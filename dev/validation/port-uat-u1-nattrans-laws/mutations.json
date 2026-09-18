@@ -1,0 +1,167 @@
+{
+  "passed": true,
+  "killed": 7,
+  "controls": 7,
+  "sources_unchanged": true,
+  "source_sha256": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/nattrans-laws.mech": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+    "test/fixtures/prelude/nattrans-laws.mech": "debdd344fde2ed2557bf0dade1d625c6e5c79e92d42a80f8eff35c88674d7bc0",
+    "test/fixtures/prelude/heterogeneous-nattrans-runtime.mech": "8629f115a251836f3e2a9082ca1f6a95adc89db12ff38380d017aedce5324730",
+    "test/fixtures/prelude/nattrans-laws-runtime.mech": "36894b3a925998b8f8c57b56fad9d7ef8af53c61934d0f7c0bef0c058e26aa9c",
+    "test/neg/nattrans-laws/false-components.err": "a1a276d0e2866f71a23581bab95b8e459eaf8907b31bd0f873f62b2e9f8dbb58",
+    "test/neg/nattrans-laws/false-components.mech": "ae9bdc47976c98de7f5bf04e9dba7c2969713376680a0a3bd00df8cbe71fba71",
+    "test/neg/nattrans-laws/missing-congruence.err": "883547059e5cb10714ff588e2660f6791a117a51e65e993077613f0f090009da",
+    "test/neg/nattrans-laws/missing-congruence.mech": "31f390cf2fd414eddf794fe7c43033c02c0a35983415f80563371a8634af2575",
+    "test/neg/nattrans-laws/nominal-equality.err": "1d208bd6342db5611935474bd01858a4ac474f46c8590d486cd0f854330f1479",
+    "test/neg/nattrans-laws/nominal-equality.mech": "a6683a3b61da74874794a4e71fd1deecee65adc8ef0dc782069d27361d5120bb",
+    "test/neg/nattrans-laws/one-component.err": "a93ccf2dc62de8abff905beed209a43f9e425c3522e20c1d79fc5349aeaeef69",
+    "test/neg/nattrans-laws/one-component.mech": "b7f6b1bfa122d9febfb2ad7c2e415820b610e21b62890cbe157c7fded98b0b65",
+    "test/neg/nattrans-laws/trans-middle.err": "dfdb827930f5bd257b06dce50a98ec927393de1f35fbb5a811167c7ef7bd5d9f",
+    "test/neg/nattrans-laws/trans-middle.mech": "279f2bda75dae8d4753804096fbd88eb6a70df1a7c67b9a070206e0f288e87b9",
+    "test/neg/nattrans-laws/wrong-endpoint.err": "df842a6e5c6d6aaf390982e5325b0f29597824e377bcafa8ec22629c52021f8a",
+    "test/neg/nattrans-laws/wrong-endpoint.mech": "6bfa26472053dba98f075906ec26643053f2eb05086670f417ac77c482e2b841"
+  },
+  "suite_source_sha256": "d23073b5c9b4b4c8dc031645cd0cb337d0ee649da48dbaec3086e49db06b4ff6",
+  "executable_sha256": "bafe802fd4f2f7615b50b49ba56bedb02e3a92fc53bed591868000d4a8fca564",
+  "rows": [
+    {
+      "id": "baseline",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 30.856,
+      "stdout_sha256": "74ecc18f225a5d1c2621c1db4e1e561d74401ae611c5d61c2c2a40db2b080c6e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    },
+    {
+      "id": "relation-endpoint",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 4.487,
+      "stdout_sha256": "0c3c5e708d4c4e926eb28cc1849b0fa1f4abf7eb744af58f7b6813e8a30f2a09",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/nattrans-laws.mech",
+      "before_sha256": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+      "mutated_sha256": "8ba038ab3144e7a435f2619f6d35b3691a32182eaa02f0af948e8c43fdf7697a",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL mismatch: the term has type (Lan SMu Ops_Base_Target [(Out SPi w x C (APt w x) (Elim SPi w app (Ran SPi w x C (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 x D (Ran SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi 0 x D (Ran SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y => x)))) alpha as self return (Ran SPi",
+      "killed": true
+    },
+    {
+      "id": "identity-proof",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 16.061,
+      "stdout_sha256": "a0e3b00d889b3c05ccf075288b91d254aa5addac826f37404b2ca5debab76a2e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/nattrans-laws.mech",
+      "before_sha256": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+      "mutated_sha256": "1783d4c7cab6eefa04bf724a3ac0292f5275e92aff3d54f45c4fa41e2316790a",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL mismatch: the constructor categoryRefl of Ops_Base_Target gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SP",
+      "killed": true
+    },
+    {
+      "id": "associativity-proof",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 13.352,
+      "stdout_sha256": "8c5f8519fdf568984dee9049d1fd5f50f27c1044442af069b38e1b57aadf7ad4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/nattrans-laws.mech",
+      "before_sha256": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+      "mutated_sha256": "d9f7e9b592092ddace80a40f2f31e2928b3790d135b9dcc1a9306c15ff86d451",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL mismatch: the constructor categoryRefl of Ops_Base_Target gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) I as self return (Ran SP",
+      "killed": true
+    },
+    {
+      "id": "congruence-proof",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 8.854,
+      "stdout_sha256": "02dabdcaeb2ac2aa34def15c45103299530f46a5504d53a5b98f356164ffbf95",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "prelude/cat/nattrans-laws.mech",
+      "before_sha256": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+      "mutated_sha256": "5e556b00f75d2598318e8190e4fb0ae0b075c36d1bc80901ae7197cf01fa2935",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL mismatch: the term has type (Lan SMu Ops_Base_Target [(Out SPi w x C (APt w x) (Elim SPi w app (Ran SPi w x C (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 x D (Ran SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi 0 x D (Ran SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y => x)))) alpha2 as self return (Ran SP",
+      "killed": true
+    },
+    {
+      "id": "sharing",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 29.233,
+      "stdout_sha256": "493b54d0650fcc0f783f170f2e2f710ccdce98a3a28a833fdbb466fdcd3d232f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/nattrans-laws-runtime.mech",
+      "before_sha256": "36894b3a925998b8f8c57b56fad9d7ef8af53c61934d0f7c0bef0c058e26aa9c",
+      "mutated_sha256": "35b7988993c065dd0b525171a3a65457813b25682efb9ba122a7844dc1e807e5",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL mismatch: the term has type (Lan SPi w hom (Ran SPi 0 x (L",
+      "killed": true
+    },
+    {
+      "id": "component",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 35.661,
+      "stdout_sha256": "2c09db3900ab0de73375cb537e6faf0d65f8cb7c062f5e0f64d688ca5cf051da",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/fixtures/prelude/nattrans-laws-runtime.mech",
+      "before_sha256": "36894b3a925998b8f8c57b56fad9d7ef8af53c61934d0f7c0bef0c058e26aa9c",
+      "mutated_sha256": "9883f0781748f28fbbcd5c19354fdab649bfb9222852c4627b3de1fd6e4d6506",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL wrong computation: leftIdentityAt/37",
+      "killed": true
+    },
+    {
+      "id": "refusal-control",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 1,
+      "seconds": 45.012,
+      "stdout_sha256": "feb551b7a9b78bd3048602fe7a8016ca7382fd3cb05f0e319f0e94966a49a238",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "test/neg/nattrans-laws/false-components.mech",
+      "before_sha256": "ae9bdc47976c98de7f5bf04e9dba7c2969713376680a0a3bd00df8cbe71fba71",
+      "mutated_sha256": "2221a1bec92a2c0650a56e280db2aac899548de140416c9557669a5e7af49d95",
+      "expected": "PRELUDE-NATTRANS-LAWS-FAIL false-components: expected refusal",
+      "killed": true
+    },
+    {
+      "id": "restored",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "COPY"
+      ],
+      "exit": 0,
+      "seconds": 55.055,
+      "stdout_sha256": "74ecc18f225a5d1c2621c1db4e1e561d74401ae611c5d61c2c2a40db2b080c6e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    }
+  ]
+}

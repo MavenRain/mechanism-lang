@@ -1,0 +1,2 @@
+def bad : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant Alpha Beta :=
+  fun (0 x : Nat) => categoryRefl

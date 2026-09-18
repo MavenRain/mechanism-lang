@@ -1,0 +1,212 @@
+{
+  "base_commit": "59f48f11593c8524efbd9e9051f3fbc6767a392b",
+  "scope": "Additive pointwise natural transformation laws; full battery not rerun.",
+  "full_battery_run": false,
+  "checks": [
+    {
+      "name": "BUILD",
+      "command": [
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "exit_code": 0,
+      "stdout_projection": {
+        "artifact": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-nr4vlA",
+        "command": 1,
+        "stream": "stdout",
+        "total_bytes": 31,
+        "truncated": false,
+        "next_line": null,
+        "next_byte": null,
+        "next_bytes": null,
+        "excerpts": [
+          {
+            "command": 1,
+            "stream": "stdout",
+            "line": 1,
+            "byte_offset": 0,
+            "byte_length": 31,
+            "priority": 7,
+            "clipped": false,
+            "text": "OK build: 0 errors, 0 warnings"
+          }
+        ]
+      },
+      "stderr_bytes": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS-LAWS",
+      "command": [
+        "_build/default/test/prelude_nattrans_laws.exe",
+        "."
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "capture": {
+        "stdout": "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6\n",
+        "stdout_sha256": "74ecc18f225a5d1c2621c1db4e1e561d74401ae611c5d61c2c2a40db2b080c6e",
+        "stderr_bytes": 0
+      },
+      "evidence": "mutations.json baseline and restored rows; mutation-output.json"
+    },
+    {
+      "name": "PRELUDE-NATTRANS-LAWS-RUNTIME",
+      "command": [
+        "python3",
+        "-I",
+        "test/nattrans_laws_runtime.py"
+      ],
+      "exit_code": 0,
+      "stdout_projection": {
+        "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-6whOxO",
+        "command": 1,
+        "stream": "stdout",
+        "total_bytes": 60,
+        "truncated": false,
+        "next_line": null,
+        "next_byte": null,
+        "next_bytes": null,
+        "excerpts": [
+          {
+            "command": 1,
+            "stream": "stdout",
+            "line": 1,
+            "byte_offset": 0,
+            "byte_length": 60,
+            "priority": 1,
+            "clipped": false,
+            "text": "PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2"
+          }
+        ]
+      },
+      "stderr_bytes": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-NATTRANS",
+      "command": [
+        "_build/default/test/prelude_heterogeneous_nattrans.exe",
+        "."
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt12/.kanon-exec/run-WLJLNz",
+      "counts": {
+        "stdout_bytes": 86,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "excerpts": [
+        {
+          "command": 1,
+          "stream": "stdout",
+          "line": 1,
+          "byte_offset": 0,
+          "byte_length": 86,
+          "priority": 2,
+          "clipped": false,
+          "text": "PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=150 instances=4 computations=5 negatives=13"
+        }
+      ]
+    },
+    {
+      "name": "PRELUDE-SHARED-NATTRANS",
+      "command": [
+        "_build/default/test/prelude_shared_nattrans.exe",
+        "."
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt12/.kanon-exec/run-vIDpIt",
+      "counts": {
+        "stdout_bytes": 78,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "excerpts": [
+        {
+          "command": 1,
+          "stream": "stdout",
+          "line": 1,
+          "byte_offset": 0,
+          "byte_length": 78,
+          "priority": 2,
+          "clipped": false,
+          "text": "PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6"
+        }
+      ]
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "command": [
+        "zsh",
+        "dev/trusted-lines.sh"
+      ],
+      "exit_code": 1,
+      "capture": "/Users/oobi/Documents/gpt12/.kanon-exec/run-MFWgwy",
+      "counts": {
+        "stdout_bytes": 52,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "excerpts": [
+        {
+          "command": 1,
+          "stream": "stdout",
+          "line": 1,
+          "byte_offset": 0,
+          "byte_length": 52,
+          "priority": 2,
+          "clipped": false,
+          "text": "TRUSTED-LINES kernel=5475/3000 encoder=246/900 FAIL"
+        }
+      ],
+      "classification": "inherited failure, unchanged trusted sources and limits"
+    },
+    {
+      "name": "SHELL-SYNTAX",
+      "command": [
+        "zsh",
+        "-n",
+        "dev/gates.sh"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "DIFF-WHITESPACE",
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "gate_oracles": [
+    {
+      "name": "PRELUDE-NATTRANS-LAWS",
+      "pattern": "^PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6$",
+      "matched": true
+    },
+    {
+      "name": "PRELUDE-NATTRANS-LAWS-RUNTIME",
+      "pattern": "^PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2$",
+      "matched": true
+    }
+  ],
+  "captured_at_utc": "2026-09-18T15:06:24.819263+00:00",
+  "executable_sha256": {
+    "_build/default/test/prelude_nattrans_laws.exe": "bafe802fd4f2f7615b50b49ba56bedb02e3a92fc53bed591868000d4a8fca564",
+    "_build/default/test/prelude_runtime.exe": "48a30c53d55831586fbc013401eee6c43f647707b54ac83bd8ea0c055e53f9de",
+    "_build/default/test/prelude_heterogeneous_nattrans.exe": "c5fb23e51a65fd9b2b3f6a982eda0b3bc9ffb1c4aeb68ec157477ee34a7d00db",
+    "_build/default/test/prelude_shared_nattrans.exe": "a99e66be46705aee69b62b089bf3017fe8b301a4a0fc612aa5ac72ca12a46622"
+  }
+}

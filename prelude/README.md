@@ -405,8 +405,9 @@ Both PRELUDE-HETEROGENEOUS-LEFT-KAN gates check this API and four
 exports on three hosts at two payloads. Ordinary specializations
 retain distinct nominal families. Closed family reuse and functor
 identity/composition are described above. Shared natural transformation
-and left Kan APIs are described here; transformation equations and
-source-type parity remain open.
+and left Kan APIs are described here. Pointwise vertical laws appear
+below; whiskering and horizontal equations and source-type parity
+remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 
 ## Shared left Kan extensions
@@ -430,3 +431,29 @@ kernel. The second gate compares the six computations on the kernel,
 Node and Wasmtime at two payloads. The runtime client
 chooses two distinct mediators and composes them in an observable
 order. See `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md` for the full API.
+
+## Pointwise natural transformation laws
+
+Load `cat/category-core.mech`, `cat/heterogeneous-functor.mech`,
+`cat/heterogeneous-nattrans.mech`, then `cat/nattrans-laws.mech`.
+The laws can share an independently specialized transformation API:
+
+```text
+specialize MechHeterogeneousNatTrans (0, 1, 2, 3) as N
+specialize MechNatTransLaws (0, 1, 2, 3) as L
+  with (Ops_Base_Source := N_Base_Source, Ops_Base_Target := N_Base_Target)
+```
+
+`L_NatTransEq C D c d F G alpha beta` is a proposition giving target
+equality of the two components at every source object. `L_eqRefl`,
+`L_eqSymm` and `L_eqTrans` prove its equivalence laws. `L_idVcomp` and
+`L_vcompId` remove the corresponding vertical identity; `L_vcompAssoc`
+reassociates three transformations; `L_vcompCongr` composes two pairs
+of pointwise equal transformations. The `L_Ops_` members expose the
+underlying heterogeneous transformation API.
+
+Each law is checked with four independent universe parameters and
+uses the existing target category proofs. This relation does not
+supply equality of whole records or functional extensionality.
+The new kernel and runtime gates cover mixed universes, family reuse,
+refusals and erased proof arguments. See `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.

@@ -1,0 +1,15 @@
+def bad : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : Mixed_Ops_Base_Source_Category C) -> (d : Mixed_Ops_Base_Target_Category D) ->
+    (F : Mixed_Ops_Base_Functor C D c d) -> (G : Mixed_Ops_Base_Functor C D c d) ->
+    (alpha : Mixed_Ops_NatTrans C D c d F G) -> (beta : Mixed_Ops_NatTrans C D c d F G) ->
+    (gamma : Mixed_Ops_NatTrans C D c d F G) ->
+    Mixed_NatTransEq C D c d F G alpha beta -> Mixed_NatTransEq C D c d F G alpha gamma ->
+    Mixed_NatTransEq C D c d F G alpha gamma :=
+  fun (0 C : Type 0) (0 D : Type 2)
+      (c : Mixed_Ops_Base_Source_Category C) (d : Mixed_Ops_Base_Target_Category D)
+      (F : Mixed_Ops_Base_Functor C D c d) (G : Mixed_Ops_Base_Functor C D c d)
+      (alpha : Mixed_Ops_NatTrans C D c d F G) (beta : Mixed_Ops_NatTrans C D c d F G)
+      (gamma : Mixed_Ops_NatTrans C D c d F G)
+      (first : Mixed_NatTransEq C D c d F G alpha beta)
+      (second : Mixed_NatTransEq C D c d F G alpha gamma) =>
+    Mixed_eqTrans C D c d F G alpha beta gamma first second

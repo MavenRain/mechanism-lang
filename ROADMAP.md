@@ -42,13 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-17
+## Position on 2026-09-18
 
-The base is bbebbff, following committed shared natural transformations.
-The current increment connects left Kan extensions to those shared
-APIs. Unit and mediator accessors work with independently specialized
-functors and transformations; the mediators compose through the shared
-vertical composition operation. See `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`.
+The base is 59f48f1, following committed shared left Kan extensions
+and the Veil kernel migration. The current increment adds pointwise
+equality of natural transformations, its equivalence proofs, vertical
+identity and associativity laws, and vertical composition congruence.
+It supports independently specialized APIs through checked family reuse.
+See `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -59,8 +60,9 @@ and dependent closure calls.  The first U1 increment adds checked
 functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
-add universal mediators and pointwise uniqueness.  Stage C remains
-open on transformation equations and source-type parity.
+add universal mediators and pointwise uniqueness. Stage C remains
+open on whiskering and horizontal composition equations, equality of
+whole transformation records, and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
 2,477. The
@@ -85,6 +87,9 @@ horizontal composition and six refusals, and compare four exports on
 three hosts at two payloads. PRELUDE-SHARED-LEFT-KAN checks shared
 unit and mediator APIs, independent specializations and seven refusals.
 Its runtime gate compares six exports on three hosts at two payloads.
+PRELUDE-NATTRANS-LAWS checks pointwise vertical laws at independent
+universes and six refusals. Its runtime gate compares six certified
+component applications on three hosts at two payloads.
 After the Veil kernel migration, TRUSTED-LINES stays red at
 kernel=5475/3000 and encoder=246/900 until
 the user rules D-A-1.
@@ -156,8 +161,10 @@ stay under `ports/` (D-UAT-3).
   groups follows in `dev/M0-STAGE-C-SYMBOLIC-REUSE.md`. Shared natural
   transformations and horizontal composition follow in
   `dev/PORT-UAT-U1-SHARED-NATTRANS.md`. Shared left Kan extensions
-  follow in `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. U1 remains open on
-  transformation equations and source-type parity.
+  follow in `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. Pointwise vertical
+  transformation laws follow in `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
+  U1 remains open on whiskering and horizontal equations, equality of
+  whole transformation records, and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

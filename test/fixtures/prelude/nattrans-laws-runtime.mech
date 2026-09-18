@@ -1,0 +1,56 @@
+-- Load heterogeneous-nattrans-runtime.mech first. Its independent Run API joins
+-- this specialization through the same two checked category families.
+specialize MechNatTransLaws (0, 1, 1, 0) as Laws
+  with (Ops_Base_Source := Run_Base_Source, Ops_Base_Target := Run_Base_Target)
+specialize MechNatTransLaws (0, 1, 1, 0) as Separate
+
+def LeftIdentity : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    (Run_idNat Nat Point IndexedEnd DoubleEnd Constant) Alpha
+def RightIdentity : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    Alpha (Run_idNat Nat Point IndexedEnd DoubleEnd Constant)
+def AssocLeft : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    (Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha Beta) Beta
+def AssocRight : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Alpha
+    (Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant Beta Beta)
+def leftIdentityLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant LeftIdentity Alpha :=
+  Laws_idVcomp Nat Point IndexedEnd DoubleEnd Constant Constant Alpha
+def rightIdentityLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant RightIdentity Alpha :=
+  Laws_vcompId Nat Point IndexedEnd DoubleEnd Constant Constant Alpha
+def assocLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant AssocLeft AssocRight :=
+  Laws_vcompAssoc Nat Point IndexedEnd DoubleEnd Constant Constant Constant Constant Alpha Beta Beta
+def reflLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant Alpha Alpha :=
+  Laws_eqRefl Nat Point IndexedEnd DoubleEnd Constant Constant Alpha
+def symmLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant Alpha RightIdentity :=
+  Laws_eqSymm Nat Point IndexedEnd DoubleEnd Constant Constant RightIdentity Alpha rightIdentityLaw
+def transLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant LeftIdentity RightIdentity :=
+  Laws_eqTrans Nat Point IndexedEnd DoubleEnd Constant Constant LeftIdentity Alpha RightIdentity
+    leftIdentityLaw symmLaw
+def CongrLeft : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant LeftIdentity Beta
+def CongrRight : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Run_vcomp Nat Point IndexedEnd DoubleEnd Constant Constant Constant RightIdentity Beta
+def congrLaw : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant CongrLeft CongrRight :=
+  Laws_vcompCongr Nat Point IndexedEnd DoubleEnd Constant Constant Constant
+    LeftIdentity RightIdentity Beta Beta transLaw
+    (Laws_eqRefl Nat Point IndexedEnd DoubleEnd Constant Constant Beta)
+
+-- Proofs are accepted as erased inputs to executable component applications.
+def certifiedComponent : (alpha : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant) ->
+    (beta : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant) ->
+    (0 proof : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant alpha beta) -> Nat -> Nat :=
+  fun (alpha : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant)
+      (beta : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant)
+      (0 proof : Laws_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant alpha beta)
+      (x : Nat) => (alpha.1 x).1 0
+def leftIdentityAt : Nat -> Nat := certifiedComponent LeftIdentity Alpha leftIdentityLaw
+def rightIdentityAt : Nat -> Nat := certifiedComponent RightIdentity Alpha rightIdentityLaw
+def assocLeftAt : Nat -> Nat := certifiedComponent AssocLeft AssocRight assocLaw
+def assocRightAt : Nat -> Nat := certifiedComponent AssocRight AssocLeft
+  (Laws_eqSymm Nat Point IndexedEnd DoubleEnd Constant Constant AssocLeft AssocRight assocLaw)
+def congrLeftAt : Nat -> Nat := certifiedComponent CongrLeft CongrRight congrLaw
+def congrRightAt : Nat -> Nat := certifiedComponent CongrRight CongrLeft
+  (Laws_eqSymm Nat Point IndexedEnd DoubleEnd Constant Constant CongrLeft CongrRight congrLaw)

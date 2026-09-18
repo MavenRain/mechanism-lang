@@ -263,6 +263,12 @@ leg SUITE PRELUDE-SHARED-NATTRANS \
 leg SUITE PRELUDE-SHARED-NATTRANS-RUNTIME \
   '^PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_nattrans_runtime.py
+leg SUITE PRELUDE-NATTRANS-LAWS \
+  '^PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6$' \
+  $ROOT/_build/default/test/prelude_nattrans_laws.exe $ROOT
+leg SUITE PRELUDE-NATTRANS-LAWS-RUNTIME \
+  '^PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2$' \
+  python3 -I $ROOT/test/nattrans_laws_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

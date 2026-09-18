@@ -1,0 +1,2 @@
+def bad : Separate_NatTransEq Nat Point IndexedEnd DoubleEnd Constant Constant Alpha Alpha :=
+  Laws_eqRefl Nat Point IndexedEnd DoubleEnd Constant Constant Alpha
