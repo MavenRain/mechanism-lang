@@ -1,0 +1,176 @@
+-- Load shared-nattrans.mech and nattrans-laws.mech with their dependencies first.
+-- All relations and operations reuse the same three category families.
+poly (u, v, w, z, p, q) group MechWhiskeringLaws where
+specialize MechSharedNatTrans (u, v, w, z, p, q) as Ops
+specialize MechNatTransLaws (u, v, w, z) as First
+  with (Ops_Base_Source := Ops_Source, Ops_Base_Target := Ops_Middle)
+specialize MechNatTransLaws (w, z, p, q) as Second
+  with (Ops_Base_Source := Ops_Middle, Ops_Base_Target := Ops_Target)
+specialize MechNatTransLaws (u, v, p, q) as Composite
+  with (Ops_Base_Source := Ops_Source, Ops_Base_Target := Ops_Target)
+
+def whiskerRightId : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (K : Ops_First_Base_Functor C D c d) ->
+    (F : Ops_Second_Base_Functor D E d e) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e K F) (Ops_Compose_Base_compFunctor C D E c d e K F)
+      (Ops_Compose_whiskerRight C D E c d e F F (Ops_Second_idNat D E d e F) K) (Ops_Composite_idNat C E c e (Ops_Compose_Base_compFunctor C D E c d e K F)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (K : Ops_First_Base_Functor C D c d)
+      (F : Ops_Second_Base_Functor D E d e) (0 x : C) =>
+    categoryRefl
+
+def whiskerRightVcomp : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (K : Ops_First_Base_Functor C D c d) ->
+    (F : Ops_Second_Base_Functor D E d e) ->
+    (G : Ops_Second_Base_Functor D E d e) ->
+    (J : Ops_Second_Base_Functor D E d e) ->
+    (alpha : Ops_Second_NatTrans D E d e F G) ->
+    (beta : Ops_Second_NatTrans D E d e G J) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e K F) (Ops_Compose_Base_compFunctor C D E c d e K J)
+      (Ops_Compose_whiskerRight C D E c d e F J (Ops_Second_vcomp D E d e F G J
+        (alpha) (beta)) K) (Ops_Composite_vcomp C E c e (Ops_Compose_Base_compFunctor C D E c d e K F) (Ops_Compose_Base_compFunctor C D E c d e K G) (Ops_Compose_Base_compFunctor C D E c d e K J)
+        (Ops_Compose_whiskerRight C D E c d e F G (alpha) K) (Ops_Compose_whiskerRight C D E c d e G J (beta) K)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (K : Ops_First_Base_Functor C D c d)
+      (F : Ops_Second_Base_Functor D E d e)
+      (G : Ops_Second_Base_Functor D E d e)
+      (J : Ops_Second_Base_Functor D E d e)
+      (alpha : Ops_Second_NatTrans D E d e F G)
+      (beta : Ops_Second_NatTrans D E d e G J) (0 x : C) =>
+    categoryRefl
+
+def whiskerRightCongr : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (K : Ops_First_Base_Functor C D c d) ->
+    (F : Ops_Second_Base_Functor D E d e) ->
+    (G : Ops_Second_Base_Functor D E d e) ->
+    (alpha : Ops_Second_NatTrans D E d e F G) ->
+    (beta : Ops_Second_NatTrans D E d e F G) ->
+    (proof : Second_NatTransEq D E d e F G
+      (alpha) (beta)) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e K F) (Ops_Compose_Base_compFunctor C D E c d e K G)
+      (Ops_Compose_whiskerRight C D E c d e F G (alpha) K) (Ops_Compose_whiskerRight C D E c d e F G (beta) K) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (K : Ops_First_Base_Functor C D c d)
+      (F : Ops_Second_Base_Functor D E d e)
+      (G : Ops_Second_Base_Functor D E d e)
+      (alpha : Ops_Second_NatTrans D E d e F G)
+      (beta : Ops_Second_NatTrans D E d e F G)
+      (proof : Second_NatTransEq D E d e F G
+      (alpha) (beta)) (0 x : C) =>
+    proof (K.1 x)
+
+def whiskerLeftId : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (H : Ops_Second_Base_Functor D E d e) ->
+    (F : Ops_First_Base_Functor C D c d) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e F H) (Ops_Compose_Base_compFunctor C D E c d e F H)
+      (Ops_Compose_whiskerLeft C D E c d e H F F (Ops_First_idNat C D c d F)) (Ops_Composite_idNat C E c e (Ops_Compose_Base_compFunctor C D E c d e F H)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (H : Ops_Second_Base_Functor D E d e)
+      (F : Ops_First_Base_Functor C D c d) (0 x : C) =>
+    Ops_Second_Base_functorMapId D E d e H (F.1 x)
+
+def whiskerLeftVcomp : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (H : Ops_Second_Base_Functor D E d e) ->
+    (F : Ops_First_Base_Functor C D c d) ->
+    (G : Ops_First_Base_Functor C D c d) ->
+    (J : Ops_First_Base_Functor C D c d) ->
+    (alpha : Ops_First_NatTrans C D c d F G) ->
+    (beta : Ops_First_NatTrans C D c d G J) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e F H) (Ops_Compose_Base_compFunctor C D E c d e J H)
+      (Ops_Compose_whiskerLeft C D E c d e H F J (Ops_First_vcomp C D c d F G J
+        (alpha) (beta))) (Ops_Composite_vcomp C E c e (Ops_Compose_Base_compFunctor C D E c d e F H) (Ops_Compose_Base_compFunctor C D E c d e G H) (Ops_Compose_Base_compFunctor C D E c d e J H)
+        (Ops_Compose_whiskerLeft C D E c d e H F G (alpha)) (Ops_Compose_whiskerLeft C D E c d e H G J (beta))) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (H : Ops_Second_Base_Functor D E d e)
+      (F : Ops_First_Base_Functor C D c d)
+      (G : Ops_First_Base_Functor C D c d)
+      (J : Ops_First_Base_Functor C D c d)
+      (alpha : Ops_First_NatTrans C D c d F G)
+      (beta : Ops_First_NatTrans C D c d G J) (0 x : C) =>
+    Ops_Second_Base_functorMapComp D E d e H (F.1 x) (G.1 x) (J.1 x)
+      (alpha.1 x) (beta.1 x)
+
+def whiskerLeftCongr : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : Ops_Source_Category C) ->
+    (d : Ops_Middle_Category D) ->
+    (e : Ops_Target_Category E) ->
+    (H : Ops_Second_Base_Functor D E d e) ->
+    (F : Ops_First_Base_Functor C D c d) ->
+    (G : Ops_First_Base_Functor C D c d) ->
+    (alpha : Ops_First_NatTrans C D c d F G) ->
+    (beta : Ops_First_NatTrans C D c d F G) ->
+    (proof : First_NatTransEq C D c d F G
+      (alpha) (beta)) ->
+    Composite_NatTransEq C E c e (Ops_Compose_Base_compFunctor C D E c d e F H) (Ops_Compose_Base_compFunctor C D E c d e G H)
+      (Ops_Compose_whiskerLeft C D E c d e H F G (alpha)) (Ops_Compose_whiskerLeft C D E c d e H F G (beta)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : Ops_Source_Category C)
+      (d : Ops_Middle_Category D)
+      (e : Ops_Target_Category E)
+      (H : Ops_Second_Base_Functor D E d e)
+      (F : Ops_First_Base_Functor C D c d)
+      (G : Ops_First_Base_Functor C D c d)
+      (alpha : Ops_First_NatTrans C D c d F G)
+      (beta : Ops_First_NatTrans C D c d F G)
+      (proof : First_NatTransEq C D c d F G
+      (alpha) (beta)) (0 x : C) =>
+    Ops_Second_Base_eqCongr (Ops_Middle_Hom D d (F.1 x) (G.1 x))
+      (Ops_Target_Hom E e (H.1 (F.1 x)) (H.1 (G.1 x)))
+      (fun (f : Ops_Middle_Hom D d (F.1 x) (G.1 x)) =>
+        Ops_Second_Base_functorMap D E d e H (F.1 x) (G.1 x) f)
+      (alpha.1 x) (beta.1 x) (proof x)
+end

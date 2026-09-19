@@ -269,6 +269,12 @@ leg SUITE PRELUDE-NATTRANS-LAWS \
 leg SUITE PRELUDE-NATTRANS-LAWS-RUNTIME \
   '^PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2$' \
   python3 -I $ROOT/test/nattrans_laws_runtime.py
+leg SUITE PRELUDE-WHISKERING-LAWS \
+  '^PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24 negatives=6$' \
+  $ROOT/_build/default/test/prelude_whiskering_laws.exe $ROOT
+leg SUITE PRELUDE-WHISKERING-LAWS-RUNTIME \
+  '^PRELUDE-WHISKERING-LAWS-RUNTIME OK cases=12 hosts=3 payloads=2 comparisons=48$' \
+  python3 -I $ROOT/test/whiskering_laws_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

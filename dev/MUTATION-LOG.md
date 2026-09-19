@@ -1135,3 +1135,17 @@ The first attempt stopped on an incorrectly escaped mutation anchor
 after two controls. The corrected complete run and its full outputs
 are retained in dev/validation/port-uat-u1-nattrans-laws/. The runtime
 payload check additionally compares 37 and 41 on all three hosts.
+
+## Stage C / U1: pointwise whiskering preservation laws (2026-09-18)
+
+`python3 -I dev/whiskering-laws-mutations.py NEW-WORK-DIRECTORY`
+passed all seven controls. The runner checks symbolic templates with the
+existing CLI, without rebuilding or changing canonical source files.
+Controls cover the left identity/composition proofs, both congruence
+premises, right composition order, target-family sharing and the right
+identity target: the composite of K and F in the conclusion of
+whiskerRightId. Each needs its exact diagnostic hash; timeouts and
+unrelated errors do not count.
+Baseline and restored templates pass and all eight input sources retain
+their hashes. `dev/validation/port-uat-u1-whiskering-laws/mutations.json`
+records the source and executable hashes and measured outcomes.

@@ -47,7 +47,12 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The current natural transformation laws increment adds pointwise
+The whiskering preservation increment proves identity, vertical composition
+and pointwise congruence for precomposition and postcomposition. It reuses
+the shared three-category API and the existing transformation laws.
+See `dev/PORT-UAT-U1-WHISKERING-LAWS.md` and
+`dev/validation/port-uat-u1-whiskering-laws/` for its contract and validation.
+The preceding natural transformation laws increment adds pointwise
 equality, vertical identity and associativity laws, and composition
 congruence. Its kernel and runtime gates and seven mutation controls
 are described in `dev/PORT-UAT-U1-NATTRANS-LAWS.md`; the validation

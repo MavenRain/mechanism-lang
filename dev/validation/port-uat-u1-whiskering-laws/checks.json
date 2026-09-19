@@ -1,0 +1,385 @@
+{
+  "base_commit": "c7b99fe06ca80da954dad15f6f1c8f1a651022d9",
+  "scope": "Stage C / U1 pointwise whiskering preservation laws",
+  "captured_at_utc": "2026-09-19T00:59:09.534133+00:00",
+  "full_battery_run": false,
+  "checks": [
+    {
+      "id": "PARTIAL-BATTERY",
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "command": [
+        "zsh",
+        "dev/gates.sh"
+      ],
+      "exit": 143,
+      "supervisor_exit": 137,
+      "interrupted": true,
+      "passed": 46,
+      "completed": 48,
+      "planned_total": 72,
+      "not_completed": 24,
+      "failures": [
+        "PRELUDE-COMPOSABLE-FUNCTORS",
+        "PRELUDE-HETEROGENEOUS-LEFT-KAN"
+      ],
+      "inherited_failures": [],
+      "host_load_at_diagnosis": [
+        134.32,
+        80.59,
+        51.45
+      ],
+      "stop_reason": "Host overload coincided with timeouts in two unchanged tests; full pass not claimed.",
+      "capture_artifact": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-Hotcq1",
+      "measurements": [
+        {
+          "id": "BUILD",
+          "tier": "SLOW",
+          "elapsed_ms": 335.845,
+          "exit": 0
+        },
+        {
+          "id": "PIN",
+          "tier": "FAST",
+          "elapsed_ms": 71.994,
+          "exit": 0
+        },
+        {
+          "id": "PIN-DELTA",
+          "tier": "MED",
+          "elapsed_ms": 1975.968,
+          "exit": 0
+        },
+        {
+          "id": "R0-COUNT",
+          "tier": "FAST",
+          "elapsed_ms": 213.746,
+          "exit": 0
+        },
+        {
+          "id": "R0-AUDIT",
+          "tier": "FAST",
+          "elapsed_ms": 268.343,
+          "exit": 0
+        },
+        {
+          "id": "SUITE-KERNEL",
+          "tier": "SUITE",
+          "elapsed_ms": 992.905,
+          "exit": 0
+        },
+        {
+          "id": "LEVELS",
+          "tier": "FAST",
+          "elapsed_ms": 157.217,
+          "exit": 0
+        },
+        {
+          "id": "VEIL-TEMPLATES",
+          "tier": "FAST",
+          "elapsed_ms": 69.961,
+          "exit": 0
+        },
+        {
+          "id": "VEIL-CIRCUIT",
+          "tier": "FAST",
+          "elapsed_ms": 32.233,
+          "exit": 0
+        },
+        {
+          "id": "VEIL-KERNEL",
+          "tier": "SLOW",
+          "elapsed_ms": 1025.018,
+          "exit": 0
+        },
+        {
+          "id": "PRENEX",
+          "tier": "FAST",
+          "elapsed_ms": 42.31,
+          "exit": 0
+        },
+        {
+          "id": "PRENEX-FAMILIES",
+          "tier": "FAST",
+          "elapsed_ms": 40.951,
+          "exit": 0
+        },
+        {
+          "id": "PRENEX-GROUPS",
+          "tier": "FAST",
+          "elapsed_ms": 86.491,
+          "exit": 0
+        },
+        {
+          "id": "TEMPLATE-COMPOSITION",
+          "tier": "MED",
+          "elapsed_ms": 1259.153,
+          "exit": 0
+        },
+        {
+          "id": "TEMPLATE-REUSE",
+          "tier": "SLOW",
+          "elapsed_ms": 11955.144,
+          "exit": 0
+        },
+        {
+          "id": "TEMPLATE-SYMBOLIC-REUSE",
+          "tier": "SLOW",
+          "elapsed_ms": 16120.852,
+          "exit": 0
+        },
+        {
+          "id": "SUITE-SURFACE",
+          "tier": "FAST",
+          "elapsed_ms": 32.258,
+          "exit": 0
+        },
+        {
+          "id": "SUITE-WASM",
+          "tier": "SUITE",
+          "elapsed_ms": 3125.187,
+          "exit": 0
+        },
+        {
+          "id": "IMPORT-GRAMMAR",
+          "tier": "MED",
+          "elapsed_ms": 820.289,
+          "exit": 0
+        },
+        {
+          "id": "IMPORT-CLI",
+          "tier": "FAST",
+          "elapsed_ms": 208.386,
+          "exit": 0
+        },
+        {
+          "id": "CORPUS-UAT",
+          "tier": "MED",
+          "elapsed_ms": 1627.856,
+          "exit": 0
+        },
+        {
+          "id": "PARITY-COUNTS",
+          "tier": "MED",
+          "elapsed_ms": 818.813,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE",
+          "tier": "FAST",
+          "elapsed_ms": 35.927,
+          "exit": 0
+        },
+        {
+          "id": "EQUALITY",
+          "tier": "FAST",
+          "elapsed_ms": 19.032,
+          "exit": 0
+        },
+        {
+          "id": "FAMILY-POLY",
+          "tier": "FAST",
+          "elapsed_ms": 23.675,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-POLY",
+          "tier": "FAST",
+          "elapsed_ms": 23.914,
+          "exit": 0
+        },
+        {
+          "id": "FAMILY-MEMBERS",
+          "tier": "FAST",
+          "elapsed_ms": 22.954,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-TRANSPORT",
+          "tier": "FAST",
+          "elapsed_ms": 28.61,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-EQUALITY-OPS",
+          "tier": "FAST",
+          "elapsed_ms": 38.343,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-DEPENDENT",
+          "tier": "FAST",
+          "elapsed_ms": 37.388,
+          "exit": 0
+        },
+        {
+          "id": "FAMILY-GROUPS",
+          "tier": "FAST",
+          "elapsed_ms": 21.804,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-CONGRUENCE",
+          "tier": "FAST",
+          "elapsed_ms": 29.251,
+          "exit": 0
+        },
+        {
+          "id": "TEMPLATE-COST",
+          "tier": "MED",
+          "elapsed_ms": 63.958,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-CATEGORY",
+          "tier": "CATEGORY",
+          "elapsed_ms": 133401.754,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-FUNCTOR",
+          "tier": "CATEGORY",
+          "elapsed_ms": 147780.197,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+          "tier": "SLOW",
+          "elapsed_ms": 5851.186,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-HETEROGENEOUS-NATTRANS",
+          "tier": "SLOW",
+          "elapsed_ms": 13454.071,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-HETEROGENEOUS-WHISKERING",
+          "tier": "SLOW",
+          "elapsed_ms": 33096.263,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-SHARED-NATTRANS",
+          "tier": "SUITE",
+          "elapsed_ms": 55221.352,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-SHARED-NATTRANS-RUNTIME",
+          "tier": "SUITE",
+          "elapsed_ms": 63134.183,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-NATTRANS-LAWS",
+          "tier": "SUITE",
+          "elapsed_ms": 43579.546,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-NATTRANS-LAWS-RUNTIME",
+          "tier": "SUITE",
+          "elapsed_ms": 54591.497,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-WHISKERING-LAWS",
+          "tier": "SUITE",
+          "elapsed_ms": 206503.573,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-WHISKERING-LAWS-RUNTIME",
+          "tier": "SUITE",
+          "elapsed_ms": 157204.768,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-SHARED-LEFT-KAN",
+          "tier": "CATEGORY",
+          "elapsed_ms": 184763.67,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-SHARED-LEFT-KAN-RUNTIME",
+          "tier": "CATEGORY",
+          "elapsed_ms": 273450.855,
+          "exit": 0
+        },
+        {
+          "id": "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+          "tier": "SUITE",
+          "elapsed_ms": 300345.07,
+          "exit": 124
+        },
+        {
+          "id": "PRELUDE-COMPOSABLE-FUNCTORS",
+          "tier": "SLOW",
+          "elapsed_ms": 120180.55,
+          "exit": 124
+        }
+      ]
+    },
+    {
+      "id": "TRUSTED-LINES",
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "command": [
+        "zsh",
+        "dev/trusted-lines.sh",
+        "/Users/oobi/Documents/mechanism-lang"
+      ],
+      "exit": 1,
+      "stdout": "TRUSTED-LINES kernel=5475/3000 encoder=246/900 FAIL\n",
+      "stderr": "",
+      "inherited_failure": true,
+      "capture_artifact": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-PFKRc3"
+    },
+    {
+      "id": "DENOMINATORS",
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "command": [
+        "zsh",
+        "dev/gates.sh",
+        "--leg",
+        "denominators"
+      ],
+      "exit": 0,
+      "stdout": "PASS DENOMINATORS denominators.json: OK\n",
+      "stderr": "",
+      "capture_artifact": "/Users/oobi/Documents/mechanism-lang/.kanon-exec/run-euN2Iz"
+    },
+    {
+      "id": "WHISKERING-LAWS-MUTATIONS",
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "command": [
+        "python3",
+        "-I",
+        "/Users/oobi/Documents/mechanism-lang/dev/whiskering-laws-mutations.py",
+        "/Users/oobi/Documents/gpt12/whiskering-mutation-final"
+      ],
+      "exit": 0,
+      "killed": 6,
+      "controls": 6,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-Ehjpgi"
+    },
+    {
+      "id": "DIFF-WHITESPACE",
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "executable_sha256": {
+    "_build/default/bin/mech.exe": "ba633541a9e394ceeb4eda6c0a612e29db47159568a5871abe3ec6cb60606820",
+    "_build/default/test/prelude_whiskering_laws.exe": "61bb073fee83bf75501c4bf47a92c03fc07442bef55c7406cf3fa9540811b10a",
+    "_build/default/test/prelude_runtime.exe": "48a30c53d55831586fbc013401eee6c43f647707b54ac83bd8ea0c055e53f9de"
+  }
+}

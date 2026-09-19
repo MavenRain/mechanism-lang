@@ -1,0 +1,2 @@
+def falseComponents : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left)
+  rightIdLhs rightVcompLhs := fun (0 x : Nat) => categoryRefl

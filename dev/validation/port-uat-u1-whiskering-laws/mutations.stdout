@@ -1,0 +1,7 @@
+left-identity-proof: killed=True
+left-composition-proof: killed=True
+left-congruence-proof: killed=True
+right-congruence-proof: killed=True
+right-composition-order: killed=True
+shared-target: killed=True
+{"passed": true, "killed": 6, "controls": 6}

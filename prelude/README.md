@@ -457,3 +457,27 @@ uses the existing target category proofs. This relation does not
 supply equality of whole records or functional extensionality.
 The new kernel and runtime gates cover mixed universes, family reuse,
 refusals and erased proof arguments. See `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
+
+## Pointwise whiskering preservation laws
+
+Load the shared transformation sources, `cat/nattrans-laws.mech`, then
+`cat/whiskering-laws.mech`. The six universe parameters remain independent:
+
+```text
+specialize MechSharedNatTrans (0, 1, 2, 3, 4, 5) as N
+specialize MechWhiskeringLaws (0, 1, 2, 3, 4, 5) as L
+  with (Ops_Source := N_Source, Ops_Middle := N_Middle, Ops_Target := N_Target)
+```
+
+`L_whiskerRightId`, `L_whiskerRightVcomp` and `L_whiskerRightCongr`
+prove preservation by precomposition. `L_whiskerLeftId`,
+`L_whiskerLeftVcomp` and `L_whiskerLeftCongr` prove preservation by
+postcomposition. All conclusions use `L_Composite_NatTransEq`;
+congruence consumes `L_Second_NatTransEq` or `L_First_NatTransEq`.
+The imported `First`, `Second` and `Composite` laws use the same
+three category families as `L_Ops`.
+
+The laws compare components at every object. They do not assert equality
+of whole records. Mixed-universe and shared-family checks, refusal fixtures
+and both equation sides on three runtime hosts are described in
+`dev/PORT-UAT-U1-WHISKERING-LAWS.md`.

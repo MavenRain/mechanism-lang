@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "killed": 6,
+  "controls": 6,
+  "sources_unchanged": true,
+  "source_sha256": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "prelude/cat/nattrans-laws.mech": "592188d934386e31cf791cb88c8322e635675e2336a037b49c8c25447cad0519",
+    "prelude/cat/whiskering-laws.mech": "d9e9aa471be58f98fb91a99c33432cf01fef31fe4b987f8e503e711c6a1bad44"
+  },
+  "executable_sha256": "ba633541a9e394ceeb4eda6c0a612e29db47159568a5871abe3ec6cb60606820",
+  "runner_sha256": "888bfae03406209e321ca38f6f1834ed4970e6e6b6eb3493f3b5b743597e4d95",
+  "diagnostics_sha256": "4ca6a8a134809398934c8c89cc3a364a22830886301c35b12ddddc1046873490",
+  "rows": [
+    {
+      "id": "baseline",
+      "exit": 0,
+      "seconds": 64.48,
+      "input_sha256": "196b92f1d832e6940ab7e7e05dfbb49b1940613a5fb664de58624ea9f041c350",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    },
+    {
+      "id": "left-identity-proof",
+      "exit": 1,
+      "seconds": 58.288,
+      "input_sha256": "43bf48015a0970ce2617448e5a4428c0c341c5ad87e2958a7db08b691d3079ec",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "a2d76f6a0c8d4c9542e745f7a4521c421a1ddd3f99dc84ed7df12ae2e7a5fa02",
+      "expected_stderr_sha256": "a2d76f6a0c8d4c9542e745f7a4521c421a1ddd3f99dc84ed7df12ae2e7a5fa02",
+      "killed": true
+    },
+    {
+      "id": "left-composition-proof",
+      "exit": 1,
+      "seconds": 86.206,
+      "input_sha256": "1e311cca2708dfd4f8990ec8de24a7a6a340954c616198fed18b58f93ed854e2",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8879bedbcbc082a2494f68952016b18e6adb21dc8fd5f81339738c3ca60e6faf",
+      "expected_stderr_sha256": "8879bedbcbc082a2494f68952016b18e6adb21dc8fd5f81339738c3ca60e6faf",
+      "killed": true
+    },
+    {
+      "id": "left-congruence-proof",
+      "exit": 1,
+      "seconds": 86.7,
+      "input_sha256": "13d9d2a374270941e8f44d05cac53f7f55c5850cf73286ceff93ced2edf5f18c",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "20b463d5a6cad226c15fb04266fc252034b02f2c0590dff42478d161b4c6b5b6",
+      "expected_stderr_sha256": "20b463d5a6cad226c15fb04266fc252034b02f2c0590dff42478d161b4c6b5b6",
+      "killed": true
+    },
+    {
+      "id": "right-congruence-proof",
+      "exit": 1,
+      "seconds": 86.839,
+      "input_sha256": "1e04f0901a79d7218ef6ccd3d903551a57ccaf99fa486d0da161977f3bebf188",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "93093feeeac343f7c740889cf7d64685e08ed1dce36486bc6bd98f8b1c9e8788",
+      "expected_stderr_sha256": "93093feeeac343f7c740889cf7d64685e08ed1dce36486bc6bd98f8b1c9e8788",
+      "killed": true
+    },
+    {
+      "id": "right-composition-order",
+      "exit": 1,
+      "seconds": 73.143,
+      "input_sha256": "f8bf2120580df18a1654c25c786d406fa0adfec0be88ea855498eb358279fad8",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d5ea1d1edbd1f82428f6c67d0f9ac8e686388f2e304d40ca5d3b9e7ec6899d58",
+      "expected_stderr_sha256": "d5ea1d1edbd1f82428f6c67d0f9ac8e686388f2e304d40ca5d3b9e7ec6899d58",
+      "killed": true
+    },
+    {
+      "id": "shared-target",
+      "exit": 1,
+      "seconds": 33.537,
+      "input_sha256": "d642eef049aa9c6b829e836bd6fd53b3697d5d2f050c2f63b631856aa407689f",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "5b81888e9c46d296db7b7b3d7d32207c7d0ff14b323f46c8c7f834bd27a54dda",
+      "expected_stderr_sha256": "5b81888e9c46d296db7b7b3d7d32207c7d0ff14b323f46c8c7f834bd27a54dda",
+      "killed": true
+    },
+    {
+      "id": "restored",
+      "exit": 0,
+      "seconds": 58.768,
+      "input_sha256": "196b92f1d832e6940ab7e7e05dfbb49b1940613a5fb664de58624ea9f041c350",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": true
+    }
+  ],
+  "review_delta": {
+    "date": "2026-09-18",
+    "reason": "Review round 3 added the seventh control right-identity-target for L1-1, the composite of K and F in the conclusion of whiskerRightId, so the captured control set and executable hash are stale for the fixed tree. The captured rows stay as recorded, and the replay of the fixed tree reprinted passed=True killed=7 controls=7.",
+    "paths": [
+      {
+        "path": "dev/whiskering-laws-mutations.py",
+        "captured": "888bfae03406209e321ca38f6f1834ed4970e6e6b6eb3493f3b5b743597e4d95",
+        "final": "8b666668db6ccb08a91f6187c803ac2aee97cf9f0512b1b40e08153b9deac211"
+      },
+      {
+        "path": "dev/validation/port-uat-u1-whiskering-laws/mutation-diagnostics.json",
+        "captured": "4ca6a8a134809398934c8c89cc3a364a22830886301c35b12ddddc1046873490",
+        "final": "32d44a2b91b23d2eda9d48c6d4fd095f3a6e1ef36e346136382e994a70e8607a"
+      }
+    ]
+  }
+}

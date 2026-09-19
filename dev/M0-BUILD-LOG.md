@@ -3916,3 +3916,95 @@ FLOOR 68 with the FAIL row TRUSTED-LINES (inherited), the pinned
 budget-bound leg PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME passed,
 mutation replay 7 of 7 controls killed, sources.sha256 ok=41,
 RUNNER-EXIT 0.
+
+## Stage C / U1: pointwise whiskering preservation laws (2026-09-18)
+
+Base: `c7b99fe06ca80da954dad15f6f1c8f1a651022d9`. `MechWhiskeringLaws` supplies six checked preservation
+laws for precomposition and postcomposition: identity, ordered vertical
+composition and pointwise congruence. Its shared operations and three
+pointwise law imports reuse the same category families. All six universe
+parameters remain independent. Stage C and U1 remain open.
+
+Validation on this slice:
+
+```text
+PRELUDE-WHISKERING-LAWS-OK entries=1176 families=12 computations=24 negatives=6
+PRELUDE-WHISKERING-LAWS-RUNTIME OK cases=12 hosts=3 payloads=2
+mutations: passed=true killed=6 controls=6
+partial battery: PASS 46, TIMEOUT 2, completed 48 of 72
+DENOMINATORS: PASS
+TRUSTED-LINES kernel=5475/3000 encoder=246/900 FAIL
+```
+
+The broader battery was stopped after two unchanged regression tests timed
+out: PRELUDE-HETEROGENEOUS-LEFT-KAN at 300 seconds and
+PRELUDE-COMPOSABLE-FUNCTORS at 120 seconds. At diagnosis the host load
+averages were 134.32, 80.59 and 51.45. Both new gates passed before this
+load spike. The remaining 24 checks were not completed, and the two
+timeouts remain unresolved. A full regression pass is not claimed.
+
+The separate trusted-line check retains the inherited size failure.
+The active kernel, surface implementation, Wasm implementation, vendor,
+pin, mapping inventory, old gate predicates and old watchdog tiers are unchanged.
+The two new gates use the existing SUITE tier. The build reports zero
+errors and warnings. Runtime checks compare both sides of each equation
+on the kernel, Node and Wasmtime at payloads 37 and 41.
+
+- PRELUDE-WHISKERING-LAWS: 206.504 seconds, exit 0.
+- PRELUDE-WHISKERING-LAWS-RUNTIME: 157.205 seconds, exit 0.
+
+Six symbolic source mutation controls replace the left identity and
+composition proofs with reflexivity, discard each congruence premise,
+reverse the right composition operands and break target-family sharing.
+Every control requires exit 1, empty stdout and its exact pinned stderr
+SHA256. Baseline and restored sources pass; source hashes remain unchanged.
+These controls check symbolic source types. The runtime suite separately
+observes noncommuting maps and both component coordinates.
+
+The validation record is `dev/validation/port-uat-u1-whiskering-laws/`.
+Iterated whiskering, horizontal equations, whole-record equality and
+source-type parity remain due.
+
+## Pointwise whiskering preservation laws review (2026-09-18)
+
+Seven findings were kept: L1-1, L1-2, L2-2, L3-3, L4-1, L4-2, L4-3, ND-1-1.
+All seven were fixed. L1-2, L2-2 and L4-2 were fixed by the Workflow round
+(wf_5d8b809f-5d4). L1-1, L3-3, L4-1 and L4-3 were fixed by hand in round 3.
+ND-1-1, a stale sources.sha256 pin, was cleared by the repin in this close
+stage. No finding was refuted or dropped.
+
+L1-1 gave the mutation replay a unique anchor at
+test/fixtures/prelude/whiskering-laws.mech:21 with a seventh control,
+right-identity-target; replay now reports killed=7 controls=7. L4-1 moved
+the runtime fixture onto the functor Embed with an observer x + 13 probe
+carrier, replacing (Constant 7), and proved dependence at 10007 against
+5007 on an identity-morphism copy. That change raised the suite leg to
+PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24
+negatives=6 and the runtime leg to PRELUDE-WHISKERING-LAWS-RUNTIME OK
+cases=12 hosts=3 payloads=2 comparisons=48, both pinned in dev/gates.sh
+rows 273 and 276 and in the bundle README row 23 as 1,177. L4-3 added a
+harness guard that compares the produced case set against the required
+set. L3-3 backticked 17 of 18 record names in the bundle README; the
+README does not name itself, which is acceptable.
+
+Two close ladder runs were needed. Run 1 (00:39 to 01:14 PDT) went RED
+because the kit's own suite and runtime row pins (SUITE_AUTHOR,
+RUNTIME_AUTHOR) still held the pre-L4-1 counts (entries=1176, no
+comparisons row); the 72-leg battery itself was healthy at 71 of 72. Run 2
+(01:23 to 01:58 PDT), after the kit pins were moved to entries=1177 and
+comparisons=48, passed items 3 and 4 and the verify-ladder-WL.py verdict
+read LADDER explicit GREEN.
+
+Close ladder run 2: PASS 71 of 72 against CLOSE-FLOOR 71, 72 legs seen.
+The one FAIL is TRUSTED-LINES at kernel=5475/3000, the inherited size
+failure the baseline ladder also carried at 71 of 72; it is never a gate
+failure. Mutation replay reported passed=true, killed=7, controls=7.
+sources.sha256 checked ok=41 bad=0. RUNNER-EXIT 0.
+
+The kernel record still holds entries=1176 from the author's original
+capture, kept by design; the suite and harness legs now report 1177 and
+48 comparisons after the L4-1 fix. The record files are unchanged by this
+close stage apart from the sources.sha256 repin below; the battery legs
+pin no record files.
+
+This slice stays staged for the user; no commit was made in this stage.

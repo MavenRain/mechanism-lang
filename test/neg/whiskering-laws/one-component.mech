@@ -1,0 +1,2 @@
+def oneComponent : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left)
+  leftIdLhs leftIdRhs := leftIdLaw 0

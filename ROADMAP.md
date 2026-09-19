@@ -163,8 +163,10 @@ stay under `ports/` (D-UAT-3).
   `dev/PORT-UAT-U1-SHARED-NATTRANS.md`. Shared left Kan extensions
   follow in `dev/PORT-UAT-U1-SHARED-LEFT-KAN.md`. Pointwise vertical
   transformation laws follow in `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
-  U1 remains open on whiskering and horizontal equations, equality of
-  whole transformation records, and source-type parity.
+  Pointwise preservation of identities, vertical composition and equality
+  by whiskering follows in `dev/PORT-UAT-U1-WHISKERING-LAWS.md`.
+  U1 remains open on iterated whiskering and horizontal equations,
+  equality of whole transformation records, and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

@@ -107,3 +107,9 @@ bounds.  Neither this increment nor its tests move that limit.
 
 Build copy: `/Users/oobi/Documents/gpt16/mechanism-lang`.
 Canonical repository: `/Users/oobi/Documents/mechanism-lang`.
+
+The pointwise whiskering preservation increment proves identity,
+vertical composition and congruence for the shared three-category API;
+see `dev/PORT-UAT-U1-WHISKERING-LAWS.md`. Iterated whiskering,
+horizontal equations, whole-record equality and source-type parity
+remain open in U1.

@@ -1,0 +1,27 @@
+def wrongEndpoint : (0 C : Type 0) ->
+  (0 D : Type 2) ->
+  (0 E : Type 4) ->
+  (c : Mixed_Ops_Source_Category C) ->
+  (d : Mixed_Ops_Middle_Category D) ->
+  (e : Mixed_Ops_Target_Category E) ->
+  (H : Mixed_Ops_Second_Base_Functor D E d e) ->
+  (F : Mixed_Ops_First_Base_Functor C D c d) ->
+  (G : Mixed_Ops_First_Base_Functor C D c d) ->
+  (J : Mixed_Ops_First_Base_Functor C D c d) ->
+  (alpha : Mixed_Ops_First_NatTrans C D c d F G) ->
+  (beta : Mixed_Ops_First_NatTrans C D c d F J) ->
+  Mixed_Composite_NatTransEq C E c e (Mixed_Ops_Compose_Base_compFunctor C D E c d e F H) (Mixed_Ops_Compose_Base_compFunctor C D E c d e G H) (Mixed_Ops_Compose_whiskerLeft C D E c d e H F G alpha) (Mixed_Ops_Compose_whiskerLeft C D E c d e H F G alpha) :=
+  fun (0 C : Type 0)
+    (0 D : Type 2)
+    (0 E : Type 4)
+    (c : Mixed_Ops_Source_Category C)
+    (d : Mixed_Ops_Middle_Category D)
+    (e : Mixed_Ops_Target_Category E)
+    (H : Mixed_Ops_Second_Base_Functor D E d e)
+    (F : Mixed_Ops_First_Base_Functor C D c d)
+    (G : Mixed_Ops_First_Base_Functor C D c d)
+    (J : Mixed_Ops_First_Base_Functor C D c d)
+    (alpha : Mixed_Ops_First_NatTrans C D c d F G)
+    (beta : Mixed_Ops_First_NatTrans C D c d F J) =>
+    Mixed_whiskerLeftCongr C D E c d e H F G alpha beta
+      (Mixed_First_eqRefl C D c d F G alpha)

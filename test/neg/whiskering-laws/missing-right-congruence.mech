@@ -1,0 +1,3 @@
+def missingRight : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right)
+  rightCongrLhs rightCongrRhs :=
+  Laws_whiskerRightCongr Nat Nat Point IndexedEnd End PairEnd Embed Left Right SecondIdentityBeta Beta

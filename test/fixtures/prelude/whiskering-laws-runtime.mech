@@ -1,0 +1,110 @@
+-- Load shared-nattrans-runtime.mech first.
+specialize MechWhiskeringLaws (0, 1, 0, 0, 1, 0) as Laws
+  with (Ops_Source := Run_Source, Ops_Middle := Run_Middle, Ops_Target := Run_Target)
+
+-- Delta after Beta discards the second input. The opposite order discards the first.
+def Embed : External_Functor Nat Nat IndexedEnd End :=
+  ((fun (x : Nat) => x),
+   ((fun (0 x : Nat) (0 y : Nat)
+         (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (n : Nat) => f.2 Nat n),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+          (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Delta : Run_Second_NatTrans Nat Point End PairEnd Right Left :=
+  ((fun (x : Nat) (n : Nat * Nat) => (n.2, 5)),
+   (fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => categoryRefl))
+def FirstIdentityAlpha : Run_First_NatTrans Nat Nat IndexedEnd End (Constant 0) (Constant 1) :=
+  Run_First_vcomp Nat Nat IndexedEnd End (Constant 0) (Constant 0) (Constant 1)
+    (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) Alpha
+def SecondIdentityBeta : Run_Second_NatTrans Nat Point End PairEnd Left Right :=
+  Run_Second_vcomp Nat Point End PairEnd Left Left Right
+    (Run_Second_idNat Nat Point End PairEnd Left) Beta
+def pairCode : (Nat * Nat) -> Nat := fun (n : Nat * Nat) => natAdd (natMul n.1 100) n.2
+def certifiedWhisker : (F : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd) ->
+    (G : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd) ->
+    (alpha : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G) ->
+    (beta : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G) ->
+    (0 proof : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd F G alpha beta) -> Nat -> Nat :=
+  fun (F : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd)
+      (G : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd)
+      (alpha : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G)
+      (beta : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G)
+      (0 proof : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd F G alpha beta)
+      (x : Nat) => pairCode (alpha.1 x (F.2.1 x x (same, (fun (0 A : Type 0) (n : Nat) => natMul n 2)) (natAdd x 13, 7)))
+
+def rightIdLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) :=
+  Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Left
+    (Run_Second_idNat Nat Point End PairEnd Left) Embed
+def rightIdRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) :=
+  Run_Composite_idNat Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left)
+def rightIdLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightIdLhs rightIdRhs :=
+  Laws_whiskerRightId Nat Nat Point IndexedEnd End PairEnd Embed Left
+def rightIdLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightIdLhs rightIdRhs rightIdLaw
+def rightIdRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightIdRhs rightIdLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightIdLhs rightIdRhs rightIdLaw)
+
+def rightVcompLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) :=
+  Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Left
+    (Run_Second_vcomp Nat Point End PairEnd Left Right Left Beta Delta) Embed
+def rightVcompRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) :=
+  Run_Composite_vcomp Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left)
+    (Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right
+    (Beta) Embed) (Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Right Left
+    (Delta) Embed)
+def rightVcompLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightVcompLhs rightVcompRhs :=
+  Laws_whiskerRightVcomp Nat Nat Point IndexedEnd End PairEnd Embed Left Right Left Beta Delta
+def rightVcompLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightVcompLhs rightVcompRhs rightVcompLaw
+def rightVcompRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightVcompRhs rightVcompLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) rightVcompLhs rightVcompRhs rightVcompLaw)
+
+def rightCongrLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) :=
+  Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right
+    (SecondIdentityBeta) Embed
+def rightCongrRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) :=
+  Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right
+    (Beta) Embed
+def rightCongrLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) rightCongrLhs rightCongrRhs :=
+  Laws_whiskerRightCongr Nat Nat Point IndexedEnd End PairEnd Embed Left Right SecondIdentityBeta Beta
+    (Laws_Second_idVcomp Nat Point End PairEnd Left Right Beta)
+def rightCongrLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) rightCongrLhs rightCongrRhs rightCongrLaw
+def rightCongrRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) rightCongrRhs rightCongrLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd Embed Right) rightCongrLhs rightCongrRhs rightCongrLaw)
+
+def leftIdLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) :=
+  Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 0)
+    (Run_First_idNat Nat Nat IndexedEnd End (Constant 0))
+def leftIdRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) :=
+  Run_Composite_idNat Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left)
+def leftIdLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) leftIdLhs leftIdRhs :=
+  Laws_whiskerLeftId Nat Nat Point IndexedEnd End PairEnd Left (Constant 0)
+def leftIdLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) leftIdLhs leftIdRhs leftIdLaw
+def leftIdRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) leftIdRhs leftIdLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) leftIdLhs leftIdRhs leftIdLaw)
+
+def leftVcompLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) :=
+  Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 2)
+    (Vertical)
+def leftVcompRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) :=
+  Run_Composite_vcomp Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left)
+    (Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1)
+    (Alpha)) (Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 1) (Constant 2)
+    (Gamma))
+def leftVcompLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) leftVcompLhs leftVcompRhs :=
+  Laws_whiskerLeftVcomp Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1) (Constant 2) Alpha Gamma
+def leftVcompLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) leftVcompLhs leftVcompRhs leftVcompLaw
+def leftVcompRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) leftVcompRhs leftVcompLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) leftVcompLhs leftVcompRhs leftVcompLaw)
+
+def leftCongrLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) :=
+  Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1)
+    (FirstIdentityAlpha)
+def leftCongrRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) :=
+  Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1)
+    (Alpha)
+def leftCongrLaw : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) leftCongrLhs leftCongrRhs :=
+  Laws_whiskerLeftCongr Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1) FirstIdentityAlpha Alpha
+    (Laws_First_idVcomp Nat Nat IndexedEnd End (Constant 0) (Constant 1) Alpha)
+def leftCongrLeftAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) leftCongrLhs leftCongrRhs leftCongrLaw
+def leftCongrRightAt : Nat -> Nat := certifiedWhisker (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) leftCongrRhs leftCongrLhs
+  (Laws_Composite_eqSymm Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) leftCongrLhs leftCongrRhs leftCongrLaw)

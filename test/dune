@@ -185,3 +185,8 @@
  (name prelude_shared_left_kan)
  (modules Prelude_shared_left_kan)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
+ (name prelude_whiskering_laws)
+ (modules Prelude_whiskering_laws)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))

@@ -1,0 +1,3 @@
+def missingLeft : Laws_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left)
+  leftCongrLhs leftCongrRhs :=
+  Laws_whiskerLeftCongr Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1) FirstIdentityAlpha Alpha
