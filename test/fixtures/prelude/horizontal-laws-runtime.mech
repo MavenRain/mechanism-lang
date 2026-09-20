@@ -1,0 +1,139 @@
+-- Load shared-nattrans-runtime.mech first.
+specialize MechHorizontalLaws (0, 1, 0, 0, 1, 0) as Laws
+  with (W_Ops_Source := Run_Source, W_Ops_Middle := Run_Middle, W_Ops_Target := Run_Target)
+
+def Delta : Run_Second_NatTrans Nat Point End PairEnd Right Left :=
+  ((fun (x : Nat) (n : Nat * Nat) => (n.2, 5)),
+   (fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => categoryRefl))
+def FirstIdentityAlpha : Run_First_NatTrans Nat Nat IndexedEnd End (Constant 0) (Constant 1) :=
+  Run_First_vcomp Nat Nat IndexedEnd End (Constant 0) (Constant 0) (Constant 1)
+    (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) Alpha
+def SecondIdentityBeta : Run_Second_NatTrans Nat Point End PairEnd Left Right :=
+  Run_Second_vcomp Nat Point End PairEnd Left Left Right
+    (Run_Second_idNat Nat Point End PairEnd Left) Beta
+
+def pairCode : (Nat * Nat) -> Nat := fun (n : Nat * Nat) => natAdd (natMul n.1 100) n.2
+
+def certifiedHorizontal : (F : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd) ->
+    (G : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd) ->
+    (alpha : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G) ->
+    (beta : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G) ->
+    (0 proof : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd F G alpha beta x) -> Nat -> Nat :=
+  fun (F : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd)
+      (G : Run_Composite_Base_Functor Nat Point IndexedEnd PairEnd)
+      (alpha : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G)
+      (beta : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd F G)
+      (0 proof : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd F G alpha beta x)
+      (x : Nat) => pairCode (alpha.1 x (natAdd x 13, 7))
+
+def idLeftLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 0) Left Right (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) Beta)
+
+def idLeftRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) :=
+  (Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right Beta (Constant 0))
+
+def idLeftLaw : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) idLeftLhs idLeftRhs :=
+  (Laws_idHcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left Right Beta)
+
+def idLeftLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) idLeftLhs idLeftRhs (fun (x : Nat) => idLeftLaw x)
+
+def idLeftRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) idLeftRhs idLeftLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right).1 x)) (idLeftLhs.1 x) (idLeftRhs.1 x) (idLeftLaw x))
+
+def idRightLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Left Alpha (Run_Second_idNat Nat Point End PairEnd Left))
+
+def idRightRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) :=
+  (Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Left (Constant 0) (Constant 1) Alpha)
+
+def idRightLaw : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) idRightLhs idRightRhs :=
+  (Laws_hcompId Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Alpha)
+
+def idRightLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) idRightLhs idRightRhs (fun (x : Nat) => idRightLaw x)
+
+def idRightRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left) idRightRhs idRightLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Left).1 x)) (idRightLhs.1 x) (idRightRhs.1 x) (idRightLaw x))
+
+def idBothLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 0) Left Left (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) (Run_Second_idNat Nat Point End PairEnd Left))
+
+def idBothRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) :=
+  (Run_Composite_idNat Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left))
+
+def idBothLaw : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) idBothLhs idBothRhs :=
+  (Laws_hcompIdId Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left)
+
+def idBothLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) idBothLhs idBothRhs (fun (x : Nat) => idBothLaw x)
+
+def idBothRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) idBothRhs idBothLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x)) (idBothLhs.1 x) (idBothRhs.1 x) (idBothLaw x))
+
+def congruenceLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right FirstIdentityAlpha SecondIdentityBeta)
+
+def congruenceRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta)
+
+def congruenceLaw : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) congruenceLhs congruenceRhs :=
+  (Laws_hcompCongr Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right FirstIdentityAlpha Alpha SecondIdentityBeta Beta (Laws_W_First_idVcomp Nat Nat IndexedEnd End (Constant 0) (Constant 1) Alpha) (Laws_W_Second_idVcomp Nat Point End PairEnd Left Right Beta))
+
+def congruenceLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) congruenceLhs congruenceRhs (fun (x : Nat) => congruenceLaw x)
+
+def congruenceRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) congruenceRhs congruenceLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right).1 x)) (congruenceLhs.1 x) (congruenceRhs.1 x) (congruenceLaw x))
+
+def exchangeLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta)
+
+def exchangeRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) :=
+  (Run_Composite_vcomp Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) (Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right Beta (Constant 0)) (Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Right (Constant 0) (Constant 1) Alpha))
+
+def exchangeLaw : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) exchangeLhs exchangeRhs x :=
+  (Laws_hcompExchange Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta)
+
+def exchangeLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) exchangeLhs exchangeRhs (fun (x : Nat) => exchangeLaw x)
+
+def exchangeRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) exchangeRhs exchangeLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right).1 x)) (exchangeLhs.1 x) (exchangeRhs.1 x) (exchangeLaw x))
+
+def exchangeSwappedLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 0) Left Right (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) Beta)
+
+def exchangeSwappedRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) :=
+  (Run_Composite_vcomp Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) (Run_Compose_whiskerRight Nat Nat Point IndexedEnd End PairEnd Left Right Beta (Constant 0)) (Run_Compose_whiskerLeft Nat Nat Point IndexedEnd End PairEnd Right (Constant 0) (Constant 0) (Run_First_idNat Nat Nat IndexedEnd End (Constant 0))))
+
+def exchangeSwappedLaw : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) exchangeSwappedLhs exchangeSwappedRhs x :=
+  (Laws_hcompExchange Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 0) Left Right (Run_First_idNat Nat Nat IndexedEnd End (Constant 0)) Beta)
+
+def exchangeSwappedLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) exchangeSwappedLhs exchangeSwappedRhs (fun (x : Nat) => exchangeSwappedLaw x)
+
+def exchangeSwappedRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right) exchangeSwappedRhs exchangeSwappedLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Right).1 x)) (exchangeSwappedLhs.1 x) (exchangeSwappedRhs.1 x) (exchangeSwappedLaw x))
+
+def interchangeLhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) :=
+  (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 2) Left Left (Run_First_vcomp Nat Nat IndexedEnd End (Constant 0) (Constant 1) (Constant 2) Alpha Gamma) (Run_Second_vcomp Nat Point End PairEnd Left Right Left Beta Delta))
+
+def interchangeRhs : Run_Composite_NatTrans Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) :=
+  (Run_Composite_vcomp Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta) (Run_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 1) (Constant 2) Right Left Gamma Delta))
+
+def interchangeLaw : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) interchangeLhs interchangeRhs x :=
+  (Laws_hcompVcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) (Constant 2) Left Right Left Alpha Gamma Beta Delta)
+
+def interchangeLeftAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) interchangeLhs interchangeRhs (fun (x : Nat) => interchangeLaw x)
+
+def interchangeRightAt : Nat -> Nat :=
+  certifiedHorizontal (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left) interchangeRhs interchangeLhs
+    (fun (x : Nat) => Run_Composite_targetEqSymm (Run_Target_Hom Point PairEnd ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left).1 x) ((Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 2) Left).1 x)) (interchangeLhs.1 x) (interchangeRhs.1 x) (interchangeLaw x))

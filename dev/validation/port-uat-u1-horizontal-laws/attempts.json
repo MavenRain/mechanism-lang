@@ -1,0 +1,47 @@
+[
+  {
+    "name": "symbolic-erasure-correction",
+    "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-TAL9r6",
+    "exit": 1,
+    "seconds": 133.097,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+    "note": "Initial erased object failed the quantity check; corrected by explicit object arguments."
+  },
+  {
+    "name": "symbolic-proof-check",
+    "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-DqFpBB",
+    "exit": 0,
+    "seconds": 98.697,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "note": "All symbolic definitions checked, no output."
+  },
+  {
+    "name": "kernel-short-budget",
+    "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-LnOt6J",
+    "exit": 2,
+    "seconds": 300.943,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "945e2e82020ef2cdb81f32862ce2b465cd3e71549d648c5b0e608c5ddba50464",
+    "note": "300-second probe timed out. Capture cleanup reported an error; a subsequent process inspection found no orphaned kernel check."
+  },
+  {
+    "name": "runtime-short-budget",
+    "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-pTZ1ix",
+    "exit": 1,
+    "seconds": 240.696,
+    "stdout_sha256": "977afd2d8bbd103f2f84b4fd5b4434f028f070b5140bf3605997e4d8c9283fd0",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "note": "Runtime emission exceeded the initial 240-second limit while the kernel probe also ran."
+  },
+  {
+    "name": "diagnostic-calibration",
+    "artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-2z21FC",
+    "exit": 1,
+    "seconds": 328.489,
+    "stdout_sha256": "64cc96dbcfdf5cb3193dba96d92873b4fb102223fbf8e7119d6cab1d30edd215",
+    "stderr_sha256": "424e4904897ae77bc3a61b75bd06c8ddd742b628b8e684453fcf37b32f3fdad2",
+    "note": "All positive checks and seven refusals completed. Exit 1 reflects the deliberately uncalibrated refusal files. Final checks rerun after pinning."
+  }
+]

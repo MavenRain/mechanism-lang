@@ -4008,3 +4008,85 @@ close stage apart from the sources.sha256 repin below; the battery legs
 pin no record files.
 
 This slice stays staged for the user; no commit was made in this stage.
+
+
+## Stage C / U1: horizontal composition laws (2026-09-19)
+
+Base: dbaa955. MechHorizontalLaws adds horizontal identities, congruence,
+naturality exchange and vertical interchange over the existing shared
+three-category API, with six independent universes. The exchange and
+interchange proofs take an explicit object argument: naturality can
+inspect its component morphism. NatTransEqAt exposes the proposition at
+that object; the earlier erased-object relation remains the conclusion
+of identity and congruence. No kernel, vendor, axiom or mapping change is
+needed. See dev/PORT-UAT-U1-HORIZONTAL-LAWS.md.
+
+Validation:
+
+```text
+build: 0 errors, 0 warnings
+PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7
+PRELUDE-HORIZONTAL-LAWS-RUNTIME OK cases=14 hosts=3 payloads=2 comparisons=56
+PIN-DELTA: PASS
+DENOMINATORS: PASS
+TRUSTED-LINES: inherited FAIL kernel=5475/3000 encoder=246/900
+```
+
+Both new gates use the existing CATEGORY watchdog. The initial shorter
+kernel and emission probes timed out; the final serial checks passed
+under the documented limits. Refusals pin complete diagnostic fingerprints
+as well as readable prefixes. Their coverage includes an attempt to erase
+the object required by naturality. Full commands, results, attempted-run
+captures and source hashes are in dev/validation/port-uat-u1-horizontal-laws/.
+The full battery was not run and no full regression pass is claimed.
+Stage C and U1 remain open on iterated whiskering, horizontal associativity,
+whole-record equality and source-type parity.
+
+## Horizontal composition laws review (2026-09-19)
+
+L3-1 (low, dev/PORT-UAT-U1-HORIZONTAL-LAWS.md): the Validation
+paragraph now names the third kernel-fixture specialization,
+`MechCategoryCore (4, 5)` as `SeparateTarget`, and states that the
+nominal-target refusal coerces into it.
+
+L4-1 (medium, test/fixtures/prelude/horizontal-laws-runtime.mech,
+test/prelude_horizontal_laws.ml, test/horizontal_laws_runtime.py): a
+second hcompExchange runtime pairing, exchangeSwapped, holds the First
+edge at the identity and varies Beta on Second, so the interchange law
+is checked under a second concrete pairing. Suite and runtime counts
+move together: entries 1200 to 1205, computations 24 to 28, cases 12
+to 14, comparisons 48 to 56; families, negatives, hosts and payloads
+are unchanged.
+
+GATE-1 (high, gate ladder): no source under this slice changed. The
+lone non-inherited red leg from fix-1, PRELUDE-HETEROGENEOUS-LEFT-KAN-
+RUNTIME, sits outside this slice (no kernel or encoder edit here) and
+is the TIMING HAZARD load flake named in the fix brief; it is recheck-
+by-id, not a code defect, and stays open for the gates stage to
+reconfirm at calm load.
+
+Round 3 (2026-09-19, by hand after the two Workflow fix rounds):
+
+ND-2-1 (medium, dev/validation/port-uat-u1-horizontal-laws/sources.sha256):
+the round-2 re-pin wrote the 16 entries of the 8 edited files with no
+newline between them, so 7 lines held two or more entries and the check
+reported ok=47 bad=7. The file is regenerated from the staged blobs of
+the same 63 paths in the same order, one entry per line. The check
+reports ok=63 bad=0.
+
+Evidence refresh (dev/validation/port-uat-u1-horizontal-laws/kernel.stdout
+and runtime.stdout): both captures still held the rows from before L4-1.
+They are captured again from the suite executable and the runtime
+harness, and hold the two rows dev/gates.sh pins:
+PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7
+PRELUDE-HORIZONTAL-LAWS-RUNTIME OK cases=14 hosts=3 payloads=2 comparisons=56
+
+ND-2-2 (medium, review kit only): the kit's own suite and harness row
+pins moved to the same two rows. No repository file is involved.
+
+Close (2026-09-20): two findings are fixed, one low (L3-1) and one
+medium (L4-1); none refuted, none dropped. The close ladder ran after
+the round-3 repair and passed 73 of 74 rows against a CLOSE-FLOOR of
+73. The sole FAIL id is TRUSTED-LINES, the inherited red leg at
+kernel=5475/3000 encoder=246/900, explained and outside this slice.
+The slice stays staged for the user to commit.

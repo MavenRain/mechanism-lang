@@ -1,0 +1,34 @@
+def wrongEndpoint : (0 C : Type 0) ->
+  (0 D : Type 2) ->
+  (0 E : Type 4) ->
+  (c : Mixed_W_Ops_Source_Category C) ->
+  (d : Mixed_W_Ops_Middle_Category D) ->
+  (e : Mixed_W_Ops_Target_Category E) ->
+  (F : Mixed_W_Ops_First_Base_Functor C D c d) ->
+  (G : Mixed_W_Ops_First_Base_Functor C D c d) ->
+  (J : Mixed_W_Ops_First_Base_Functor C D c d) ->
+  (H : Mixed_W_Ops_Second_Base_Functor D E d e) ->
+  (I : Mixed_W_Ops_Second_Base_Functor D E d e) ->
+  (K : Mixed_W_Ops_Second_Base_Functor D E d e) ->
+  (alpha : Mixed_W_Ops_First_NatTrans C D c d F G) ->
+  (gamma : Mixed_W_Ops_First_NatTrans C D c d F J) ->
+  (beta : Mixed_W_Ops_Second_NatTrans D E d e H I) ->
+  (delta : Mixed_W_Ops_Second_NatTrans D E d e I K) ->
+  Mixed_W_First_NatTransEq C D c d F G alpha alpha :=
+  fun (0 C : Type 0)
+    (0 D : Type 2)
+    (0 E : Type 4)
+    (c : Mixed_W_Ops_Source_Category C)
+    (d : Mixed_W_Ops_Middle_Category D)
+    (e : Mixed_W_Ops_Target_Category E)
+    (F : Mixed_W_Ops_First_Base_Functor C D c d)
+    (G : Mixed_W_Ops_First_Base_Functor C D c d)
+    (J : Mixed_W_Ops_First_Base_Functor C D c d)
+    (H : Mixed_W_Ops_Second_Base_Functor D E d e)
+    (I : Mixed_W_Ops_Second_Base_Functor D E d e)
+    (K : Mixed_W_Ops_Second_Base_Functor D E d e)
+    (alpha : Mixed_W_Ops_First_NatTrans C D c d F G)
+    (gamma : Mixed_W_Ops_First_NatTrans C D c d F J)
+    (beta : Mixed_W_Ops_Second_NatTrans D E d e H I)
+    (delta : Mixed_W_Ops_Second_NatTrans D E d e I K) =>
+    Mixed_hcompVcomp C D E c d e F G J H I K alpha gamma beta delta

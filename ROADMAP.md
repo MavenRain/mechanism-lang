@@ -42,14 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-18
+## Position on 2026-09-19
 
-The base is 59f48f1, following committed shared left Kan extensions
-and the Veil kernel migration. The current increment adds pointwise
-equality of natural transformations, its equivalence proofs, vertical
-identity and associativity laws, and vertical composition congruence.
-It supports independently specialized APIs through checked family reuse.
-See `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
+The base is dbaa955, following pointwise whiskering preservation laws.
+The current increment adds horizontal identity and congruence, naturality
+exchange, and vertical interchange over the shared three-category API.
+Exchange and interchange retain an explicit object argument because
+naturality can inspect the component morphism. All six universes remain
+independent. See `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md`.
 Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
@@ -61,7 +61,7 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness. Stage C remains
-open on whiskering and horizontal composition equations, equality of
+open on iterated whiskering and horizontal associativity, equality of
 whole transformation records, and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
@@ -90,6 +90,12 @@ Its runtime gate compares six exports on three hosts at two payloads.
 PRELUDE-NATTRANS-LAWS checks pointwise vertical laws at independent
 universes and six refusals. Its runtime gate compares six certified
 component applications on three hosts at two payloads.
+PRELUDE-WHISKERING-LAWS checks preservation of identity, vertical
+composition and equality by both whiskering operations. Its runtime
+gate compares twelve exports on three hosts at two payloads.
+PRELUDE-HORIZONTAL-LAWS checks horizontal identity, congruence,
+naturality exchange and vertical interchange with seven refusals. Its
+runtime gate compares fourteen exports on three hosts at two payloads.
 After the Veil kernel migration, TRUSTED-LINES stays red at
 kernel=5475/3000 and encoder=246/900 until
 the user rules D-A-1.
@@ -165,7 +171,9 @@ stay under `ports/` (D-UAT-3).
   transformation laws follow in `dev/PORT-UAT-U1-NATTRANS-LAWS.md`.
   Pointwise preservation of identities, vertical composition and equality
   by whiskering follows in `dev/PORT-UAT-U1-WHISKERING-LAWS.md`.
-  U1 remains open on iterated whiskering and horizontal equations,
+  Horizontal identity, congruence, exchange and vertical interchange follow
+  in `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md`. U1 remains open on iterated
+  whiskering and horizontal associativity,
   equality of whole transformation records, and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.

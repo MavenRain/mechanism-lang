@@ -1,0 +1,325 @@
+-- Load whiskering-laws.mech with its dependencies first.
+-- Pointwise horizontal equations share all three category families.
+poly (u, v, w, z, p, q) group MechHorizontalLaws where
+specialize MechWhiskeringLaws (u, v, w, z, p, q) as W
+
+-- A component proposition keeps the object available to naturality proofs.
+def NatTransEqAt : (0 C : Sort (succ u)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_Composite_Base_Functor C E c e) ->
+    (G : W_Ops_Composite_Base_Functor C E c e) ->
+    (alpha : W_Ops_Composite_NatTrans C E c e F G) ->
+    (beta : W_Ops_Composite_NatTrans C E c e F G) ->
+    (x : C) ->
+    Prop :=
+  fun (0 C : Sort (succ u))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_Composite_Base_Functor C E c e)
+      (G : W_Ops_Composite_Base_Functor C E c e)
+      (alpha : W_Ops_Composite_NatTrans C E c e F G)
+      (beta : W_Ops_Composite_NatTrans C E c e F G)
+      (x : C) =>
+    W_Ops_Target (W_Ops_Target_Hom E e (F.1 x) (G.1 x)) (alpha.1 x) (beta.1 x)
+
+def idHcomp : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (I : W_Ops_Second_Base_Functor D E d e) ->
+    (beta : W_Ops_Second_NatTrans D E d e H I) ->
+    (W_Composite_NatTransEq C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F I) (W_Ops_hcomp C D E c d e F F H I (W_Ops_First_idNat C D c
+      d F) beta) (W_Ops_Compose_whiskerRight C D E c d e H I beta F)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e)
+      (I : W_Ops_Second_Base_Functor D E d e)
+      (beta : W_Ops_Second_NatTrans D E d e H I) =>
+    (W_Composite_eqTrans C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F I) (W_Ops_hcomp C D E c d e F F H I (W_Ops_First_idNat C D c
+      d F) beta) (W_Ops_Composite_vcomp C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_Compose_Base_compFunctor C D E c d e F I)
+      (W_Ops_Composite_idNat C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H))
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta F)) (W_Ops_Compose_whiskerRight C D E c d e H I beta F)
+      (W_Composite_vcompCongr C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_Compose_Base_compFunctor C D E c d e F I)
+      (W_Ops_Compose_whiskerLeft C D E c d e H F F (W_Ops_First_idNat C D c d F)) (W_Ops_Composite_idNat C E c e
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H)) (W_Ops_Compose_whiskerRight C D E c d e H I beta F)
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta F) (W_whiskerLeftId C D E c d e H F) (W_Composite_eqRefl
+      C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_Compose_Base_compFunctor C D E c d e F I)
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta F))) (W_Composite_idVcomp C E c e
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_Compose_Base_compFunctor C D E c d e F I)
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta F)))
+
+def hcompId : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (G : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (alpha : W_Ops_First_NatTrans C D c d F G) ->
+    (W_Composite_NatTransEq C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e G H) (W_Ops_hcomp C D E c d e F G H H alpha
+      (W_Ops_Second_idNat D E d e H)) (W_Ops_Compose_whiskerLeft C D E c d e H F G alpha)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (G : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e)
+      (alpha : W_Ops_First_NatTrans C D c d F G) =>
+    (W_Composite_vcompId C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e G H) (W_Ops_Compose_whiskerLeft C D E c d e H F G alpha))
+
+def hcompIdId : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (W_Composite_NatTransEq C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_hcomp C D E c d e F F H H (W_Ops_First_idNat C D c
+      d F) (W_Ops_Second_idNat D E d e H)) (W_Ops_Composite_idNat C E c e (W_Ops_Compose_Base_compFunctor C D E
+      c d e F H))) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e) =>
+    (W_Composite_eqTrans C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_hcomp C D E c d e F F H H (W_Ops_First_idNat C D c
+      d F) (W_Ops_Second_idNat D E d e H)) (W_Ops_Compose_whiskerRight C D E c d e H H (W_Ops_Second_idNat D E d
+      e H) F) (W_Ops_Composite_idNat C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)) (idHcomp C D E c
+      d e F H H (W_Ops_Second_idNat D E d e H)) (W_whiskerRightId C D E c d e F H))
+
+def hcompCongr : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (G : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (I : W_Ops_Second_Base_Functor D E d e) ->
+    (alpha : W_Ops_First_NatTrans C D c d F G) ->
+    (alpha2 : W_Ops_First_NatTrans C D c d F G) ->
+    (beta : W_Ops_Second_NatTrans D E d e H I) ->
+    (beta2 : W_Ops_Second_NatTrans D E d e H I) ->
+    (first : W_First_NatTransEq C D c d F G alpha alpha2) ->
+    (second : W_Second_NatTransEq D E d e H I beta beta2) ->
+    (W_Composite_NatTransEq C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e G I) (W_Ops_hcomp C D E c d e F G H I alpha beta) (W_Ops_hcomp
+      C D E c d e F G H I alpha2 beta2)) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (G : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e)
+      (I : W_Ops_Second_Base_Functor D E d e)
+      (alpha : W_Ops_First_NatTrans C D c d F G)
+      (alpha2 : W_Ops_First_NatTrans C D c d F G)
+      (beta : W_Ops_Second_NatTrans D E d e H I)
+      (beta2 : W_Ops_Second_NatTrans D E d e H I)
+      (first : W_First_NatTransEq C D c d F G alpha alpha2)
+      (second : W_Second_NatTransEq D E d e H I beta beta2) =>
+    (W_Composite_vcompCongr C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e G H) (W_Ops_Compose_Base_compFunctor C D E c d e G I)
+      (W_Ops_Compose_whiskerLeft C D E c d e H F G alpha) (W_Ops_Compose_whiskerLeft C D E c d e H F G alpha2)
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta G) (W_Ops_Compose_whiskerRight C D E c d e H I beta2 G)
+      (W_whiskerLeftCongr C D E c d e H F G alpha alpha2 first) (W_whiskerRightCongr C D E c d e G H I beta
+      beta2 second))
+
+def hcompExchange : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (G : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (I : W_Ops_Second_Base_Functor D E d e) ->
+    (alpha : W_Ops_First_NatTrans C D c d F G) ->
+    (beta : W_Ops_Second_NatTrans D E d e H I) ->
+    (x : C) -> (NatTransEqAt C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e G I) (W_Ops_hcomp C D E c d e F G H I alpha beta)
+      (W_Ops_Composite_vcomp C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e F I) (W_Ops_Compose_Base_compFunctor C D E c d e G I)
+      (W_Ops_Compose_whiskerRight C D E c d e H I beta F) (W_Ops_Compose_whiskerLeft C D E c d e I F G alpha))
+      x) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (G : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e)
+      (I : W_Ops_Second_Base_Functor D E d e)
+      (alpha : W_Ops_First_NatTrans C D c d F G)
+      (beta : W_Ops_Second_NatTrans D E d e H I) =>
+    fun (x : C) =>
+      W_Ops_Second_naturality D E d e H I beta (F.1 x) (G.1 x) (alpha.1 x)
+
+-- Reassociate around a supplied middle square in the target category.
+def targetMiddleFour : (0 E : Sort (succ p)) ->
+    (e : W_Ops_Target_Category E) ->
+    (0 x0 : E) ->
+    (0 x1 : E) ->
+    (0 x2 : E) ->
+    (0 x3 : E) ->
+    (0 x4 : E) ->
+    (0 x5 : E) ->
+    (0 a : (W_Ops_Target_Hom E e x0 x1)) ->
+    (0 b : (W_Ops_Target_Hom E e x1 x2)) ->
+    (0 c : (W_Ops_Target_Hom E e x2 x4)) ->
+    (0 d : (W_Ops_Target_Hom E e x4 x5)) ->
+    (0 c2 : (W_Ops_Target_Hom E e x1 x3)) ->
+    (0 b2 : (W_Ops_Target_Hom E e x3 x4)) ->
+    (square : (W_Ops_Target (W_Ops_Target_Hom E e x1 x4) (W_Ops_Target_comp E e x1 x2 x4 b c) (W_Ops_Target_comp
+      E e x1 x3 x4 c2 b2))) ->
+    (W_Ops_Target (W_Ops_Target_Hom E e x0 x5) (W_Ops_Target_comp E e x0 x2 x5 (W_Ops_Target_comp E e x0 x1 x2 a
+      b) (W_Ops_Target_comp E e x2 x4 x5 c d)) (W_Ops_Target_comp E e x0 x3 x5 (W_Ops_Target_comp E e x0 x1 x3 a
+      c2) (W_Ops_Target_comp E e x3 x4 x5 b2 d))) :=
+  fun (0 E : Sort (succ p))
+      (e : W_Ops_Target_Category E)
+      (0 x0 : E)
+      (0 x1 : E)
+      (0 x2 : E)
+      (0 x3 : E)
+      (0 x4 : E)
+      (0 x5 : E)
+      (0 a : (W_Ops_Target_Hom E e x0 x1))
+      (0 b : (W_Ops_Target_Hom E e x1 x2))
+      (0 c : (W_Ops_Target_Hom E e x2 x4))
+      (0 d : (W_Ops_Target_Hom E e x4 x5))
+      (0 c2 : (W_Ops_Target_Hom E e x1 x3))
+      (0 b2 : (W_Ops_Target_Hom E e x3 x4))
+      (square : (W_Ops_Target (W_Ops_Target_Hom E e x1 x4) (W_Ops_Target_comp E e x1 x2 x4 b c)
+      (W_Ops_Target_comp E e x1 x3 x4 c2 b2))) =>
+    (W_Ops_Target_eqTrans (W_Ops_Target_Hom E e x0 x5) (W_Ops_Target_comp E e x0 x2 x5 (W_Ops_Target_comp E e x0
+      x1 x2 a b) (W_Ops_Target_comp E e x2 x4 x5 c d)) (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e
+      x1 x2 x5 b (W_Ops_Target_comp E e x2 x4 x5 c d))) (W_Ops_Target_comp E e x0 x3 x5 (W_Ops_Target_comp E e
+      x0 x1 x3 a c2) (W_Ops_Target_comp E e x3 x4 x5 b2 d)) (W_Ops_Target_assoc E e x0 x1 x2 x5 a b
+      (W_Ops_Target_comp E e x2 x4 x5 c d)) (W_Ops_Target_eqTrans (W_Ops_Target_Hom E e x0 x5)
+      (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x2 x5 b (W_Ops_Target_comp E e x2 x4 x5 c d)))
+      (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x4 x5 (W_Ops_Target_comp E e x1 x2 x4 b c) d))
+      (W_Ops_Target_comp E e x0 x3 x5 (W_Ops_Target_comp E e x0 x1 x3 a c2) (W_Ops_Target_comp E e x3 x4 x5 b2
+      d)) (W_Ops_Target_eqCongr (W_Ops_Target_Hom E e x1 x5) (W_Ops_Target_Hom E e x0 x5) (fun (f :
+      (W_Ops_Target_Hom E e x1 x5)) => (W_Ops_Target_comp E e x0 x1 x5 a f)) (W_Ops_Target_comp E e x1 x2 x5 b
+      (W_Ops_Target_comp E e x2 x4 x5 c d)) (W_Ops_Target_comp E e x1 x4 x5 (W_Ops_Target_comp E e x1 x2 x4 b c)
+      d) (W_Ops_Composite_targetEqSymm (W_Ops_Target_Hom E e x1 x5) (W_Ops_Target_comp E e x1 x4 x5
+      (W_Ops_Target_comp E e x1 x2 x4 b c) d) (W_Ops_Target_comp E e x1 x2 x5 b (W_Ops_Target_comp E e x2 x4 x5
+      c d)) (W_Ops_Target_assoc E e x1 x2 x4 x5 b c d))) (W_Ops_Target_eqTrans (W_Ops_Target_Hom E e x0 x5)
+      (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x4 x5 (W_Ops_Target_comp E e x1 x2 x4 b c) d))
+      (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x4 x5 (W_Ops_Target_comp E e x1 x3 x4 c2 b2)
+      d)) (W_Ops_Target_comp E e x0 x3 x5 (W_Ops_Target_comp E e x0 x1 x3 a c2) (W_Ops_Target_comp E e x3 x4 x5
+      b2 d)) (W_Ops_Target_eqCongr (W_Ops_Target_Hom E e x1 x4) (W_Ops_Target_Hom E e x0 x5) (fun (f :
+      (W_Ops_Target_Hom E e x1 x4)) => (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x4 x5 f d)))
+      (W_Ops_Target_comp E e x1 x2 x4 b c) (W_Ops_Target_comp E e x1 x3 x4 c2 b2) square) (W_Ops_Target_eqTrans
+      (W_Ops_Target_Hom E e x0 x5) (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x4 x5
+      (W_Ops_Target_comp E e x1 x3 x4 c2 b2) d)) (W_Ops_Target_comp E e x0 x1 x5 a (W_Ops_Target_comp E e x1 x3
+      x5 c2 (W_Ops_Target_comp E e x3 x4 x5 b2 d))) (W_Ops_Target_comp E e x0 x3 x5 (W_Ops_Target_comp E e x0 x1
+      x3 a c2) (W_Ops_Target_comp E e x3 x4 x5 b2 d)) (W_Ops_Target_eqCongr (W_Ops_Target_Hom E e x1 x5)
+      (W_Ops_Target_Hom E e x0 x5) (fun (f : (W_Ops_Target_Hom E e x1 x5)) => (W_Ops_Target_comp E e x0 x1 x5 a
+      f)) (W_Ops_Target_comp E e x1 x4 x5 (W_Ops_Target_comp E e x1 x3 x4 c2 b2) d) (W_Ops_Target_comp E e x1 x3
+      x5 c2 (W_Ops_Target_comp E e x3 x4 x5 b2 d)) (W_Ops_Target_assoc E e x1 x3 x4 x5 c2 b2 d))
+      (W_Ops_Composite_targetEqSymm (W_Ops_Target_Hom E e x0 x5) (W_Ops_Target_comp E e x0 x3 x5
+      (W_Ops_Target_comp E e x0 x1 x3 a c2) (W_Ops_Target_comp E e x3 x4 x5 b2 d)) (W_Ops_Target_comp E e x0 x1
+      x5 a (W_Ops_Target_comp E e x1 x3 x5 c2 (W_Ops_Target_comp E e x3 x4 x5 b2 d))) (W_Ops_Target_assoc E e x0
+      x1 x3 x5 a c2 (W_Ops_Target_comp E e x3 x4 x5 b2 d)))))))
+
+def hcompVcomp : (0 C : Sort (succ u)) ->
+    (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) ->
+    (c : W_Ops_Source_Category C) ->
+    (d : W_Ops_Middle_Category D) ->
+    (e : W_Ops_Target_Category E) ->
+    (F : W_Ops_First_Base_Functor C D c d) ->
+    (G : W_Ops_First_Base_Functor C D c d) ->
+    (J : W_Ops_First_Base_Functor C D c d) ->
+    (H : W_Ops_Second_Base_Functor D E d e) ->
+    (I : W_Ops_Second_Base_Functor D E d e) ->
+    (K : W_Ops_Second_Base_Functor D E d e) ->
+    (alpha : W_Ops_First_NatTrans C D c d F G) ->
+    (gamma : W_Ops_First_NatTrans C D c d G J) ->
+    (beta : W_Ops_Second_NatTrans D E d e H I) ->
+    (delta : W_Ops_Second_NatTrans D E d e I K) ->
+    (x : C) -> (NatTransEqAt C E c e (W_Ops_Compose_Base_compFunctor C D E c d e F H)
+      (W_Ops_Compose_Base_compFunctor C D E c d e J K) (W_Ops_hcomp C D E c d e F J H K (W_Ops_First_vcomp C D c
+      d F G J alpha gamma) (W_Ops_Second_vcomp D E d e H I K beta delta)) (W_Ops_Composite_vcomp C E c e
+      (W_Ops_Compose_Base_compFunctor C D E c d e F H) (W_Ops_Compose_Base_compFunctor C D E c d e G I)
+      (W_Ops_Compose_Base_compFunctor C D E c d e J K) (W_Ops_hcomp C D E c d e F G H I alpha beta) (W_Ops_hcomp
+      C D E c d e G J I K gamma delta)) x) :=
+  fun (0 C : Sort (succ u))
+      (0 D : Sort (succ w))
+      (0 E : Sort (succ p))
+      (c : W_Ops_Source_Category C)
+      (d : W_Ops_Middle_Category D)
+      (e : W_Ops_Target_Category E)
+      (F : W_Ops_First_Base_Functor C D c d)
+      (G : W_Ops_First_Base_Functor C D c d)
+      (J : W_Ops_First_Base_Functor C D c d)
+      (H : W_Ops_Second_Base_Functor D E d e)
+      (I : W_Ops_Second_Base_Functor D E d e)
+      (K : W_Ops_Second_Base_Functor D E d e)
+      (alpha : W_Ops_First_NatTrans C D c d F G)
+      (gamma : W_Ops_First_NatTrans C D c d G J)
+      (beta : W_Ops_Second_NatTrans D E d e H I)
+      (delta : W_Ops_Second_NatTrans D E d e I K) =>
+    fun (x : C) =>
+      (W_Ops_Target_eqTrans (W_Ops_Target_Hom E e (H.1 (F.1 x)) (K.1 (J.1 x))) (W_Ops_Target_comp E e (H.1 (F.1
+      x)) (H.1 (J.1 x)) (K.1 (J.1 x)) (W_Ops_Second_Base_functorMap D E d e H (F.1 x) (J.1 x) (W_Ops_Middle_comp
+      D d (F.1 x) (G.1 x) (J.1 x) (alpha.1 x) (gamma.1 x))) (W_Ops_Target_comp E e (H.1 (J.1 x)) (I.1 (J.1 x))
+      (K.1 (J.1 x)) (beta.1 (J.1 x)) (delta.1 (J.1 x)))) (W_Ops_Target_comp E e (H.1 (F.1 x)) (H.1 (J.1 x)) (K.1
+      (J.1 x)) (W_Ops_Target_comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (J.1 x)) (W_Ops_Second_Base_functorMap D
+      E d e H (F.1 x) (G.1 x) (alpha.1 x)) (W_Ops_Second_Base_functorMap D E d e H (G.1 x) (J.1 x) (gamma.1 x)))
+      (W_Ops_Target_comp E e (H.1 (J.1 x)) (I.1 (J.1 x)) (K.1 (J.1 x)) (beta.1 (J.1 x)) (delta.1 (J.1 x))))
+      (W_Ops_Target_comp E e (H.1 (F.1 x)) (I.1 (G.1 x)) (K.1 (J.1 x)) (W_Ops_Target_comp E e (H.1 (F.1 x)) (H.1
+      (G.1 x)) (I.1 (G.1 x)) (W_Ops_Second_Base_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)) (beta.1 (G.1
+      x))) (W_Ops_Target_comp E e (I.1 (G.1 x)) (I.1 (J.1 x)) (K.1 (J.1 x)) (W_Ops_Second_Base_functorMap D E d
+      e I (G.1 x) (J.1 x) (gamma.1 x)) (delta.1 (J.1 x)))) (W_Ops_Target_eqCongr (W_Ops_Target_Hom E e (H.1 (F.1
+      x)) (H.1 (J.1 x))) (W_Ops_Target_Hom E e (H.1 (F.1 x)) (K.1 (J.1 x))) (fun (f : (W_Ops_Target_Hom E e (H.1
+      (F.1 x)) (H.1 (J.1 x)))) => (W_Ops_Target_comp E e (H.1 (F.1 x)) (H.1 (J.1 x)) (K.1 (J.1 x)) f
+      (W_Ops_Target_comp E e (H.1 (J.1 x)) (I.1 (J.1 x)) (K.1 (J.1 x)) (beta.1 (J.1 x)) (delta.1 (J.1 x)))))
+      (W_Ops_Second_Base_functorMap D E d e H (F.1 x) (J.1 x) (W_Ops_Middle_comp D d (F.1 x) (G.1 x) (J.1 x)
+      (alpha.1 x) (gamma.1 x))) (W_Ops_Target_comp E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (J.1 x))
+      (W_Ops_Second_Base_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x)) (W_Ops_Second_Base_functorMap D E d e
+      H (G.1 x) (J.1 x) (gamma.1 x))) (W_Ops_Second_Base_functorMapComp D E d e H (F.1 x) (G.1 x) (J.1 x)
+      (alpha.1 x) (gamma.1 x))) (targetMiddleFour E e (H.1 (F.1 x)) (H.1 (G.1 x)) (H.1 (J.1 x)) (I.1 (G.1 x))
+      (I.1 (J.1 x)) (K.1 (J.1 x)) (W_Ops_Second_Base_functorMap D E d e H (F.1 x) (G.1 x) (alpha.1 x))
+      (W_Ops_Second_Base_functorMap D E d e H (G.1 x) (J.1 x) (gamma.1 x)) (beta.1 (J.1 x)) (delta.1 (J.1 x))
+      (beta.1 (G.1 x)) (W_Ops_Second_Base_functorMap D E d e I (G.1 x) (J.1 x) (gamma.1 x))
+      (W_Ops_Second_naturality D E d e H I beta (G.1 x) (J.1 x) (gamma.1 x))))
+
+end

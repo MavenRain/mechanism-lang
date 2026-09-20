@@ -406,7 +406,7 @@ exports on three hosts at two payloads. Ordinary specializations
 retain distinct nominal families. Closed family reuse and functor
 identity/composition are described above. Shared natural transformation
 and left Kan APIs are described here. Pointwise vertical laws appear
-below; whiskering and horizontal equations and source-type parity
+below; iterated whiskering, horizontal associativity and source-type parity
 remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 
@@ -481,3 +481,28 @@ The laws compare components at every object. They do not assert equality
 of whole records. Mixed-universe and shared-family checks, refusal fixtures
 and both equation sides on three runtime hosts are described in
 `dev/PORT-UAT-U1-WHISKERING-LAWS.md`.
+
+
+## Horizontal composition laws
+
+Load the preceding sources and `cat/horizontal-laws.mech`:
+
+```text
+specialize MechSharedNatTrans (0, 1, 2, 3, 4, 5) as N
+specialize MechHorizontalLaws (0, 1, 2, 3, 4, 5) as L
+  with (W_Ops_Source := N_Source, W_Ops_Middle := N_Middle, W_Ops_Target := N_Target)
+```
+
+`L_idHcomp`, `L_hcompId`, `L_hcompIdId` and `L_hcompCongr` conclude the
+existing `L_W_Composite_NatTransEq`. Congruence requires a pointwise
+equality on each edge. `L_hcompExchange` gives the alternate component
+order using naturality. `L_hcompVcomp` proves vertical interchange.
+The latter two take an ordinary object argument and conclude
+`L_NatTransEqAt`; naturality may inspect the component morphism, which
+requires that object to be available. They do not produce the existing
+erased-object relation. Each proposition at a chosen object is in Prop.
+
+The shared operations and earlier laws are under `L_W_`. The auxiliary
+`L_targetMiddleFour` reassociates around a supplied target-category square.
+See `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md` for exact argument order,
+universe and erasure contracts, and the kernel and runtime checks.

@@ -275,6 +275,12 @@ leg SUITE PRELUDE-WHISKERING-LAWS \
 leg SUITE PRELUDE-WHISKERING-LAWS-RUNTIME \
   '^PRELUDE-WHISKERING-LAWS-RUNTIME OK cases=12 hosts=3 payloads=2 comparisons=48$' \
   python3 -I $ROOT/test/whiskering_laws_runtime.py
+leg CATEGORY PRELUDE-HORIZONTAL-LAWS \
+  '^PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7$' \
+  $ROOT/_build/default/test/prelude_horizontal_laws.exe $ROOT
+leg CATEGORY PRELUDE-HORIZONTAL-LAWS-RUNTIME \
+  '^PRELUDE-HORIZONTAL-LAWS-RUNTIME OK cases=14 hosts=3 payloads=2 comparisons=56$' \
+  python3 -I $ROOT/test/horizontal_laws_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

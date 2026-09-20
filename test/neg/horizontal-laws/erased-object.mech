@@ -1,0 +1,2 @@
+def erasedObject : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) exchangeLhs exchangeRhs :=
+  fun (0 x : Nat) => exchangeLaw x

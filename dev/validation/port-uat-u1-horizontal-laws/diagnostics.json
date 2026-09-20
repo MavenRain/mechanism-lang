@@ -1,0 +1,48 @@
+{
+  "capture": "/Users/oobi/Documents/gpt12/.kanon-exec/run-2z21FC",
+  "stderr_sha256": "424e4904897ae77bc3a61b75bd06c8ddd742b628b8e684453fcf37b32f3fdad2",
+  "diagnostics": {
+    "false-components": {
+      "bytes": 610,
+      "sha256": "173ef0e9becd903e1f7aa72db27092872a03b2ba3ed529298e35df6b97fa6cd7",
+      "diagnostic_digest": "79f84b72282b34bedd81054d8b8aa2c3",
+      "prefix_bytes": 240
+    },
+    "one-component": {
+      "bytes": 1572,
+      "sha256": "9bc3e6cd19c218e5175a18e2f893481924b9733cb0a8e0db85464256700b47c5",
+      "diagnostic_digest": "cdcd31efcf2d88df4679f7b289f6b5c6",
+      "prefix_bytes": 240
+    },
+    "erased-object": {
+      "bytes": 59,
+      "sha256": "0f2957717c5246f39307060d2d1d32fb68be194ffdd75018009a6e3bd02289e0",
+      "diagnostic_digest": "1f81383e9d7f9be51a5b37634a8d0c60",
+      "prefix_bytes": 59
+    },
+    "missing-first-congruence": {
+      "bytes": 962,
+      "sha256": "f100238f0b072060c5570e449cb0d25fd6742f3835fa7468349147ba8b032e16",
+      "diagnostic_digest": "cddbcae163a0d9f236c1eed7f1d6bca0",
+      "prefix_bytes": 240
+    },
+    "missing-second-congruence": {
+      "bytes": 2131,
+      "sha256": "f4570e43a14294c29be62877b3abb260e73e6c5f6c34d6930590fb09d61023d7",
+      "diagnostic_digest": "703bb35431f3036bd35a7a27e60dba67",
+      "prefix_bytes": 240
+    },
+    "nominal-target": {
+      "bytes": 5646,
+      "sha256": "64aa8695b29bc82b4e295fb18fb45785adf18416bd4bf537e062287d6da6e64e",
+      "diagnostic_digest": "cb5aa495787e97de033d579181d80be2",
+      "prefix_bytes": 5646
+    },
+    "wrong-endpoint": {
+      "bytes": 260910,
+      "sha256": "427e0ef792fa07c30f4728959d3de46dff08856228855ed34cda991abc591016",
+      "diagnostic_digest": "1fb661ed802b3d417b7c734378dcd68d",
+      "prefix_bytes": 240
+    }
+  }
+}

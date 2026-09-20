@@ -1,0 +1,102 @@
+{
+  "date": "2026-09-19T22:04:54.041390+00:00",
+  "base": "dbaa9554673f7003eb17892fb54099a75cb77da3",
+  "full_battery_run": false,
+  "checks": [
+    {
+      "name": "kernel",
+      "argv": [
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_horizontal_laws.exe",
+        "/Users/oobi/Documents/mechanism-lang"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "timeout_seconds": 900,
+      "seconds": 175.35,
+      "exit": 0,
+      "timed_out": false,
+      "expected_exit": 0,
+      "expectation_met": true,
+      "inherited_failure": false,
+      "stdout_sha256": "3bf1531d9aafc574ac9686f3559f6f426b4e951db8bd0c081addea1868ac2a78",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "runtime",
+      "argv": [
+        "python3",
+        "-I",
+        "/Users/oobi/Documents/mechanism-lang/test/horizontal_laws_runtime.py"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "timeout_seconds": 540,
+      "seconds": 151.143,
+      "exit": 0,
+      "timed_out": false,
+      "expected_exit": 0,
+      "expectation_met": true,
+      "inherited_failure": false,
+      "stdout_sha256": "7242b424631397597f3d3faebb6ba0829ff2b45f2ac0e1d49eb7d54ba9166493",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "pin-delta",
+      "argv": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "timeout_seconds": 30,
+      "seconds": 1.133,
+      "exit": 0,
+      "timed_out": false,
+      "expected_exit": 0,
+      "expectation_met": true,
+      "inherited_failure": false,
+      "stdout_sha256": "f89e61e5f9ed1959fa499a8e9158d037c0a5cb4b136f41f1dedbe7deeba48e15",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "denominators",
+      "argv": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/gates.sh",
+        "--leg",
+        "denominators"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "timeout_seconds": 30,
+      "seconds": 0.074,
+      "exit": 0,
+      "timed_out": false,
+      "expected_exit": 0,
+      "expectation_met": true,
+      "inherited_failure": false,
+      "stdout_sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "trusted-lines",
+      "argv": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/trusted-lines.sh",
+        "/Users/oobi/Documents/mechanism-lang"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "timeout_seconds": 30,
+      "seconds": 0.034,
+      "exit": 1,
+      "timed_out": false,
+      "expected_exit": 1,
+      "expectation_met": true,
+      "inherited_failure": true,
+      "stdout_sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "executables": {
+    "_build/default/test/prelude_horizontal_laws.exe": "463d3526cfa8ab3e1e45a37574e217a8e3318e93850c4e3dc9b6a7c5d4fe668d",
+    "_build/default/test/prelude_runtime.exe": "48a30c53d55831586fbc013401eee6c43f647707b54ac83bd8ea0c055e53f9de",
+    "_build/default/bin/mech.exe": "ba633541a9e394ceeb4eda6c0a612e29db47159568a5871abe3ec6cb60606820"
+  },
+  "expectations_met": true
+}

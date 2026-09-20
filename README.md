@@ -47,7 +47,12 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
-The whiskering preservation increment proves identity, vertical composition
+The horizontal laws increment proves identity, congruence, naturality
+exchange and vertical interchange for horizontal composition. The last
+two laws take an explicit object argument for their naturality proofs.
+See `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md` and
+`dev/validation/port-uat-u1-horizontal-laws/` for the contract and checks.
+The preceding whiskering preservation increment proves identity, vertical composition
 and pointwise congruence for precomposition and postcomposition. It reuses
 the shared three-category API and the existing transformation laws.
 See `dev/PORT-UAT-U1-WHISKERING-LAWS.md` and

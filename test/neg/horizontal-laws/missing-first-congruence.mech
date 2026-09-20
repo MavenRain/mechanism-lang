@@ -1,0 +1,2 @@
+def missingFirst : Laws_W_Composite_NatTransEq Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) congruenceLhs congruenceRhs :=
+  (Laws_hcompCongr Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right FirstIdentityAlpha Alpha SecondIdentityBeta Beta (Laws_W_Second_idVcomp Nat Point End PairEnd Left Right Beta))

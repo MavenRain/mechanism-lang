@@ -1,0 +1,2 @@
+def wrongTarget : (0 E : Type 4) -> SeparateTarget_Category E -> Mixed_W_Ops_Target_Category E :=
+  fun (0 E : Type 4) (e : SeparateTarget_Category E) => e

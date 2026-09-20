@@ -1,0 +1,1 @@
+def oneComponent : (x : Nat) -> Laws_NatTransEqAt Nat Point IndexedEnd PairEnd (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) (Run_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) exchangeLhs exchangeRhs x := exchangeLaw 37
