@@ -281,6 +281,12 @@ leg CATEGORY PRELUDE-HORIZONTAL-LAWS \
 leg CATEGORY PRELUDE-HORIZONTAL-LAWS-RUNTIME \
   '^PRELUDE-HORIZONTAL-LAWS-RUNTIME OK cases=14 hosts=3 payloads=2 comparisons=56$' \
   python3 -I $ROOT/test/horizontal_laws_runtime.py
+leg CATEGORY PRELUDE-ITERATED-WHISKERING \
+  '^PRELUDE-ITERATED-WHISKERING-OK entries=902 families=14 computations=18 negatives=6$' \
+  $ROOT/_build/default/test/prelude_iterated_whiskering.exe $ROOT
+leg CATEGORY PRELUDE-ITERATED-WHISKERING-RUNTIME \
+  '^PRELUDE-ITERATED-WHISKERING-RUNTIME OK cases=6 hosts=3 payloads=3 comparisons=36$' \
+  python3 -I $ROOT/test/iterated_whiskering_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

@@ -1,0 +1,16 @@
+PIN-DELTA file diff expected
+PIN-DELTA lib/check.ml NO-ROW FAIL
+PIN-DELTA lib/conv.ml NO-ROW FAIL
+PIN-DELTA lib/eval.ml NO-ROW FAIL
+PIN-DELTA lib/level.ml NO-ROW FAIL
+PIN-DELTA lib/rules.ml NO-ROW FAIL
+PIN-DELTA lib/level.mli NO-ROW FAIL
+PIN-DELTA wasm/emit.ml NO-ROW FAIL
+PIN-DELTA wasm/link.ml NO-ROW FAIL
+PIN-DELTA surface/elab.ml NO-ROW FAIL
+PIN-DELTA surface/lexer.ml NO-ROW FAIL
+PIN-DELTA surface/parser.ml NO-ROW FAIL
+PIN-DELTA surface/syntax.ml NO-ROW FAIL
+PIN-DELTA surface/token.ml NO-ROW FAIL
+PIN-DELTA bin/kanon.ml NO-ROW FAIL
+PIN-DELTA FAIL

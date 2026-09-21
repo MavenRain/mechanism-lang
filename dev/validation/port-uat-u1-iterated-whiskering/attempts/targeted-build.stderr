@@ -1,0 +1,2 @@
+Usage: dunecho [--help] [--full=FILE:LINE] [--warn] [OPTION]… MODE
+dunecho: too many arguments, don't know what to do with 'bin/mech.exe'

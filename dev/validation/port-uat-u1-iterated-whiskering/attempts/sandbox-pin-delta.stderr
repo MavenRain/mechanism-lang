@@ -1,0 +1,3 @@
+mkdir: /Users/oobi/Documents/mechanism-lang/.gatework/pin-delta: Operation not permitted
+/Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh:60: no such file or directory: /Users/oobi/Documents/mechanism-lang/.gatework/pin-delta/rows
+/Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh:62: no such file or directory: /Users/oobi/Documents/mechanism-lang/.gatework/pin-delta/rows

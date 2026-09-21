@@ -1,0 +1,1 @@
+mismatch: the constructor categoryRefl of Target gives the index (Sec SPi w n Nat [n => (Out SPi w b Nat (APt w 80) (Out SPi w a Nat (APt w (Out SPi w b Nat (APt w 2) (Out SPi w a Nat (APt w n) natMul))) natAdd))]) and the type asks for (Sec SPi w n Nat [n

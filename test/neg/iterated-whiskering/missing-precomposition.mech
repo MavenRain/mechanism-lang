@@ -1,0 +1,2 @@
+def missingPrecomposition : Target ((Nat * Nat) -> Nat * Nat) (mixedLhs 37)
+  ((Run_BCD_whiskerLeft Nat Nat Nat IndexedMiddle1 EndMiddle2 PairEndTarget Right (ConstantM1M2 0) (ConstantM1M2 1) AlphaM1M2).1 37) := categoryRefl

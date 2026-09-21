@@ -1,0 +1,1 @@
+mismatch: the term has type (Lan SMu Target [(Sec SPi w n Nat [n => (Out SPi w b Nat (APt w 80) (Out SPi w a Nat (APt w (Out SPi w b Nat (APt w 2) (Out SPi w a Nat (APt w n) natMul))) natAdd))])] (Sec SColl 2 [ => (Ran SPi w _ Nat Nat);  => (Sec SPi w n Na

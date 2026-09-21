@@ -1,0 +1,103 @@
+-- Load category-core, heterogeneous-functor, composable-functors
+-- and heterogeneous-whiskering first.
+-- Four independent category families are shared by all four triangles.
+poly (u, v, w, z, p, q, r, s) group MechIteratedWhiskering where
+specialize MechCategoryCore (u, v) as Source
+specialize MechCategoryCore (w, z) as Middle1
+specialize MechCategoryCore (p, q) as Middle2
+specialize MechCategoryCore (r, s) as Target
+specialize MechHeterogeneousWhiskering (u, v, w, z, p, q) as ABC
+  with (Base_Source := Source, Base_Middle := Middle1, Base_Target := Middle2)
+specialize MechHeterogeneousWhiskering (w, z, p, q, r, s) as BCD
+  with (Base_Source := Middle1, Base_Middle := Middle2, Base_Target := Target)
+specialize MechHeterogeneousWhiskering (u, v, p, q, r, s) as ACD
+  with (Base_Source := Source, Base_Middle := Middle2, Base_Target := Target)
+specialize MechHeterogeneousWhiskering (u, v, w, z, r, s) as ABD
+  with (Base_Source := Source, Base_Middle := Middle1, Base_Target := Target)
+
+-- Precomposing by a composite agrees with two successive precompositions.
+def whiskerRightComp : (0 A : Sort (succ u)) -> (0 B : Sort (succ w)) ->
+    (0 C : Sort (succ p)) -> (0 D : Sort (succ r)) ->
+    (a : Source_Category A) -> (b : Middle1_Category B) ->
+    (c : Middle2_Category C) -> (d : Target_Category D) ->
+    (K : ABC_Base_First_Functor A B a b) ->
+    (L : ABC_Base_Second_Functor B C b c) ->
+    (F : BCD_Base_Second_Functor C D c d) ->
+    (G : BCD_Base_Second_Functor C D c d) ->
+    (alpha : BCD_Second_NatTrans C D c d F G) -> (0 x : A) ->
+    Target (Target_Hom D d (F.1 (L.1 (K.1 x))) (G.1 (L.1 (K.1 x))))
+      ((ACD_whiskerRight A C D a c d F G alpha
+        (ABC_Base_compFunctor A B C a b c K L)).1 x)
+      ((ABD_whiskerRight A B D a b d
+        (BCD_Base_compFunctor B C D b c d L F)
+        (BCD_Base_compFunctor B C D b c d L G)
+        (BCD_whiskerRight B C D b c d F G alpha L) K).1 x) :=
+  fun (0 A : Sort (succ u)) (0 B : Sort (succ w))
+      (0 C : Sort (succ p)) (0 D : Sort (succ r))
+      (a : Source_Category A) (b : Middle1_Category B)
+      (c : Middle2_Category C) (d : Target_Category D)
+      (K : ABC_Base_First_Functor A B a b)
+      (L : ABC_Base_Second_Functor B C b c)
+      (F : BCD_Base_Second_Functor C D c d)
+      (G : BCD_Base_Second_Functor C D c d)
+      (alpha : BCD_Second_NatTrans C D c d F G) (0 x : A) =>
+    categoryRefl
+
+-- Postcomposing by a composite agrees with two successive postcompositions.
+def whiskerLeftComp : (0 A : Sort (succ u)) -> (0 B : Sort (succ w)) ->
+    (0 C : Sort (succ p)) -> (0 D : Sort (succ r)) ->
+    (a : Source_Category A) -> (b : Middle1_Category B) ->
+    (c : Middle2_Category C) -> (d : Target_Category D) ->
+    (F : ABC_Base_First_Functor A B a b) ->
+    (G : ABC_Base_First_Functor A B a b) ->
+    (H : ABC_Base_Second_Functor B C b c) ->
+    (K : BCD_Base_Second_Functor C D c d) ->
+    (alpha : ABC_First_NatTrans A B a b F G) -> (0 x : A) ->
+    Target (Target_Hom D d (K.1 (H.1 (F.1 x))) (K.1 (H.1 (G.1 x))))
+      ((ABD_whiskerLeft A B D a b d
+        (BCD_Base_compFunctor B C D b c d H K) F G alpha).1 x)
+      ((ACD_whiskerLeft A C D a c d K
+        (ABC_Base_compFunctor A B C a b c F H)
+        (ABC_Base_compFunctor A B C a b c G H)
+        (ABC_whiskerLeft A B C a b c H F G alpha)).1 x) :=
+  fun (0 A : Sort (succ u)) (0 B : Sort (succ w))
+      (0 C : Sort (succ p)) (0 D : Sort (succ r))
+      (a : Source_Category A) (b : Middle1_Category B)
+      (c : Middle2_Category C) (d : Target_Category D)
+      (F : ABC_Base_First_Functor A B a b)
+      (G : ABC_Base_First_Functor A B a b)
+      (H : ABC_Base_Second_Functor B C b c)
+      (K : BCD_Base_Second_Functor C D c d)
+      (alpha : ABC_First_NatTrans A B a b F G) (0 x : A) =>
+    categoryRefl
+
+-- Precomposition and postcomposition commute on components.
+def whiskerCommute : (0 A : Sort (succ u)) -> (0 B : Sort (succ w)) ->
+    (0 C : Sort (succ p)) -> (0 D : Sort (succ r)) ->
+    (a : Source_Category A) -> (b : Middle1_Category B) ->
+    (c : Middle2_Category C) -> (d : Target_Category D) ->
+    (K : ABC_Base_First_Functor A B a b) ->
+    (F : ABC_Base_Second_Functor B C b c) ->
+    (G : ABC_Base_Second_Functor B C b c) ->
+    (H : BCD_Base_Second_Functor C D c d) ->
+    (alpha : ABC_Second_NatTrans B C b c F G) -> (0 x : A) ->
+    Target (Target_Hom D d (H.1 (F.1 (K.1 x))) (H.1 (G.1 (K.1 x))))
+      ((ACD_whiskerLeft A C D a c d H
+        (ABC_Base_compFunctor A B C a b c K F)
+        (ABC_Base_compFunctor A B C a b c K G)
+        (ABC_whiskerRight A B C a b c F G alpha K)).1 x)
+      ((ABD_whiskerRight A B D a b d
+        (BCD_Base_compFunctor B C D b c d F H)
+        (BCD_Base_compFunctor B C D b c d G H)
+        (BCD_whiskerLeft B C D b c d H F G alpha) K).1 x) :=
+  fun (0 A : Sort (succ u)) (0 B : Sort (succ w))
+      (0 C : Sort (succ p)) (0 D : Sort (succ r))
+      (a : Source_Category A) (b : Middle1_Category B)
+      (c : Middle2_Category C) (d : Target_Category D)
+      (K : ABC_Base_First_Functor A B a b)
+      (F : ABC_Base_Second_Functor B C b c)
+      (G : ABC_Base_Second_Functor B C b c)
+      (H : BCD_Base_Second_Functor C D c d)
+      (alpha : ABC_Second_NatTrans B C b c F G) (0 x : A) =>
+    categoryRefl
+end

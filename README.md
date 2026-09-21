@@ -47,6 +47,11 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
+The iterated whiskering increment proves precomposition and postcomposition
+by composite functors, and their commutation, over four shared categories.
+All eight universe levels remain independent. The laws compare components
+at erased objects. See `dev/PORT-UAT-U1-ITERATED-WHISKERING.md` and
+`dev/validation/port-uat-u1-iterated-whiskering/` for the contract and checks.
 The horizontal laws increment proves identity, congruence, naturality
 exchange and vertical interchange for horizontal composition. The last
 two laws take an explicit object argument for their naturality proofs.

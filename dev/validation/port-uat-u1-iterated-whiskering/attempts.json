@@ -1,0 +1,133 @@
+{
+  "development_attempts_only": true,
+  "attempts": [
+    {
+      "name": "targeted-build",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/dunecho.sh",
+        "build",
+        "bin/mech.exe"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 124,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-rnqKOA",
+      "stdout": {
+        "path": "attempts/targeted-build.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "attempts/targeted-build.stderr",
+        "sha256": "2e641bf0859f35c547c0810d12e9707bd8246365ebe24d9dac7bccb55233c1b7"
+      },
+      "note": "The installed dunecho does not accept a positional target; the documented build command passed."
+    },
+    {
+      "name": "universe-probe",
+      "command": [
+        "gtimeout",
+        "900",
+        "/Users/oobi/Documents/mechanism-lang/_build/default/bin/mech.exe",
+        "check",
+        "/private/tmp/mechanism-iterated-check.mech"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 0,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-f5laj7",
+      "stdout": {
+        "path": "attempts/universe-probe.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "attempts/universe-probe.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "note": "The three laws checked at eight distinct universe levels."
+    },
+    {
+      "name": "runtime-fixture",
+      "command": [
+        "gtimeout",
+        "900",
+        "/Users/oobi/Documents/mechanism-lang/_build/default/bin/mech.exe",
+        "check",
+        "/private/tmp/mechanism-iterated-runtime-check.mech"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 1,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-XaMBLy",
+      "stdout": {
+        "path": "attempts/runtime-fixture.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "attempts/runtime-fixture.stderr",
+        "sha256": "edccc23d51af6655f4f85742c88afc2409340322e64bcdb8fbf2e7f9be2d79ad"
+      },
+      "note": "A tuple argument annotation lacked parentheses."
+    },
+    {
+      "name": "kernel-fixture",
+      "command": [
+        "gtimeout",
+        "900",
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_iterated_whiskering.exe",
+        "/Users/oobi/Documents/mechanism-lang",
+        "--trace"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 1,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-rOAJro",
+      "stdout": {
+        "path": "attempts/kernel-fixture.stdout",
+        "sha256": "056eb926495d2a0d38a23a7955d0f4550b0bd29dba750c0d7f4a911736e22e94"
+      },
+      "stderr": {
+        "path": "attempts/kernel-fixture.stderr",
+        "sha256": "c047420e442603c9f7a5b5f927307a767329c0cf948d832b61a18d97c4afe0b2"
+      },
+      "note": "Per-definition diagnostics identified the swap annotation; both tuple annotations were fixed."
+    },
+    {
+      "name": "diagnostic-recording",
+      "command": [
+        "gtimeout",
+        "900",
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_iterated_whiskering.exe",
+        "/Users/oobi/Documents/mechanism-lang",
+        "--trace"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 1,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-fLBKZU",
+      "stdout": {
+        "path": "attempts/diagnostic-recording.stdout",
+        "sha256": "800be0200b87e8b71bc2d75e3ba9eff8a2831d5b3ee640b883a58eff29c80a70"
+      },
+      "stderr": {
+        "path": "attempts/diagnostic-recording.stderr",
+        "sha256": "b4c49a1148092d4a8e4cd1ddbcb6b43385459d40c8c627bd2a8ac31b9e28c6ff"
+      },
+      "note": "All positive checks passed and all six negative cases were refused; placeholder diagnostic digests were then replaced."
+    },
+    {
+      "name": "sandbox-pin-delta",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 1,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-ZHnvY2",
+      "stdout": {
+        "path": "attempts/sandbox-pin-delta.stdout",
+        "sha256": "061e41e7326bdaa13c2598c60065e55e295db28f2a9cb972fd49afa63f78786d"
+      },
+      "stderr": {
+        "path": "attempts/sandbox-pin-delta.stderr",
+        "sha256": "5046f467170b2db875e21ad3145c08b17b80f09f8ddac2476882990009890c98"
+      },
+      "note": "The sandbox prevented creation of the required .gatework directory; the authorized rerun passed."
+    }
+  ]
+}

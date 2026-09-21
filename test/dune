@@ -195,3 +195,8 @@
  (name prelude_horizontal_laws)
  (modules Prelude_horizontal_laws)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
+ (name prelude_iterated_whiskering)
+ (modules Prelude_iterated_whiskering)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))

@@ -1,0 +1,33 @@
+def incompatibleEndpoints : (0 A : Type 0) ->
+    (0 B : Type 0) ->
+    (0 C : Type 0) ->
+    (0 D : Type 0) ->
+    (a : Source_Category A) ->
+    (b : Middle1_Category B) ->
+    (c : Middle2_Category C) ->
+    (d : Target_Category D) ->
+    (K : Run_ABC_Base_First_Functor A B a b) ->
+    (L : Run_ABC_Base_Second_Functor B C b c) ->
+    (F : Run_BCD_Base_Second_Functor C D c d) ->
+    (G : Run_BCD_Base_Second_Functor C D c d) ->
+    (J : Run_BCD_Base_Second_Functor C D c d) ->
+    (alpha : Run_BCD_Second_NatTrans C D c d F G) ->
+    (0 x : A) ->
+    Target (Target_Hom D d (F.1 (L.1 (K.1 x))) (G.1 (L.1 (K.1 x))))
+      (alpha.1 (L.1 (K.1 x))) (alpha.1 (L.1 (K.1 x))) :=
+  fun (0 A : Type 0)
+      (0 B : Type 0)
+      (0 C : Type 0)
+      (0 D : Type 0)
+      (a : Source_Category A)
+      (b : Middle1_Category B)
+      (c : Middle2_Category C)
+      (d : Target_Category D)
+      (K : Run_ABC_Base_First_Functor A B a b)
+      (L : Run_ABC_Base_Second_Functor B C b c)
+      (F : Run_BCD_Base_Second_Functor C D c d)
+      (G : Run_BCD_Base_Second_Functor C D c d)
+      (J : Run_BCD_Base_Second_Functor C D c d)
+      (alpha : Run_BCD_Second_NatTrans C D c d F G)
+      (0 x : A) =>
+    Run_whiskerRightComp A B C D a b c d K L F J alpha x

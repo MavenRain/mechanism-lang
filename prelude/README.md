@@ -406,7 +406,7 @@ exports on three hosts at two payloads. Ordinary specializations
 retain distinct nominal families. Closed family reuse and functor
 identity/composition are described above. Shared natural transformation
 and left Kan APIs are described here. Pointwise vertical laws appear
-below; iterated whiskering, horizontal associativity and source-type parity
+below; horizontal associativity and source-type parity
 remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 
@@ -506,3 +506,31 @@ The shared operations and earlier laws are under `L_W_`. The auxiliary
 `L_targetMiddleFour` reassociates around a supplied target-category square.
 See `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md` for exact argument order,
 universe and erasure contracts, and the kernel and runtime checks.
+
+## Iterated whiskering
+
+Load category-core, heterogeneous-functor, composable-functors,
+heterogeneous-whiskering, and `cat/iterated-whiskering.mech`:
+
+```text
+specialize MechIteratedWhiskering (0, 1, 2, 3, 4, 5, 6, 7) as L
+```
+
+`L_Source`, `L_Middle1`, `L_Middle2`, and `L_Target` are the four
+category families. All eight object/hom universes are independent.
+The shared triangles `L_ABC_`, `L_BCD_`, `L_ACD_`, and `L_ABD_`
+expose the existing heterogeneous whiskering and composable-functor APIs.
+
+All three laws start with `A B C D a b c d` and end in an equality of
+components at `(0 x : A)`:
+
+| Member | Remaining arguments | Law |
+| --- | --- | --- |
+| whiskerRightComp | K L F G alpha | Precomposition by a composite. |
+| whiskerLeftComp | F G H K alpha | Postcomposition by a composite. |
+| whiskerCommute | K F G H alpha | Precomposition commutes with postcomposition. |
+
+All four root families support explicit reuse. The laws are checked
+source proofs by reduction, and assert no equality of whole records.
+See `dev/PORT-UAT-U1-ITERATED-WHISKERING.md` for argument directions,
+reuse examples, and the validation contract.

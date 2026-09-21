@@ -1,0 +1,2 @@
+def missingPostcomposition : Target ((Nat * Nat) -> Nat * Nat) (leftLhs 37)
+  ((Run_ABC_whiskerLeft Nat Nat Nat IndexedSource EndMiddle1 PairEndMiddle2 Left (Constant 0) (Constant 1) Alpha).1 37) := categoryRefl

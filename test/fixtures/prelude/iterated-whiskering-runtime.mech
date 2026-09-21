@@ -1,0 +1,241 @@
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechCategoryCore (0, 0) as Source
+specialize MechCategoryCore (0, 0) as Middle1
+specialize MechCategoryCore (0, 0) as Middle2
+specialize MechCategoryCore (0, 0) as Target
+specialize MechIteratedWhiskering (0, 0, 0, 0, 0, 0, 0, 0) as Run
+  with (Source := Source, Middle1 := Middle1, Middle2 := Middle2, Target := Target)
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+
+def pathCongr : (f : Nat -> Nat) -> (0 x : Nat) -> (0 y : Nat) ->
+    Path x y -> Path (f x) (f y) :=
+  fun (f : Nat -> Nat) (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return Path (f x) (f right) with | same => same
+
+def IndexedSource : Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat)) (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def IndexedMiddle1 : Middle1_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat)) (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def IndexedMiddle2 : Middle2_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * (Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * (Nat -> Nat)) (g : (Path y z) * (Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (n : Nat) => g.2 (f.2 n)))),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Path x y) * (Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * (Nat -> Nat)) (0 g : (Path x y) * (Nat -> Nat))
+            (0 h : (Path y z) * (Nat -> Nat)) => categoryRefl))))))
+
+def EndMiddle1 : Middle1_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def EndMiddle2 : Middle2_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def EndTarget : Target_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+
+def PairEndMiddle2 : Middle2_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Nat * Nat) -> Nat * Nat),
+   ((fun (0 x : Nat) (n : Nat * Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Nat * Nat) -> Nat * Nat) (g : (Nat * Nat) -> Nat * Nat) (n : Nat * Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat)
+            (0 h : (Nat * Nat) -> Nat * Nat) => categoryRefl))))))
+
+def PairEndTarget : Target_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Nat * Nat) -> Nat * Nat),
+   ((fun (0 x : Nat) (n : Nat * Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Nat * Nat) -> Nat * Nat) (g : (Nat * Nat) -> Nat * Nat) (n : Nat * Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat)
+            (0 h : (Nat * Nat) -> Nat * Nat) => categoryRefl))))))
+
+def IndexedMap : (f : Nat -> Nat) -> Run_ABC_Base_First_Functor Nat Nat IndexedSource IndexedMiddle1 :=
+  fun (f : Nat -> Nat) =>
+    (f, ((fun (0 x : Nat) (0 y : Nat) (edge : (Path x y) * (Nat -> Nat)) =>
+      (pathCongr f x y edge.1, edge.2)),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 a : (Path x y) * (Nat -> Nat)) (0 b : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+
+def Shift : Run_ABC_Base_First_Functor Nat Nat IndexedSource IndexedMiddle1 :=
+  IndexedMap (fun (x : Nat) => natAdd x 3)
+
+def Stretch : Run_ABC_Base_Second_Functor Nat Nat IndexedMiddle1 IndexedMiddle2 :=
+  ((fun (x : Nat) => natMul x 2),
+   ((fun (0 x : Nat) (0 y : Nat) (edge : (Path x y) * (Nat -> Nat)) =>
+      (pathCongr (fun (n : Nat) => natMul n 2) x y edge.1, edge.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 a : (Path x y) * (Nat -> Nat)) (0 b : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+
+def Constant : Nat -> Run_ABC_Base_First_Functor Nat Nat IndexedSource EndMiddle1 :=
+  fun (object : Nat) =>
+    ((fun (x : Nat) => object),
+     ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) (n : Nat) => n),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+
+def Left : Run_ABC_Base_Second_Functor Nat Nat EndMiddle1 PairEndMiddle2 :=
+  ((fun (x : Nat) => 0),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (f n.1, n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+
+def Right : Run_BCD_Base_Second_Functor Nat Nat EndMiddle2 PairEndTarget :=
+  ((fun (x : Nat) => 0),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (n.1, f n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+
+def swap : (Nat * Nat) -> Nat * Nat := fun (n : Nat * Nat) => (n.2, n.1)
+def Conjugate : Run_BCD_Base_Second_Functor Nat Nat PairEndMiddle2 PairEndTarget :=
+  ((fun (x : Nat) => 0),
+   ((fun (0 x : Nat) (0 y : Nat) (f : (Nat * Nat) -> Nat * Nat) (n : Nat * Nat) => swap (f (swap n))),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat) => categoryRefl))))
+
+def ConstantM1M2 : Nat -> Run_ABC_Base_Second_Functor Nat Nat IndexedMiddle1 EndMiddle2 :=
+  fun (object : Nat) =>
+    ((fun (x : Nat) => object),
+     ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) (n : Nat) => n),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+
+def ConstantM2T : Nat -> Run_BCD_Base_Second_Functor Nat Nat IndexedMiddle2 EndTarget :=
+  fun (object : Nat) =>
+    ((fun (x : Nat) => object),
+     ((fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) (n : Nat) => n),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path x y) * (Nat -> Nat)) (0 g : (Path y z) * (Nat -> Nat)) => categoryRefl))))
+
+def components : Nat -> Nat -> Nat := fun (x : Nat) (n : Nat) => natAdd (natMul n 2) x
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Middle1 (Nat -> Nat) (components y) (components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Middle1 (Nat -> Nat) (components right) (components x) with | same => categoryRefl
+def Alpha : Run_ABC_First_NatTrans Nat Nat IndexedSource EndMiddle1 (Constant 0) (Constant 1) :=
+  (components, (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => componentLaw x y f.1))
+
+def componentLawM1M2 : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Middle2 (Nat -> Nat) (components y) (components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Middle2 (Nat -> Nat) (components right) (components x) with | same => categoryRefl
+def AlphaM1M2 : Run_ABC_Second_NatTrans Nat Nat IndexedMiddle1 EndMiddle2 (ConstantM1M2 0) (ConstantM1M2 1) :=
+  (components, (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => componentLawM1M2 x y f.1))
+
+def componentLawM2T : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Target (Nat -> Nat) (components y) (components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Target (Nat -> Nat) (components right) (components x) with | same => categoryRefl
+def AlphaM2T : Run_BCD_Second_NatTrans Nat Nat IndexedMiddle2 EndTarget (ConstantM2T 0) (ConstantM2T 1) :=
+  (components, (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * (Nat -> Nat)) => componentLawM2T x y f.1))
+
+def rightLhs : Nat -> Nat -> Nat := fun (x : Nat) =>
+  (Run_ACD_whiskerRight Nat Nat Nat IndexedSource IndexedMiddle2 EndTarget (ConstantM2T 0) (ConstantM2T 1) AlphaM2T
+    (Run_ABC_Base_compFunctor Nat Nat Nat IndexedSource IndexedMiddle1 IndexedMiddle2 Shift Stretch)).1 x
+def rightRhs : Nat -> Nat -> Nat := fun (x : Nat) =>
+  (Run_ABD_whiskerRight Nat Nat Nat IndexedSource IndexedMiddle1 EndTarget
+    (Run_BCD_Base_compFunctor Nat Nat Nat IndexedMiddle1 IndexedMiddle2 EndTarget Stretch (ConstantM2T 0))
+    (Run_BCD_Base_compFunctor Nat Nat Nat IndexedMiddle1 IndexedMiddle2 EndTarget Stretch (ConstantM2T 1))
+    (Run_BCD_whiskerRight Nat Nat Nat IndexedMiddle1 IndexedMiddle2 EndTarget (ConstantM2T 0) (ConstantM2T 1) AlphaM2T Stretch) Shift).1 x
+def rightLaw : (0 x : Nat) -> Target (Nat -> Nat) (rightLhs x) (rightRhs x) :=
+  Run_whiskerRightComp Nat Nat Nat Nat IndexedSource IndexedMiddle1 IndexedMiddle2 EndTarget Shift Stretch (ConstantM2T 0) (ConstantM2T 1) AlphaM2T
+
+def leftLhs : Nat -> (Nat * Nat) -> Nat * Nat := fun (x : Nat) =>
+  (Run_ABD_whiskerLeft Nat Nat Nat IndexedSource EndMiddle1 PairEndTarget
+    (Run_BCD_Base_compFunctor Nat Nat Nat EndMiddle1 PairEndMiddle2 PairEndTarget Left Conjugate) (Constant 0) (Constant 1) Alpha).1 x
+def leftRhs : Nat -> (Nat * Nat) -> Nat * Nat := fun (x : Nat) =>
+  (Run_ACD_whiskerLeft Nat Nat Nat IndexedSource PairEndMiddle2 PairEndTarget Conjugate
+    (Run_ABC_Base_compFunctor Nat Nat Nat IndexedSource EndMiddle1 PairEndMiddle2 (Constant 0) Left)
+    (Run_ABC_Base_compFunctor Nat Nat Nat IndexedSource EndMiddle1 PairEndMiddle2 (Constant 1) Left)
+    (Run_ABC_whiskerLeft Nat Nat Nat IndexedSource EndMiddle1 PairEndMiddle2 Left (Constant 0) (Constant 1) Alpha)).1 x
+def leftLaw : (0 x : Nat) -> Target ((Nat * Nat) -> Nat * Nat) (leftLhs x) (leftRhs x) :=
+  Run_whiskerLeftComp Nat Nat Nat Nat IndexedSource EndMiddle1 PairEndMiddle2 PairEndTarget (Constant 0) (Constant 1) Left Conjugate Alpha
+
+def mixedLhs : Nat -> (Nat * Nat) -> Nat * Nat := fun (x : Nat) =>
+  (Run_ACD_whiskerLeft Nat Nat Nat IndexedSource EndMiddle2 PairEndTarget Right
+    (Run_ABC_Base_compFunctor Nat Nat Nat IndexedSource IndexedMiddle1 EndMiddle2 Shift (ConstantM1M2 0))
+    (Run_ABC_Base_compFunctor Nat Nat Nat IndexedSource IndexedMiddle1 EndMiddle2 Shift (ConstantM1M2 1))
+    (Run_ABC_whiskerRight Nat Nat Nat IndexedSource IndexedMiddle1 EndMiddle2 (ConstantM1M2 0) (ConstantM1M2 1) AlphaM1M2 Shift)).1 x
+def mixedRhs : Nat -> (Nat * Nat) -> Nat * Nat := fun (x : Nat) =>
+  (Run_ABD_whiskerRight Nat Nat Nat IndexedSource IndexedMiddle1 PairEndTarget
+    (Run_BCD_Base_compFunctor Nat Nat Nat IndexedMiddle1 EndMiddle2 PairEndTarget (ConstantM1M2 0) Right)
+    (Run_BCD_Base_compFunctor Nat Nat Nat IndexedMiddle1 EndMiddle2 PairEndTarget (ConstantM1M2 1) Right)
+    (Run_BCD_whiskerLeft Nat Nat Nat IndexedMiddle1 EndMiddle2 PairEndTarget Right (ConstantM1M2 0) (ConstantM1M2 1) AlphaM1M2) Shift).1 x
+def mixedLaw : (0 x : Nat) -> Target ((Nat * Nat) -> Nat * Nat) (mixedLhs x) (mixedRhs x) :=
+  Run_whiskerCommute Nat Nat Nat Nat IndexedSource IndexedMiddle1 EndMiddle2 PairEndTarget Shift (ConstantM1M2 0) (ConstantM1M2 1) Right AlphaM1M2
+
+def certified : (0 P : Prop) -> (0 proof : P) -> Nat -> Nat :=
+  fun (0 P : Prop) (0 proof : P) (value : Nat) => value
+def pairCode : (Nat * Nat) -> Nat := fun (n : Nat * Nat) => natAdd (natMul n.1 100) n.2
+def rightLeftAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target (Nat -> Nat) (rightLhs x) (rightRhs x)) (rightLaw x) (rightLhs x (natAdd x 13))
+def rightRightAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target (Nat -> Nat) (rightLhs x) (rightRhs x)) (rightLaw x) (rightRhs x (natAdd x 13))
+def leftLeftAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target ((Nat * Nat) -> Nat * Nat) (leftLhs x) (leftRhs x)) (leftLaw x) (pairCode (leftLhs x (natAdd x 13, 7)))
+def leftRightAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target ((Nat * Nat) -> Nat * Nat) (leftLhs x) (leftRhs x)) (leftLaw x) (pairCode (leftRhs x (natAdd x 13, 7)))
+def mixedLeftAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target ((Nat * Nat) -> Nat * Nat) (mixedLhs x) (mixedRhs x)) (mixedLaw x) (pairCode (mixedLhs x (natAdd x 13, 7)))
+def mixedRightAt : Nat -> Nat := fun (x : Nat) =>
+  certified (Target ((Nat * Nat) -> Nat * Nat) (mixedLhs x) (mixedRhs x)) (mixedLaw x) (pairCode (mixedRhs x (natAdd x 13, 7)))

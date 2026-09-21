@@ -1,0 +1,1 @@
+def nominalTarget : SeparateTarget (Nat -> Nat) (rightLhs 37) (rightRhs 37) := rightLaw 37

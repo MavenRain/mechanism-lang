@@ -1,0 +1,181 @@
+{
+  "date": "2026-09-21T05:32:42.898265+00:00",
+  "base": "aaeb4bd331047957601249d4eb2193e1b77cfd05",
+  "full_battery_run": false,
+  "checks": [
+    {
+      "name": "build",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/dunecho.sh",
+        "build"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "build.stdout",
+        "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+      },
+      "stderr": {
+        "path": "build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "kernel",
+      "command": [
+        "gtimeout",
+        "900",
+        "/Users/oobi/Documents/mechanism-lang/_build/default/test/prelude_iterated_whiskering.exe",
+        "/Users/oobi/Documents/mechanism-lang"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "kernel.stdout",
+        "sha256": "2207bd8cce7b36126abdffdc8a2b47e033499a1b539358f83249488649240590"
+      },
+      "stderr": {
+        "path": "kernel.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "runtime",
+      "command": [
+        "gtimeout",
+        "900",
+        "python3",
+        "-I",
+        "/Users/oobi/Documents/mechanism-lang/test/iterated_whiskering_runtime.py"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "runtime.stdout",
+        "sha256": "58e89c7f3c5627dec63ec84057fac7be8732cb3dadb7e182e903a87a62d68295"
+      },
+      "stderr": {
+        "path": "runtime.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "pin-delta",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/pin-delta.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 0,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-wMOyv4",
+      "stdout": {
+        "path": "pin-delta.stdout",
+        "sha256": "f89e61e5f9ed1959fa499a8e9158d037c0a5cb4b136f41f1dedbe7deeba48e15"
+      },
+      "stderr": {
+        "path": "pin-delta.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "denominators",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/gates.sh",
+        "--leg",
+        "denominators"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "denominators.stdout",
+        "sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b"
+      },
+      "stderr": {
+        "path": "denominators.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "trusted-lines",
+      "command": [
+        "zsh",
+        "/Users/oobi/Documents/mechanism-lang/dev/trusted-lines.sh",
+        "/Users/oobi/Documents/mechanism-lang"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt12",
+      "exit_code": 1,
+      "capture_artifact": "/Users/oobi/Documents/gpt12/.kanon-exec/run-vp84NJ",
+      "stdout": {
+        "path": "trusted-lines.stdout",
+        "sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b"
+      },
+      "stderr": {
+        "path": "trusted-lines.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "inherited-failure"
+    },
+    {
+      "name": "gate-syntax",
+      "command": [
+        "zsh",
+        "-n",
+        "/Users/oobi/Documents/mechanism-lang/dev/gates.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "gate-syntax.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "gate-syntax.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "-C",
+        "/Users/oobi/Documents/mechanism-lang",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "cwd": "/Users/oobi/Documents/mechanism-lang",
+      "exit_code": 0,
+      "capture_artifact": null,
+      "stdout": {
+        "path": "diff-check.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "diff-check.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "pass"
+    }
+  ],
+  "executables": {
+    "_build/default/bin/mech.exe": "ba633541a9e394ceeb4eda6c0a612e29db47159568a5871abe3ec6cb60606820",
+    "_build/default/test/prelude_iterated_whiskering.exe": "6538640f00bdd85ac93fd589e1577df41656583553afc79dc288e88f9d1ea43a",
+    "_build/default/test/prelude_runtime.exe": "48a30c53d55831586fbc013401eee6c43f647707b54ac83bd8ea0c055e53f9de"
+  },
+  "all_checks_passed": false,
+  "slice_expectations_met": true,
+  "inherited_failure": "TRUSTED-LINES kernel=5475/3000 encoder=246/900 FAIL"
+}

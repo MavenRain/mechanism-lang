@@ -4090,3 +4090,106 @@ the round-3 repair and passed 73 of 74 rows against a CLOSE-FLOOR of
 73. The sole FAIL id is TRUSTED-LINES, the inherited red leg at
 kernel=5475/3000 encoder=246/900, explained and outside this slice.
 The slice stays staged for the user to commit.
+
+## Stage C / U1: iterated whiskering (2026-09-20)
+
+Base: aaeb4bd. Contract: `dev/PORT-UAT-U1-ITERATED-WHISKERING.md`.
+The new `MechIteratedWhiskering` group shares four category families
+across four existing whiskering APIs and proves precomposition by a
+composite, postcomposition by a composite, and mixed whiskering.
+All eight universe parameters remain independent. The proofs concern
+components at erased objects; horizontal associativity, whole-record
+equality, and source-type parity remain open.
+
+The kernel suite passes with 902 definitions, 14 checked families,
+18 computations, and six pinned refusals. The runtime suite passes for
+six functions and three payloads on the kernel, Node, and Wasmtime,
+with 36 external-host comparisons. Both new gates use the existing
+CATEGORY tier. No previous gate, budget, denominator, compiler module,
+or vendor file changes.
+
+Build, PIN-DELTA, and DENOMINATORS pass. TRUSTED-LINES remains the
+inherited failure at kernel=5475/3000 encoder=246/900.
+The full battery was not rerun for this source-only increment.
+Captures, development attempts, executable hashes, and source hashes
+are in `dev/validation/port-uat-u1-iterated-whiskering/`.
+
+## Iterated whiskering review (2026-09-20)
+
+Workflow wf_3d15e1d1-53e ran the finders, verifier, judge, and fixer
+for this slice. The kit-reason was a HALT at the round-2 ladder
+wait. The review finished by hand and the workflow was never
+resumed.
+
+Four findings in round 1. L2-1 (low) and L3-1 (low) are fixed in
+round 1, L1-1 (medium) in round 2, and round-1 L3-2 is refuted.
+L2-1: the suite test/prelude_iterated_whiskering.ml now hashes a
+256-character excerpt of the negative message instead of the whole
+message, as ruled; five test/neg/iterated-whiskering/*.digest
+values were regenerated to the md5 of that excerpt. L3-1 is fixed by
+hand: the dev/M0-BUILD-LOG.md row 4094 heading is normalized to
+"## Stage C / U1: iterated whiskering (2026-09-20)".
+
+L1-1 (medium, confirmed) is fixed in round 2. The runtime fixture
+test/fixtures/prelude/iterated-whiskering-runtime.mech specializes
+MechCategoryCore four times, as Source, Middle1, Middle2, and
+Target, and binds Run over the four roles, so the harness exercises
+the four-category shape. The suite row moved to entries=902
+families=14 computations=18 negatives=6, and the gate row of
+dev/gates.sh moved with it. The record README and the port document
+carry the same counts.
+
+Round-1 L3-2 is refuted by the verifier.
+
+Baseline ladder: GREEN-FUNCTIONAL, raw 70 plus 5 CLEARED-LOAD
+rechecks by id, for 75 against BASELINE_PASS 75 and FLOOR 75.
+Fix-1 and fix-2: RED on item 6 only, sources.sha256 stale after the
+L2-1 fix, battery raw 75 both rounds. Fix-3: GREEN, raw 74 plus 1
+CLEARED-LOAD PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME, for 75; sources
+ok 45; every item rc 0; pin-delta OK; RUNTIME_SECS observed 64
+against a pin of 216. TRUSTED-LINES stays the inherited red at
+kernel=5475/3000 encoder=246/900.
+
+Round 2 ran as Workflow wf_88e779e2-6b2 after the L1-1 fix (ten
+agents, no errors). The judge carried five findings: L3-2 (medium),
+L2-2 (low), L3-3 (low), L1-3 (low), and L3-4 (low). The fixer fixed
+all five, the not-fixed list is empty, and no finding stays open.
+The L1-1 fix itself was made by prep Workflow wf_aac981c3-a5c, a
+builder on Fable xhigh, before round 2: the suite row moved from
+entries=864 families=11 to entries=902 families=14 with a 44-pin kit
+cascade. The round-2 fixes are records and documents only. L3-2
+(medium): this block described L1-1 as open with the earlier
+one-category fixture and its entry pin; the L1-1 paragraph above now
+states the four-category fixture and the 902 row. L2-2 (low): the
+port document said full-message digests while the suite hashes the
+256-character excerpt; the port sentence and the L2-1 row above now
+say so. L3-3 (low): the diff-check row of checks.json ran git diff
+--check on the empty unstaged diff; it is re-recorded as git diff
+--cached --check, rc 0. L1-3 (low): the whiskerRightComp table row of
+the port document named the inverted operation order; it now reads L
+then K. L3-4 (low): the port document said 18 exports; it now says 18
+evaluations of the six exports. No code, fixture, count, bound, or
+tier moved. The dev/M0-BUILD-LOG.md and
+dev/PORT-UAT-U1-ITERATED-WHISKERING.md rows of sources.sha256 are
+re-pinned from the staged blobs.
+
+Close ladder: GREEN on 2026-09-21. The battery passed 75 of 76 legs
+against CLOSE-FLOOR 75, and RUNNER-EXIT was 0. The one FAIL is
+TRUSTED-LINES at kernel=5475/3000 encoder=246/900, the inherited red
+row; it is informational and never a gate failure. sources.sha256
+checked ok=45 bad=0. PIN-DELTA OK. The ladder runtime was 44 s
+against the 216 s pin. The chain launched at load1 11.89 and load5
+14.51, and the battery started at load 10.59 with 0 load polls. The
+ladder of record is ladder-IW-close.log and the gates log is
+gates-IW-close.log, both in the review kit directory.
+
+Round 1 ran every unit and every Workflow stage on sonnet with the
+explicit tier markers, so the round-1 finder, verifier, builder, and
+closer tiers are unmet. Round 2 (wf_aac981c3-a5c and wf_88e779e2-6b2)
+ran the finders on Fable xhigh, the verifiers and the judge on Fable
+max, and the builder and the fixer on Fable xhigh, so the finder,
+verifier, and builder tiers are met. The round-2 close-fill unit ran
+on the wf-closer roster type, Opus 5 medium, so the closer tier is
+met for this unit.
+
+The slice stays staged for the user to commit.

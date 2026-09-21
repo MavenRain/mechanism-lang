@@ -1,0 +1,1 @@
+def wrongOrder : Target (Nat -> Nat) (rightLhs 37) (Alpha.1 (Shift.1 (Stretch.1 37))) := categoryRefl

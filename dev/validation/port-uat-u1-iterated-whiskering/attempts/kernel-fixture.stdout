@@ -1,0 +1,2 @@
+PRELUDE-ITERATED-WHISKERING-FAIL def swap : (_ : Nat) * (_ : Nat) -> (_ : Nat) * Nat := fun (n : (_ : Nat) * Nat) => (n.2, n.1)
+: cannot infer: a pair needs an expected type
