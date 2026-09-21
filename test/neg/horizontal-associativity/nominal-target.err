@@ -1,0 +1,1 @@
+mismatch: the term has type (Lan SMu Target [4625] (Sec SColl 2 [ => Nat;  => 4625])) and the expected type is (Lan SMu SeparateTarget [4625] (Sec SColl 2 [ => Nat;  => 4625]))

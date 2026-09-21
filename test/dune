@@ -200,3 +200,8 @@
  (name prelude_iterated_whiskering)
  (modules Prelude_iterated_whiskering)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
+ (name prelude_horizontal_associativity)
+ (modules Prelude_horizontal_associativity)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))

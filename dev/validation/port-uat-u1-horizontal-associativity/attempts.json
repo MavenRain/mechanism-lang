@@ -1,0 +1,95 @@
+{
+  "base": "747ab466d1052433b26a21fe40705c848b34934e",
+  "final_source": false,
+  "attempts": [
+    {
+      "name": "erased-object",
+      "argv": [
+        "_build/default/bin/mech.exe",
+        "check",
+        "/private/tmp/mechanism-assoc-template.mech"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 1,
+      "capture_manifest_sha256": "38c9f50d47e48047e7574a8e33df5f3df21dfa734afbda2b2bd1585c4b920019",
+      "capture_artifact": ".kanon-exec/run-Iq4Bjq",
+      "stdout": {
+        "path": "attempts/erased-object.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "attempts/erased-object.stderr",
+        "sha256": "2903c72b58899e24f7322f613e3d6e9f4045f1e9622e582f91e289a853ce3ce5",
+        "bytes": 60
+      }
+    },
+    {
+      "name": "targeted-build",
+      "argv": [
+        "zsh",
+        "dev/dunecho.sh",
+        "build",
+        "test/prelude_horizontal_associativity.exe"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 124,
+      "capture_manifest_sha256": "eec0773e8fc61aa8e830d1e318f1659d59e6464a0ee0ecba25f402082a7a3cfa",
+      "capture_artifact": ".kanon-exec/run-qR47Yl",
+      "stdout": {
+        "path": "attempts/targeted-build.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "attempts/targeted-build.stderr",
+        "sha256": "4fbec7cdfffe661c0823fe9cc89cc2d10e033feef73b3b9dfb0a3b5dd6ecb9d8",
+        "bytes": 178
+      }
+    },
+    {
+      "name": "reused-family",
+      "argv": [
+        "_build/default/test/prelude_horizontal_associativity.exe",
+        ".",
+        "--trace"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 1,
+      "capture_manifest_sha256": "e14e6c731893bf08a8fe7f56175f7c934641898eb54524a584e928c150811243",
+      "capture_artifact": ".kanon-exec/run-ezpkPP",
+      "stdout": {
+        "path": "attempts/reused-family.stdout",
+        "sha256": "1884679af1551cdc43d82e1ab191498317ea40954d4006ff57a0dbba908b1467",
+        "bytes": 161
+      },
+      "stderr": {
+        "path": "attempts/reused-family.stderr",
+        "sha256": "c047420e442603c9f7a5b5f927307a767329c0cf948d832b61a18d97c4afe0b2",
+        "bytes": 30
+      }
+    },
+    {
+      "name": "diagnostic-recording",
+      "argv": [
+        "_build/default/test/prelude_horizontal_associativity.exe",
+        ".",
+        "--trace"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 1,
+      "capture_manifest_sha256": "cbfb672b11f0ad2b6511e9d8dbfe8c7e6a5af9d8a2cc1ac179be15cbc1d4de8c",
+      "capture_artifact": ".kanon-exec/run-xOgfpL",
+      "stdout": {
+        "path": "attempts/diagnostic-recording.stdout",
+        "sha256": "a98661da6503060d8b2aece137f4e6a5669881934ca587a1071cb231edab007d",
+        "bytes": 301
+      },
+      "stderr": {
+        "path": "attempts/diagnostic-recording.stderr",
+        "sha256": "86a461d3c2ceeef3ab80bb950802a41390446e1187436ddec6e35af1e4fe6a16",
+        "bytes": 1895
+      }
+    }
+  ]
+}

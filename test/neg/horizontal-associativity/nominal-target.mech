@@ -1,0 +1,5 @@
+-- The proof comes from the checked law, carried to Nat by congruence.
+def unrelatedTarget : SeparateTarget Nat (assocLeftAt 37) (assocRightAt 37) :=
+  Run_Target_eqCongr ((Nat * Nat) -> Nat * Nat) Nat
+    (fun (g : (Nat * Nat) -> Nat * Nat) => pairCode (g (40, 44)))
+    (assocLhs.1 37) (assocRhs.1 37) (assocLaw 37)

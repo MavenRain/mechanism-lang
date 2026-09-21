@@ -1,0 +1,7 @@
+-- The right side omits beta: gamma after J of H of alpha.
+def missingMiddle : Target Nat (pairCode (assocLhs.1 37 (40, 44)))
+    (pairCode (Gamma.1 point
+      (Run_BCD_Second_Base_functorMap Point Point PairEnd FinalEnd Conjugate point point
+        (Run_ABC_Second_Base_functorMap Nat Point End PairEnd Left 0 1 (Alpha.1 37))
+        (40, 44)))) :=
+  categoryRefl

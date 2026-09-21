@@ -1,0 +1,30 @@
+-- The last transformation runs from K to J, and the law asks for J to K.
+def incompatibleEndpoints : (0 A : Type 0) -> (0 B : Type 0) ->
+    (0 C : Type 1) -> (0 D : Type 1) ->
+    (a : Run_Source_Category A) -> (b : Run_Middle1_Category B) ->
+    (c : Run_Middle2_Category C) -> (d : Run_Target_Category D) ->
+    (F : Run_ABC_First_Base_Functor A B a b) ->
+    (G : Run_ABC_First_Base_Functor A B a b) ->
+    (H : Run_ABC_Second_Base_Functor B C b c) ->
+    (I : Run_ABC_Second_Base_Functor B C b c) ->
+    (J : Run_BCD_Second_Base_Functor C D c d) ->
+    (K : Run_BCD_Second_Base_Functor C D c d) ->
+    (alpha : Run_ABC_First_NatTrans A B a b F G) ->
+    (beta : Run_ABC_Second_NatTrans B C b c H I) ->
+    (gamma : Run_BCD_Second_NatTrans C D c d K J) -> (x : A) ->
+    Target (Run_Target_Hom D d (K.1 (I.1 (G.1 x))) (J.1 (I.1 (G.1 x))))
+      (gamma.1 (I.1 (G.1 x))) (gamma.1 (I.1 (G.1 x))) :=
+  fun (0 A : Type 0) (0 B : Type 0)
+      (0 C : Type 1) (0 D : Type 1)
+      (a : Run_Source_Category A) (b : Run_Middle1_Category B)
+      (c : Run_Middle2_Category C) (d : Run_Target_Category D)
+      (F : Run_ABC_First_Base_Functor A B a b)
+      (G : Run_ABC_First_Base_Functor A B a b)
+      (H : Run_ABC_Second_Base_Functor B C b c)
+      (I : Run_ABC_Second_Base_Functor B C b c)
+      (J : Run_BCD_Second_Base_Functor C D c d)
+      (K : Run_BCD_Second_Base_Functor C D c d)
+      (alpha : Run_ABC_First_NatTrans A B a b F G)
+      (beta : Run_ABC_Second_NatTrans B C b c H I)
+      (gamma : Run_BCD_Second_NatTrans C D c d K J) (x : A) =>
+    Run_hcompAssoc A B C D a b c d F G H I J K alpha beta gamma x

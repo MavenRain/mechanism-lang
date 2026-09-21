@@ -1,0 +1,1 @@
+PRELUDE-HORIZONTAL-ASSOCIATIVITY-FAIL def componentLaw : (0 x : Nat) -> (0 y : Nat) -> (_ : Path x y) -> Run_Middle1 ((_ : Nat) -> Nat) (c: unbound: Run_Middle1

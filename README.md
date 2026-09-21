@@ -47,6 +47,10 @@ results and every failed gate from the full battery.
 The active kernel still exceeds the unchanged 3,000-line bound, so
 TRUSTED-LINES also awaits the existing kernel-limit ruling.
 See `dev/M0-BUILD-LOG.md` for the validation record.
+Horizontal composition now has a checked associativity law over four shared
+categories with eight independent universe levels. It compares components
+at an explicit object. See `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`
+for the contract and validation record.
 The iterated whiskering increment proves precomposition and postcomposition
 by composite functors, and their commutation, over four shared categories.
 All eight universe levels remain independent. The laws compare components

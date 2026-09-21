@@ -1,0 +1,6 @@
+-- The right side omits J: gamma after the first horizontal composite.
+def missingPostcomposition : Target Nat (pairCode (assocLhs.1 37 (40, 44)))
+    (pairCode (Gamma.1 point
+      ((Run_ABC_hcomp Nat Nat Point IndexedEnd End PairEnd
+        (Constant 0) (Constant 1) Left Right Alpha Beta).1 37 (40, 44)))) :=
+  categoryRefl

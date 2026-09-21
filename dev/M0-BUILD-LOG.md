@@ -4193,3 +4193,51 @@ on the wf-closer roster type, Opus 5 medium, so the closer tier is
 met for this unit.
 
 The slice stays staged for the user to commit.
+
+## Stage C / U1: horizontal associativity (2026-09-21)
+
+Base: 747ab466d1052433b26a21fe40705c848b34934e, the committed iterated
+whiskering slice. `MechHorizontalAssociativity` shares four category
+families across four instances of the existing horizontal-composition API.
+Its `hcompAssoc` source proof uses functor preservation of composition,
+congruence, and target associativity at an explicit object. All eight
+object/hom universes remain independent. No axiom or kernel rule is added.
+
+Validation: the build has zero errors and warnings. The kernel suite passes
+with 2,328 definitions, 15 checked families, six computations, and seven
+refusals. Two symbolic specializations use distinct universe levels in
+opposite orders. The runtime fixture reuses four distinct external roots.
+Both parenthesizations compute `103*x+814` at 0, 37, and 41 on the kernel,
+Node, and Wasmtime, including 12 external-host comparisons. Replacing the
+proof with reflexivity is rejected by the kernel's constructor-index check.
+
+Pin-delta, frozen-denominator, gate syntax, and diff checks pass. The full
+battery was not rerun. TRUSTED-LINES retains the inherited failure at
+`kernel=5475/3000 encoder=246/900`. Existing gate expectations, watchdogs,
+compiler sources, and the vendor pin remain unchanged.
+
+`dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md` defines the API contract.
+`dev/validation/port-uat-u1-horizontal-associativity/` records commands,
+complete captures, executable and source hashes, and development attempts.
+Stage C and U1 remain open on equality of whole transformation records
+and source-type parity. No commit is created.
+
+## Horizontal associativity review (2026-09-21)
+
+A four-lens review of this slice kept seven findings: one medium and six
+low. The relay fix round repaired all seven. The medium finding added an
+abstract statement pin for `hcompAssoc`. The low findings split the refusal
+oracle over seven distinct negatives, made `incompatible-endpoints` apply
+the law, gated a reflexivity control, wrote the record capture paths
+relative to the repository, corrected the functor named in
+`prelude/README.md`, and rewrapped six prose rows. No finding was refuted
+and no finding was left unfixed. Of the 13 raw findings, two were
+downgraded and six were merged into the kept ids.
+
+Gates: the close ladder is the ladder of record. It ran 78 legs and 77
+passed against CLOSE-FLOOR pass=77 floor=77. The one FAIL id is
+TRUSTED-LINES (kernel=5475/3000 encoder=246/900), the inherited red that
+is present at HEAD before this slice; it is INFO only and never a gate
+failure. RUNNER-EXIT 0.
+
+The slice stays staged for the user. No commit is created.

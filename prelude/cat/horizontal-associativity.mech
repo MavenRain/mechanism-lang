@@ -1,0 +1,90 @@
+-- Load shared-nattrans.mech with its dependencies first.
+-- All four horizontal-composition triangles share their category families.
+poly (u, v, w, z, p, q, r, s) group MechHorizontalAssociativity where
+specialize MechCategoryCore (u, v) as Source
+specialize MechCategoryCore (w, z) as Middle1
+specialize MechCategoryCore (p, q) as Middle2
+specialize MechCategoryCore (r, s) as Target
+specialize MechSharedNatTrans (u, v, w, z, p, q) as ABC
+  with (Source := Source, Middle := Middle1, Target := Middle2)
+specialize MechSharedNatTrans (w, z, p, q, r, s) as BCD
+  with (Source := Middle1, Middle := Middle2, Target := Target)
+specialize MechSharedNatTrans (u, v, p, q, r, s) as ACD
+  with (Source := Source, Middle := Middle2, Target := Target)
+specialize MechSharedNatTrans (u, v, w, z, r, s) as ABD
+  with (Source := Source, Middle := Middle1, Target := Target)
+
+-- Equality is between components in the same target hom, without identifying
+-- the two differently associated functor or transformation records.
+def hcompAssoc : (0 A : Sort (succ u)) -> (0 B : Sort (succ w)) ->
+    (0 C : Sort (succ p)) -> (0 D : Sort (succ r)) ->
+    (a : Source_Category A) -> (b : Middle1_Category B) ->
+    (c : Middle2_Category C) -> (d : Target_Category D) ->
+    (F : ABC_First_Base_Functor A B a b) ->
+    (G : ABC_First_Base_Functor A B a b) ->
+    (H : ABC_Second_Base_Functor B C b c) ->
+    (I : ABC_Second_Base_Functor B C b c) ->
+    (J : BCD_Second_Base_Functor C D c d) ->
+    (K : BCD_Second_Base_Functor C D c d) ->
+    (alpha : ABC_First_NatTrans A B a b F G) ->
+    (beta : ABC_Second_NatTrans B C b c H I) ->
+    (gamma : BCD_Second_NatTrans C D c d J K) -> (x : A) ->
+    Target (Target_Hom D d (J.1 (H.1 (F.1 x))) (K.1 (I.1 (G.1 x))))
+      ((ACD_hcomp A C D a c d
+        (ABC_Compose_Base_compFunctor A B C a b c F H)
+        (ABC_Compose_Base_compFunctor A B C a b c G I) J K
+        (ABC_hcomp A B C a b c F G H I alpha beta) gamma).1 x)
+      ((ABD_hcomp A B D a b d F G
+        (BCD_Compose_Base_compFunctor B C D b c d H J)
+        (BCD_Compose_Base_compFunctor B C D b c d I K) alpha
+        (BCD_hcomp B C D b c d H I J K beta gamma)).1 x) :=
+  fun (0 A : Sort (succ u)) (0 B : Sort (succ w))
+      (0 C : Sort (succ p)) (0 D : Sort (succ r))
+      (a : Source_Category A) (b : Middle1_Category B)
+      (c : Middle2_Category C) (d : Target_Category D)
+      (F : ABC_First_Base_Functor A B a b)
+      (G : ABC_First_Base_Functor A B a b)
+      (H : ABC_Second_Base_Functor B C b c)
+      (I : ABC_Second_Base_Functor B C b c)
+      (J : BCD_Second_Base_Functor C D c d)
+      (K : BCD_Second_Base_Functor C D c d)
+      (alpha : ABC_First_NatTrans A B a b F G)
+      (beta : ABC_Second_NatTrans B C b c H I)
+      (gamma : BCD_Second_NatTrans C D c d J K) (x : A) =>
+    let f : Middle2_Hom C c (H.1 (F.1 x)) (H.1 (G.1 x)) :=
+      ABC_Second_Base_functorMap B C b c H (F.1 x) (G.1 x) (alpha.1 x) in
+    let g : Middle2_Hom C c (H.1 (G.1 x)) (I.1 (G.1 x)) := beta.1 (G.1 x) in
+    let h : Target_Hom D d (J.1 (I.1 (G.1 x))) (K.1 (I.1 (G.1 x))) :=
+      gamma.1 (I.1 (G.1 x)) in
+    let jf : Target_Hom D d (J.1 (H.1 (F.1 x))) (J.1 (H.1 (G.1 x))) :=
+      BCD_Second_Base_functorMap C D c d J (H.1 (F.1 x)) (H.1 (G.1 x)) f in
+    let jg : Target_Hom D d (J.1 (H.1 (G.1 x))) (J.1 (I.1 (G.1 x))) :=
+      BCD_Second_Base_functorMap C D c d J (H.1 (G.1 x)) (I.1 (G.1 x)) g in
+    let mapped : Target_Hom D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x))) :=
+      BCD_Second_Base_functorMap C D c d J (H.1 (F.1 x)) (I.1 (G.1 x))
+        (Middle2_comp C c (H.1 (F.1 x)) (H.1 (G.1 x)) (I.1 (G.1 x)) f g) in
+    let composed : Target_Hom D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x))) :=
+      Target_comp D d (J.1 (H.1 (F.1 x))) (J.1 (H.1 (G.1 x)))
+        (J.1 (I.1 (G.1 x))) jf jg in
+    Target_eqTrans
+      (Target_Hom D d (J.1 (H.1 (F.1 x))) (K.1 (I.1 (G.1 x))))
+      (Target_comp D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x)))
+        (K.1 (I.1 (G.1 x))) mapped h)
+      (Target_comp D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x)))
+        (K.1 (I.1 (G.1 x))) composed h)
+      (Target_comp D d (J.1 (H.1 (F.1 x))) (J.1 (H.1 (G.1 x)))
+        (K.1 (I.1 (G.1 x))) jf
+        (Target_comp D d (J.1 (H.1 (G.1 x))) (J.1 (I.1 (G.1 x)))
+          (K.1 (I.1 (G.1 x))) jg h))
+      (Target_eqCongr
+        (Target_Hom D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x))))
+        (Target_Hom D d (J.1 (H.1 (F.1 x))) (K.1 (I.1 (G.1 x))))
+        (fun (n : Target_Hom D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x)))) =>
+          Target_comp D d (J.1 (H.1 (F.1 x))) (J.1 (I.1 (G.1 x)))
+            (K.1 (I.1 (G.1 x))) n h)
+        mapped composed
+        (BCD_Second_Base_functorMapComp C D c d J
+          (H.1 (F.1 x)) (H.1 (G.1 x)) (I.1 (G.1 x)) f g))
+      (Target_assoc D d (J.1 (H.1 (F.1 x))) (J.1 (H.1 (G.1 x)))
+        (J.1 (I.1 (G.1 x))) (K.1 (I.1 (G.1 x))) jf jg h)
+end

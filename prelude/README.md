@@ -406,8 +406,8 @@ exports on three hosts at two payloads. Ordinary specializations
 retain distinct nominal families. Closed family reuse and functor
 identity/composition are described above. Shared natural transformation
 and left Kan APIs are described here. Pointwise vertical laws appear
-below; horizontal associativity and source-type parity
-remain open.
+below, together with horizontal associativity. Equality of whole
+transformation records and source-type parity remain open.
 See `dev/PORT-UAT-U1-HETEROGENEOUS-LEFT-KAN.md`.
 
 ## Shared left Kan extensions
@@ -534,3 +534,29 @@ All four root families support explicit reuse. The laws are checked
 source proofs by reduction, and assert no equality of whole records.
 See `dev/PORT-UAT-U1-ITERATED-WHISKERING.md` for argument directions,
 reuse examples, and the validation contract.
+
+## Horizontal associativity
+
+Load category-core, heterogeneous-functor, composable-functors,
+heterogeneous-nattrans, heterogeneous-whiskering, shared-nattrans,
+and `cat/horizontal-associativity.mech`:
+
+```text
+specialize MechHorizontalAssociativity (0, 1, 2, 3, 4, 5, 6, 7) as L
+```
+
+The four category families are `L_Source`, `L_Middle1`, `L_Middle2`, and
+`L_Target`. The shared triangles `L_ABC_`, `L_BCD_`, `L_ACD_`, and `L_ABD_`
+expose the existing shared natural transformation and horizontal composition
+APIs. Each root accepts explicit family reuse.
+
+`L_hcompAssoc A B C D a b c d F G H I J K alpha beta gamma x` proves
+`h(h(alpha,beta),gamma).app x = h(alpha,h(beta,gamma)).app x`, where
+`h` uses the existing `hcomp` argument order. The equality is in the
+target hom. The three transformations go between `F` and `G` from A to B,
+`H` and `I` from B to C, and `J` and `K` from C to D.
+The object argument `(x : A)` is ordinary, as in the shared component API.
+The proof uses the preservation of composition by J, then target
+associativity. It introduces no axiom or equality of whole records.
+See `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md` for the exact equations
+and the kernel and runtime checks.

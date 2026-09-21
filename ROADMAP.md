@@ -42,14 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-20
+## Position on 2026-09-21
 
-The base is aaeb4bd, following horizontal composition laws.
-The current increment adds iterated precomposition, iterated
-postcomposition, and mixed whiskering over four shared categories.
-All eight universe levels remain independent. The three laws compare
-components at erased objects. See `dev/PORT-UAT-U1-ITERATED-WHISKERING.md`.
-Stage 0, Stage
+The base is 747ab46, following iterated whiskering.
+The current increment proves horizontal associativity over four shared
+categories. All eight universe levels remain independent. The law
+compares components at an explicit object using preservation of
+composition and target-category associativity. See
+`dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,
@@ -60,7 +60,7 @@ functors, identity and composition within one category group instance.
 Natural transformations now supply identity, vertical composition
 and both whiskering operations in that group.  Left Kan extensions
 add universal mediators and pointwise uniqueness. Stage C remains
-open on horizontal associativity, equality of
+open on equality of
 whole transformation records, and source-type parity.
 Stage D (typed mapping) and Stage E (M0-EXIT) have not started. The map
 inventory holds 19 NAME_ONLY, 2,273 UNMAPPED and 185 NEVER rows of
@@ -174,8 +174,10 @@ stay under `ports/` (D-UAT-3).
   in `dev/PORT-UAT-U1-HORIZONTAL-LAWS.md`. Iterated precomposition,
   iterated postcomposition, and mixed whiskering now share four category
   families with eight independent universe levels; see
-  `dev/PORT-UAT-U1-ITERATED-WHISKERING.md`. U1 remains open on horizontal associativity,
-  equality of whole transformation records, and source-type parity.
+  `dev/PORT-UAT-U1-ITERATED-WHISKERING.md`. Pointwise horizontal
+  associativity follows in
+  `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. U1 remains open on
+  equality of whole transformation records and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.
 - U2, M1.  Foundation modules: FunctorExt, HeqTransport, Discrete,

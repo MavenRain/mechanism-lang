@@ -1,0 +1,38 @@
+-- Control: at abstract parameters the two sides do not convert, so
+-- reflexivity cannot prove the statement of assocLawAbstract.
+def reflexivityControl : (0 A : Type 0) -> (0 B : Type 0) ->
+    (0 C : Type 1) -> (0 D : Type 1) ->
+    (a : Run_Source_Category A) -> (b : Run_Middle1_Category B) ->
+    (c : Run_Middle2_Category C) -> (d : Run_Target_Category D) ->
+    (F : Run_ABC_First_Base_Functor A B a b) ->
+    (G : Run_ABC_First_Base_Functor A B a b) ->
+    (H : Run_ABC_Second_Base_Functor B C b c) ->
+    (I : Run_ABC_Second_Base_Functor B C b c) ->
+    (J : Run_BCD_Second_Base_Functor C D c d) ->
+    (K : Run_BCD_Second_Base_Functor C D c d) ->
+    (alpha : Run_ABC_First_NatTrans A B a b F G) ->
+    (beta : Run_ABC_Second_NatTrans B C b c H I) ->
+    (gamma : Run_BCD_Second_NatTrans C D c d J K) -> (x : A) ->
+    Target (Run_Target_Hom D d (J.1 (H.1 (F.1 x))) (K.1 (I.1 (G.1 x))))
+      ((Run_ACD_hcomp A C D a c d
+        (Run_ABC_Compose_Base_compFunctor A B C a b c F H)
+        (Run_ABC_Compose_Base_compFunctor A B C a b c G I) J K
+        (Run_ABC_hcomp A B C a b c F G H I alpha beta) gamma).1 x)
+      ((Run_ABD_hcomp A B D a b d F G
+        (Run_BCD_Compose_Base_compFunctor B C D b c d H J)
+        (Run_BCD_Compose_Base_compFunctor B C D b c d I K) alpha
+        (Run_BCD_hcomp B C D b c d H I J K beta gamma)).1 x) :=
+  fun (0 A : Type 0) (0 B : Type 0)
+      (0 C : Type 1) (0 D : Type 1)
+      (a : Run_Source_Category A) (b : Run_Middle1_Category B)
+      (c : Run_Middle2_Category C) (d : Run_Target_Category D)
+      (F : Run_ABC_First_Base_Functor A B a b)
+      (G : Run_ABC_First_Base_Functor A B a b)
+      (H : Run_ABC_Second_Base_Functor B C b c)
+      (I : Run_ABC_Second_Base_Functor B C b c)
+      (J : Run_BCD_Second_Base_Functor C D c d)
+      (K : Run_BCD_Second_Base_Functor C D c d)
+      (alpha : Run_ABC_First_NatTrans A B a b F G)
+      (beta : Run_ABC_Second_NatTrans B C b c H I)
+      (gamma : Run_BCD_Second_NatTrans C D c d J K) (x : A) =>
+    categoryRefl

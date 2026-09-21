@@ -1,0 +1,268 @@
+{
+  "base": "747ab466d1052433b26a21fe40705c848b34934e",
+  "date": "2026-09-21",
+  "source_root": ".",
+  "full_battery_rerun": false,
+  "all_checks_passed": false,
+  "slice_expectations_met": true,
+  "executables": [
+    {
+      "path": "_build/default/bin/mech.exe",
+      "sha256": "ba633541a9e394ceeb4eda6c0a612e29db47159568a5871abe3ec6cb60606820"
+    },
+    {
+      "path": "_build/default/test/prelude_runtime.exe",
+      "sha256": "48a30c53d55831586fbc013401eee6c43f647707b54ac83bd8ea0c055e53f9de"
+    },
+    {
+      "path": "_build/default/test/prelude_horizontal_associativity.exe",
+      "sha256": "f4bc86ce60d674665ea04a559d981cf1b231e08845dfa1c0279dd7997efdaf4e"
+    }
+  ],
+  "checks": [
+    {
+      "name": "build",
+      "argv": [
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "8476a7908afdcb930a2b8e5ee5f343f876d70a089737c0c408ca4390c1da4c34",
+      "capture_artifact": ".kanon-exec/run-BbVPnr",
+      "stdout": {
+        "path": "build.stdout",
+        "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b",
+        "bytes": 31
+      },
+      "stderr": {
+        "path": "build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "kernel",
+      "argv": [
+        "_build/default/test/prelude_horizontal_associativity.exe",
+        "."
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "af6da90f28f13d14c72cba61236d866342358a47951884e40870701c18c74218",
+      "capture_artifact": ".kanon-exec/run-IjeiiL",
+      "stdout": {
+        "path": "kernel.stdout",
+        "sha256": "ec2dd8a2747b63d937e42866162bbb602c9397197cdcbc9d2a7e4722fee66f4c",
+        "bytes": 88
+      },
+      "stderr": {
+        "path": "kernel.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "runtime",
+      "argv": [
+        "python3",
+        "-I",
+        "test/horizontal_associativity_runtime.py"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "2b8e185fe85d05db5d231457f6eebc7158d7c4775369ab8e43efe5e988d931ba",
+      "capture_artifact": ".kanon-exec/run-K43oPu",
+      "stdout": {
+        "path": "runtime.stdout",
+        "sha256": "89b8b795cbc5890f2699c0bfa3e84669216408d00f4d21593c31511eb87a0032",
+        "bytes": 86
+      },
+      "stderr": {
+        "path": "runtime.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "pin-delta",
+      "argv": [
+        "zsh",
+        "dev/pin-delta.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "8ed392590f148ef3ed8fda956a1a258bb186b19671b39e2bdb138f784b50946e",
+      "capture_artifact": ".kanon-exec/run-6rmS4D",
+      "stdout": {
+        "path": "pin-delta.stdout",
+        "sha256": "f89e61e5f9ed1959fa499a8e9158d037c0a5cb4b136f41f1dedbe7deeba48e15",
+        "bytes": 710
+      },
+      "stderr": {
+        "path": "pin-delta.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "denominators",
+      "argv": [
+        "zsh",
+        "dev/gates.sh",
+        "--leg",
+        "denominators"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "cbd18720952a8887198b76b89ce3849746f51352985d3f3a5dbce8ac88273b6b",
+      "capture_artifact": ".kanon-exec/run-lx4agu",
+      "stdout": {
+        "path": "denominators.stdout",
+        "sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b",
+        "bytes": 40
+      },
+      "stderr": {
+        "path": "denominators.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "gate-syntax",
+      "argv": [
+        "zsh",
+        "-n",
+        "dev/gates.sh"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "8d7fe2af404d03390304c92b9caac0da4c784efa6f27ac27a6de05543a5879d7",
+      "capture_artifact": ".kanon-exec/run-deq49p",
+      "stdout": {
+        "path": "gate-syntax.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "gate-syntax.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "65318df4e6f74b5aa171c9c9e0077c95074828fc4dd09e1dffa961d8e86ed0ed",
+      "capture_artifact": ".kanon-exec/run-pfZFwp",
+      "stdout": {
+        "path": "diff-check.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "diff-check.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "proof-reflexivity",
+      "argv": [
+        "_build/default/bin/mech.exe",
+        "check",
+        "/private/tmp/mechanism-assoc-refl.mech"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 1,
+      "capture_manifest_sha256": "2c8a23c3ffe420d292db6f7ca049ccb06989329fb5ba1b98779ad987fadc0d2f",
+      "capture_artifact": ".kanon-exec/run-tuyG0r",
+      "stdout": {
+        "path": "proof-reflexivity.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "proof-reflexivity.stderr",
+        "sha256": "2826b66b67d4a68a92ae5aa4b7b9af73da3dbc01d31e205032fd972e72abdcc6",
+        "bytes": 338922
+      },
+      "expected_exit": 1,
+      "inherited_failure": false,
+      "required_stderr_prefix": "mismatch: the constructor categoryRefl of Target gives the index ",
+      "generated_source_sha256": "604ab7daab9f303c08270a0506b9b050225d695e261acdf4d21b6c2d7eba3c54",
+      "generator": "proof-reflexivity.py"
+    },
+    {
+      "name": "control-replay",
+      "argv": [
+        "sh",
+        "-c",
+        "python3 -I dev/validation/port-uat-u1-horizontal-associativity/proof-reflexivity.py /private/tmp/mechanism-assoc-refl-replay.mech && cmp -s /private/tmp/mechanism-assoc-refl.mech /private/tmp/mechanism-assoc-refl-replay.mech"
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 0,
+      "capture_manifest_sha256": "6d393cf8254618948b92b359f223fb0df1455fb9f05ce8d5f3ea8e26949f6e69",
+      "capture_artifact": ".kanon-exec/run-D0PFDn",
+      "stdout": {
+        "path": "control-replay.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "control-replay.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": false
+    },
+    {
+      "name": "trusted-lines",
+      "argv": [
+        "zsh",
+        "dev/trusted-lines.sh",
+        "."
+      ],
+      "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-20260921",
+      "exit_code": 1,
+      "capture_manifest_sha256": "98103ae1f97262850388181f34bdf33296c0bad26684160f832713a62dd642b2",
+      "capture_artifact": ".kanon-exec/run-aKecUf",
+      "stdout": {
+        "path": "trusted-lines.stdout",
+        "sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b",
+        "bytes": 52
+      },
+      "stderr": {
+        "path": "trusted-lines.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "expected_exit": 0,
+      "inherited_failure": true,
+      "inherited_expected_exit": 1
+    }
+  ]
+}

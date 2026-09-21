@@ -1,0 +1,191 @@
+mu Point : Type 1 with | point : Point
+mu Path (0 x : Nat) : (0 y : Nat) -> Prop with | same : Path x x
+specialize MechCategoryCore (0, 1) as Source
+specialize MechCategoryCore (0, 0) as Middle1
+specialize MechCategoryCore (1, 0) as Middle2
+specialize MechCategoryCore (1, 0) as Target
+specialize MechHorizontalAssociativity (0, 1, 0, 0, 1, 0, 1, 0) as Run
+  with (Source := Source, Middle1 := Middle1, Middle2 := Middle2, Target := Target)
+specialize MechCategoryCore (1, 0) as SeparateTarget
+
+def pathTrans : (0 x : Nat) -> (0 y : Nat) -> (0 z : Nat) ->
+    Path x y -> Path y z -> Path x z :=
+  fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Path x y) (g : Path y z) =>
+    match g as self in Path right return Path x right with | same => f
+def IndexedEnd : Run_Source_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => (Path x y) * ((0 A : Type 0) -> Nat -> Nat)),
+   ((fun (0 x : Nat) => (same, (fun (0 A : Type 0) (n : Nat) => n))),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+          (g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) =>
+        (pathTrans x y z f.1 g.1, (fun (0 A : Type 0) (n : Nat) => g.2 A (f.2 A n)))),
+     ((fun (0 x : Nat) (0 y : Nat)
+           (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat)
+            (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path w x) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 h : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))))
+def End : Run_Middle1_Category Nat :=
+  ((fun (0 x : Nat) (0 y : Nat) => Nat -> Nat),
+   ((fun (0 x : Nat) (n : Nat) => n),
+    ((fun (0 x : Nat) (0 y : Nat) (0 z : Nat) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Nat) (0 y : Nat) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Nat) (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+def PairEnd : Run_Middle2_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat * Nat) -> Nat * Nat),
+   ((fun (0 x : Point) (n : Nat * Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat * Nat) -> Nat * Nat) (g : (Nat * Nat) -> Nat * Nat)
+          (n : Nat * Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat)
+            (0 h : (Nat * Nat) -> Nat * Nat) => categoryRefl))))))
+
+def Constant : Nat -> Run_ABC_First_Base_Functor Nat Nat IndexedEnd End :=
+  fun (object : Nat) =>
+    ((fun (x : Nat) => object),
+     ((fun (0 x : Nat) (0 y : Nat)
+           (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) (n : Nat) => n),
+      ((fun (0 x : Nat) => categoryRefl),
+       (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+            (0 f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat))
+            (0 g : (Path y z) * ((0 A : Type 0) -> Nat -> Nat)) => categoryRefl))))
+def Left : Run_ABC_Second_Base_Functor Nat Point End PairEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (f n.1, n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Right : Run_ABC_Second_Base_Functor Nat Point End PairEnd :=
+  ((fun (x : Nat) => point),
+   ((fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) (n : Nat * Nat) => (n.1, f n.2)),
+    ((fun (0 x : Nat) => categoryRefl),
+     (fun (0 x : Nat) (0 y : Nat) (0 z : Nat)
+          (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def components : Nat -> Nat -> Nat :=
+  fun (x : Nat) (n : Nat) => natAdd (natMul n 2) x
+def componentLaw : (0 x : Nat) -> (0 y : Nat) -> Path x y ->
+    Middle1 (Nat -> Nat) (components y) (components x) :=
+  fun (0 x : Nat) (0 y : Nat) (proof : Path x y) =>
+    match proof as self in Path right return
+      Middle1 (Nat -> Nat) (components right) (components x) with
+    | same => categoryRefl
+def Alpha : Run_ABC_First_NatTrans Nat Nat IndexedEnd End (Constant 0) (Constant 1) :=
+  (components,
+   (fun (0 x : Nat) (0 y : Nat) (f : (Path x y) * ((0 A : Type 0) -> Nat -> Nat)) =>
+     componentLaw x y f.1))
+-- The middle transformation leaves a visible trace, so a term that
+-- omits it computes a different value. Naturality stays reflexive.
+def Beta : Run_ABC_Second_NatTrans Nat Point End PairEnd Left Right :=
+  ((fun (x : Nat) (n : Nat * Nat) => (natAdd n.2 5, n.1)),
+   (fun (0 x : Nat) (0 y : Nat) (f : Nat -> Nat) => categoryRefl))
+
+-- The last category is nominally distinct, with the same endomorphism model.
+def FinalEnd : Run_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => (Nat * Nat) -> Nat * Nat),
+   ((fun (0 x : Point) (n : Nat * Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (f : (Nat * Nat) -> Nat * Nat) (g : (Nat * Nat) -> Nat * Nat)
+          (n : Nat * Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : (Nat * Nat) -> Nat * Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat)
+            (0 h : (Nat * Nat) -> Nat * Nat) => categoryRefl))))))
+def swap : (Nat * Nat) -> Nat * Nat := fun (n : Nat * Nat) => (n.2, n.1)
+def Conjugate : Run_BCD_Second_Base_Functor Point Point PairEnd FinalEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Nat * Nat) -> Nat * Nat)
+         (n : Nat * Nat) => swap (f (swap n))),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat) => categoryRefl))))
+def Identity : Run_BCD_Second_Base_Functor Point Point PairEnd FinalEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : (Nat * Nat) -> Nat * Nat) => f),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point)
+          (0 f : (Nat * Nat) -> Nat * Nat) (0 g : (Nat * Nat) -> Nat * Nat) => categoryRefl))))
+def Gamma : Run_BCD_Second_NatTrans Point Point PairEnd FinalEnd Conjugate Identity :=
+  ((fun (x : Point) => swap),
+   (fun (0 x : Point) (0 y : Point) (f : (Nat * Nat) -> Nat * Nat) => categoryRefl))
+
+def assocLhs : Run_ACD_Composite_NatTrans Nat Point IndexedEnd FinalEnd
+    (Run_ACD_Compose_Base_compFunctor Nat Point Point IndexedEnd PairEnd FinalEnd
+      (Run_ABC_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left) Conjugate)
+    (Run_ACD_Compose_Base_compFunctor Nat Point Point IndexedEnd PairEnd FinalEnd
+      (Run_ABC_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right) Identity) :=
+  Run_ACD_hcomp Nat Point Point IndexedEnd PairEnd FinalEnd
+    (Run_ABC_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 0) Left)
+    (Run_ABC_Compose_Base_compFunctor Nat Nat Point IndexedEnd End PairEnd (Constant 1) Right)
+    Conjugate Identity
+    (Run_ABC_hcomp Nat Nat Point IndexedEnd End PairEnd (Constant 0) (Constant 1) Left Right Alpha Beta) Gamma
+def assocRhs : Run_ABD_Composite_NatTrans Nat Point IndexedEnd FinalEnd
+    (Run_ABD_Compose_Base_compFunctor Nat Nat Point IndexedEnd End FinalEnd (Constant 0)
+      (Run_BCD_Compose_Base_compFunctor Nat Point Point End PairEnd FinalEnd Left Conjugate))
+    (Run_ABD_Compose_Base_compFunctor Nat Nat Point IndexedEnd End FinalEnd (Constant 1)
+      (Run_BCD_Compose_Base_compFunctor Nat Point Point End PairEnd FinalEnd Right Identity)) :=
+  Run_ABD_hcomp Nat Nat Point IndexedEnd End FinalEnd (Constant 0) (Constant 1)
+    (Run_BCD_Compose_Base_compFunctor Nat Point Point End PairEnd FinalEnd Left Conjugate)
+    (Run_BCD_Compose_Base_compFunctor Nat Point Point End PairEnd FinalEnd Right Identity)
+    Alpha (Run_BCD_hcomp Nat Point Point End PairEnd FinalEnd Left Right Conjugate Identity Beta Gamma)
+def assocLaw : (x : Nat) -> Target ((Nat * Nat) -> Nat * Nat) (assocLhs.1 x) (assocRhs.1 x) :=
+  fun (x : Nat) => Run_hcompAssoc Nat Nat Point Point IndexedEnd End PairEnd FinalEnd
+    (Constant 0) (Constant 1) Left Right Conjugate Identity Alpha Beta Gamma x
+-- The closed model cannot pin the statement, because both sides share
+-- one normal form there. This client states the two-sided law at
+-- abstract parameters, where the two sides do not convert.
+def assocLawAbstract : (0 A : Type 0) -> (0 B : Type 0) ->
+    (0 C : Type 1) -> (0 D : Type 1) ->
+    (a : Run_Source_Category A) -> (b : Run_Middle1_Category B) ->
+    (c : Run_Middle2_Category C) -> (d : Run_Target_Category D) ->
+    (F : Run_ABC_First_Base_Functor A B a b) ->
+    (G : Run_ABC_First_Base_Functor A B a b) ->
+    (H : Run_ABC_Second_Base_Functor B C b c) ->
+    (I : Run_ABC_Second_Base_Functor B C b c) ->
+    (J : Run_BCD_Second_Base_Functor C D c d) ->
+    (K : Run_BCD_Second_Base_Functor C D c d) ->
+    (alpha : Run_ABC_First_NatTrans A B a b F G) ->
+    (beta : Run_ABC_Second_NatTrans B C b c H I) ->
+    (gamma : Run_BCD_Second_NatTrans C D c d J K) -> (x : A) ->
+    Target (Run_Target_Hom D d (J.1 (H.1 (F.1 x))) (K.1 (I.1 (G.1 x))))
+      ((Run_ACD_hcomp A C D a c d
+        (Run_ABC_Compose_Base_compFunctor A B C a b c F H)
+        (Run_ABC_Compose_Base_compFunctor A B C a b c G I) J K
+        (Run_ABC_hcomp A B C a b c F G H I alpha beta) gamma).1 x)
+      ((Run_ABD_hcomp A B D a b d F G
+        (Run_BCD_Compose_Base_compFunctor B C D b c d H J)
+        (Run_BCD_Compose_Base_compFunctor B C D b c d I K) alpha
+        (Run_BCD_hcomp B C D b c d H I J K beta gamma)).1 x) :=
+  fun (0 A : Type 0) (0 B : Type 0)
+      (0 C : Type 1) (0 D : Type 1)
+      (a : Run_Source_Category A) (b : Run_Middle1_Category B)
+      (c : Run_Middle2_Category C) (d : Run_Target_Category D)
+      (F : Run_ABC_First_Base_Functor A B a b)
+      (G : Run_ABC_First_Base_Functor A B a b)
+      (H : Run_ABC_Second_Base_Functor B C b c)
+      (I : Run_ABC_Second_Base_Functor B C b c)
+      (J : Run_BCD_Second_Base_Functor C D c d)
+      (K : Run_BCD_Second_Base_Functor C D c d)
+      (alpha : Run_ABC_First_NatTrans A B a b F G)
+      (beta : Run_ABC_Second_NatTrans B C b c H I)
+      (gamma : Run_BCD_Second_NatTrans C D c d J K) (x : A) =>
+    Run_hcompAssoc A B C D a b c d F G H I J K alpha beta gamma x
+def certified : (0 left : (Nat * Nat) -> Nat * Nat) ->
+    (0 right : (Nat * Nat) -> Nat * Nat) -> (0 proof : Target ((Nat * Nat) -> Nat * Nat) left right) ->
+    Nat -> Nat :=
+  fun (0 left : (Nat * Nat) -> Nat * Nat) (0 right : (Nat * Nat) -> Nat * Nat)
+      (0 proof : Target ((Nat * Nat) -> Nat * Nat) left right) (n : Nat) => n
+def pairCode : (Nat * Nat) -> Nat := fun (n : Nat * Nat) => natAdd (natMul n.1 100) n.2
+def assocLeftAt : Nat -> Nat := fun (x : Nat) =>
+  certified (assocLhs.1 x) (assocRhs.1 x) (assocLaw x)
+    (pairCode (assocLhs.1 x (natAdd x 3, natAdd x 7)))
+def assocRightAt : Nat -> Nat := fun (x : Nat) =>
+  certified (assocLhs.1 x) (assocRhs.1 x) (assocLaw x)
+    (pairCode (assocRhs.1 x (natAdd x 3, natAdd x 7)))

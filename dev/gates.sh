@@ -287,6 +287,12 @@ leg CATEGORY PRELUDE-ITERATED-WHISKERING \
 leg CATEGORY PRELUDE-ITERATED-WHISKERING-RUNTIME \
   '^PRELUDE-ITERATED-WHISKERING-RUNTIME OK cases=6 hosts=3 payloads=3 comparisons=36$' \
   python3 -I $ROOT/test/iterated_whiskering_runtime.py
+leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY \
+  '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK entries=2328 families=15 computations=6 negatives=7$' \
+  $ROOT/_build/default/test/prelude_horizontal_associativity.exe $ROOT
+leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME \
+  '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME OK cases=2 hosts=3 payloads=3 comparisons=12$' \
+  python3 -I $ROOT/test/horizontal_associativity_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

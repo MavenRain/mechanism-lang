@@ -1,0 +1,6 @@
+-- The right side omits gamma: J of the first horizontal composite.
+def missingFinal : Target Nat (pairCode (assocLhs.1 37 (40, 44)))
+    (pairCode (Run_BCD_Second_Base_functorMap Point Point PairEnd FinalEnd Conjugate point point
+      ((Run_ABC_hcomp Nat Nat Point IndexedEnd End PairEnd
+        (Constant 0) (Constant 1) Left Right Alpha Beta).1 37) (40, 44))) :=
+  categoryRefl
