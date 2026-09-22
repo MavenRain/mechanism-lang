@@ -52,6 +52,24 @@ let suite root =
       ~name ~levels ~as_name)) (Ok globals) instances in
   let* client = read (Filename.concat root "test/fixtures/prelude/transport.mech") in
   let* checked, _rows = kernel (Mechanism_surface.Elab.check_in installed client) in
+  let exports = ["refl", "libraryRefl"; "cast", "libraryCast";
+    "symm", "librarySymm"; "trans", "libraryTrans"] in
+  let* named = kernel (Mechanism_surface.Family_poly.instantiate
+    ~exports ~reuse:["MechTypeEq", "CastData"] checked catalog
+    ~name:"MechTypeEq" ~levels:[Level.zero] ~as_name:"NamedCast") in
+  let* () = require "reuse installed a fresh family or a default member name"
+    (Global.find_family "NamedCast" named = None
+      && Global.find "NamedCast_cast" named = None) in
+  (* The cast takes the reused family's own witness, so the client holds only
+     when the exported operations work over CastData. *)
+  let* checked, _rows = kernel (Mechanism_surface.Elab.check_in named
+    "def libraryValue : MechNat := libraryCast MechNat MechNat \
+       (CastData_refl MechNat) (mechSucc mechZero)\n\
+     def librarySelf : MechNat := libraryCast MechNat MechNat \
+       (libraryRefl MechNat) mechZero\n\
+     mu LibraryIsOne : (0 n : MechNat) -> Type 0 with\n\
+     | libraryIsOne : LibraryIsOne (mechSucc mechZero)\n\
+     def libraryComputes : LibraryIsOne libraryValue := libraryIsOne\n") in
   let* () = audit checked in
   (* Each row carries its own scope.  The first four are misuse diagnostics
      in the installed environment.  The last row is a scope control: it

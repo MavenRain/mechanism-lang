@@ -38,19 +38,17 @@ let rename_instance scheme ~name ~as_name n = match () with
       as_name ^ "_" ^ n
   | () -> n
 
-let instance_names ?(reuse = []) catalog ~name ~as_name =
-  Option.map (fun scheme ->
-    let rename = rename_instance scheme ~name ~as_name in
-    List.filter_map (fun (family, _ctors) ->
-      if List.mem_assoc family.Check.fam_name reuse then None
-      else Some (rename family.Check.fam_name))
-      ((scheme.family, scheme.ctors) :: scheme.companions),
-    List.map (fun member -> rename member.Check.d_name) scheme.members)
-    (List.assoc_opt name catalog)
+(** A constructor label of any family in [globals].  The surface elaborator
+    resolves a bare name through the constructor tables before the globals,
+    so a global under such a label is unreachable from surface text. *)
+let ctor_declared globals name =
+  Global.StringMap.exists (fun _family_name family ->
+    Option.is_some (Positivity.ctor_of name family)) globals.Global.families
 
 let occupied globals catalog name =
   Option.is_some (Global.find name globals)
   || Option.is_some (Global.find_family name globals)
+  || ctor_declared globals name
   || List.mem_assoc name catalog
 
 let collision name = Error.Mismatch ("the name " ^ name ^ " is already declared")
@@ -60,6 +58,48 @@ let poll budget =
   if Budget.exhausted budget then
     Error (Error.Budget_exhausted "the check budget is exhausted")
   else Ok ()
+
+let check_member_exports budget scheme ~name ~as_name ~reuse exports =
+  Option.fold exports ~none:(Ok []) ~some:(fun bindings ->
+    let names = List.map (fun d -> d.Check.d_name) scheme.members in
+    let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
+    let family_names = List.map (fun (family, _ctors) ->
+      let n = family.Check.fam_name in
+      Option.value (List.assoc_opt n reuse)
+        ~default:(rename_instance scheme ~name ~as_name n)) raw_families in
+    let labels = List.concat_map (fun (_family, ctors) ->
+      List.map (fun ctor -> ctor.Check.ct_name) ctors) raw_families in
+    let reserved = as_name :: family_names @ labels in
+    let rec loop sources targets = function
+      | [] ->
+          if List.length sources = List.length names then Ok bindings
+          else Error (Error.Mismatch "every family member needs an export name")
+      | (source, target) :: rest ->
+          let* () = poll budget in
+          match () with
+          | () when not (List.mem source names) || List.mem source sources ->
+              Error (Error.Mismatch "member exports must name each member once")
+          | () when List.mem target reserved -> Error (collision target)
+          | () when List.mem target targets ->
+              Error (Error.Mismatch ("member exports repeat the target " ^ target))
+          | () -> loop (source :: sources) (target :: targets) rest
+    in
+    loop [] [] bindings)
+
+let rename_export scheme ~name ~as_name exports n =
+  List.assoc_opt n exports |> Option.fold
+    ~none:(rename_instance scheme ~name ~as_name n) ~some:Fun.id
+
+let instance_names ?(reuse = []) ?exports catalog ~name ~as_name =
+  Option.bind (List.assoc_opt name catalog) (fun scheme ->
+    check_member_exports Budget.unlimited scheme ~name ~as_name ~reuse exports
+    |> Result.to_option |> Option.map (fun exports ->
+      let rename = rename_export scheme ~name ~as_name exports in
+      List.filter_map (fun (family, _ctors) ->
+        if List.mem_assoc family.Check.fam_name reuse then None
+        else Some (rename family.Check.fam_name))
+        ((scheme.family, scheme.ctors) :: scheme.companions),
+      List.map (fun member -> rename member.Check.d_name) scheme.members))
 
 let map_list f xs =
   let rec loop rows = function
@@ -378,7 +418,8 @@ let normal_level (level : Level.t) : Level.t =
       | () -> None))
   |> Option.value ~default:level
 
-let instantiate ?(budget = Budget.unlimited) ?(reuse = []) globals catalog ~name ~levels ~as_name =
+let instantiate ?(budget = Budget.unlimited) ?(reuse = []) ?exports
+    globals catalog ~name ~levels ~as_name =
   let* scheme = List.assoc_opt name catalog
     |> Option.to_result ~none:(Error.Unbound ("unknown family universe schema " ^ name)) in
   match () with
@@ -395,9 +436,10 @@ let instantiate ?(budget = Budget.unlimited) ?(reuse = []) globals catalog ~name
       let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
       let* () = check_bindings budget raw_families reuse
         ~available:(fun existing -> Option.is_some (Global.find_family existing globals)) in
+      let* exports = check_member_exports budget scheme ~name ~as_name ~reuse exports in
       let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
       let rename n = Ok (List.assoc_opt n reuse |> Option.value
-        ~default:(rename_instance scheme ~name ~as_name n)) in
+        ~default:(rename_export scheme ~name ~as_name exports n)) in
       let* families = map_list (fun (family, ctors) ->
         let* mapped = map_family budget level rename family ctors in
         Ok (List.mem_assoc family.Check.fam_name reuse, mapped)) raw_families in

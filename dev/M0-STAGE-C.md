@@ -85,6 +85,9 @@ Template composition imports preceding family templates at symbolic
 universe arguments and checks their members in one group; see
 dev/M0-STAGE-C-COMPOSITION.md.  It supplies a prerequisite for the
 category prelude at separate universe pairs.
+The member export increment lets a caller choose the global name of every
+template member; see dev/M0-STAGE-C-MEMBER-EXPORTS.md.  Callers that omit
+the option keep the prefixed names.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

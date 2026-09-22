@@ -4294,3 +4294,43 @@ TRUSTED-LINES (kernel=5475/3000 encoder=246/900), the inherited red that
 is present at HEAD before this slice; it is INFO only and never a gate
 failure. RUNNER-EXIT 0.
 The slice stays staged for the user. No commit is created.
+
+## Stage C: chosen member export names (2026-09-22)
+
+Base: 510ff32, the committed natural transformation units slice.
+`Family_poly.instantiate` and `Family_poly.instance_names` accept an optional
+`~exports` mapping from template member names to chosen global names. Omitting
+the option keeps the instance-prefix names. Supplying it requires every member
+exactly once, with targets that are distinct and clear of `as_name`, the
+installed family names, the reused family names and every constructor label
+of the template's families or of an ambient family. Export validation shares
+the caller's check budget and polls once for each binding. All references to a
+renamed member move together, including references from later members.
+`dev/M0-STAGE-C-MEMBER-EXPORTS.md` defines the API contract.
+
+Validation after the review fixes: the build has zero errors and zero
+warnings. The gates over this code path print
+
+    FAMILY-POLY-OK cases=34
+    PRELUDE-POLY-OK templates=2 instances=5 negatives=2
+    FAMILY-MEMBERS-OK cases=35
+    PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5
+    PRELUDE-EQUALITY-OPS-OK instances=10 computations=11 negatives=8
+
+The family-member suite gains 16 export cases, from 19 to 35. They cover
+dependent member renaming and computation, mapping order, missing and
+duplicate sources, unknown members, target collisions with `as_name` (also
+under reuse), families, companion families, constructor labels of the
+instance and of an ambient family, ambient globals and templates, family
+reuse, name planning, the export share of the check budget and late budget
+rollback. PRELUDE-TRANSPORT installs the four type-equality operations
+under chosen names over a reused family, and its client computes through the
+exported cast with the reused family's own witness.
+`dev/MUTATION-LOG.md` records the export mutants under
+`## Stage C: chosen member export name controls (2026-09-22)`.
+
+The full battery was not rerun. This run is interrupted, not green: it stopped
+after the gates that cover the API change and before the remaining long
+suites. No kernel rule, gate expectation, watchdog or vendor pin changes. The
+source change stays inside `surface/family_poly.ml`, its interface and the two
+suites. The slice stays staged for the user. No commit is created.

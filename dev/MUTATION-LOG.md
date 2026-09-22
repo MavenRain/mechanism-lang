@@ -1194,3 +1194,46 @@ the unit and law names of each runtime case.
 
 Evidence: `dev/validation/port-uat-u1-nattrans-units/`. This is scoped
 validation of the new library surface; no full regression pass is claimed.
+
+## Stage C: chosen member export name controls (2026-09-22)
+
+The family-member suite gates export validation in `surface/family_poly.ml`
+with two kinds of control. `export-validation-budget` counts the polls of a
+plain specialization and of the same specialization with `~exports`, and
+requires one added poll for each export binding. It then gives an invalid
+mapping the poll allowance of the export prefix only, so the refusal is the
+budget message and not the mapping message. Six negative cases pin the exact
+refusal text: exports-empty-mapping, exports-missing-member,
+exports-unknown-member, exports-duplicate-source, exports-duplicate-target and
+exports-family-collision. Three cases pin the reserved constructor labels and
+the `as_name` row of the seed: exports-constructor-collision,
+exports-ambient-constructor-collision and exports-as-name-under-reuse.
+
+Mutant: `let* () = poll budget in` deleted from `check_member_exports`
+(`surface/family_poly.ml:68`) gives `FAMILY-MEMBERS-FAIL
+export-validation-budget: export polls 34, expected 36`.
+
+Mutant: the reserved-name arm and the repeated-target arm of
+`check_member_exports` (`surface/family_poly.ml:72` to `74`) exchange their
+diagnostics. This gives `FAMILY-MEMBERS-FAIL exports-duplicate-target: wrong
+refusal: mismatch: the name same is already declared`.
+
+Mutant: `~reuse:["MechTypeEq", "CastData"]` deleted from the NamedCast
+instantiation in `test/prelude_transport.ml` gives `PRELUDE-TRANSPORT-FAIL
+reuse installed a fresh family or a default member name`.
+
+Mutant: the constructor labels of the template's families computed as the
+empty list in `check_member_exports` (`surface/family_poly.ml:70` to `71`,
+`fun (_family, _ctors) -> []`). This gives `FAMILY-MEMBERS-FAIL
+exports-constructor-collision: constructor collision produced a name plan`.
+
+Mutant: `|| ctor_declared globals name` deleted from `occupied`
+(`surface/family_poly.ml:51`). This gives `FAMILY-MEMBERS-FAIL
+exports-ambient-constructor-collision: expected refusal: mismatch: the name
+other is already declared`.
+
+Each mutant was reverted by editing. The restored sources match the index, the
+build has zero errors and zero warnings, and the suites print
+FAMILY-MEMBERS-OK cases=35 and PRELUDE-TRANSPORT-OK templates=2 instances=7
+negatives=5. This is scoped validation of the export API; no full regression
+pass is claimed.

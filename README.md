@@ -11,6 +11,24 @@ map/prelude.map.tsv.
 
 The driver is `mech` and the source extension is `.mech`.
 
+## Compilation speed target
+
+R3 requires compilation at least as fast as **Bend 2** (user ruling,
+2026-09-21), replacing the previous OCaml target. Compilation includes
+parsing, elaboration, kernel checking, erasure, Wasm emission and validation.
+The acceptance ratio is mechanism-lang compilation time divided by the
+matched Bend 2 compilation time, at most 1.000, using pinned toolchains,
+equivalent workloads, the same machine and matched cache conditions.
+
+The Bend 2 baseline and acceptance ratios are **UNMEASURED**. The frozen
+OCaml timings in `dev/denominators.json` are historical evidence and do not
+establish this target. The M1 warm per-kloc and M3 full-corpus gates retain
+their milestones, with Bend 2 as the comparator.
+
+ROADMAP.md rows 27 to 37 and the binding row of `dev/denominators.json` still
+name the ocamlopt denominator; the Bend 2 comparator enters ROADMAP.md under
+its change control when the user commits that change.
+
 The [combinatorial GPU auction](GPU-AUCTION.md) is a complete reservation-auction
 CLI with tenant-defined XOR bundles, exact VCG payments, cuOpt LP export,
 independent optimality verification, and kernel-checked settlement certificates.
@@ -161,6 +179,11 @@ and type cast.  Family templates can carry ordered definitions, which
 specialize to fresh names and check again before entering ordinary globals.
 FAMILY-MEMBERS and PRELUDE-TRANSPORT test this path, including independent
 carrier and motive universes.  See `dev/M0-STAGE-C-TRANSPORT.md`.
+
+Programmatic specialization also accepts `~exports` to choose every helper's
+global name. The name plan and checked instance use the same mapping, including
+when a family is reused. Existing callers retain prefixed member names.
+See `dev/M0-STAGE-C-MEMBER-EXPORTS.md` for the contract and validation.
 
 The equality catalog also provides dependent `j`, `symm`, `trans` and
 `congr`, plus symmetry and transitivity for type equality.  The
