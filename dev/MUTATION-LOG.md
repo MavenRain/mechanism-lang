@@ -1267,3 +1267,41 @@ remain under `/Users/oobi/Documents/gpt6/` in
 retained there in `mechanism-export-mutations-20260922/`.
 The runtime gate also changes the shared input from 37 to
 41 and requires both exported computations to follow it on all three hosts.
+
+## Stage C dependency export clauses (2026-09-22)
+
+`python3 -P dev/validation/prenex-dependency-exports/mutations.py NEW_WORK_DIRECTORY`
+copies the current source into that new directory outside the repository,
+requires clean builds of the baseline, each mutant and the restored tree,
+records the precise refusal, and copies each per-attempt test log into
+`dev/validation/prenex-dependency-exports/` before it exits.
+All six controls compile with zero warnings and are killed:
+
+| Control | Source change | Designated regression |
+| --- | --- | --- |
+| C-DEPENDENCY-EXPORT-M1 | Permit incomplete member mappings | Missing member mapping is accepted |
+| C-DEPENDENCY-EXPORT-M2 | Ignore chosen names while renaming references | The chosen local name `a` is unbound |
+| C-DEPENDENCY-EXPORT-M3 | Drop earlier alias reservation | An earlier composed prefix is accepted as a member name |
+| C-DEPENDENCY-EXPORT-M4 | Omit exports from name planning | A chosen name collides with a definition template |
+| C-DEPENDENCY-EXPORT-M5 | Drop dependency exports in the printer | Parse/print changes the mapping |
+| C-DEPENDENCY-EXPORT-M6 | Ignore the name-planning validation budget | A collision wins over budget exhaustion |
+
+The first harness attempt used a target argument unsupported by dunecho;
+it was corrected to the repository's build command. The initial M3
+regression covered an alias that was already protected as a family name,
+so M3 survived. A composed-prefix collision now isolates the alias check.
+The complete rerun reports `killed=6 restored=1`; restored positives also
+cover exported names in member types and closed specialization of every
+positive example. These harness corrections did not alter production code.
+Final review separately reproduced and fixed budget exhaustion losing to
+name planning, covered by M6 and a second budget regression. The complete
+six-control run uses that fixed implementation.
+
+`dev/validation/prenex-dependency-exports/mutations.stdout` preserves the
+verdicts and the work path of the recorded run (a temporary directory of
+the first runner version, which the operating system purges). The
+`*-test.log` files in that directory preserve each per-attempt test
+output. `mutation-builds.stdout` preserves each baseline, mutant and
+restored build result. The runtime
+gate separately changes the shared payload from 37 to 41 and checks both
+computations on all three hosts.

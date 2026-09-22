@@ -416,6 +416,7 @@ poly-compose ::= 'poly' '(' universes ')' 'group' NAME 'where'
                  dependency+ member* 'end'
 dependency   ::= 'specialize' NAME '(' levels ')' 'as' NAME
                  [ 'with' '(' binding (',' binding)* ')' ]
+                 [ 'export' '(' [ binding (',' binding)* ] ')' ]
 binding      ::= NAME ':=' NAME
 ```
 
@@ -430,7 +431,9 @@ catalog; no symbolic global escapes.
 Specializing a composed group uses the output name as a prefix.
 For a dependency imported as Local, its primary family becomes
 OUTPUT_Local, and its member value becomes OUTPUT_Local_value.
-Nested groups retain all dependency prefixes.  New members become
+An explicit dependency export replaces Local_value with its chosen local
+name, which receives OUTPUT_ when the group is specialized. Nested groups
+retain the resulting names at each composition boundary. New members become
 OUTPUT_MEMBER.  The output prefix is not itself a family or global.
 The closed families and definitions recheck against current globals.
 Constructor labels retain their names and repeated imports retain
@@ -590,13 +593,24 @@ the immutable environment only after checking both catalogs and all
 generated names. A failed check publishes no partial specialization.
 
 Definition templates reject export clauses. Unknown templates keep their
-unbound-name error. Export clauses on dependencies inside a `poly group`
-remain outside this increment. Top-level specialization of such a group
-can export its members with the same syntax. The member set of a
-composed group includes the definitions imported by its dependencies
-under their LOCAL_member names, next to the group's own members. An
-explicit mapping names every one of them; a mapping that names only the
-group's own members is refused.
+unbound-name error. Dependencies inside a `poly group` accept the same
+optional clause, after any `with` clause. Their targets are local member
+names in the composed schema. Group members see those chosen names;
+the default LOCAL_member names are absent. They also cannot collide with
+any dependency alias or with another imported or locally defined member.
+An explicit empty mapping is accepted only for a dependency with no members.
+Both mappings and symbolic rechecking consume the caller's budget.
+`Family_poly.validate_exports` checks explicit dependency mappings before
+name planning, so an exhausted budget takes precedence over a planned
+name collision. Composition revalidates the mapping before checking members.
+
+Top-level specialization of a composed group can choose new global names
+with the same syntax. Its mapping must cover every imported member under
+its chosen local name (or LOCAL_member when no dependency export was given),
+as well as the group's own members. A mapping of only the group's own
+members is refused. Nested composition preserves the chosen names and
+renames references in member types and bodies at every boundary. See
+`dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md` for examples and validation.
 
 ## Stage C symbolic family reuse
 

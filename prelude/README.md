@@ -133,6 +133,13 @@ and declaration cost measurements.
 
 ## Categories
 
+Group dependencies can choose local helper names with
+`specialize Template (LEVELS) as Local export (member := chosenName)`.
+An explicit mapping names every imported member. Place it after any
+`with` family bindings. Group members use the chosen names; a later
+specialization prefixes them or supplies its own complete mapping.
+See `../dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md` for a complete example.
+
 `cat/category.mech` declares the MechCategory group with two Type-level
 parameters: objects at `Type u` and morphisms at `Type v`. Specializing
 as C installs equality C and forty members.  The category

@@ -62,9 +62,27 @@ val declare_group_elaborated : ?budget:Budget.t ->
   members:(Global.t -> (Check.decl, Error.t) result) list -> Global.t -> t ->
   arity:int -> (Check.family_decl * Check.ctor_decl list) list -> (t, Error.t) result
 
+(** Validate a complete member mapping with the caller's budget before
+    surface name planning. The reuse bindings are checked first, in the
+    order of [instantiate]: [available] tells which existing family a
+    binding may name (the caller's families and the fresh families of
+    earlier dependencies), so an unbound reused family is reported as
+    [Unbound] before the bindings become name reservations for the
+    mapping check. [compose] and [instantiate] check their family
+    certificates. *)
+val validate_exports : ?budget:Budget.t -> ?reuse:(string * string) list ->
+  available:(string -> bool) -> t -> name:string -> as_name:string ->
+  (string * string) list -> (unit, Error.t) result
+
+(** Report [Budget_exhausted] when the caller's budget is spent. The
+    elaborator polls once between mapping validation and surface name
+    planning, so a budget exhausted after the mapping polls still takes
+    precedence over a name collision reported by name planning. *)
+val poll : Budget.t -> (unit, Error.t) result
+
 (** Compose a nonempty list of preceding family templates.  Each dependency
-    is [(template, universe_arguments, local_prefix, reuse)]. Arguments may use
-    the new group's universe scope.  Imported families and definitions are
+    is [(template, universe_arguments, local_prefix, reuse, exports)].
+    Arguments may use the new group's universe scope. Imported families and definitions are
     renamed, traversed and checked again before the callbacks run.  Members
     see all dependencies and earlier members.  The group name and dependency
     prefixes must be fresh.  Only the complete schema enters the catalog;
@@ -72,11 +90,16 @@ val declare_group_elaborated : ?budget:Budget.t ->
     templates are flattened in dependency order. Reuse binds local families
     to caller families or families of earlier dependencies. Certificates
     must agree under the full universe scope, and reused families are omitted
-    from the new schema. At least one fresh family must remain. *)
+    from the new schema. At least one fresh family must remain. Optional
+    [exports] names every imported member exactly once, using the same
+    validation as [instantiate]. Chosen names are local to the composed
+    schema, visible to the group's members, and prefixed
+    when the composed schema is specialized. *)
 val compose : ?budget:Budget.t ->
   members:(Global.t -> (Check.decl, Error.t) result) list -> Global.t -> t ->
   arity:int -> name:string ->
-  (string * Level.t list * string * (string * string) list) list ->
+  (string * Level.t list * string * (string * string) list
+    * (string * string) list option) list ->
   (t, Error.t) result
 
 (** Specialize all universe occurrences and self references using exactly

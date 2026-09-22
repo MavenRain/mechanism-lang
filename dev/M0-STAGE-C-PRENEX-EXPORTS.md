@@ -39,8 +39,10 @@ generated names. A failed check publishes no partial specialization.
 
 Definition templates reject export clauses. Unknown templates keep their
 unbound-name error. Export clauses on dependencies inside a `poly group`
-remain outside this increment. Top-level specialization of such a group
-can export its members with the same syntax. The member set of a
+remained outside this increment and are added by the dependency export
+increment (dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md). Top-level
+specialization of such a group can export its members with the same
+syntax. The member set of a
 composed group includes the definitions imported by its dependencies
 under their LOCAL_member names, next to the group's own members. An
 explicit mapping names every one of them; a mapping that names only the
@@ -72,3 +74,6 @@ and produce its designated failure.
 
 Measured results and capture paths are recorded in `dev/M0-BUILD-LOG.md`
 and `dev/MUTATION-LOG.md`.
+
+The follow-up in `dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md` extends the same
+clause to dependencies inside composed groups.

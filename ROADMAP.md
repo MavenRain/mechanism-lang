@@ -44,12 +44,12 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-22
 
-The base is 0b8661b, following natural transformation units and chosen
-member export names. The current increment exposes chosen names in
-top-level source specializations through an optional `export` clause,
-including specialization over reused families. PRENEX-EXPORTS and its
-runtime gate check the surface contract and execution on three hosts.
-See `dev/M0-STAGE-C-PRENEX-EXPORTS.md`. Stage 0, Stage
+The base is a86e84b, following top-level specialization export clauses.
+The current increment extends those clauses to dependencies inside
+`poly group`. Chosen local member names survive nested composition,
+family reuse and closed specialization. PRENEX-DEPENDENCY-EXPORTS and
+its runtime gate check the surface contract and execution on three hosts.
+See `dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md`. Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,

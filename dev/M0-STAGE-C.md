@@ -92,6 +92,10 @@ The textual member export increment exposes the chosen names through an
 optional export clause on top-level specialize; see
 dev/M0-STAGE-C-PRENEX-EXPORTS.md.  Omitting the clause keeps the
 prefixed names.
+The dependency member export increment accepts the same clause on
+dependency rows inside a poly group; chosen names stay local to the
+composed schema and are prefixed or renamed by a closed
+specialization; see dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

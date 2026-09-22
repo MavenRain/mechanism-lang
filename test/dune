@@ -96,6 +96,11 @@
  (libraries mechanism_kernel mechanism_surface mechanism_import))
 
 (executable
+ (name prenex_dependency_exports)
+ (modules Prenex_dependency_exports)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
  (name prelude_category)
  (modules Prelude_category)
  (libraries mechanism_kernel mechanism_surface mechanism_import))

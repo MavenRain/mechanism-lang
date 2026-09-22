@@ -192,6 +192,12 @@ name every member. PRENEX-EXPORTS and PRENEX-EXPORTS-RUNTIME check fresh
 and reused families, name reservations and computations on three hosts.
 See `dev/M0-STAGE-C-PRENEX-EXPORTS.md`.
 
+Dependencies inside a `poly group` accept the same export clause. Chosen
+names are local to the group, so its members can use them directly and
+closed specialization prefixes them or applies another export mapping.
+Nested groups and reused families follow the same rules. See
+`dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md` and its two regression gates.
+
 The equality catalog also provides dependent `j`, `symm`, `trans` and
 `congr`, plus symmetry and transitivity for type equality.  The
 PRELUDE-EQUALITY-OPS gate checks generic contracts, normalization and

@@ -4454,3 +4454,71 @@ parser=10 budget=3`, `PASS FAMILY-MEMBERS: FAMILY-MEMBERS-OK cases=35`,
 `PASS PRELUDE-TRANSPORT: PRELUDE-TRANSPORT-OK templates=2 instances=7
 negatives=5` and `PASS PRENEX-EXPORTS-RUNTIME: PRENEX-EXPORTS-RUNTIME OK
 cases=2 hosts=3 mutation=1`.
+
+## Stage C dependency export clauses (2026-09-22)
+
+Base: a86e84b. Dependencies inside `poly group` now accept a complete
+optional member export mapping after any family reuse bindings. Chosen
+names stay local to the composed schema, survive nesting, and are renamed
+again during closed specialization. Member types and bodies use the same
+mapping. The shared validator preserves complete mappings, fresh targets,
+constructor and family reservations, and caller budgets. Composition also
+reserves earlier composed dependency aliases that are only prefixes.
+
+The new suite passes `positives=7 negatives=22 parser=6 budget=2`, including
+closed specialization of every positive example with its chosen row names
+in declaration order, a capture-sensitive swap of a type member and its
+value, member references in types, no symbolic leakage, nested family
+reuse, and refusals of a target equal to the own composed alias, the
+template name, an installed family or an installed constructor. The
+reused-family case repeats the reused name so a lost reuse lookup fails
+on the second binding. The unbound-reuse-with-export case pins `unknown
+reused family Nope` on a dependency row that carries an export clause:
+`validate_exports` checks the reuse bindings before it reserves them, so
+the dependency path reports the same refusal as the top-level path. The
+new runtime gate
+passes `cases=2 hosts=3 mutation=1`, with both computations following the
+shared input from 37 to 41 on the kernel, Node and Wasmtime. Existing
+prenex export, composition and symbolic reuse suites pass. Builds report
+zero errors and warnings.
+
+Six compiling mutations are killed at designated regressions, and the
+restored tree passes. The alias mutation initially survived because a
+simple dependency alias was also a family name. A composed-prefix
+regression isolates that reservation and kills the mutation. A further
+positive example covers exported names in member types. Final review also
+reproduced a collision being reported after the budget expired. Explicit
+dependency mappings now receive budgeted validation before name planning;
+the second budget regression and sixth mutation control cover this fix.
+
+`PIN-DELTA` first identified stale syntax and parser line counts. The
+measured ledger now records 79 and 262 respectively, and 389 for the
+elaborator including budgeted name planning. The scoped audit passes. The contract is in
+`dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md`. Complete battery results, supplemental
+checks, mutation logs and source hashes are in
+`dev/validation/prenex-dependency-exports/`. The full battery there ran
+before the elaborator reached its pinned 389 rows; `elab-legs.stdout` in
+the same directory reruns PIN-DELTA and the composition legs on the
+pinned bytes, all PASS. Gate predicates, watchdogs,
+kernel sources and the vendor pin retain their existing requirements.
+
+Review fix relay (2026-09-22): the fix units edited paths pinned in
+`dev/validation/prenex-dependency-exports/sources.sha256` after the record
+was captured, so the record is stale for
+`test/prenex_dependency_exports.ml`, `surface/elab.ml`,
+`surface/family_poly.ml`, `surface/family_poly.mli`, `dev/PIN-DELTA.md`,
+`dev/validation/prenex-dependency-exports/mutations.py`,
+`dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md`. Rerun `zsh dev/gates.sh` and
+recapture the record before the commit. On the fixed tree the ROOT build
+reports `OK build: 0 errors, 0 warnings` and the legs pass: `PRENEX-OK
+entries=16 computations=4 negatives=25`; `PRENEX-FAMILIES-OK families=13
+entries=18 computations=5 negatives=30`; `PRENEX-GROUPS-OK families=13
+entries=23 computations=7 negatives=39`; `PRENEX-EXPORTS-OK entries=12
+positives=8 negatives=21 parser=10 budget=3`; `PRENEX-DEPENDENCY-EXPORTS-OK
+positives=7 negatives=23 parser=6 budget=2`; `FAMILY-POLY-OK cases=34`;
+`FAMILY-MEMBERS-OK cases=35`; `PRELUDE-TRANSPORT-OK templates=2 instances=7
+negatives=5`; `TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10`;
+`TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5`;
+`PRENEX-EXPORTS-RUNTIME OK cases=2 hosts=3 mutation=1`;
+`PRENEX-DEPENDENCY-EXPORTS-RUNTIME OK cases=2 hosts=3 mutation=1`;
+`LEGS-EXIT 0`.

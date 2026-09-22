@@ -1498,21 +1498,32 @@ let elab_family_group ~budget globals catalog definitions ~arity group members =
     globals catalog ~arity (List.rev reversed)
 
 let elab_composition ~budget globals catalog definitions ~arity ~name dependencies members =
-  let* dependencies = Rules.all_ok (List.map (fun (source, levels, as_name, reuse) ->
+  let* dependencies = Rules.all_ok (List.map (fun (source, levels, as_name, reuse, exports) ->
     let* levels = Rules.all_ok (List.map Universe.lower levels) in
-    Ok (source, levels, as_name, reuse)) dependencies) in
-  let imported = List.concat_map (fun (source, _levels, as_name, reuse) ->
-    let generated = Family_poly.instance_names ~reuse catalog ~name:source ~as_name
+    Ok (source, levels, as_name, reuse, exports)) dependencies) in
+  let fresh_families (source, _levels, as_name, reuse, exports) =
+    Family_poly.instance_names ~reuse ?exports catalog ~name:source ~as_name
+    |> Option.fold ~none:[] ~some:fst in
+  let* _available = List.fold_left (fun acc ((source, _levels, as_name, reuse, exports) as row) ->
+    let* available = acc in
+    let* () = Option.fold exports ~none:(Ok ()) ~some:(fun exports ->
+      Family_poly.validate_exports ~budget ~reuse catalog ~name:source ~as_name exports
+        ~available:(fun existing -> List.mem existing available
+          || Option.is_some (Global.find_family existing globals))) in
+    Ok (fresh_families row @ available)) (Ok []) dependencies in
+  let imported = List.concat_map (fun (source, _levels, as_name, reuse, exports) ->
+    let generated = Family_poly.instance_names ~reuse ?exports catalog ~name:source ~as_name
       |> Option.fold ~none:[] ~some:(fun (families, members) -> families @ members) in
     as_name :: generated) dependencies in
   let names = imported @ List.map (fun member -> member.Syntax.rd_name) members in
+  let* () = Family_poly.poll budget in
   let* () = Rules.all_ok (List.map (fun local ->
     if String.equal local name || Option.is_some (Poly.arity definitions local)
         || Option.is_some (Family_poly.arity catalog local)
         || Option.is_some (find_ctor local globals) then
       Error (Error.Mismatch ("the name " ^ local ^ " is already declared"))
     else Ok ()) names) |> Result.map (fun _checks -> ()) in
-  let labels = List.concat_map (fun (source, _levels, _as_name, _reuse) ->
+  let labels = List.concat_map (fun (source, _levels, _as_name, _reuse, _exports) ->
     Family_poly.constructors catalog source |> Option.value ~default:[]) dependencies in
   let* () = Rules.all_ok (List.map (fun label ->
     if String.equal label name || List.mem label names

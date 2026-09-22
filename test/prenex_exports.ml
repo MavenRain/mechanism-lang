@@ -85,9 +85,9 @@ let parse_cases = [
     "'with' must precede 'export' in a specialization";
   "second-export", "export (witness := w) export (alias := a)",
     "one export clause per specialization";
-  "dependency-export",
-    "poly (v) group Pair where specialize Box (v) as Inner export (witness := w) end",
-    "export clauses on group dependencies are not supported";
+  "dependency-second-export",
+    "poly (v) group Pair where specialize Box (v) as Inner export () export () end",
+    "one export clause per specialization";
 ]
 
 let polls_of source =

@@ -63,11 +63,11 @@ payloads during universe substitution and family renaming.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 385 |
+| surface/elab.ml | 397 |
 | surface/token.ml | 12 |
 | surface/lexer.ml | 6 |
-| surface/syntax.ml | 74 |
-| surface/parser.ml | 243 |
+| surface/syntax.ml | 79 |
+| surface/parser.ml | 262 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 
@@ -113,4 +113,12 @@ Symbolic family reuse adds bindings to group dependencies, preserves them
 in printed source and omits reused family aliases from name reservation.
 The family catalog checks certificates under the group's universe scope
 and retains only fresh families in the resulting schema. The syntax and
-parser counts above include this increment; the elaborator count stays 378.
+parser counts included that increment; its elaborator count stayed 378.
+
+Dependency export clauses add optional member mappings to composed
+dependencies and preserve them through parsing, printing and elaboration.
+They share top-level clause parsing and export validation. The current
+measured counts are syntax 79, parser 262 and elaborator 397, including
+budgeted export validation before name planning and one budget poll
+before the name-planning check. The vendor pin and kernel overlay are
+unchanged.

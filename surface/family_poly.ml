@@ -303,6 +303,18 @@ let check_bindings budget ~available families reuse =
     | () -> Ok (local :: bound)) (Ok []) reuse in
   Ok ()
 
+(* The reuse bindings are checked before they become reservations, so an
+   unbound reused family is reported as such and never as a collision. *)
+let validate_exports ?(budget = Budget.unlimited) ?(reuse = []) ~available
+    catalog ~name ~as_name exports =
+  let* () = poll budget in
+  let* scheme = List.assoc_opt name catalog |> Option.to_result
+    ~none:(Error.Unbound ("unknown family universe schema " ^ name)) in
+  let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
+  let* () = check_bindings budget raw_families reuse ~available in
+  check_member_exports budget scheme ~name ~as_name ~reuse (Some exports)
+  |> Result.map (fun _bindings -> ())
+
 let declare_group_with_reuse ~budget ~members globals catalog ~arity imports =
   let families = List.filter_map (fun (reused, family) ->
     if reused then None else Some family) imports in
@@ -352,7 +364,7 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
   else if arity < 0 then Error (Error.Universe "a universe parameter arity must be nonnegative")
   else
     let* _aliases, _available, groups =
-      List.fold_left (fun acc (source, levels, as_name, reuse) ->
+      List.fold_left (fun acc (source, levels, as_name, reuse, exports) ->
       let* aliases, available, groups = acc in
       let* () = poll budget in
       let* scheme = List.assoc_opt source catalog |> Option.to_result
@@ -369,9 +381,10 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
           let raw_families = (scheme.family, scheme.ctors) :: scheme.companions in
           let* () = check_bindings budget raw_families reuse ~available:(fun existing ->
             List.mem existing available || Option.is_some (Global.find_family existing globals)) in
+          let* exports = check_member_exports budget scheme ~name:source ~as_name ~reuse exports in
           let level l = Level.subst levels l |> Option.to_result ~none:scope_error in
           let rename n = Ok (List.assoc_opt n reuse |> Option.value
-            ~default:(rename_instance scheme ~name:source ~as_name n)) in
+            ~default:(rename_export scheme ~name:source ~as_name exports n)) in
           let* families = map_list (fun (family, ctors) ->
             let* mapped = map_family budget level rename family ctors in
             Ok (List.mem_assoc family.Check.fam_name reuse, mapped)) raw_families in
@@ -379,6 +392,9 @@ let compose ?(budget = Budget.unlimited) ~members globals catalog ~arity ~name d
           let fresh = List.filter_map (fun (reused, (family, _ctors)) ->
             if reused then None else Some family.Check.fam_name) families in
           let generated = fresh @ List.map (fun definition -> definition.Check.d_name) definitions in
+          let* () = map_list (fun generated ->
+            if List.mem generated aliases then Error (collision generated)
+            else Ok ()) generated |> Result.map (fun _checks -> ()) in
           Ok (as_name :: generated @ aliases, fresh @ available,
             (families, definitions) :: groups)) (Ok ([], [], [])) dependencies in
     let groups = List.rev groups in

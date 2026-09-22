@@ -922,13 +922,6 @@ let specialization_tail (exports : (string * string) list option) ts =
       parse_err loc "one export clause per specialization"
   | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ()
 
-(* Dependencies inside a poly group take no export clause. *)
-let dependency_tail ts =
-  match ts with
-  | { Token.kind = Token.Ident "export"; loc } :: _rest ->
-      parse_err loc "export clauses on group dependencies are not supported"
-  | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ()
-
 let parse_decl ts =
   match ts with
   | { Token.kind = Token.KPoly; loc = _ }
@@ -964,8 +957,9 @@ let parse_decl ts =
             | { Token.kind = Token.KSpecialize; loc = _ } :: _rest ->
                 let* (source, levels, as_name), rest = specialization P.parse_level ts in
                 let* reuse, rest = reuse_bindings rest in
-                let* () = dependency_tail rest in
-                dependencies rest ((source, levels, as_name, reuse) :: acc)
+                let* exports, rest = export_bindings rest in
+                let* () = specialization_tail exports rest in
+                dependencies rest ((source, levels, as_name, reuse, exports) :: acc)
             | ({ Token.kind = _; loc = _ } :: _ | []) ->
                 (match acc with
                 | [] -> expected "at least one template specialization in a group" ts

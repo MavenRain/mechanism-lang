@@ -137,7 +137,8 @@ let raw () =
   let* original = Global.find_family "Existing" globals |> Option.to_result ~none:"missing family" in
   let compose ?(budget = Budget.unlimited) ?(members = []) globals =
     Family_poly.compose ~budget ~members globals catalog ~arity:1 ~name:"Shared"
-      ["Seed", [Level.zero], "Fresh", []; "Seed", [Level.zero], "Copy", ["Seed", "Existing"]] in
+      ["Seed", [Level.zero], "Fresh", [], None;
+       "Seed", [Level.zero], "Copy", ["Seed", "Existing"], None] in
   let checks = [
     "preserve-caller", (fun () ->
       let* shared = kernel (compose globals) in

@@ -8,6 +8,7 @@ import tempfile
 GATES = {(): "PRENEX-RUNTIME", ("--families",): "PRENEX-FAMILIES-RUNTIME",
          ("--groups",): "PRENEX-GROUPS-RUNTIME", ("--category",): "PRELUDE-CATEGORY-RUNTIME",
          ("--exports",): "PRENEX-EXPORTS-RUNTIME",
+         ("--dependency-exports",): "PRENEX-DEPENDENCY-EXPORTS-RUNTIME",
          ("--category-accessors",): "PRELUDE-CATEGORY-ACCESSORS",
          ("--closures",): "DEPENDENT-CLOSURE-RUNTIME"}
 
@@ -20,7 +21,7 @@ def gate_name(arguments):
 def main():
     if tuple(sys.argv[1:]) not in GATES:
         print("usage: python3 -P test/prenex_runtime.py "
-              "[--families|--groups|--exports|--category|--category-accessors|--closures]",
+              "[--families|--groups|--exports|--dependency-exports|--category|--category-accessors|--closures]",
               file=sys.stderr)
         return 64
 
@@ -39,11 +40,14 @@ def main():
         fixture = (root / "test/fixtures/prelude/prenex-groups-runtime.mech").read_text()
         original = "def groupPayload : Nat := Run_unpack Nat (Run_pack Nat 37)"
         replacement = "def groupPayload : Nat := Run_unpack Nat (Run_pack Nat 41)"
-    member_exports = sys.argv[1:] == ["--exports"]
+    dependency_exports = sys.argv[1:] == ["--dependency-exports"]
+    member_exports = sys.argv[1:] == ["--exports"] or dependency_exports
     if member_exports:
         fixture = (root / "test/fixtures/prelude/prenex-exports-runtime.mech").read_text()
         original = "def exportInput : Nat := 37"
         replacement = "def exportInput : Nat := 41"
+        if dependency_exports:
+            fixture += (root / "test/fixtures/prelude/dependency-exports-runtime.mech").read_text()
     category = sys.argv[1:] in (["--category"], ["--category-accessors"])
     if category:
         fixture = (root / "prelude/cat/category.mech").read_text()
@@ -85,6 +89,8 @@ def main():
     changed = [(payload, 41), (other, 12)]
     if member_exports:
         cases = [(name, 37) for name in ("namedPayload", "reusedPayload")]
+        if dependency_exports:
+            cases = [(name, 37) for name in ("dependencyPayload", "nestedPayload")]
         changed = [(name, 41) for name, _ in cases]
     if closures:
         exports = ["nullaryPayload", "functionPayload", "capturedPayload",

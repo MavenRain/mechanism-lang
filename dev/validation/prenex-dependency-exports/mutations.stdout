@@ -1,0 +1,8 @@
+MUTATION-WORK /var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-dependency-exports-rivdilgu
+KILLED mapping-validation: PRENEX-DEPENDENCY-EXPORTS FAIL missing: expected refusal
+KILLED reference-renaming: PRENEX-DEPENDENCY-EXPORTS FAIL unbound: a
+KILLED alias-reservation: PRENEX-DEPENDENCY-EXPORTS FAIL earlier-composed-alias: expected refusal
+KILLED name-planning: PRENEX-DEPENDENCY-EXPORTS FAIL poly-name: expected refusal
+KILLED printing: PRENEX-DEPENDENCY-EXPORTS FAIL parse/print changed a dependency export mapping
+KILLED planning-budget: PRENEX-DEPENDENCY-EXPORTS FAIL collision-budget: mismatch: the name w is already declared
+DEPENDENCY-EXPORT-MUTATIONS OK killed=6 restored=1

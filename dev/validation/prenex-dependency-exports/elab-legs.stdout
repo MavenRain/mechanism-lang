@@ -1,0 +1,50 @@
+ELAB-LEGS capture on the staged sources (fix L4-1)
+HEAD a86e84b
+sources.sha256 check: 18 OK of 18 pinned files
+command: zsh dev/dunecho.sh build, then each leg with the oracle of dev/gates.sh
+MEASURE PIN-DELTA elapsed_ms=1272.608 exit=0
+PASS PIN-DELTA
+PIN-DELTA file diff expected
+PIN-DELTA lib/check.ml diff=140 expected=140 OK
+PIN-DELTA lib/conv.ml diff=51 expected=51 OK
+PIN-DELTA lib/eval.ml diff=24 expected=24 OK
+PIN-DELTA lib/rules.ml diff=84 expected=84 OK
+PIN-DELTA lib/level.ml diff=49 expected=49 OK
+PIN-DELTA lib/level.mli diff=17 expected=17 OK
+PIN-DELTA bin/kanon.ml diff=14 expected=14 OK
+PIN-DELTA surface/elab.ml diff=389 expected=389 OK
+PIN-DELTA surface/token.ml diff=12 expected=12 OK
+PIN-DELTA surface/lexer.ml diff=6 expected=6 OK
+PIN-DELTA surface/syntax.ml diff=79 expected=79 OK
+PIN-DELTA surface/parser.ml diff=262 expected=262 OK
+PIN-DELTA wasm/emit.ml diff=27 expected=27 OK
+PIN-DELTA wasm/link.ml diff=61 expected=61 OK
+PIN-DELTA OK
+MEASURE PRENEX-GROUPS elapsed_ms=358.643 exit=0
+PASS PRENEX-GROUPS
+PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=39
+MEASURE SUITE-SURFACE elapsed_ms=260.542 exit=0
+PASS SUITE-SURFACE
+SL-SURFACE OK
+MEASURE FAMILY-POLY elapsed_ms=276.632 exit=0
+PASS FAMILY-POLY
+FAMILY-POLY-OK cases=34
+MEASURE FAMILY-MEMBERS elapsed_ms=277.255 exit=0
+PASS FAMILY-MEMBERS
+FAMILY-MEMBERS-OK cases=35
+MEASURE PRELUDE-TRANSPORT elapsed_ms=273.361 exit=0
+PASS PRELUDE-TRANSPORT
+PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5
+MEASURE FAMILY-GROUPS elapsed_ms=278.445 exit=0
+PASS FAMILY-GROUPS
+FAMILY-GROUPS-OK cases=31
+MEASURE AXIOMS elapsed_ms=588.897 exit=0
+PASS AXIOMS
+AXIOMS OK prelude=0 fixture=1 hidden_builtins=0
+MEASURE CORPUS-UAT elapsed_ms=1811.625 exit=0
+PASS CORPUS-UAT
+CORPUS-OK
+MEASURE MAP-INVENTORY elapsed_ms=1291.651 exit=0
+PASS MAP-INVENTORY
+MAP-INVENTORY OK
+ELAB-LEGS-EXIT 0

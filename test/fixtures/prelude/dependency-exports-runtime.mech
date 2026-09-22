@@ -1,0 +1,24 @@
+poly (u, v) group Exported where
+specialize Box (u, v) as Local
+  export (unpack := read, pack := make, unbox := value)
+def relay : (0 A : Sort u) -> Local_Wrapped A -> A :=
+  fun (0 A : Sort u) (w : Local_Wrapped A) => read A w
+end
+poly (u, v) group Nested where
+specialize Exported (u, v) as Inner
+  export (relay := nestedRelay, read := nestedRead,
+          make := nestedMake, value := nestedValue)
+specialize Box (u, v) as Again
+  with (Box := Inner_Local, Wrapped := Inner_Local_Wrapped)
+  export (unbox := reusedValue, pack := reusedMake, unpack := reusedRead)
+def combine : (0 A : Sort u) -> A -> A :=
+  fun (0 A : Sort u) (x : A) => reusedRead A (nestedMake A x)
+end
+specialize Exported (1, 2) as GroupRun
+specialize Nested (1, 2) as NestedRun
+  export (nestedValue := runtimeValue, nestedMake := runtimeMake,
+          nestedRead := runtimeRead, nestedRelay := runtimeRelay,
+          reusedValue := runtimeReusedValue, reusedMake := runtimeReusedMake,
+          reusedRead := runtimeReusedRead, combine := runtimeCombine)
+def dependencyPayload : Nat := GroupRun_relay Nat (GroupRun_make Nat exportInput)
+def nestedPayload : Nat := runtimeCombine Nat exportInput
