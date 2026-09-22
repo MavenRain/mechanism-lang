@@ -878,6 +878,57 @@ let reuse_bindings ts =
       expected "'(' and a nonempty list of family bindings" rest
   | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ([], ts)
 
+(* "export" is contextual here, so it remains an ordinary name in terms
+   and declarations. An explicit empty mapping is distinct from omission. *)
+let export_bindings ts =
+  let rec bindings ts acc = match ts with
+    | { Token.kind = Token.Ident member; loc = _ }
+      :: { Token.kind = Token.ColonEq; loc = _ }
+      :: { Token.kind = Token.Ident target; loc = _ } :: rest ->
+        (match rest with
+        | { Token.kind = Token.Comma; loc = _ } :: rest ->
+            bindings rest ((member, target) :: acc)
+        | { Token.kind = Token.RParen; loc = _ } :: rest ->
+            Ok (Some (List.rev ((member, target) :: acc)), rest)
+        | ({ Token.kind = _; loc = _ } :: _ | []) ->
+            expected "',' or ')' after a member export" rest)
+    | { Token.kind = Token.Ident _; loc = _ }
+      :: { Token.kind = Token.ColonEq; loc = _ } :: rest ->
+        expected "a global name after ':='" rest
+    | ({ Token.kind = _; loc = _ } :: _ | []) ->
+        expected "a member export 'MEMBER := NAME'" ts in
+  match ts with
+  | { Token.kind = Token.Ident "export"; loc = _ }
+    :: { Token.kind = Token.Unit; loc = _ } :: rest -> Ok (Some [], rest)
+  | { Token.kind = Token.Ident "export"; loc = _ }
+    :: { Token.kind = Token.LParen; loc = _ }
+    :: { Token.kind = Token.RParen; loc = _ } :: rest -> Ok (Some [], rest)
+  | { Token.kind = Token.Ident "export"; loc = _ }
+    :: { Token.kind = Token.LParen; loc = _ } :: rest -> bindings rest []
+  | { Token.kind = Token.Ident "export"; loc = _ } :: rest ->
+      expected "'(' after 'export'" rest
+  | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok (None, ts)
+
+(* A specialization takes at most one 'with' clause and then at most one
+   'export' clause.  A clause left over after both readers names the rule
+   it breaks instead of falling to the generic declaration error. *)
+let specialization_tail (exports : (string * string) list option) ts =
+  match ts with
+  | { Token.kind = Token.KWith; loc } :: _rest ->
+      parse_err loc (Option.fold exports
+        ~none:"one 'with' clause per specialization"
+        ~some:(fun _mapping -> "'with' must precede 'export' in a specialization"))
+  | { Token.kind = Token.Ident "export"; loc } :: _rest ->
+      parse_err loc "one export clause per specialization"
+  | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ()
+
+(* Dependencies inside a poly group take no export clause. *)
+let dependency_tail ts =
+  match ts with
+  | { Token.kind = Token.Ident "export"; loc } :: _rest ->
+      parse_err loc "export clauses on group dependencies are not supported"
+  | ({ Token.kind = _; loc = _ } :: _ | []) -> Ok ()
+
 let parse_decl ts =
   match ts with
   | { Token.kind = Token.KPoly; loc = _ }
@@ -913,6 +964,7 @@ let parse_decl ts =
             | { Token.kind = Token.KSpecialize; loc = _ } :: _rest ->
                 let* (source, levels, as_name), rest = specialization P.parse_level ts in
                 let* reuse, rest = reuse_bindings rest in
+                let* () = dependency_tail rest in
                 dependencies rest ((source, levels, as_name, reuse) :: acc)
             | ({ Token.kind = _; loc = _ } :: _ | []) ->
                 (match acc with
@@ -950,7 +1002,9 @@ let parse_decl ts =
       | { Token.kind = Token.KAs; loc = _ }
         :: { Token.kind = Token.Ident as_name; loc = _ } :: rest ->
           let* reuse, rest = reuse_bindings rest in
-          Ok (Syntax.DSpecialize (name, levels, as_name, reuse), rest)
+          let* exports, rest = export_bindings rest in
+          let* () = specialization_tail exports rest in
+          Ok (Syntax.DSpecialize (name, levels, as_name, reuse, exports), rest)
       | ({ Token.kind = _; loc = _ } :: _ | []) -> expected "'as' and a fresh name" rest)
   (* SC-D4:  a malformed poly or specialize declaration names its own
      keyword.  The lexer reads the two characters "()" as one Unit

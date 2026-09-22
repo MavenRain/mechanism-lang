@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "controls": [
+    {
+      "name": "C-PRENEX-EXPORT-M1",
+      "path": "surface/parser.ml",
+      "old": ":: { Token.kind = Token.Unit; loc = _ } :: rest -> Ok (Some [], rest)",
+      "new": ":: { Token.kind = Token.Unit; loc = _ } :: rest -> Ok (None, rest)",
+      "source_sha256": "123128f09a4e2fb7fba056992ea42e4363904f7a73766092077a0e6196caa850",
+      "mutant_sha256": "d6c42c6a87dded0e059a8dd0f32d1083356b6266c67f61ffd48415d7590dd201",
+      "exit_code": 1,
+      "diagnostic": "parse/print changed the export mapping",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M2",
+      "path": "surface/syntax.ml",
+      "old": "(exports_text exports)",
+      "new": "(exports_text (Option.map (fun _bindings -> []) exports))",
+      "source_sha256": "a30e6d3d0092bf67531186c6b8476a10ec1c22aea804916b58b582a34d7aa0bd",
+      "mutant_sha256": "94558d5fcb587640af70a227266768fe5fbe3f3b8ec1eb2e8a0ca725851aac67",
+      "exit_code": 1,
+      "diagnostic": "parse/print changed the export mapping",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M3",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instantiate ~budget ~reuse ?exports",
+      "new": "Family_poly.instantiate ~budget ~reuse",
+      "source_sha256": "11e473148b954b8f5f2303be0799b67611718ad9ddbd0f4a47b903883d9ee596",
+      "mutant_sha256": "3514c44c2e531e5caa75a1160c81146e5ea8ac3b93029c6b635dc8557a80b9bf",
+      "exit_code": 1,
+      "diagnostic": "specialization returned no member",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M4",
+      "path": "surface/elab.ml",
+      "old": "Option.is_some (Poly.arity catalog n)",
+      "new": "Option.is_some (Poly.arity catalog (n ^ \":missing\"))",
+      "source_sha256": "11e473148b954b8f5f2303be0799b67611718ad9ddbd0f4a47b903883d9ee596",
+      "mutant_sha256": "d9d03e331c92a60e56c81534dadf563f10f4e386913bbe93fb4eca6b4a503156",
+      "exit_code": 1,
+      "diagnostic": "definition-catalog: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M5",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instance_names ~reuse ?exports families",
+      "new": "Family_poly.instance_names ~reuse:[] ?exports families",
+      "source_sha256": "11e473148b954b8f5f2303be0799b67611718ad9ddbd0f4a47b903883d9ee596",
+      "mutant_sha256": "02e3c4f34617522641c9fc2611d39b45f213b3a5ecc0950f154eea0ff61b38f1",
+      "exit_code": 1,
+      "diagnostic": "specialization returned no family",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M6",
+      "path": "surface/elab.ml",
+      "old": "Family_poly.instantiate ~budget ~reuse ?exports",
+      "new": "Family_poly.instantiate ~budget:Budget.unlimited ~reuse ?exports",
+      "source_sha256": "11e473148b954b8f5f2303be0799b67611718ad9ddbd0f4a47b903883d9ee596",
+      "mutant_sha256": "37825bf30f1e74bccd566952a1724b43a49e847e807d91514bda0bf3627e97d3",
+      "exit_code": 1,
+      "diagnostic": "instance-budget: expected refusal",
+      "killed": true
+    },
+    {
+      "name": "C-PRENEX-EXPORT-M7",
+      "path": "surface/elab.ml",
+      "old": "Error (Error.Not_yet \"member exports require a family template\")",
+      "new": "Ok ()",
+      "source_sha256": "11e473148b954b8f5f2303be0799b67611718ad9ddbd0f4a47b903883d9ee596",
+      "mutant_sha256": "fbe203764bf4281d627bccee764e4811725287c0053f4ef1004add4b9df90cee",
+      "exit_code": 1,
+      "diagnostic": "definition-template: expected refusal",
+      "killed": true
+    }
+  ]
+}

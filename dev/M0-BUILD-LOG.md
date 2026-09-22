@@ -4334,3 +4334,123 @@ after the gates that cover the API change and before the remaining long
 suites. No kernel rule, gate expectation, watchdog or vendor pin changes. The
 source change stays inside `surface/family_poly.ml`, its interface and the two
 suites. The slice stays staged for the user. No commit is created.
+
+## Stage C: textual member exports (2026-09-22)
+
+Base: `0b8661b066bc75d607ce280eea59e1a6ceaf371e`.
+
+Top-level `specialize` declarations now accept
+`export (member := chosenName, ...)` after optional family reuse bindings.
+The AST and printer distinguish omission from an explicit empty mapping.
+The elaborator forwards the mapping through name planning and checked
+instantiation, retains member declaration order, reserves names against
+both catalogs, and shares the caller's check budget. See
+`dev/M0-STAGE-C-PRENEX-EXPORTS.md` for the surface contract and scope.
+
+The focused checks print:
+
+```text
+OK build: 0 errors, 0 warnings
+PRENEX-EXPORTS-OK entries=12 positives=7 negatives=20 parser=10 budget=3
+PRENEX-EXPORTS-RUNTIME OK cases=2 hosts=3 mutation=1
+```
+
+Runtime validation covers fresh families and members exported over reused
+families. Both computations return 37, then 41 after changing the input,
+on the kernel, Node and Wasmtime. The axiom reports are empty.
+
+All seven compiling source mutants are rejected by their designated
+checks, with successful baseline and restored builds and suites. The
+first mutation attempt required correcting M1's expected diagnostic:
+round-trip preservation failed before the empty-mapping refusal. The
+complete control set was rerun after that harness correction.
+
+The complete `zsh dev/gates.sh` battery reports 81 PASS and one FAIL,
+with exit status 1. Its sole failure is the existing TRUSTED-LINES bound:
+`kernel=5475/3000 encoder=246/900`. The counted sources and bounds match
+the base, and the D-A-1 ruling remains open. PIN, PIN-DELTA, axiom disclosure,
+mapping inventory, denominators, all functional suites and all runtime
+gates pass. PIN-DELTA measures elab=385, parser=243 and syntax=74.
+
+Validation ran in `/Users/oobi/Documents/gpt6/mechanism-lang-20260922`.
+The implementation is staged in `/Users/oobi/Documents/mechanism-lang`.
+`dev/validation/prenex-exports/` contains the full gate output, focused
+receipts, mutation records and source hashes. The managed full-gate capture
+is `.kanon-exec/run-1Ijyyd` in the validation checkout. Mutation attempt
+logs remain under `/Users/oobi/Documents/gpt6/` in
+`mechanism-export-mutations-20260922/` and
+`mechanism-export-mutations-20260922-final/`.
+
+### Review fix L1-2 (2026-09-22): export target position
+
+The export reader reported a missing or non-identifier export target at
+the member token, with the message `expected a member export 'MEMBER :=
+NAME', found identifier MEMBER`. The reader now has an arm for `MEMBER :=`
+followed by anything else and reports from the token after `:=` with
+`expected a global name after ':='`. The parse case `missing-target` now
+requires the full message `expected a global name after ':=', found ')'`,
+and the new case `keyword-target` (`export (witness := def, alias := a)`)
+requires `found 'def'`, so the reported token is the target. Before the
+parser change the suite printed
+`PRENEX-EXPORTS FAIL missing-target: expected a member export 'MEMBER := NAME', found identifier witness`.
+The suite line is now `PRENEX-EXPORTS-OK entries=12 positives=7
+negatives=20 parser=7 budget=3`. The captured record under
+`dev/validation/prenex-exports/` predates this fix.
+
+### Review fix L1-3 (2026-09-22): leftover clauses after a specialization
+
+A `with` clause after `export`, a second `export` clause and an `export`
+clause on a dependency inside a `poly group` fell to the generic
+declaration errors (`expected 'def NAME :', ... found 'with'` and
+`expected 'def' or 'end' in family members, found identifier export`).
+The parser now peeks after the export reader through `specialization_tail`
+and reports `'with' must precede 'export' in a specialization` on `with`
+after an export clause, `one 'with' clause per specialization` on a second
+`with` without an export clause, and `one export clause per specialization`
+on a second `export`. The group dependency loop peeks through
+`dependency_tail` and reports `export clauses on group dependencies are not
+supported`. Three parse cases (`with-after-export`, `second-export`,
+`dependency-export`) require these messages. Before the parser change the
+suite printed
+`PRENEX-EXPORTS FAIL with-after-export: expected 'def NAME :', 'def rec NAME :', 'axiom NAME :', 'mu NAME' or 'mutual', found 'with'`.
+The suite line is now `PRENEX-EXPORTS-OK entries=12 positives=7
+negatives=20 parser=10 budget=3`. The captured record under
+`dev/validation/prenex-exports/` predates this fix.
+
+### Review fix L4-1 (2026-09-22): composed-group export mapping
+
+The contract sentence `Top-level specialization of such a group can export
+its members with the same syntax` had no battery case, and it did not say
+that the member set of a composed group includes the definitions imported
+by its dependencies under their `LOCAL_member` names. A reader who mapped
+only the group's own members met the refusal
+`every family member needs an export name`. The contract and `SPEC.md`
+now state that an explicit mapping names every member, imported ones
+included. The suite gains the constant `composed` (the `Box` group
+imported as `Local` plus `def pick : Local := Local_witness`) and the
+positive `composed_instance`, whose mapping lists `pick` first and
+`Local_witness` last and whose rows must still read `chosenWitness`,
+`chosenLocalAlias`, `chosenPick` with no `Inst_Local_witness`,
+`Inst_Local_alias` or `Inst_pick` default global. The refusal
+`composed-own-members-only` maps `pick` alone and requires the mismatch
+above. The suite line is now `PRENEX-EXPORTS-OK entries=12 positives=8
+negatives=21 parser=10 budget=3`. The captured record under
+`dev/validation/prenex-exports/` predates this fix.
+
+### Review fix relay close (2026-09-22): stale validation record
+
+The review fix relay above edited four paths that
+`dev/validation/prenex-exports/sources.sha256` pins: `surface/parser.ml`,
+`surface/syntax.ml`, `test/prenex_exports.ml` and `dev/prenex-mutations.py`.
+The captured record under `dev/validation/prenex-exports/` predates these
+fixes. Rerun `zsh dev/gates.sh` and recapture the record before the commit.
+The last rerun of the six FAST legs and the MED runtime leg on the fixed
+tree printed `PASS PRENEX: PRENEX-OK entries=16 computations=4
+negatives=25`, `PASS PRENEX-FAMILIES: PRENEX-FAMILIES-OK families=13
+entries=18 computations=5 negatives=30`, `PASS PRENEX-GROUPS:
+PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=39`,
+`PASS PRENEX-EXPORTS: PRENEX-EXPORTS-OK entries=12 positives=8 negatives=21
+parser=10 budget=3`, `PASS FAMILY-MEMBERS: FAMILY-MEMBERS-OK cases=35`,
+`PASS PRELUDE-TRANSPORT: PRELUDE-TRANSPORT-OK templates=2 instances=7
+negatives=5` and `PASS PRENEX-EXPORTS-RUNTIME: PRENEX-EXPORTS-RUNTIME OK
+cases=2 hosts=3 mutation=1`.

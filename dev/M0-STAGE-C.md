@@ -88,6 +88,10 @@ category prelude at separate universe pairs.
 The member export increment lets a caller choose the global name of every
 template member; see dev/M0-STAGE-C-MEMBER-EXPORTS.md.  Callers that omit
 the option keep the prefixed names.
+The textual member export increment exposes the chosen names through an
+optional export clause on top-level specialize; see
+dev/M0-STAGE-C-PRENEX-EXPORTS.md.  Omitting the clause keeps the
+prefixed names.
 A kernel change requires
 soundness analysis of proof irrelevance and large elimination, since the
 existing criterion admits singleton families with erased fields.

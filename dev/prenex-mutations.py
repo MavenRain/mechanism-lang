@@ -9,10 +9,13 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] not in ("--families", "--groups")):
-    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families|--groups]")
+EXECUTABLES = {(): "prenex.exe", ("--families",): "prenex_families.exe",
+               ("--groups",): "prenex_groups.exe", ("--exports",): "prenex_exports.exe"}
+if len(sys.argv) < 2 or tuple(sys.argv[2:]) not in EXECUTABLES:
+    raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families|--groups|--exports]")
 FAMILIES = sys.argv[2:] == ["--families"]
 GROUPS = sys.argv[2:] == ["--groups"]
+EXPORTS = sys.argv[2:] == ["--exports"]
 WORK = Path(sys.argv[1]).resolve()
 if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
     raise SystemExit("the work directory must be new and outside the source repository")
@@ -39,9 +42,7 @@ def build(name):
 
 
 def suite(name):
-    executable = "prenex_families.exe" if FAMILIES else "prenex.exe"
-    if GROUPS:
-        executable = "prenex_groups.exe"
+    executable = EXECUTABLES[tuple(sys.argv[2:])]
     return run(name, [str(COPY / "_build/default/test" / executable), str(COPY)])
 
 
@@ -172,6 +173,38 @@ if GROUPS:
          "PRENEX-GROUPS-FAIL companion-constructor-name: expected refusal"),
     ]
 
+if EXPORTS:
+    controls = [
+        ("C-PRENEX-EXPORT-M1", "surface/parser.ml",
+         ":: { Token.kind = Token.Unit; loc = _ } :: rest -> Ok (Some [], rest)",
+         ":: { Token.kind = Token.Unit; loc = _ } :: rest -> Ok (None, rest)",
+         "parse/print changed the export mapping"),
+        ("C-PRENEX-EXPORT-M2", "surface/syntax.ml",
+         "(exports_text exports)",
+         "(exports_text (Option.map (fun _bindings -> []) exports))",
+         "parse/print changed the export mapping"),
+        ("C-PRENEX-EXPORT-M3", "surface/elab.ml",
+         "Family_poly.instantiate ~budget ~reuse ?exports",
+         "Family_poly.instantiate ~budget ~reuse",
+         "specialization returned no member"),
+        ("C-PRENEX-EXPORT-M4", "surface/elab.ml",
+         "Option.is_some (Poly.arity catalog n)",
+         "Option.is_some (Poly.arity catalog (n ^ \":missing\"))",
+         "definition-catalog: expected refusal"),
+        ("C-PRENEX-EXPORT-M5", "surface/elab.ml",
+         "Family_poly.instance_names ~reuse ?exports families",
+         "Family_poly.instance_names ~reuse:[] ?exports families",
+         "specialization returned no family"),
+        ("C-PRENEX-EXPORT-M6", "surface/elab.ml",
+         "Family_poly.instantiate ~budget ~reuse ?exports",
+         "Family_poly.instantiate ~budget:Budget.unlimited ~reuse ?exports",
+         "instance-budget: expected refusal"),
+        ("C-PRENEX-EXPORT-M7", "surface/elab.ml",
+         'Error (Error.Not_yet "member exports require a family template")',
+         "Ok ()",
+         "definition-template: expected refusal"),
+    ]
+
 build("baseline-build")
 if suite("baseline").returncode != 0:
     raise SystemExit("baseline failed")
@@ -188,7 +221,12 @@ for name, relative, old, new, diagnostic in controls:
         mutated = hashlib.sha256(path.read_bytes()).hexdigest()
         build(name + "-build")
         result = suite(name)
-        killed = result.returncode == 1 and result.stdout.startswith(diagnostic.encode())
+        if EXPORTS:
+            killed = (result.returncode == 1
+                      and result.stderr.startswith(b"PRENEX-EXPORTS FAIL ")
+                      and diagnostic.encode() in result.stderr)
+        else:
+            killed = result.returncode == 1 and result.stdout.startswith(diagnostic.encode())
         reports.append({"name": name, "path": relative, "old": old, "new": new,
                         "source_sha256": hashlib.sha256(original).hexdigest(),
                         "mutant_sha256": mutated, "exit_code": result.returncode,

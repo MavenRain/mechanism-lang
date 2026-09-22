@@ -558,6 +558,46 @@ MechIdentityFunctor uses one category core and supplies a checked identity
 functor compatible with shared heterogeneous functors. See
 `dev/M0-STAGE-C-REUSE.md` for the API, validation and exact-match boundary.
 
+## Stage C textual member exports
+
+A top-level family specialization accepts an optional export mapping after
+its optional family reuse clause:
+
+```text
+specialize TEMPLATE (LEVELS) as PREFIX
+  with (LOCAL := EXISTING)
+  export (MEMBER := GLOBAL, MEMBER2 := GLOBAL2)
+```
+
+Omitting `export` preserves prefix-based member names. An explicit mapping
+must name every member exactly once, with distinct fresh targets. Family
+names and constructor labels retain their existing names. Targets cannot
+collide with the instance prefix, installed or reused families, constructor
+labels, existing globals, or either template catalog. Member types and
+bodies are renamed together, including references to earlier members.
+Output rows retain declaration order, independently of mapping order.
+
+`export ()` and `export ( )` are explicit empty mappings. They are accepted
+only for a family template with no members. They never request default
+member names. The AST retains this distinction and the printer preserves it.
+`export` is contextual after the specialization options and remains an
+ordinary identifier elsewhere.
+
+Export validation and closed checking share the caller's budget. The
+elaborator validates through `Family_poly.instantiate` before planning
+output names, preserving the API's specific mapping errors. It returns
+the immutable environment only after checking both catalogs and all
+generated names. A failed check publishes no partial specialization.
+
+Definition templates reject export clauses. Unknown templates keep their
+unbound-name error. Export clauses on dependencies inside a `poly group`
+remain outside this increment. Top-level specialization of such a group
+can export its members with the same syntax. The member set of a
+composed group includes the definitions imported by its dependencies
+under their LOCAL_member names, next to the group's own members. An
+explicit mapping names every one of them; a mapping that names only the
+group's own members is refused.
+
 ## Stage C symbolic family reuse
 
 Dependencies inside `poly (...) group NAME where ... end` accept the same

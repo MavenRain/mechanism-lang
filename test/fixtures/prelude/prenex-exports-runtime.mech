@@ -1,0 +1,23 @@
+poly (u, v) mu Box (0 A : Sort u) : Sort (succ u) with
+| box : A -> Box A
+and Wrapped (0 A : Sort u) : Sort (succ (max u v)) with
+| wrap : Box A -> Wrapped A
+where
+def unbox : (0 A : Sort u) -> Box A -> A :=
+  fun (0 A : Sort u) (b : Box A) =>
+  match b as self in Box return A with | box (x : A) => x
+def pack : (0 A : Sort u) -> A -> Wrapped A :=
+  fun (0 A : Sort u) (x : A) => wrap (box x)
+def unpack : (0 A : Sort u) -> Wrapped A -> A :=
+  fun (0 A : Sort u) (w : Wrapped A) =>
+  match w as self in Wrapped return A with | wrap (b : Box A) => unbox A b
+end
+specialize Box (1, 2) as Shared
+specialize Box (1, 2) as Named
+  export (unpack := freshUnpack, pack := freshPack, unbox := freshUnbox)
+specialize Box (1, 2) as Reused
+  with (Box := Shared, Wrapped := Shared_Wrapped)
+  export (pack := sharedPack, unbox := sharedUnbox, unpack := sharedUnpack)
+def exportInput : Nat := 37
+def namedPayload : Nat := freshUnpack Nat (freshPack Nat exportInput)
+def reusedPayload : Nat := sharedUnpack Nat (Shared_pack Nat exportInput)

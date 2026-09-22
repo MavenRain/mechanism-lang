@@ -63,11 +63,11 @@ payloads during universe substitution and family renaming.
 | lib/level.ml | 49 |
 | lib/level.mli | 17 |
 | bin/kanon.ml | 14 |
-| surface/elab.ml | 378 |
+| surface/elab.ml | 385 |
 | surface/token.ml | 12 |
 | surface/lexer.ml | 6 |
-| surface/syntax.ml | 67 |
-| surface/parser.ml | 214 |
+| surface/syntax.ml | 74 |
+| surface/parser.ml | 243 |
 | wasm/emit.ml | 27 |
 | wasm/link.ml | 61 |
 

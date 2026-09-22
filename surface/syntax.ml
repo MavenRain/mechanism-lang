@@ -160,6 +160,7 @@ type decl =
   | DPolyCompose of int * string *
       (string * Universe.t list * string * (string * string) list) list * rec_def list
   | DSpecialize of string * Universe.t list * string * (string * string) list
+      * (string * string) list option
   | DDef of string * t * t
   | DAxiom of string * t
   | DMu of fam list
@@ -343,11 +344,20 @@ let reuse_text = function
   | first :: rest -> " with (" ^ String.concat ", "
       (List.map (fun (local, existing) -> local ^ " := " ^ existing) (first :: rest)) ^ ")"
 
+let exports_text exports =
+  Option.fold exports ~none:"" ~some:(fun bindings ->
+    " export (" ^ String.concat ", "
+      (List.map (fun (member, target) -> member ^ " := " ^ target) bindings) ^ ")")
+
 (* SC-D5:  the poly arm and the specialize arm print a parenthesized
-   list, and the parser fills that list with one item or more.
+   universe list, and the parser fills that list with one item or more.
    universe_names and universe_arguments each refuse an empty list, so
-   no parsed tree carries arity 0 or an empty level list, and neither
-   arm prints the text that the lexer reads as one Unit token. *)
+   no parsed tree carries arity 0 or an empty level list, and no
+   universe list prints the text that the lexer reads as one Unit token.
+   An explicit empty export mapping is the one exception: exports_text
+   (Some []) prints " export ()", the lexer reads "()" as one Unit
+   token, and the parser accepts that form as Some [].  The printer
+   keeps the None versus Some [] distinction, so None prints nothing. *)
 let decl_text (d : decl) : string =
   match d with
   | DPoly (arity, name, ty, body) ->
@@ -366,9 +376,10 @@ let decl_text (d : decl) : string =
         | _first :: _rest -> "where\n" ^ String.concat "" (List.map (fun m ->
             Printf.sprintf "def %s : %s := %s\n" m.rd_name (at 0 m.rd_ty)
               (at 0 m.rd_body)) members) ^ "end\n")
-  | DSpecialize (name, levels, as_name, reuse) ->
-      Printf.sprintf "specialize %s (%s) as %s%s\n" name
+  | DSpecialize (name, levels, as_name, reuse, exports) ->
+      Printf.sprintf "specialize %s (%s) as %s%s%s\n" name
         (String.concat ", " (List.map Universe.text levels)) as_name (reuse_text reuse)
+        (exports_text exports)
   | DPolyCompose (arity, name, dependencies, members) ->
       let names = List.init arity (fun i -> "u" ^ string_of_int i) in
       "poly (" ^ String.concat ", " names ^ ") group " ^ name ^ " where\n"

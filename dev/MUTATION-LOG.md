@@ -1237,3 +1237,33 @@ build has zero errors and zero warnings, and the suites print
 FAMILY-MEMBERS-OK cases=35 and PRELUDE-TRANSPORT-OK templates=2 instances=7
 negatives=5. This is scoped validation of the export API; no full regression
 pass is claimed.
+
+## Stage C: textual member export controls (2026-09-22)
+
+The isolated `dev/prenex-mutations.py --exports` run kills all seven
+compiling mutants. Baseline and restored builds report zero errors and
+zero warnings; both suite runs report 12 entries, seven positive clients,
+20 semantic refusals, six parser refusals and two budget checks.
+
+| Control | Mutation | Required failure |
+| --- | --- | --- |
+| C-PRENEX-EXPORT-M1 | Parse explicit `export ()` as omission | Export round-trip changes |
+| C-PRENEX-EXPORT-M2 | Print a nonempty mapping as empty | Export round-trip changes |
+| C-PRENEX-EXPORT-M3 | Drop exports at instantiation | Specialization returns no member |
+| C-PRENEX-EXPORT-M4 | Bypass definition-template name reservations | Definition-catalog collision is accepted |
+| C-PRENEX-EXPORT-M5 | Drop reuse during name planning | Specialization returns no family |
+| C-PRENEX-EXPORT-M6 | Ignore the specialization budget | Instance-budget refusal disappears |
+| C-PRENEX-EXPORT-M7 | Permit exports on a definition template | Definition-template refusal disappears |
+
+The first run matched six designated diagnostics. M1 also failed, but its
+round-trip check fired before the expected empty-mapping refusal. The
+harness expectation was corrected, then all seven controls were rerun.
+No production source change was needed for that correction.
+
+`dev/validation/prenex-exports/mutations.json` records each source hash,
+mutant hash, replacement, exit status and observed verdict. Complete logs
+remain under `/Users/oobi/Documents/gpt6/` in
+`mechanism-export-mutations-20260922-final/`. The earlier attempt is
+retained there in `mechanism-export-mutations-20260922/`.
+The runtime gate also changes the shared input from 37 to
+41 and requires both exported computations to follow it on all three hosts.

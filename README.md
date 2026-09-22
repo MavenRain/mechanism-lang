@@ -185,6 +185,13 @@ global name. The name plan and checked instance use the same mapping, including
 when a family is reused. Existing callers retain prefixed member names.
 See `dev/M0-STAGE-C-MEMBER-EXPORTS.md` for the contract and validation.
 
+Source programs can choose those names with
+`specialize Template (LEVELS) as Instance export (member := chosenName)`.
+The optional export clause follows any `with` family bindings and must
+name every member. PRENEX-EXPORTS and PRENEX-EXPORTS-RUNTIME check fresh
+and reused families, name reservations and computations on three hosts.
+See `dev/M0-STAGE-C-PRENEX-EXPORTS.md`.
+
 The equality catalog also provides dependent `j`, `symm`, `trans` and
 `congr`, plus symmetry and transitivity for type equality.  The
 PRELUDE-EQUALITY-OPS gate checks generic contracts, normalization and

@@ -42,14 +42,14 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-21
+## Position on 2026-09-22
 
-The base is 1e4f371, following horizontal associativity.
-The current increment proves identity whiskering and left and right
-horizontal unit laws over two shared categories with four independent
-universe levels. The laws compare components at an explicit object using
-identity reduction, functor preservation of identity, and category unit
-laws. See `dev/PORT-UAT-U1-NATTRANS-UNITS.md`. Stage 0, Stage
+The base is 0b8661b, following natural transformation units and chosen
+member export names. The current increment exposes chosen names in
+top-level source specializations through an optional `export` clause,
+including specialization over reused families. PRENEX-EXPORTS and its
+runtime gate check the surface contract and execution on three hosts.
+See `dev/M0-STAGE-C-PRENEX-EXPORTS.md`. Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,

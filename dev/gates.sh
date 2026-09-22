@@ -207,6 +207,8 @@ leg FAST PRENEX-FAMILIES '^PRENEX-FAMILIES-OK families=' \
   $ROOT/_build/default/test/prenex_families.exe $ROOT
 leg FAST PRENEX-GROUPS '^PRENEX-GROUPS-OK families=' \
   $ROOT/_build/default/test/prenex_groups.exe $ROOT
+leg FAST PRENEX-EXPORTS '^PRENEX-EXPORTS-OK entries=' \
+  $ROOT/_build/default/test/prenex_exports.exe $ROOT
 leg MED TEMPLATE-COMPOSITION '^TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10$' \
   $ROOT/_build/default/test/template_composition.exe $ROOT
 leg SLOW TEMPLATE-REUSE '^TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6$' \
@@ -322,6 +324,8 @@ leg MED PRENEX-FAMILIES-RUNTIME '^PRENEX-FAMILIES-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --families
 leg MED PRENEX-GROUPS-RUNTIME '^PRENEX-GROUPS-RUNTIME OK cases=' \
   python3 -P $ROOT/test/prenex_runtime.py --groups
+leg MED PRENEX-EXPORTS-RUNTIME '^PRENEX-EXPORTS-RUNTIME OK cases=[1-9][0-9]* hosts=3 mutation=1$' \
+  python3 -P $ROOT/test/prenex_runtime.py --exports
 leg SLOW TEMPLATE-COMPOSITION-RUNTIME \
   '^TEMPLATE-COMPOSITION-RUNTIME OK cases=3 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/composition_runtime.py
