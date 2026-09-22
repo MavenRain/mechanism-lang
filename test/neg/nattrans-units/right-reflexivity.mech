@@ -1,0 +1,15 @@
+def rightReflexivity : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : UnitsWide_Source_Category C) -> (d : UnitsWide_Target_Category D) ->
+    (F : UnitsWide_After_First_Base_Functor C D c d) ->
+    (G : UnitsWide_After_First_Base_Functor C D c d) ->
+    (alpha : UnitsWide_After_First_NatTrans C D c d F G) -> (x : C) ->
+    UnitsWide_Target (UnitsWide_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsWide_After_hcomp C D D c d d F G (UnitsWide_TargetIdentity_idFunctor D d)
+        (UnitsWide_TargetIdentity_idFunctor D d) alpha
+        (UnitsWide_After_Second_idNat D D d d (UnitsWide_TargetIdentity_idFunctor D d))).1 x)
+      (alpha.1 x) :=
+  fun (0 C : Type 3) (0 D : Type 1)
+      (c : UnitsWide_Source_Category C) (d : UnitsWide_Target_Category D)
+      (F : UnitsWide_After_First_Base_Functor C D c d)
+      (G : UnitsWide_After_First_Base_Functor C D c d)
+      (alpha : UnitsWide_After_First_NatTrans C D c d F G) (x : C) => categoryRefl

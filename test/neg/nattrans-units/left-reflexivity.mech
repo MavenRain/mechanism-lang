@@ -1,0 +1,15 @@
+def leftReflexivity : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : UnitsMixed_Source_Category C) -> (d : UnitsMixed_Target_Category D) ->
+    (F : UnitsMixed_Before_Second_Base_Functor C D c d) ->
+    (G : UnitsMixed_Before_Second_Base_Functor C D c d) ->
+    (alpha : UnitsMixed_Before_Second_NatTrans C D c d F G) -> (x : C) ->
+    UnitsMixed_Target (UnitsMixed_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsMixed_Before_hcomp C C D c c d (UnitsMixed_SourceIdentity_idFunctor C c)
+        (UnitsMixed_SourceIdentity_idFunctor C c) F G
+        (UnitsMixed_Before_First_idNat C C c c (UnitsMixed_SourceIdentity_idFunctor C c)) alpha).1 x)
+      (alpha.1 x) :=
+  fun (0 C : Type 0) (0 D : Type 2)
+      (c : UnitsMixed_Source_Category C) (d : UnitsMixed_Target_Category D)
+      (F : UnitsMixed_Before_Second_Base_Functor C D c d)
+      (G : UnitsMixed_Before_Second_Base_Functor C D c d)
+      (alpha : UnitsMixed_Before_Second_NatTrans C D c d F G) (x : C) => categoryRefl

@@ -293,6 +293,12 @@ leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY \
 leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME \
   '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME OK cases=2 hosts=3 payloads=3 comparisons=12$' \
   python3 -I $ROOT/test/horizontal_associativity_runtime.py
+leg CATEGORY PRELUDE-NATTRANS-UNITS \
+  '^PRELUDE-NATTRANS-UNITS-OK entries=1281 families=9 computations=15 negatives=6$' \
+  $ROOT/_build/default/test/prelude_nattrans_units.exe $ROOT
+leg CATEGORY PRELUDE-NATTRANS-UNITS-RUNTIME \
+  '^PRELUDE-NATTRANS-UNITS-RUNTIME OK cases=5 hosts=3 payloads=3 comparisons=30$' \
+  python3 -I $ROOT/test/nattrans_units_runtime.py
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT

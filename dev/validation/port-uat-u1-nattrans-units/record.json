@@ -1,0 +1,276 @@
+{
+  "base": "1e4f3716cefa1aa20c153cd01c42c19bd21b69f0",
+  "vendor_pin": "a7534cedeac82d396de8e23058ee6bc990560f65",
+  "scope": "new unit-law gates and static checks; full battery not rerun",
+  "known_failure": "TRUSTED-LINES kernel=5475/3000 encoder=246/900",
+  "kernel_status": "passed",
+  "commands": [
+    {
+      "name": "build",
+      "argv": [
+        "zsh",
+        "dev/dunecho.sh",
+        "build"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/build.stdout",
+        "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "runtime",
+      "argv": [
+        "python3",
+        "-I",
+        "test/nattrans_units_runtime.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "61cd3959bed3abcc8b18ef311f331a3be091bd766de02dff14cbec8e2e6e0530",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/runtime.stdout",
+        "sha256": "61cd3959bed3abcc8b18ef311f331a3be091bd766de02dff14cbec8e2e6e0530"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/runtime.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "right-reflexivity",
+      "argv": [
+        "python3",
+        "-I",
+        "dev/validation/port-uat-u1-nattrans-units/right-reflexivity.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "054a91f77e25ac95101ba35f6721014083fe8648b79a31ee51d99ebfaaeca525",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/right-reflexivity.stdout",
+        "sha256": "054a91f77e25ac95101ba35f6721014083fe8648b79a31ee51d99ebfaaeca525"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/right-reflexivity.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "left-reflexivity",
+      "argv": [
+        "python3",
+        "-I",
+        "-B",
+        "dev/validation/port-uat-u1-nattrans-units/right-reflexivity.py",
+        "left"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "ebc8d2f5a8f56a25c6805bdf9b0c713a5b125c5ed49e10b37c9c682a45dbb97a",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/left-reflexivity.stdout",
+        "sha256": "ebc8d2f5a8f56a25c6805bdf9b0c713a5b125c5ed49e10b37c9c682a45dbb97a"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/left-reflexivity.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "pin-delta",
+      "argv": [
+        "zsh",
+        "dev/pin-delta.sh"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "f89e61e5f9ed1959fa499a8e9158d037c0a5cb4b136f41f1dedbe7deeba48e15",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/pin-delta.stdout",
+        "sha256": "f89e61e5f9ed1959fa499a8e9158d037c0a5cb4b136f41f1dedbe7deeba48e15"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/pin-delta.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "denominators",
+      "argv": [
+        "zsh",
+        "dev/gates.sh",
+        "--leg",
+        "denominators"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/denominators.stdout",
+        "sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/denominators.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "trusted-lines",
+      "argv": [
+        "zsh",
+        "dev/trusted-lines.sh",
+        "."
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/trusted-lines.stdout",
+        "sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/trusted-lines.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "kernel",
+      "argv": [
+        "_build/default/test/prelude_nattrans_units.exe",
+        "."
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "8ce833d957c4379f7fbb9cd8b1cd2871236c90f1b26163b2fa62e0b8fe205241",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/kernel.stdout",
+        "sha256": "8ce833d957c4379f7fbb9cd8b1cd2871236c90f1b26163b2fa62e0b8fe205241"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/kernel.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "kernel-trace",
+      "argv": [
+        "_build/default/test/prelude_nattrans_units.exe",
+        ".",
+        "--trace"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "73737d10cc030c954fa7ef3c14bea944c9b05fa602d8be825f7298c421aefddc",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/kernel-trace.stdout",
+        "sha256": "8ce833d957c4379f7fbb9cd8b1cd2871236c90f1b26163b2fa62e0b8fe205241"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/kernel-trace.stderr",
+        "sha256": "e39acc89babeaf7b682b8700b577f9c8cd6f8fdab672fd603f3879713cd77274"
+      }
+    },
+    {
+      "name": "gate-syntax",
+      "argv": [
+        "zsh",
+        "-n",
+        "dev/gates.sh"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/gate-syntax.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/gate-syntax.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "gate-signatures",
+      "argv": [
+        "python3",
+        "-I",
+        "-c",
+        "from pathlib import Path\nimport re\nroot = Path('.')\npatterns = re.findall(r\"'(\\^PRELUDE-NATTRANS-UNITS[^']+\\$)'\", (root/'dev/gates.sh').read_text())\nbase = root/'dev/validation/port-uat-u1-nattrans-units'\noutputs = [(base/name).read_text().removesuffix('\\n') for name in ['kernel.stdout', 'runtime.stdout']]\nif len(patterns) != 2 or any(sum(re.fullmatch(p, output) is not None for p in patterns) != 1 for output in outputs):\n    raise SystemExit('GATE-SIGNATURES FAIL')\nprint('GATE-SIGNATURES OK gates=2')\n"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "ebe9a861496651eb84d3b6cdf7f38d7b25cf27b154e23ef7e568497445f58f3a",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/gate-signatures.stdout",
+        "sha256": "ebe9a861496651eb84d3b6cdf7f38d7b25cf27b154e23ef7e568497445f58f3a"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/gate-signatures.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "signal": 0,
+      "timed_out": false,
+      "spawn_error": "",
+      "capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/diff-check.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "dev/validation/port-uat-u1-nattrans-units/diff-check.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

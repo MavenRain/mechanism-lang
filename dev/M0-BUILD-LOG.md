@@ -4241,3 +4241,56 @@ is present at HEAD before this slice; it is INFO only and never a gate
 failure. RUNNER-EXIT 0.
 
 The slice stays staged for the user. No commit is created.
+
+## Stage C / U1: natural transformation units (2026-09-21)
+
+Base: 1e4f3716cefa1aa20c153cd01c42c19bd21b69f0, the committed horizontal
+associativity slice. `MechNatTransUnits` shares two category families
+between source/target identity functors and two shared natural
+transformation triangles. Four laws prove identity whiskering and left
+and right horizontal units at an explicit object. All four object/hom
+universes remain independent. No axiom or kernel rule is added.
+
+The kernel suite passes with 1,281 definitions, nine checked families,
+15 computations, and six distinct refusals. It also checks unchanged
+initial globals, absence of axioms, abstract whiskering and horizontal
+statements, and the heads and names of the runtime unit terms.
+Two specializations use opposite universe
+orders. The runtime specialization reuses two distinct external families.
+Five law-certified component applications compute `203*x+707` at 0, 37,
+and 41 on the kernel, Node, and Wasmtime, with 30 external-host comparisons.
+
+The build has zero errors and warnings. Pin-delta and frozen denominators
+pass. The full battery was not rerun. TRUSTED-LINES retains its inherited
+failure at `kernel=5475/3000 encoder=246/900`. Existing gate expectations,
+watchdogs, compiler sources, and the vendor pin remain unchanged.
+
+`dev/PORT-UAT-U1-NATTRANS-UNITS.md` defines the API contract.
+`dev/validation/port-uat-u1-nattrans-units/` records complete command
+captures, source and executable hashes, and development attempts.
+Stage C and U1 remain open on equality of whole transformation records
+and source-type parity. No commit is created.
+
+## Natural transformation units review (2026-09-21)
+
+A Workflow review of the staged slice raised 13 findings. The judge kept 7
+and the fix rounds fixed all 7. Three are medium: L4-1, the two whiskering
+law statements that every level could trivialise; L4-3, the four runtime
+unit terms pinned by name only; and L3-1, the source manifest that pinned
+no staged document. Four are low: L1-1, the reflexivity control that
+replayed the right law only; L4-2, downgraded from medium, the two
+reflexivity oracles that shared one digest window; L3-2, the record bundle
+without a README and with a divergent kernel argv; and L3-3, a kill claim
+with no mutant run. The verifiers refuted two findings. L2-3 fails because
+the harness source list and the suite path list differ as the finder cited
+them. L3-5 fails because row 40 of the PORT document holds 76 columns.
+Four findings were not kept: L2-1, L2-2 and L4-4 were merged into L4-3,
+L3-2 and L4-1; L3-4 was cut at the cap of 7 as a cosmetic wrap of two
+build-log rows. Every kept fix was verified on the tree by a separate
+verifier.
+Gates: the close ladder is the ladder of record. It ran 80 legs and 79
+passed against CLOSE-FLOOR pass=79 floor=79. The one FAIL id is
+TRUSTED-LINES (kernel=5475/3000 encoder=246/900), the inherited red that
+is present at HEAD before this slice; it is INFO only and never a gate
+failure. RUNNER-EXIT 0.
+The slice stays staged for the user. No commit is created.

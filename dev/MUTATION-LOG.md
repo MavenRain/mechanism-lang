@@ -1149,3 +1149,48 @@ unrelated errors do not count.
 Baseline and restored templates pass and all eight input sources retain
 their hashes. `dev/validation/port-uat-u1-whiskering-laws/mutations.json`
 records the source and executable hashes and measured outcomes.
+
+## Stage C / U1: natural transformation unit controls (2026-09-21)
+
+The unit-law suite gates six refusals under `test/neg/nattrans-units/`.
+The two horizontal reflexivity controls retain the actual abstract
+equations and replace their proofs with `categoryRefl`. Left and right
+controls use opposite universe orders and distinct equality families.
+The kernel rejects both with constructor-index mismatches.
+
+The wrong-component control compares the observed 8218 with 3785; the
+wrong-object control compares 8218 with 9030. These concrete observations
+keep the failing values visible in their diagnostic excerpts. The nominal
+target control demands an independently declared equality family. Its
+full diagnostic must name `SeparateTarget`. The endpoint control applies
+the new identity-whiskering law to a transformation with reversed
+abstract functor endpoints; it pins the argument type of `alpha`, not the
+law conclusion. The abstract clients `preUnitLawAbstract` and
+`postUnitLawAbstract` restate the two whiskering law types; they do not
+pin the conclusions, because a conclusion trivialised to
+`(alpha.1 x) (alpha.1 x)` converts to the restated type. A syntactic
+guard of the kernel suite pins the exact statement text of both members:
+the printed type of `whiskerRightIdFunctor` and of `whiskerLeftIdFunctor`,
+with each run of blanks collapsed to one space, must equal a literal
+string in the suite written from the template rows.
+Mutant: the `whiskerRightIdFunctor` conclusion replaced by
+`(alpha.1 x) (alpha.1 x)` gives `PRELUDE-NATTRANS-UNITS-FAIL whisker law
+restated: whiskerRightIdFunctor`.
+Mutant: the `whiskerLeftIdFunctor` conclusion replaced by
+`(alpha.1 x) (alpha.1 x)` gives `PRELUDE-NATTRANS-UNITS-FAIL whisker law
+restated: whiskerLeftIdFunctor`.
+Mutant: both sides of the `whiskerRightIdFunctor` equation replaced by
+the whiskered component, both names kept, gives
+`PRELUDE-NATTRANS-UNITS-FAIL whisker law restated: whiskerRightIdFunctor`.
+
+All six cases pin a diagnostic prefix and a digest, pairwise distinct: the
+two reflexivity cases digest the whole diagnostic, the other four the
+first 256 characters. Abstract positive clients restate all four general
+law statements; no weakened-statement mutant of the two horizontal laws
+was run against them in this slice. The runtime checks the values of the
+four unit terms and a reference component at three object/payload values;
+a syntactic guard of the kernel suite pins the head of each unit term and
+the unit and law names of each runtime case.
+
+Evidence: `dev/validation/port-uat-u1-nattrans-units/`. This is scoped
+validation of the new library surface; no full regression pass is claimed.

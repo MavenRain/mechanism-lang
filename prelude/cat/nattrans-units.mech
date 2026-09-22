@@ -1,0 +1,87 @@
+-- Load shared-nattrans.mech and identity-functor.mech with their dependencies first.
+-- Unit equations compare components, with independent source and target universes.
+poly (u, v, w, z) group MechNatTransUnits where
+specialize MechCategoryCore (u, v) as Source
+specialize MechCategoryCore (w, z) as Target
+specialize MechIdentityFunctor (u, v) as SourceIdentity with (Base := Source)
+specialize MechIdentityFunctor (w, z) as TargetIdentity with (Base := Target)
+specialize MechSharedNatTrans (u, v, u, v, w, z) as Before
+  with (Source := Source, Middle := Source, Target := Target)
+specialize MechSharedNatTrans (u, v, w, z, w, z) as After
+  with (Source := Source, Middle := Target, Target := Target)
+
+def whiskerRightIdFunctor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Before_Second_Base_Functor C D c d) ->
+    (G : Before_Second_Base_Functor C D c d) ->
+    (alpha : Before_Second_NatTrans C D c d F G) -> (x : C) ->
+    Target (Target_Hom D d (F.1 x) (G.1 x))
+      ((Before_Compose_whiskerRight C C D c c d F G alpha
+        (SourceIdentity_idFunctor C c)).1 x) (alpha.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Before_Second_Base_Functor C D c d)
+      (G : Before_Second_Base_Functor C D c d)
+      (alpha : Before_Second_NatTrans C D c d F G) (x : C) => categoryRefl
+
+def whiskerLeftIdFunctor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : After_First_Base_Functor C D c d) ->
+    (G : After_First_Base_Functor C D c d) ->
+    (alpha : After_First_NatTrans C D c d F G) -> (x : C) ->
+    Target (Target_Hom D d (F.1 x) (G.1 x))
+      ((After_Compose_whiskerLeft C D D c d d
+        (TargetIdentity_idFunctor D d) F G alpha).1 x) (alpha.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : After_First_Base_Functor C D c d)
+      (G : After_First_Base_Functor C D c d)
+      (alpha : After_First_NatTrans C D c d F G) (x : C) => categoryRefl
+
+-- The identity transformation is on the source identity functor.
+def hcompIdFunctorLeft : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Before_Second_Base_Functor C D c d) ->
+    (G : Before_Second_Base_Functor C D c d) ->
+    (alpha : Before_Second_NatTrans C D c d F G) -> (x : C) ->
+    Target (Target_Hom D d (F.1 x) (G.1 x))
+      ((Before_hcomp C C D c c d (SourceIdentity_idFunctor C c)
+        (SourceIdentity_idFunctor C c) F G
+        (Before_First_idNat C C c c (SourceIdentity_idFunctor C c)) alpha).1 x)
+      (alpha.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Before_Second_Base_Functor C D c d)
+      (G : Before_Second_Base_Functor C D c d)
+      (alpha : Before_Second_NatTrans C D c d F G) (x : C) =>
+    Target_eqTrans (Target_Hom D d (F.1 x) (G.1 x))
+      (Target_comp D d (F.1 x) (F.1 x) (G.1 x)
+        (Before_Second_Base_functorMap C D c d F x x (Source_id C c x)) (alpha.1 x))
+      (Target_comp D d (F.1 x) (F.1 x) (G.1 x) (Target_id D d (F.1 x)) (alpha.1 x))
+      (alpha.1 x)
+      (Target_eqCongr (Target_Hom D d (F.1 x) (F.1 x))
+        (Target_Hom D d (F.1 x) (G.1 x))
+        (fun (f : Target_Hom D d (F.1 x) (F.1 x)) =>
+          Target_comp D d (F.1 x) (F.1 x) (G.1 x) f (alpha.1 x))
+        (Before_Second_Base_functorMap C D c d F x x (Source_id C c x))
+        (Target_id D d (F.1 x)) (Before_Second_Base_functorMapId C D c d F x))
+      (Target_idComp D d (F.1 x) (G.1 x) (alpha.1 x))
+
+-- The identity transformation is on the target identity functor.
+def hcompIdFunctorRight : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : After_First_Base_Functor C D c d) ->
+    (G : After_First_Base_Functor C D c d) ->
+    (alpha : After_First_NatTrans C D c d F G) -> (x : C) ->
+    Target (Target_Hom D d (F.1 x) (G.1 x))
+      ((After_hcomp C D D c d d F G (TargetIdentity_idFunctor D d)
+        (TargetIdentity_idFunctor D d) alpha
+        (After_Second_idNat D D d d (TargetIdentity_idFunctor D d))).1 x)
+      (alpha.1 x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : After_First_Base_Functor C D c d)
+      (G : After_First_Base_Functor C D c d)
+      (alpha : After_First_NatTrans C D c d F G) (x : C) =>
+    Target_compId D d (F.1 x) (G.1 x) (alpha.1 x)
+end

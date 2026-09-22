@@ -51,6 +51,10 @@ Horizontal composition now has a checked associativity law over four shared
 categories with eight independent universe levels. It compares components
 at an explicit object. See `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`
 for the contract and validation record.
+Identity whiskering and horizontal unit laws now compare a transformation's
+components with those obtained using the source or target identity functor.
+The two category families retain four independent universe levels. See
+`dev/PORT-UAT-U1-NATTRANS-UNITS.md` for the API and validation scope.
 The iterated whiskering increment proves precomposition and postcomposition
 by composite functors, and their commutation, over four shared categories.
 All eight universe levels remain independent. The laws compare components

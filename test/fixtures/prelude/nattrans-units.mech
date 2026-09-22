@@ -1,0 +1,47 @@
+-- Each independent universe occupies both a higher and a lower position.
+specialize MechNatTransUnits (0, 1, 2, 3) as UnitsMixed
+specialize MechNatTransUnits (3, 2, 1, 0) as UnitsWide
+
+-- Pin the horizontal laws at abstract categories and distinct functor endpoints.
+def leftUnitLawAbstract : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : UnitsMixed_Source_Category C) -> (d : UnitsMixed_Target_Category D) ->
+    (F : UnitsMixed_Before_Second_Base_Functor C D c d) ->
+    (G : UnitsMixed_Before_Second_Base_Functor C D c d) ->
+    (alpha : UnitsMixed_Before_Second_NatTrans C D c d F G) -> (x : C) ->
+    UnitsMixed_Target (UnitsMixed_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsMixed_Before_hcomp C C D c c d (UnitsMixed_SourceIdentity_idFunctor C c)
+        (UnitsMixed_SourceIdentity_idFunctor C c) F G
+        (UnitsMixed_Before_First_idNat C C c c (UnitsMixed_SourceIdentity_idFunctor C c)) alpha).1 x)
+      (alpha.1 x) := UnitsMixed_hcompIdFunctorLeft
+
+def rightUnitLawAbstract : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : UnitsWide_Source_Category C) -> (d : UnitsWide_Target_Category D) ->
+    (F : UnitsWide_After_First_Base_Functor C D c d) ->
+    (G : UnitsWide_After_First_Base_Functor C D c d) ->
+    (alpha : UnitsWide_After_First_NatTrans C D c d F G) -> (x : C) ->
+    UnitsWide_Target (UnitsWide_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsWide_After_hcomp C D D c d d F G (UnitsWide_TargetIdentity_idFunctor D d)
+        (UnitsWide_TargetIdentity_idFunctor D d) alpha
+        (UnitsWide_After_Second_idNat D D d d (UnitsWide_TargetIdentity_idFunctor D d))).1 x)
+      (alpha.1 x) := UnitsWide_hcompIdFunctorRight
+
+-- Pin the whiskering laws at abstract categories and distinct functor endpoints.
+def preUnitLawAbstract : (0 C : Type 3) -> (0 D : Type 1) ->
+    (c : UnitsWide_Source_Category C) -> (d : UnitsWide_Target_Category D) ->
+    (F : UnitsWide_Before_Second_Base_Functor C D c d) ->
+    (G : UnitsWide_Before_Second_Base_Functor C D c d) ->
+    (alpha : UnitsWide_Before_Second_NatTrans C D c d F G) -> (x : C) ->
+    UnitsWide_Target (UnitsWide_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsWide_Before_Compose_whiskerRight C C D c c d F G alpha
+        (UnitsWide_SourceIdentity_idFunctor C c)).1 x)
+      (alpha.1 x) := UnitsWide_whiskerRightIdFunctor
+
+def postUnitLawAbstract : (0 C : Type 0) -> (0 D : Type 2) ->
+    (c : UnitsMixed_Source_Category C) -> (d : UnitsMixed_Target_Category D) ->
+    (F : UnitsMixed_After_First_Base_Functor C D c d) ->
+    (G : UnitsMixed_After_First_Base_Functor C D c d) ->
+    (alpha : UnitsMixed_After_First_NatTrans C D c d F G) -> (x : C) ->
+    UnitsMixed_Target (UnitsMixed_Target_Hom D d (F.1 x) (G.1 x))
+      ((UnitsMixed_After_Compose_whiskerLeft C D D c d d
+        (UnitsMixed_TargetIdentity_idFunctor D d) F G alpha).1 x)
+      (alpha.1 x) := UnitsMixed_whiskerLeftIdFunctor

@@ -44,12 +44,12 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-21
 
-The base is 747ab46, following iterated whiskering.
-The current increment proves horizontal associativity over four shared
-categories. All eight universe levels remain independent. The law
-compares components at an explicit object using preservation of
-composition and target-category associativity. See
-`dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. Stage 0, Stage
+The base is 1e4f371, following horizontal associativity.
+The current increment proves identity whiskering and left and right
+horizontal unit laws over two shared categories with four independent
+universe levels. The laws compare components at an explicit object using
+identity reduction, functor preservation of identity, and category unit
+laws. See `dev/PORT-UAT-U1-NATTRANS-UNITS.md`. Stage 0, Stage
 A (prenex levels) and Stage B (import foundation) are committed.
 Stage C has landed its data foundation, data equality and transport,
 family templates, polymorphic transport and cast, equality operations,
@@ -176,7 +176,9 @@ stay under `ports/` (D-UAT-3).
   families with eight independent universe levels; see
   `dev/PORT-UAT-U1-ITERATED-WHISKERING.md`. Pointwise horizontal
   associativity follows in
-  `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. U1 remains open on
+  `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. Identity whiskering and
+  horizontal units follow in `dev/PORT-UAT-U1-NATTRANS-UNITS.md`.
+  U1 remains open on
   equality of whole transformation records and source-type parity.
   Checked template composition supplies the source foundation;
   see `dev/M0-STAGE-C-COMPOSITION.md`.

@@ -1,0 +1,8 @@
+TRACE templates and clients checked
+TRACE computations checked
+TRACE false-components digest=aef59b749d488c1c74775527df5cdffb prefix=mismatch: the constructor categoryRefl of Run_Base_Target gives the index 8218 and the type asks for 3785
+TRACE wrong-object digest=c1d1c41f2b786b3f70be8d9e5bf11fb0 prefix=mismatch: the constructor categoryRefl of Run_Base_Target gives the index 8218 and the type asks for 9030
+TRACE nominal-target digest=15499ca1d526f3fbf7e3b3d75c859492 prefix=mismatch: the term has type (Lan SMu Run_Base_Target [(In SPi w _ (Ran SPi w _ Nat Nat) (APt w (Sec SPi w n Nat [n => (Out SPi w b Nat (APt w 37) (Out SPi w a Nat (APt w n) natAdd))])) [(Sec SPi w n Nat [n => 37])])] (Sec SColl 2 [ => (Lan SPi w _ (Ran SPi
+TRACE incompatible-endpoints digest=c8a0c2373fe6ac5fff677f4445af76b2 prefix=mismatch: the term has type (Lan SPi w app (Ran SPi w x C (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim S
+TRACE left-reflexivity digest=cbd632d9fc8317f93a7d910d595df9ac prefix=mismatch: the constructor categoryRefl of UnitsMixed_Target gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (
+TRACE right-reflexivity digest=3e4f5f93cd3dfd6c5a085f380054e2e2 prefix=mismatch: the constructor categoryRefl of UnitsWide_Target gives the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi 0 x D (APt 0 (O

@@ -1,0 +1,140 @@
+[
+  {
+    "name": "initial-build",
+    "argv": [
+      "zsh",
+      "dev/dunecho.sh",
+      "build"
+    ],
+    "cwd": ".",
+    "exit_code": 0,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/initial-build.stdout",
+      "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/initial-build.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reason": "Initial build passed."
+  },
+  {
+    "name": "kernel-alias",
+    "argv": [
+      "_build/default/test/prelude_nattrans_units.exe",
+      ".",
+      "--trace"
+    ],
+    "cwd": ".",
+    "exit_code": 1,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "050208f7d7833b2b2b8445634811e68ceeac4c2e1edf943a87677ba8a4c036a8",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/kernel-alias.stdout",
+      "sha256": "050208f7d7833b2b2b8445634811e68ceeac4c2e1edf943a87677ba8a4c036a8"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/kernel-alias.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reason": "The reused equality family needed its external name."
+  },
+  {
+    "name": "runtime-alias",
+    "argv": [
+      "python3",
+      "-I",
+      "test/nattrans_units_runtime.py"
+    ],
+    "cwd": ".",
+    "exit_code": 1,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "ee611acb855e78a9f17e37fe59d919246c810c24e558260f7236a5b2ba796910",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/runtime-alias.stdout",
+      "sha256": "ee611acb855e78a9f17e37fe59d919246c810c24e558260f7236a5b2ba796910"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/runtime-alias.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reason": "Same external equality-family naming correction."
+  },
+  {
+    "name": "scoped-build",
+    "argv": [
+      "zsh",
+      "dev/dunecho.sh",
+      "build",
+      "test/prelude_nattrans_units.exe"
+    ],
+    "cwd": ".",
+    "exit_code": 124,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "d73d84f5fdec7a845ff03b1b74db34e737e7941bf95c826ee4c62d78c83a4a42",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/scoped-build.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/scoped-build.stderr",
+      "sha256": "d73d84f5fdec7a845ff03b1b74db34e737e7941bf95c826ee4c62d78c83a4a42"
+    },
+    "reason": "The installed dunecho runner rejects positional targets; reran its build verb."
+  },
+  {
+    "name": "kernel-oracles",
+    "argv": [
+      "_build/default/test/prelude_nattrans_units.exe",
+      ".",
+      "--trace"
+    ],
+    "cwd": ".",
+    "exit_code": 1,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "e2d078c3617688f37aca6467810f762ea24e7a7e127a9b2a870278bacf39644e",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/kernel-oracles.stdout",
+      "sha256": "3e01d22a1c3b975bb73f4ae502f6cbd2dfa57133db0d7a7bdc566602bf7224d2"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/kernel-oracles.stderr",
+      "sha256": "2e5f9969d0881593217092550a99d1e082f015d4ba28bb35df7961bd7a9f120d"
+    },
+    "reason": "Templates, abstract clients and computations passed; recorded refusal diagnostics and moved the right control to the opposite universe order."
+  },
+  {
+    "name": "pin-metadata",
+    "argv": [
+      "zsh",
+      "dev/pin-delta.sh"
+    ],
+    "cwd": ".",
+    "exit_code": 1,
+    "signal": 0,
+    "timed_out": false,
+    "spawn_error": "",
+    "capture_sha256": "ac984931095301899ed4beb9dcb027fffd6a16fafd1c494d4cea23aa45dba00d",
+    "stdout": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/pin-metadata.stdout",
+      "sha256": "ac984931095301899ed4beb9dcb027fffd6a16fafd1c494d4cea23aa45dba00d"
+    },
+    "stderr": {
+      "path": "dev/validation/port-uat-u1-nattrans-units/attempts/pin-metadata.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reason": "Scratch checkout lacked vendor Git metadata; restored metadata at the same pinned revision."
+  }
+]

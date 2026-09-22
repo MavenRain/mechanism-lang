@@ -560,3 +560,26 @@ The proof uses the preservation of composition by J, then target
 associativity. It introduces no axiom or equality of whole records.
 See `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md` for the exact equations
 and the kernel and runtime checks.
+
+## Identity whiskering and horizontal units
+
+Load `identity-functor.mech` and `shared-nattrans.mech` with their
+dependencies before `nattrans-units.mech`, then specialize:
+
+```text
+specialize MechNatTransUnits (0, 1, 2, 3) as U
+```
+
+`U_Source` and `U_Target` are the two category families. The `Before`
+triangle shares its source and middle category, and the `After` triangle
+shares its middle and target category. `SourceIdentity` and `TargetIdentity`
+provide identity functors on those same families. Both roots accept
+explicit external reuse; a reused equality family keeps its external name.
+
+The four laws are `whiskerRightIdFunctor`, `whiskerLeftIdFunctor`,
+`hcompIdFunctorLeft`, and `hcompIdFunctorRight`. Each takes
+`C D c d F G alpha x` and compares a component with `alpha.app x`.
+The horizontal left unit uses the identity transformation on the source
+identity functor; the right unit uses the target identity functor.
+The object argument is ordinary and the conclusion is an erasable Prop.
+See `dev/PORT-UAT-U1-NATTRANS-UNITS.md` for the contract and checks.

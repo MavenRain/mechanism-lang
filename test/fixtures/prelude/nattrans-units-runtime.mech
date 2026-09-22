@@ -1,0 +1,52 @@
+-- Reuse the independent category families and indexed components from
+-- heterogeneous-nattrans-runtime.mech.
+specialize MechNatTransUnits (0, 1, 1, 0) as Units
+  with (Source := Run_Base_Source, Target := Run_Base_Target)
+specialize MechCategoryCore (1, 0) as SeparateTarget
+
+def PreUnit : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Units_Before_Compose_whiskerRight Nat Nat Point IndexedEnd IndexedEnd DoubleEnd
+    Constant Constant Beta (Units_SourceIdentity_idFunctor Nat IndexedEnd)
+def PostUnit : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Units_After_Compose_whiskerLeft Nat Point Point IndexedEnd DoubleEnd DoubleEnd
+    (Units_TargetIdentity_idFunctor Point DoubleEnd) Constant Constant Beta
+def LeftUnit : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Units_Before_hcomp Nat Nat Point IndexedEnd IndexedEnd DoubleEnd
+    (Units_SourceIdentity_idFunctor Nat IndexedEnd) (Units_SourceIdentity_idFunctor Nat IndexedEnd)
+    Constant Constant
+    (Units_Before_First_idNat Nat Nat IndexedEnd IndexedEnd (Units_SourceIdentity_idFunctor Nat IndexedEnd)) Beta
+def RightUnit : Run_NatTrans Nat Point IndexedEnd DoubleEnd Constant Constant :=
+  Units_After_hcomp Nat Point Point IndexedEnd DoubleEnd DoubleEnd Constant Constant
+    (Units_TargetIdentity_idFunctor Point DoubleEnd) (Units_TargetIdentity_idFunctor Point DoubleEnd) Beta
+    (Units_After_Second_idNat Point Point DoubleEnd DoubleEnd (Units_TargetIdentity_idFunctor Point DoubleEnd))
+
+def preUnitLaw : (x : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (PreUnit.1 x) (Beta.1 x) :=
+  Units_whiskerRightIdFunctor Nat Point IndexedEnd DoubleEnd Constant Constant Beta
+def postUnitLaw : (x : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (PostUnit.1 x) (Beta.1 x) :=
+  Units_whiskerLeftIdFunctor Nat Point IndexedEnd DoubleEnd Constant Constant Beta
+def leftUnitLaw : (x : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (LeftUnit.1 x) (Beta.1 x) :=
+  Units_hcompIdFunctorLeft Nat Point IndexedEnd DoubleEnd Constant Constant Beta
+def rightUnitLaw : (x : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (RightUnit.1 x) (Beta.1 x) :=
+  Units_hcompIdFunctorRight Nat Point IndexedEnd DoubleEnd Constant Constant Beta
+
+-- Both closure fields and the object index affect the result. The proof is erased.
+def unitCertified : (left : (Nat -> Nat) * (Nat -> Nat)) ->
+    (0 right : (Nat -> Nat) * (Nat -> Nat)) ->
+    (0 proof : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) left right) -> Nat -> Nat :=
+  fun (left : (Nat -> Nat) * (Nat -> Nat)) (0 right : (Nat -> Nat) * (Nat -> Nat))
+      (0 proof : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) left right) (n : Nat) =>
+    natAdd (natMul 101 (left.1 (natAdd n 7))) (left.2 (natAdd n 11))
+def preUnitAt : Nat -> Nat := fun (x : Nat) =>
+  unitCertified (PreUnit.1 x) (Beta.1 x) (preUnitLaw x) x
+def postUnitAt : Nat -> Nat := fun (x : Nat) =>
+  unitCertified (PostUnit.1 x) (Beta.1 x) (postUnitLaw x) x
+def leftUnitAt : Nat -> Nat := fun (x : Nat) =>
+  unitCertified (LeftUnit.1 x) (Beta.1 x) (leftUnitLaw x) x
+def rightUnitAt : Nat -> Nat := fun (x : Nat) =>
+  unitCertified (RightUnit.1 x) (Beta.1 x) (rightUnitLaw x) x
+def unitReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  unitCertified (Beta.1 x) (Beta.1 x) categoryRefl x
