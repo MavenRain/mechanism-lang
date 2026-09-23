@@ -1,0 +1,4 @@
+def bad : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Mediator.1 y) (Alpha.1 y) :=
+  Laws_descCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Cocone Chosen AlternativeChosen

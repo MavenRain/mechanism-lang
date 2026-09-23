@@ -1,0 +1,3 @@
+def bad : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Mediator.1 y) (Run_Base_Target_id Point DoubleEnd point) :=
+  Laws_descId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Eta IdentityChosen

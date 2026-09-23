@@ -220,3 +220,8 @@
  (name prelude_nattrans_units)
  (modules Prelude_nattrans_units)
  (libraries mechanism_kernel mechanism_surface mechanism_import))
+
+(executable
+ (name prelude_left_kan_laws)
+ (modules Prelude_left_kan_laws)
+ (libraries mechanism_kernel mechanism_surface mechanism_import))

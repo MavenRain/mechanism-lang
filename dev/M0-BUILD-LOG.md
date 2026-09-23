@@ -4522,3 +4522,47 @@ negatives=5`; `TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10`;
 `PRENEX-EXPORTS-RUNTIME OK cases=2 hosts=3 mutation=1`;
 `PRENEX-DEPENDENCY-EXPORTS-RUNTIME OK cases=2 hosts=3 mutation=1`;
 `LEGS-EXIT 0`.
+## U1: pointwise left Kan mediator laws (2026-09-22)
+
+Base: 186efb9. `MechLeftKanLaws` extends the shared left Kan API with
+pointwise cocone equality, the identity mediator law and congruence of
+chosen mediators. The proofs use the existing target category laws and
+universal uniqueness. Six universe levels and all three nominal category
+families remain independent. No kernel or vendor source changed.
+See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` for the contract.
+
+Scoped validation passes the build, the kernel suite
+(`entries=944 families=9 computations=6 negatives=6`) and the runtime
+suite (`cases=6 hosts=3 payloads=2 comparisons=36`). The kernel suite
+rejects invalid cocone evidence, wrong solutions and conclusions, and a
+distinct nominal equality family. It verifies no new axioms or primitives.
+The fixture `test/fixtures/prelude/left-kan-laws.mech` pins both law
+statements with bound solution records, so a trivial conclusion fails.
+The runtime checks consume the law proofs through erased arguments and
+compare both function fields against independent arithmetic oracles.
+
+All three mutation controls were killed: an identity reflexivity shortcut,
+an omitted cocone-equality proof and swapped runtime function fields.
+Both unmodified template controls passed. The runner also carries two
+trivialized statement controls that the pin fixture must refuse. The record, complete logs and source hashes are under
+`dev/validation/port-uat-u1-left-kan-laws/`. The full gate battery was not
+rerun. TRUSTED-LINES reproduces the inherited failure at
+`kernel=5475/3000 encoder=246/900`; its threshold is unchanged.
+Stage C and U1 remain open on whole-record transformation equality and
+source-type parity.
+
+Review fixes on 2026-09-23 changed these pinned sources after the record
+was captured, so the record is stale for them: `ROADMAP.md`,
+`dev/M0-BUILD-LOG.md`, `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`, `dev/gates.sh`,
+`dev/left-kan-laws-mutations.py`,
+`test/fixtures/prelude/left-kan-laws-runtime.mech` and
+`test/prelude_left_kan_laws.ml`. Rerun the scoped checks and recapture
+`dev/validation/port-uat-u1-left-kan-laws/` before the commit. The
+scoped legs after the fixes printed
+`PASS PRELUDE-LEFT-KAN-LAWS: PRELUDE-LEFT-KAN-LAWS-OK entries=944
+families=9 computations=6 negatives=6` and
+`PASS PRELUDE-LEFT-KAN-LAWS-RUNTIME: PRELUDE-LEFT-KAN-LAWS-RUNTIME OK
+cases=6 hosts=3 payloads=2 comparisons=36`, with the sibling legs
+PRELUDE-POLY, PRELUDE-TRANSPORT, PRELUDE-SHARED-LEFT-KAN and
+PRELUDE-SHARED-LEFT-KAN-RUNTIME also PASS. The mutation runner was not
+rerun in the review round; it runs again at the recapture.

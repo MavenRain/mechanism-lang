@@ -590,3 +590,27 @@ The horizontal left unit uses the identity transformation on the source
 identity functor; the right unit uses the target identity functor.
 The object argument is ordinary and the conclusion is an erasable Prop.
 See `dev/PORT-UAT-U1-NATTRANS-UNITS.md` for the contract and checks.
+
+## Pointwise left Kan mediator laws
+
+Load the shared left Kan prerequisites listed above, including
+`cat/shared-left-kan.mech`, then `cat/left-kan-laws.mech`.
+Specialize `MechLeftKanLaws (u, v, w, z, p, q) as L` with the same six
+levels as the shared left Kan group. `L_Base_` is the shared left Kan
+API; the only category families are `L_Base_Base_Source`,
+`L_Base_Base_Middle` and `L_Base_Base_Target`.
+
+`L_CoconeEq` is the pointwise equality of two `LanCocone` records at
+every source object, stated in the target hom equality family.
+`L_descId` says that a solution of the unit cocone against itself has
+the identity mediator at every middle object. `L_descCongr` says that
+solutions for pointwise-equal cocones have pointwise-equal mediators.
+The laws accept solution records directly, including values returned
+by `lanSolve`. Every conclusion is a component equality in the target
+hom equality family and an erasable Prop.
+
+The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
+six computations and the six refusals on the kernel. The
+PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the six exports on the
+kernel, Node and Wasmtime at two payloads.
+See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` for the contract and checks.

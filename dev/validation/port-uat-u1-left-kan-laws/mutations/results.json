@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "killed": 3,
+  "attempts": [
+    {
+      "name": "control",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 82.195,
+      "stdout": "control.stdout",
+      "stderr": "control.stderr",
+      "expected_marker": ""
+    },
+    {
+      "name": "identity-reflexivity",
+      "exit_code": 1,
+      "passed": true,
+      "seconds": 66.49,
+      "stdout": "identity-reflexivity.stdout",
+      "stderr": "identity-reflexivity.stderr",
+      "expected_marker": "mismatch:"
+    },
+    {
+      "name": "missing-cocone-equality",
+      "exit_code": 1,
+      "passed": true,
+      "seconds": 64.149,
+      "stdout": "missing-cocone-equality.stdout",
+      "stderr": "missing-cocone-equality.stderr",
+      "expected_marker": "mismatch:"
+    },
+    {
+      "name": "restored",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 63.612,
+      "stdout": "restored.stdout",
+      "stderr": "restored.stderr",
+      "expected_marker": ""
+    },
+    {
+      "name": "swapped-closure-fields",
+      "exit_code": 1,
+      "passed": true,
+      "seconds": 117.167,
+      "stdout": "swapped-closure-fields.stdout",
+      "stderr": "swapped-closure-fields.stderr",
+      "expected_marker": "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr"
+    }
+  ],
+  "sources": {
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "prelude/cat/shared-left-kan.mech": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+    "prelude/cat/left-kan-laws.mech": "d22600abfbc6f7a403ee05c927b89a472a31572c99ea8c34b9240008064ff9ce",
+    "dev/left-kan-laws-mutations.py": "96ca10e70b72bb45ac2e1cb9f94cccfc7d1c2ef1a900d1ad46a8a22c08c2d810",
+    "test/prelude_left_kan_laws.ml": "093ab8b00f86072dcc1387a111360e2e7f500b5968956f3d42922bc9be5d6380",
+    "test/fixtures/prelude/left-kan-laws-runtime.mech": "ff6d43eddf811966a7713ebde7da612ca15695fcc8af47b4b34e0a231ecf13f2"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "base": "186efb925d8cb1358704a43d767a212203b1a7f7",
+  "scope": "Additive left Kan prelude laws; full battery not rerun",
+  "checks": [
+    {
+      "name": "build",
+      "exit_code": 0,
+      "command": "zsh dev/dunecho.sh build",
+      "logs": {
+        "stdout": {
+          "path": "build.stdout",
+          "sha256": "9e007d7a4010fcc271a69a2546c4c166962b8c019f48235eca93e8512b6a997b"
+        },
+        "stderr": {
+          "path": "build.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "templates",
+      "exit_code": 0,
+      "command": "mech check combined templates",
+      "logs": {
+        "stdout": {
+          "path": "templates.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "path": "templates.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "kernel",
+      "exit_code": 0,
+      "command": "_build/default/test/prelude_left_kan_laws.exe .",
+      "logs": {
+        "stdout": {
+          "path": "kernel.stdout",
+          "sha256": "1bf52245bfbf6cf57d0c3280f62145c3dc2b0cb3c625199e052ba7ebab00e942"
+        },
+        "stderr": {
+          "path": "kernel.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "runtime",
+      "exit_code": 0,
+      "command": "python3 -I test/left_kan_laws_runtime.py",
+      "logs": {
+        "stdout": {
+          "path": "runtime.stdout",
+          "sha256": "df8ba674326b19e7e98b0abbd1dd6b639bd75a4f8a563990b42273fef1553e74"
+        },
+        "stderr": {
+          "path": "runtime.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "trusted-lines",
+      "exit_code": 1,
+      "command": "zsh dev/trusted-lines.sh",
+      "logs": {
+        "stdout": {
+          "path": "trusted-lines.stdout",
+          "sha256": "951c27ea70a49a3ad4076e44c63b62f8789279e2b67078d3bf10f24e3be7af8b"
+        },
+        "stderr": {
+          "path": "trusted-lines.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "denominators",
+      "exit_code": 0,
+      "command": "zsh dev/gates.sh --leg denominators",
+      "logs": {
+        "stdout": {
+          "path": "denominators.stdout",
+          "sha256": "53e1e49f14b917d1cf59777cc5295593cb3ed33f08549e962bc3b8b9044fd04b"
+        },
+        "stderr": {
+          "path": "denominators.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "build-before-eta-expansion",
+      "exit_code": 1,
+      "command": "zsh dev/dunecho.sh build",
+      "logs": {
+        "stdout": {
+          "path": "build-before-eta-expansion.stdout",
+          "sha256": "0237b8ce290c6a371c6a783c3ee978559d9725f307491a3b513bd8dc8dbfeeb0"
+        },
+        "stderr": {
+          "path": "build-before-eta-expansion.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "pin",
+      "exit_code": 0,
+      "command": "zsh dev/gates.sh --leg pin",
+      "logs": {
+        "stdout": {
+          "path": "pin.stdout",
+          "sha256": "42694db06f5ef1fb9d1582329ae8f8f8ed52ad4d0fe516ea314502f3f778d937"
+        },
+        "stderr": {
+          "path": "pin.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "pin-delta",
+      "exit_code": 0,
+      "command": "zsh dev/pin-delta.sh",
+      "logs": {
+        "stdout": {
+          "path": "pin-delta.stdout",
+          "sha256": "4e4ab45807d8747f161ab09a9a5f7a552cfbc5adbad566b95aae30568c50aa48"
+        },
+        "stderr": {
+          "path": "pin-delta.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "name": "mutations",
+      "exit_code": 0,
+      "command": "python3 -I dev/left-kan-laws-mutations.py NEW_OUTPUT_DIRECTORY",
+      "logs": {
+        "stdout": {
+          "path": "mutations.stdout",
+          "sha256": "0a07745537606537c65f037f5c9adf0e6e5e6292cd17a23a8dd65158399274be"
+        },
+        "stderr": {
+          "path": "mutations.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "inherited_failure": "TRUSTED-LINES kernel=5475/3000 encoder=246/900",
+  "resolved_attempt": "Build helper eta-expanded after the OCaml value restriction rejected a partial application.",
+  "static_checks": {
+    "gate_shell_syntax": "passed",
+    "python_compilation": "passed",
+    "existing_gates_unchanged": "passed",
+    "new_gate_predicates_match": "passed",
+    "diff_check": "passed"
+  }
+}

@@ -1,0 +1,2 @@
+def bad : (y : Nat) -> SeparateTarget ((Nat -> Nat) * (Nat -> Nat))
+    (IdentityMediator.1 y) (Run_Base_Target_id Point DoubleEnd point) := identityLaw

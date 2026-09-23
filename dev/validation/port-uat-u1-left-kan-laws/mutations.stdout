@@ -1,0 +1,6 @@
+{"name": "control", "exit_code": 0, "passed": true, "seconds": 82.195, "stdout": "control.stdout", "stderr": "control.stderr", "expected_marker": ""}
+{"name": "identity-reflexivity", "exit_code": 1, "passed": true, "seconds": 66.49, "stdout": "identity-reflexivity.stdout", "stderr": "identity-reflexivity.stderr", "expected_marker": "mismatch:"}
+{"name": "missing-cocone-equality", "exit_code": 1, "passed": true, "seconds": 64.149, "stdout": "missing-cocone-equality.stdout", "stderr": "missing-cocone-equality.stderr", "expected_marker": "mismatch:"}
+{"name": "restored", "exit_code": 0, "passed": true, "seconds": 63.612, "stdout": "restored.stdout", "stderr": "restored.stderr", "expected_marker": ""}
+{"name": "swapped-closure-fields", "exit_code": 1, "passed": true, "seconds": 117.167, "stdout": "swapped-closure-fields.stdout", "stderr": "swapped-closure-fields.stderr", "expected_marker": "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr"}
+{"passed": true, "killed": 3, "report": "/Users/oobi/Documents/gpt6/mechanism-lang-left-kan-laws-20260922/dev/validation/port-uat-u1-left-kan-laws/mutations/results.json"}

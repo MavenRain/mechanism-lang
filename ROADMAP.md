@@ -44,9 +44,13 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-22
 
-The base is a86e84b, following top-level specialization export clauses.
-The current increment extends those clauses to dependencies inside
-`poly group`. Chosen local member names survive nested composition,
+The base is 186efb9, following dependency export clauses. The current
+increment adds checked pointwise identity and cocone-congruence laws for
+left Kan mediators at six independent universe levels. The kernel and
+runtime gates are PRELUDE-LEFT-KAN-LAWS and PRELUDE-LEFT-KAN-LAWS-RUNTIME.
+See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`.
+Dependency export clauses inside `poly group` let chosen local member names
+survive nested composition,
 family reuse and closed specialization. PRENEX-DEPENDENCY-EXPORTS and
 its runtime gate check the surface contract and execution on three hosts.
 See `dev/M0-STAGE-C-DEPENDENCY-EXPORTS.md`. Stage 0, Stage
@@ -178,6 +182,8 @@ stay under `ports/` (D-UAT-3).
   associativity follows in
   `dev/PORT-UAT-U1-HORIZONTAL-ASSOCIATIVITY.md`. Identity whiskering and
   horizontal units follow in `dev/PORT-UAT-U1-NATTRANS-UNITS.md`.
+  Pointwise left Kan mediator identity and cocone congruence follow in
+  `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`.
   U1 remains open on
   equality of whole transformation records and source-type parity.
   Checked template composition supplies the source foundation;

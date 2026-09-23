@@ -1305,3 +1305,35 @@ output. `mutation-builds.stdout` preserves each baseline, mutant and
 restored build result. The runtime
 gate separately changes the shared payload from 37 to 41 and checks both
 computations on all three hosts.
+
+## Stage C / U1: pointwise left Kan mediator law controls (2026-09-22)
+
+`python3 -I dev/left-kan-laws-mutations.py NEW_OUTPUT_DIRECTORY`
+refuses an output directory that exists or lies inside the repository,
+copies the nine templates into a temporary source file, and checks the
+baseline, each mutant and the restored source with `mech check`, or with
+the kernel suite executable against a scratch copy of the prelude, the
+fixtures and the negatives. Every kill must print its marker exactly
+once; the two controls, `control` and `restored`, must print nothing.
+
+| Control | Source change | Oracle |
+| --- | --- | --- |
+| identity-reflexivity | The `descId` proof replaced by `categoryRefl` under the unchanged conclusion | `mismatch: the constructor categoryRefl of Base_Base_Target gives the index` |
+| missing-cocone-equality | The `equal x` argument of `lanFac` in `descCongr` replaced by `categoryRefl` | The same constructor-index mismatch |
+| swapped-closure-fields | The runtime closure reads `left.2` where it read `left.1`, and the reverse | `PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr` |
+| trivial-id-conclusion | The `descId` conclusion replaced by `((s.1).1 y) ((s.1).1 y)` with a `categoryRefl` proof | `PRELUDE-LEFT-KAN-LAWS-FAIL mismatch: the term has type` |
+| trivial-congr-conclusion | The `descCongr` conclusion replaced by `((s.1).1 y) ((s.1).1 y)` with a `categoryRefl` proof | `PRELUDE-LEFT-KAN-LAWS-FAIL mismatch: the term has type` |
+
+The two trivialized-conclusion controls are killed by the pin fixture
+`test/fixtures/prelude/left-kan-laws.mech`. It restates `descId` and
+`descCongr` at fixed universe levels with bound solution records. With
+`s` bound, `(s.1).1 y` is neutral, so the trivialized conclusion does
+not convert to the pinned statement. The runner requires `killed == 5`.
+
+The six refusals under `test/neg/left-kan-laws/` pin the full refusal
+text in `.err` files. The suite compares by prefix and requires the six
+pins to be pairwise distinct.
+
+Evidence: `dev/validation/port-uat-u1-left-kan-laws/mutations/` holds the
+five-control run. This is scoped validation of the new library surface;
+no full regression pass is claimed.

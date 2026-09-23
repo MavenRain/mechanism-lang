@@ -1,0 +1,85 @@
+-- Load shared-left-kan and its prerequisites before this group.
+-- These laws compare components, with the shared target equality family.
+poly (u, v, w, z, p, q) group MechLeftKanLaws where
+  specialize MechSharedLeftKan (u, v, w, z, p, q) as Base
+
+def CoconeEq : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    Base_Lan_LanCocone J C D j c d K F G ->
+    Base_Lan_LanCocone J C D j c d K F G -> Prop :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G) =>
+    (x : J) -> Base_Base_Target (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (alpha.1 x) (beta.1 x)
+
+-- Solving the unit cocone gives the identity mediator at every object.
+def descId : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Base_Lan_LanCocone J C D j c d K F H) ->
+    (s : Base_Lan_LanSolution J C D j c d K F H H eta eta) ->
+    (y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (H.1 y) (H.1 y))
+      ((s.1).1 y) (Base_Base_Target_id D d (H.1 y)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (H : Base_Base_Second_Base_Functor C D c d)
+      (eta : Base_Lan_LanCocone J C D j c d K F H)
+      (s : Base_Lan_LanSolution J C D j c d K F H H eta eta) (y : C) =>
+    Base_Base_Second_targetEqSymm (Base_Base_Target_Hom D d (H.1 y) (H.1 y))
+      (Base_Base_Target_id D d (H.1 y)) ((s.1).1 y)
+      (Base_Lan_lanUniq J C D j c d K F H H eta eta s
+        (Base_Base_Second_idNat C D c d H)
+        (fun (x : J) => Base_Base_Target_compId D d (F.1 x) (H.1 (K.1 x)) (eta.1 x)) y)
+
+-- Equal cocones have equal chosen mediators, even with different solutions.
+def descCongr : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Base_Base_Second_Base_Functor C D c d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Base_Lan_LanCocone J C D j c d K F G) ->
+    (s : Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (t : Base_Lan_LanSolution J C D j c d K F H G eta beta) ->
+    CoconeEq J C D j c d K F G alpha beta ->
+    (y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      ((s.1).1 y) ((t.1).1 y) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (H : Base_Base_Second_Base_Functor C D c d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (eta : Base_Lan_LanCocone J C D j c d K F H)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G)
+      (s : Base_Lan_LanSolution J C D j c d K F H G eta alpha)
+      (t : Base_Lan_LanSolution J C D j c d K F H G eta beta)
+      (equal : CoconeEq J C D j c d K F G alpha beta) (y : C) =>
+    Base_Lan_lanUniq J C D j c d K F H G eta beta t (s.1)
+      (fun (x : J) =>
+        Base_Base_Target_eqTrans (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+          (Base_Base_Target_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
+            (eta.1 x) ((s.1).1 (K.1 x))) (alpha.1 x) (beta.1 x)
+          (Base_Lan_lanFac J C D j c d K F H G eta alpha s x) (equal x)) y
+end

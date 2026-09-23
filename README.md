@@ -73,6 +73,9 @@ Identity whiskering and horizontal unit laws now compare a transformation's
 components with those obtained using the source or target identity functor.
 The two category families retain four independent universe levels. See
 `dev/PORT-UAT-U1-NATTRANS-UNITS.md` for the API and validation scope.
+Left Kan mediator laws now prove identity and congruence under pointwise
+cocone equality, using the shared universal property at six independent
+universe levels. See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` for the contract.
 The iterated whiskering increment proves precomposition and postcomposition
 by composite functors, and their commutation, over four shared categories.
 All eight universe levels remain independent. The laws compare components

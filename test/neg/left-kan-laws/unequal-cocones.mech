@@ -1,0 +1,2 @@
+def bad : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Cocone OtherCocone := fun (x : Nat) => categoryRefl

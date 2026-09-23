@@ -1,0 +1,72 @@
+-- Reuse the indexed categories, cocones and solvers of shared-left-kan-runtime.
+specialize MechLeftKanLaws (0, 1, 0, 0, 1, 0) as Laws
+  with (Base_Base_Source := Run_Base_Source, Base_Base_Middle := Run_Base_Middle,
+        Base_Base_Target := Run_Base_Target)
+specialize MechCategoryCore (1, 0) as SeparateTarget
+
+def IdentityChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Eta :=
+  Run_Lan_lanSolve Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension Constant Eta
+def IdentityMediator : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant :=
+  Run_descNat Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Eta IdentityChosen
+def identityLaw : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (IdentityMediator.1 y) (Run_Base_Target_id Point DoubleEnd point) :=
+  Laws_descId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Eta IdentityChosen
+
+-- Choose the external transformation itself, with an independent solution record.
+def AlternativeChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone :=
+  (Alpha, (externalFactorWitness,
+    (fun (other : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant)
+        (factor : Run_Lan_LanFactor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+          Constant Constant Eta Cocone other) =>
+      Run_Lan_desc_unique Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+        Constant Constant Eta Cocone Chosen other Alpha factor externalFactorWitness)))
+def otherExternalFactor : Run_Lan_LanFactor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta OtherCocone Beta :=
+  fun (x : Nat) => Run_Base_Target_idComp Point DoubleEnd point point (Beta.1 x)
+def AlternativeOtherChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta OtherCocone :=
+  (Beta, (otherExternalFactor,
+    (fun (other : Run_Base_Second_NatTrans Nat Point IndexedPlain DoubleEnd Constant Constant)
+        (factor : Run_Lan_LanFactor Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+          Constant Constant Eta OtherCocone other) =>
+      Run_Lan_desc_unique Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+        Constant Constant Eta OtherCocone OtherChosen other Beta factor otherExternalFactor)))
+def congrLaw : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Mediator.1 y) (Alpha.1 y) :=
+  Laws_descCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta Cocone Cocone Chosen AlternativeChosen (fun (x : Nat) => categoryRefl)
+def otherCongrLaw : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (OtherMediator.1 y) (Beta.1 y) :=
+  Laws_descCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta OtherCocone OtherCocone OtherChosen AlternativeOtherChosen
+    (fun (x : Nat) => categoryRefl)
+
+-- The checker needs an equality proof, which the law supplies; both closure fields contribute after erasure.
+def lanCertified : (left : (Nat -> Nat) * (Nat -> Nat)) ->
+    (0 right : (Nat -> Nat) * (Nat -> Nat)) ->
+    (0 proof : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) left right) -> Nat -> Nat :=
+  fun (left : (Nat -> Nat) * (Nat -> Nat)) (0 right : (Nat -> Nat) * (Nat -> Nat))
+      (0 proof : Run_Base_Target ((Nat -> Nat) * (Nat -> Nat)) left right) (n : Nat) =>
+    natAdd (natMul 101 (left.1 (natAdd n 7))) (left.2 (natAdd n 11))
+def lanIdentityAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (IdentityMediator.1 x) (Run_Base_Target_id Point DoubleEnd point) (identityLaw x) x
+def lanIdentityReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Run_Base_Target_id Point DoubleEnd point) (Run_Base_Target_id Point DoubleEnd point)
+    categoryRefl x
+def lanCongrAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Mediator.1 x) (Alpha.1 x) (congrLaw x) x
+def lanCongrReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Alpha.1 x) (Alpha.1 x) categoryRefl x
+def lanOtherCongrAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (OtherMediator.1 x) (Beta.1 x) (otherCongrLaw x) x
+def lanOtherCongrReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Beta.1 x) (Beta.1 x) categoryRefl x
+def lanIdentity : Nat := lanIdentityAt sharedLanInput
+def lanIdentityReference : Nat := lanIdentityReferenceAt sharedLanInput
+def lanCongr : Nat := lanCongrAt sharedLanInput
+def lanCongrReference : Nat := lanCongrReferenceAt sharedLanInput
+def lanOtherCongr : Nat := lanOtherCongrAt sharedLanInput
+def lanOtherCongrReference : Nat := lanOtherCongrReferenceAt sharedLanInput
