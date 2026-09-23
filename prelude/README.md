@@ -609,8 +609,15 @@ The laws accept solution records directly, including values returned
 by `lanSolve`. Every conclusion is a component equality in the target
 hom equality family and an erasable Prop.
 
+`L_postCocone J C D j c d K F G I alpha tau` postcomposes a cocone
+`alpha : F => G K` with `tau : G => I`, evaluating `tau` at `K x`.
+`L_descPostcomp J C D j c d K F H G I eta alpha tau s t y` compares
+`s.desc y` followed by `tau y` with `t.desc y`. Here `s` solves `alpha`
+and `t` solves `postCocone alpha tau`, both against the same unit `eta`.
+Its proof uses associativity, factorization congruence and mediator uniqueness.
+
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
-six computations and the six refusals on the kernel. The
-PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the six exports on the
+ten computations and the ten refusals on the kernel. The
+PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the ten exports on the
 kernel, Node and Wasmtime at two payloads.
 See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` for the contract and checks.

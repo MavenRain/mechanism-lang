@@ -8,8 +8,6 @@ let trace message =
   if Array.exists (String.equal "--trace") Sys.argv then Printf.eprintf "TRACE %s\n%!" message
 let read root path = Mechanism_import.Io.attempt (fun () ->
   In_channel.with_open_bin (Filename.concat root path) In_channel.input_all)
-let common_prefix left right = Seq.zip (String.to_seq left) (String.to_seq right)
-  |> Seq.take_while (fun (a, b) -> Char.equal a b) |> Seq.map fst |> String.of_seq
 let prefix name members = List.map (fun member -> name ^ "_" ^ member) members
 let core = ["Category"; "Hom"; "id"; "comp"; "idComp"; "compId"; "assoc"; "eqTrans"; "eqCongr"]
 let functor_members = ["Functor"; "functorObj"; "functorMap"; "functorMapId"; "functorMapComp"; "eqCongr"]
@@ -35,7 +33,7 @@ let lan_members = prefix "Base" whiskering
      "lanUniq"; "desc_unique"]
 let shared_members = prefix "Base" shared_nat_members @ prefix "Lan" lan_members
   @ ["unitNat"; "descNat"]
-let laws_members = ["CoconeEq"; "descId"; "descCongr"]
+let laws_members = ["CoconeEq"; "descId"; "descCongr"; "postCocone"; "descPostcomp"]
 let shared_fixture = ["sharedLanInput"; "pathTrans"; "IndexedEnd"; "DoubleEnd"; "IndexedPlain";
   "Constant"; "Components"; "componentLaw"; "Alpha"; "Forget"; "Lift"; "OtherComponents";
   "otherComponentLaw"; "Beta"; "forgetUnit"; "forgetLan"; "Original"; "Extension"; "Eta";
@@ -48,7 +46,10 @@ let laws_fixture = ["WideIdContract"; "WideCongrContract"; "IdentityChosen"; "Id
   "congrLaw"; "otherCongrLaw"; "lanCertified"; "lanIdentityAt"; "lanIdentityReferenceAt";
   "lanCongrAt"; "lanCongrReferenceAt"; "lanOtherCongrAt"; "lanOtherCongrReferenceAt";
   "lanIdentity"; "lanIdentityReference"; "lanCongr"; "lanCongrReference"; "lanOtherCongr";
-  "lanOtherCongrReference"]
+  "lanOtherCongrReference"; "WidePostcompContract"; "PostCocone"; "ReversePostCocone";
+  "PostChosen"; "ReversePostChosen"; "postLaw"; "reversePostLaw"; "lanPostcompAt";
+  "lanPostcompReferenceAt"; "lanReversePostcompAt"; "lanReversePostcompReferenceAt";
+  "lanPostcomp"; "lanPostcompReference"; "lanReversePostcomp"; "lanReversePostcompReference"]
 let expected_entries = prefix "Run" shared_members
   @ List.concat_map (fun name -> prefix name heterogeneous)
     ["ExternalFirst"; "ExternalSecond"; "ExternalComposite"]
@@ -66,10 +67,13 @@ let paths = ["prelude/cat/category-core.mech"; "prelude/cat/heterogeneous-functo
   "test/fixtures/prelude/shared-left-kan-runtime.mech";
   "test/fixtures/prelude/left-kan-laws-runtime.mech"]
 let negatives = ["unequal-cocones"; "wrong-solution"; "missing-equality";
-  "wrong-identity"; "nominal-equality"; "wrong-conclusion"]
+  "wrong-identity"; "nominal-equality"; "wrong-conclusion";
+  "post-wrong-solution"; "post-wrong-source-solution"; "post-reversed-conclusion"; "post-nominal-equality"]
 let computations = ["lanIdentity", 4492; "lanIdentityReference", 4492;
   "lanCongr", 3822; "lanCongrReference", 3822;
-  "lanOtherCongr", 4937; "lanOtherCongrReference", 4937]
+  "lanOtherCongr", 4937; "lanOtherCongrReference", 4937;
+  "lanPostcomp", 4974; "lanPostcompReference", 4974;
+  "lanReversePostcomp", 3863; "lanReversePostcompReference", 3863]
 
 let suite root =
   let* source = List.fold_left (fun acc path ->
@@ -90,10 +94,10 @@ let suite root =
     List.fold_left (fun acc member -> let* () = acc in
       let name = instance ^ "_" ^ member in
       require ("missing checked law: " ^ name) (List.mem_assoc name rows)) (Ok ())
-      ["CoconeEq"; "descId"; "descCongr"]) (Ok ()) ["Laws"; "Wide"] in
+      laws_members) (Ok ()) ["Laws"; "Wide"] in
   let* () = List.fold_left (fun acc name -> let* () = acc in
     require ("missing symbolic pin: " ^ name) (List.mem_assoc name rows)) (Ok ())
-    ["WideIdContract"; "WideCongrContract"] in
+    ["WideIdContract"; "WideCongrContract"; "WidePostcompContract"] in
   let inventory = List.sort String.compare (List.map fst rows) in
   let missing = List.filter (fun name -> not (List.mem name inventory)) expected_entries in
   let extra = List.filter (fun name -> not (List.mem name expected_entries)) inventory in
@@ -126,16 +130,15 @@ let suite root =
     let* expected = read root (directory ^ name ^ ".err") in
     Ok ((name, negative, String.trim expected) :: cases)) (Ok []) negatives in
   let cases = List.rev cases in
+  let pins = List.map (fun (_, _, expected) -> expected) cases in
   let* () = require "refusal pins are not pairwise distinct"
-    (List.length (List.sort_uniq String.compare (List.map (fun (_, _, expected) -> expected) cases))
-      = List.length cases) in
-  let shared = List.fold_left (fun acc (_, _, expected) ->
-    Option.fold ~none:(Some expected) ~some:(fun head -> Some (common_prefix head expected)) acc)
-    None cases |> Option.value ~default:"" in
+    (List.length (List.sort_uniq String.compare pins) = List.length cases) in
+  let* () = List.fold_left (fun acc (name, _, expected) -> let* () = acc in
+    require (name ^ ": refusal pin is a prefix of another pin")
+      (List.for_all (fun other -> String.equal other expected
+        || not (String.starts_with ~prefix:expected other)) pins)) (Ok ()) cases in
   let* () = List.fold_left (fun acc (name, negative, expected) -> let* () = acc in
     let* () = require (name ^ ": empty refusal prefix") (String.length expected > 64) in
-    let* () = require (name ^ ": refusal prefix is the head every negative shares")
-      (String.length expected > String.length shared) in
     Result.fold (Elab.check_in globals negative)
       ~ok:(fun _ -> Error (name ^ ": expected refusal"))
       ~error:(fun error ->

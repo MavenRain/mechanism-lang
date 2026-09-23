@@ -70,3 +70,41 @@ def lanCongr : Nat := lanCongrAt sharedLanInput
 def lanCongrReference : Nat := lanCongrReferenceAt sharedLanInput
 def lanOtherCongr : Nat := lanOtherCongrAt sharedLanInput
 def lanOtherCongrReference : Nat := lanOtherCongrReferenceAt sharedLanInput
+
+-- Both orders use independently solved cocones and noncommuting components.
+def PostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone Beta
+def ReversePostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant OtherCocone Alpha
+def PostChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta PostCocone :=
+  Run_Lan_lanSolve Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension Constant PostCocone
+def ReversePostChosen : Run_Lan_LanSolution Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Eta ReversePostCocone :=
+  Run_Lan_lanSolve Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Extension Constant ReversePostCocone
+def postLaw : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Run_Base_Target_comp Point DoubleEnd point point point (Mediator.1 y) (Beta.1 y))
+    ((PostChosen.1).1 y) :=
+  Laws_descPostcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Eta Cocone Beta Chosen PostChosen
+def reversePostLaw : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Run_Base_Target_comp Point DoubleEnd point point point (OtherMediator.1 y) (Alpha.1 y))
+    ((ReversePostChosen.1).1 y) :=
+  Laws_descPostcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Eta OtherCocone Alpha OtherChosen ReversePostChosen
+def lanPostcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Run_Base_Target_comp Point DoubleEnd point point point (Mediator.1 x) (Beta.1 x))
+    ((PostChosen.1).1 x) (postLaw x) x
+def lanPostcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((PostChosen.1).1 x) ((PostChosen.1).1 x) categoryRefl x
+def lanReversePostcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Run_Base_Target_comp Point DoubleEnd point point point (OtherMediator.1 x) (Alpha.1 x))
+    ((ReversePostChosen.1).1 x) (reversePostLaw x) x
+def lanReversePostcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((ReversePostChosen.1).1 x) ((ReversePostChosen.1).1 x) categoryRefl x
+def lanPostcomp : Nat := lanPostcompAt sharedLanInput
+def lanPostcompReference : Nat := lanPostcompReferenceAt sharedLanInput
+def lanReversePostcomp : Nat := lanReversePostcompAt sharedLanInput
+def lanReversePostcompReference : Nat := lanReversePostcompReferenceAt sharedLanInput

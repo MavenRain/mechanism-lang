@@ -4566,3 +4566,50 @@ cases=6 hosts=3 payloads=2 comparisons=36`, with the sibling legs
 PRELUDE-POLY, PRELUDE-TRANSPORT, PRELUDE-SHARED-LEFT-KAN and
 PRELUDE-SHARED-LEFT-KAN-RUNTIME also PASS. The mutation runner was not
 rerun in the review round; it runs again at the recapture.
+
+## Stage C / U1: left Kan postcomposition (2026-09-23)
+
+Base: 6a275ba. `MechLeftKanLaws` now exports `postCocone` and
+`descPostcomp` at the same six independent universe levels. Cocone
+postcomposition uses shared precomposition and vertical composition.
+The mediator law derives factorization by associativity and congruence,
+then applies the new solution's uniqueness proof.
+
+The kernel suite passes with 963 entries, nine checked families,
+ten computations and ten distinct type-mismatch refusals. The arbitrary
+solution contract is pinned at (2,0,1,3,0,2). The indexed runtime examples
+exercise both composition orders and both mediator fields at payloads
+37 and 41. All 60 comparisons pass on the kernel, Node and Wasmtime.
+The build reports zero errors and warnings. Nine mutation controls are
+killed, and the control and restored template sources pass.
+
+The first suite run found a diagnostic shared by the new source-solution
+refusal and an older refusal. The new example now supplies IdentityChosen,
+so all ten exact refusal pins are distinct. The first mutation run was
+interrupted while correcting that fixture. The validation record retains
+that interruption and the failed suite separately from the final results.
+
+The two existing gate predicates require the expanded counts; their
+watchdogs and runtime budgets remain unchanged. PIN and PIN-DELTA pass.
+The unchanged TRUSTED-LINES failure is kernel=5475/3000, encoder=246/900.
+The full battery is not rerun for this additive prelude slice. Stage C
+and U1 remain open on source-type parity and whole-record equality.
+Commands, complete logs, mutation attempts and source hashes are under
+`dev/validation/port-uat-u1-left-kan-postcomposition/`.
+
+The review round changed two paths that
+`dev/validation/port-uat-u1-left-kan-postcomposition/sources.sha256`
+pins: `test/prelude_left_kan_laws.ml` and
+`dev/left-kan-laws-mutations.py`. Rerun the scoped checks and recapture
+`dev/validation/port-uat-u1-left-kan-postcomposition/` before the commit.
+The last legs run after the fixes printed
+`PASS PRELUDE-LEFT-KAN-LAWS: PRELUDE-LEFT-KAN-LAWS-OK entries=963
+families=9 computations=10 negatives=10`,
+`PASS PRELUDE-LEFT-KAN-LAWS-RUNTIME: PRELUDE-LEFT-KAN-LAWS-RUNTIME OK
+cases=10 hosts=3 payloads=2 comparisons=60`, `PASS R0-COUNT`,
+`PASS R0-AUDIT` and `PASS PIN-DELTA`, with the sibling legs
+PRELUDE-POLY, PRELUDE-TRANSPORT, PRELUDE-SHARED-LEFT-KAN and
+PRELUDE-SHARED-LEFT-KAN-RUNTIME also PASS. The last change is a wording
+change in this entry, and the legs did not run again after it. The
+mutation runner was not rerun in the review round; it runs again at the
+recapture.

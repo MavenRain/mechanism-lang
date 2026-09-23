@@ -27,3 +27,21 @@ def WideCongrContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
     Wide_CoconeEq J C D j c d K F G alpha beta ->
     (y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (H.1 y) (G.1 y))
       ((s.1).1 y) ((t.1).1 y) := Wide_descCongr
+
+def WidePostcompContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (I : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    (s : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (t : Wide_Base_Lan_LanSolution J C D j c d K F H I eta
+      (Wide_postCocone J C D j c d K F G I alpha tau)) ->
+    (y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (H.1 y) (I.1 y))
+      (Wide_Base_Base_Target_comp D d (H.1 y) (G.1 y) (I.1 y) ((s.1).1 y) (tau.1 y))
+      ((t.1).1 y) := Wide_descPostcomp

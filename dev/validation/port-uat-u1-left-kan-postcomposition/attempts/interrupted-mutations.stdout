@@ -1,0 +1,2 @@
+{"name": "control", "exit_code": 0, "passed": true, "seconds": 155.954, "stdout": "control.stdout", "stderr": "control.stderr", "expected_marker": ""}
+{"name": "identity-reflexivity", "exit_code": 1, "passed": true, "seconds": 68.207, "stdout": "identity-reflexivity.stdout", "stderr": "identity-reflexivity.stderr", "expected_marker": "mismatch: the constructor categoryRefl of Base_Base_Target gives the index"}

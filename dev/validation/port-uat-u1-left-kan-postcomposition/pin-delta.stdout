@@ -1,0 +1,16 @@
+PIN-DELTA file diff expected
+PIN-DELTA lib/check.ml diff=140 expected=140 OK
+PIN-DELTA lib/conv.ml diff=51 expected=51 OK
+PIN-DELTA lib/eval.ml diff=24 expected=24 OK
+PIN-DELTA lib/rules.ml diff=84 expected=84 OK
+PIN-DELTA lib/level.ml diff=49 expected=49 OK
+PIN-DELTA lib/level.mli diff=17 expected=17 OK
+PIN-DELTA bin/kanon.ml diff=14 expected=14 OK
+PIN-DELTA surface/elab.ml diff=397 expected=397 OK
+PIN-DELTA surface/token.ml diff=12 expected=12 OK
+PIN-DELTA surface/lexer.ml diff=6 expected=6 OK
+PIN-DELTA surface/syntax.ml diff=79 expected=79 OK
+PIN-DELTA surface/parser.ml diff=262 expected=262 OK
+PIN-DELTA wasm/emit.ml diff=27 expected=27 OK
+PIN-DELTA wasm/link.ml diff=61 expected=61 OK
+PIN-DELTA OK

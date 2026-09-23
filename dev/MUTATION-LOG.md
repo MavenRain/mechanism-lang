@@ -1337,3 +1337,37 @@ pins to be pairwise distinct.
 Evidence: `dev/validation/port-uat-u1-left-kan-laws/mutations/` holds the
 five-control run. This is scoped validation of the new library surface;
 no full regression pass is claimed.
+
+## Stage C / U1: left Kan postcomposition (2026-09-23)
+
+The expanded `dev/left-kan-laws-mutations.py` run kills all nine controls.
+Its unmodified and restored template checks both pass. The four new
+controls reject a reflexive postcomposition proof, a missing original
+factorization premise, a reversed runtime composition and a trivialized
+postcomposition conclusion. The existing identity, congruence, field-order
+and general-statement controls remain active.
+
+| Control | Expected failure |
+| --- | --- |
+| identity-reflexivity | Constructor index mismatch |
+| missing-cocone-equality | Constructor index mismatch |
+| postcomp-reflexivity | Constructor index mismatch |
+| postcomp-missing-factor | Constructor index mismatch |
+| swapped-closure-fields | Wrong computation: lanCongr |
+| reversed-runtime-composition | Wrong computation: lanPostcomp |
+| trivial-id-conclusion | Term type mismatch |
+| trivial-congr-conclusion | Term type mismatch |
+| trivial-postcomp-conclusion | Term type mismatch |
+
+Each killed attempt requires exit 1 and exactly one occurrence of its
+marker. The four proof controls share one marker: the constructor
+`categoryRefl` of `Base_Base_Target` gives the wrong index. The three
+statement controls share the general marker
+`PRELUDE-LEFT-KAN-LAWS-FAIL mismatch: the term has type`. This marker does
+not name the contract that failed. The two computation controls each
+require the full failure line that names their computation. A timeout
+gives exit 124 and cannot satisfy a control.
+The results, full streams and source hashes are in
+`dev/validation/port-uat-u1-left-kan-postcomposition/mutations/`.
+The evidence directory also records the earlier interrupted run and the
+duplicate-refusal-pin test failure that prompted its interruption.

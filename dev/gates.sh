@@ -310,10 +310,10 @@ leg CATEGORY PRELUDE-SHARED-LEFT-KAN-RUNTIME \
   '^PRELUDE-SHARED-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_left_kan_runtime.py
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
-  '^PRELUDE-LEFT-KAN-LAWS-OK entries=944 families=9 computations=6 negatives=6$' \
+  '^PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10$' \
   $ROOT/_build/default/test/prelude_left_kan_laws.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS-RUNTIME \
-  '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2 comparisons=36$' \
+  '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=10 hosts=3 payloads=2 comparisons=60$' \
   python3 -I $ROOT/test/left_kan_laws_runtime.py
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \

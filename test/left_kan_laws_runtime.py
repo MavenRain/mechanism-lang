@@ -34,7 +34,8 @@ def main():
         raise ValueError("expected one payload anchor and a fresh alternate name")
     source = source.replace(anchor, anchor + f"\ndef {alternate_input} : Nat := 41")
     exports = ["lanIdentity", "lanIdentityReference", "lanCongr", "lanCongrReference",
-               "lanOtherCongr", "lanOtherCongrReference"]
+               "lanOtherCongr", "lanOtherCongrReference", "lanPostcomp", "lanPostcompReference",
+               "lanReversePostcomp", "lanReversePostcompReference"]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -61,11 +62,14 @@ def main():
     source = "".join(blocks)
     cases = []
     for payload, suffix in [(37, ""), (41, "_41")]:
-        # The identity and two indexed cocones have independent arithmetic oracles.
+        # Each composition order has an independent arithmetic oracle.
         identity = 102 * payload + 718
         alpha = 103 * payload + 11
         beta = 103 * payload + 1126
-        answers = [identity, identity, alpha, alpha, beta, beta]
+        post = 104 * payload + 1126
+        reverse_post = 104 * payload + 15
+        answers = [identity, identity, alpha, alpha, beta, beta,
+                   post, post, reverse_post, reverse_post]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

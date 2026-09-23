@@ -1,0 +1,5 @@
+def badPostSourceSolution : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+    (Run_Base_Target_comp Point DoubleEnd point point point (Mediator.1 y) (Beta.1 y))
+    ((PostChosen.1).1 y) :=
+  Laws_descPostcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Eta Cocone Beta IdentityChosen PostChosen

@@ -59,11 +59,17 @@ def main():
         control = run("control", command, True, "")
         identity_start = original.index("    Base_Base_Second_targetEqSymm", original.index("def descId :"))
         identity_end = original.index("\n\n-- Equal cocones", identity_start)
+        post_start = original.index("    Base_Lan_lanUniq", original.index("def descPostcomp :"))
+        post_end = original.index("\nend", post_start)
         mutations = [
             ("identity-reflexivity", original[:identity_start] + "    categoryRefl" + original[identity_end:]),
             ("missing-cocone-equality", replace_once(original,
                 "(Base_Lan_lanFac J C D j c d K F H G eta alpha s x) (equal x)",
                 "(Base_Lan_lanFac J C D j c d K F H G eta alpha s x) categoryRefl")),
+            ("postcomp-reflexivity", original[:post_start] + "    categoryRefl" + original[post_end:]),
+            ("postcomp-missing-factor", original[:post_start] + replace_once(original[post_start:post_end],
+                "(Base_Lan_lanFac J C D j c d K F H G eta alpha s x)", "categoryRefl")
+                + original[post_end:]),
         ]
         proof_marker = "mismatch: the constructor categoryRefl of Base_Base_Target gives the index"
         for name, changed in mutations:
@@ -80,21 +86,33 @@ def main():
             "natAdd (natMul 101 (left.1 (natAdd n 7))) (left.2 (natAdd n 11))",
             "natAdd (natMul 101 (left.2 (natAdd n 7))) (left.1 (natAdd n 11))"))
         run("swapped-closure-fields", [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
-            False, "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr")
+            False, "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr\n")
+        fixture.write_text((ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech").read_text())
+        fixture.write_text(replace_once(fixture.read_text(),
+            "def lanPostcomp : Nat := lanPostcompAt sharedLanInput",
+            "def lanPostcomp : Nat := lanReversePostcompAt sharedLanInput"))
+        run("reversed-runtime-composition", [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
+            False, "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanPostcomp\n")
         fixture.write_text((ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech").read_text())
 
-        def trivialize(text, law, body, stop, conclusion):
+        def trivialize(text, law, body, stop, conclusion, replacement="((s.1).1 y) ((s.1).1 y) :="):
             start = text.index(body, text.index(f"def {law} :"))
             end = text.index(stop, start)
             return replace_once(text[:start] + "    categoryRefl" + text[end:],
-                                conclusion, "((s.1).1 y) ((s.1).1 y) :=")
+                                conclusion, replacement)
 
         law = paths[-1].read_text()
         statements = [
             ("trivial-id-conclusion", trivialize(law, "descId", "    Base_Base_Second_targetEqSymm",
                 "\n\n-- Equal cocones", "((s.1).1 y) (Base_Base_Target_id D d (H.1 y)) :=")),
             ("trivial-congr-conclusion", trivialize(law, "descCongr", "    Base_Lan_lanUniq",
-                "\nend", "((s.1).1 y) ((t.1).1 y) :=")),
+                "\n\n-- Postcompose", "((s.1).1 y) ((t.1).1 y) :=")),
+            ("trivial-postcomp-conclusion", trivialize(law, "descPostcomp", "    Base_Lan_lanUniq",
+                "\nend",
+                "(Base_Base_Target_comp D d (H.1 y) (G.1 y) (I.1 y) ((s.1).1 y) (tau.1 y))\n"
+                "      ((t.1).1 y) :=",
+                "(Base_Base_Target_comp D d (H.1 y) (G.1 y) (I.1 y) ((s.1).1 y) (tau.1 y))\n"
+                "      (Base_Base_Target_comp D d (H.1 y) (G.1 y) (I.1 y) ((s.1).1 y) (tau.1 y)) :=")),
         ]
         template = scratch / "prelude/cat/left-kan-laws.mech"
         for name, changed in statements:
@@ -102,12 +120,15 @@ def main():
             run(name, [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
                 False, "PRELUDE-LEFT-KAN-LAWS-FAIL mismatch: the term has type")
     killed = sum(row["passed"] for row in attempts if row["name"] not in {"control", "restored"})
-    report = {"passed": control and restored and killed == 5, "killed": killed,
+    report = {"passed": control and restored and killed == 9, "killed": killed,
               "attempts": attempts,
               "sources": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                           for path in paths + [Path(__file__), ROOT / "test/prelude_left_kan_laws.ml",
                               ROOT / "test/fixtures/prelude/left-kan-laws.mech",
-                              ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech"]}}
+                              ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech",
+                              ROOT / "test/fixtures/prelude/shared-left-kan-runtime.mech"]
+                          + sorted((ROOT / "test/neg/left-kan-laws").glob("*.mech"))
+                          + sorted((ROOT / "test/neg/left-kan-laws").glob("*.err"))}}
     (output / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"passed": report["passed"], "killed": killed, "report": str(output / "results.json")}))
     return 0 if report["passed"] else 1
