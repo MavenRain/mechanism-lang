@@ -1,0 +1,38 @@
+{
+  "dune": {
+    "path": "/Users/oobi/.opam/zxcaml-p1/bin/dune",
+    "sha256": "ab7a3967e9bffe086bf80cdf24130d2da309ff460d3be532e30d4f5208f5732c"
+  },
+  "ocamlfind": {
+    "path": "/Users/oobi/.opam/zxcaml-p1/bin/ocamlfind",
+    "sha256": "439b75d80551c74e0f783b15168277e7ca333f5ee1b18325f9a3d088bc5d1e68"
+  },
+  "ocamlc": {
+    "path": "/Users/oobi/.opam/zxcaml-p1/bin/ocamlc",
+    "sha256": "7f9a5f32a88bdf673384fe9b95483902d3f020a36dd37a6bd449889abd6c57e6"
+  },
+  "ocamlrun": {
+    "path": "/Users/oobi/.opam/zxcaml-p1/bin/ocamlrun",
+    "sha256": "c1faa0eaca0dab60079c18b4ca89d72edfcb75ea058f4e9ff5b0be3c4252247d"
+  },
+  "ocamlopt": {
+    "path": "/Users/oobi/.opam/zxcaml-p1/bin/ocamlopt",
+    "sha256": "d9026dd79400551418af67351c4443160a38903b97fc566eea7bf93a3ea7d02b"
+  },
+  "node": {
+    "path": "/opt/homebrew/bin/node",
+    "sha256": "68df4fd9c6de2301b79bef0a79fe46e4923c80494b2ddf68439ea21a7abd159d"
+  },
+  "wasmtime": {
+    "path": "/opt/homebrew/bin/wasmtime",
+    "sha256": "62c9c9644d690f3615c842e6bfa977588c4eac905622508507821fadce385681"
+  },
+  "zsh": {
+    "path": "/bin/zsh",
+    "sha256": "450b2d89ac587adea6397bb67c8e909f692af9b8bf63a0fca8064347e8a0aa57"
+  },
+  "rg": {
+    "path": "/Users/oobi/.cargo/bin/rg",
+    "sha256": "2c10ce986e298ac66d11d3aea9852cbf8d4c9dfd02d896a247fc8a7c279d809c"
+  }
+}

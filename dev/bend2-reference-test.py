@@ -73,6 +73,70 @@ def main() -> int:
         if report["status"] != "failed" or report["failed"] or report["drift"] != [str(corpus)]:
             raise AssertionError("input drift was not rejected independently")
         print("REFERENCE CONTROL input-drift PASS", flush=True)
+        module.observe = original
+
+        core_directory = root / "bend2/tests"
+        core_directory.mkdir(parents=True)
+        for name in ("cli_core_check.py", "cli_core_expected.json"):
+            shutil.copyfile(ROOT / "bend2/tests" / name, core_directory / name)
+        shutil.copyfile(ROOT / "dev/bend2-process.py", root / "dev/bend2-process.py")
+        core = module.load_helper("core-cli")
+        corpus = core_directory / "cli_core_expected.json"
+        frozen = json.loads(corpus.read_text())
+        inventory = core.load_cases(corpus)
+        names = [case["name"] for case in inventory]
+        if len(names) != 28 or len(set(names)) != 28:
+            raise AssertionError("core CLI inventory changed")
+        for control in ("missing-case", "extra-case", "invalid-bytes", "invalid-status"):
+            damaged = json.loads(json.dumps(frozen))
+            observations = damaged["observations"]
+            if control == "missing-case":
+                del observations["emit"]
+            elif control == "extra-case":
+                observations["unknown case"] = observations["emit"]
+            elif control == "invalid-bytes":
+                observations["emit"]["bytes"] = "abc"
+            else:
+                observations["emit"]["code"] = True
+            corpus.write_text(json.dumps(damaged))
+            try:
+                core.load_cases(corpus)
+            except ValueError as error:
+                if control == "invalid-bytes" and "invalid core CLI artifact: emit" not in str(error):
+                    raise AssertionError(f"core CLI invalid-bytes control gave {error}")
+                print(f"REFERENCE CONTROL core-{control} PASS", flush=True)
+            else:
+                raise AssertionError(f"core CLI accepted {control}")
+
+        frozen["observations"]["emit"]["bytes"] = "ff" + frozen["observations"]["emit"]["bytes"][2:]
+        frozen["observations"]["run node"]["stdout"] = "changed runtime answer\n"
+        corpus.write_text(json.dumps(frozen))
+        core_observe = core.observe
+
+        def core_timeout(command, case, cwd):
+            if case["name"] == "usage":
+                command = [sys.executable, "-c",
+                           "import time; print('timeout control', flush=True); time.sleep(10)"]
+                return core_observe(command, case, cwd, timeout=0.2)
+            return core_observe(command, case, cwd)
+
+        core.observe = core_timeout
+        load_helper = module.load_helper
+        module.load_helper = lambda name: core if name == "core-cli" else load_helper(name)
+        output = root / "core-controls"
+        output.mkdir()
+        report = module.verify(args.reference.resolve(), output, ["core-cli"])
+        if report["status"] != "failed" or report["failed"] != 3 or report["drift"]:
+            raise AssertionError("Wasm bytes, runtime answer and timeout were not rejected independently")
+        rows = json.loads((output / "core-cli-observations.json").read_text())["observations"]
+        failed = {names[row["index"]] for row in rows if not row["passed"]}
+        if failed != {"usage", "emit", "run node"}:
+            raise AssertionError(f"unexpected core CLI control failures: {failed}")
+        timeout = rows[names.index("usage")]["actual"]
+        if timeout["code"] != "timeout" or timeout["stdout"] != "timeout control\n":
+            raise AssertionError("core timeout did not preserve its verdict and captured output")
+        for control in ("wasm-bytes", "runtime-answer", "timeout"):
+            print(f"REFERENCE CONTROL core-{control} PASS", flush=True)
     return 0
 
 

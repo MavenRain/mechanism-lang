@@ -1,0 +1,29 @@
+passed: usage
+passed: help passthrough
+passed: unknown
+passed: spec-count
+passed: check
+passed: checked form
+passed: checked trailing args
+passed: erased form
+passed: check failure
+passed: missing input
+passed: axioms
+passed: circuit
+passed: circuit refusal silent stderr
+passed: emit
+passed: emit missing export
+passed: emit output path
+passed: build
+passed: build interspersed flags
+passed: build repeated output
+passed: build repeated export
+passed: run kernel
+passed: run node
+passed: run wasmtime
+passed: run both
+passed: run kernel trap
+passed: run both trap
+passed: run bad host
+passed: run missing file
+{"passed": 28, "failed": []}

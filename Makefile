@@ -46,3 +46,4 @@ bend2-diff: bend2-reference-check bend2-build
 	$(PYTHON) -P dev/bend2-surface-check.py --driver _bend2/test/surface_check_driver.exe
 	$(PYTHON) -P dev/bend2-erase-check.py
 	$(PYTHON) -P dev/bend2-cli-check.py
+	$(PYTHON) -P bend2/tests/cli_core_check.py

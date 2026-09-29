@@ -1,0 +1,44 @@
+python3 -P dev/bend2-reference-check.py
+REFERENCE json: observed 100/166
+REFERENCE json: 166 cases, 0 differences
+REFERENCE export: observed 100/470
+REFERENCE export: observed 200/470
+REFERENCE export: observed 300/470
+REFERENCE export: observed 400/470
+REFERENCE export: 470 cases, 0 differences
+REFERENCE translate: observed 100/613
+REFERENCE translate: observed 200/613
+REFERENCE translate: observed 300/613
+REFERENCE translate: observed 400/613
+REFERENCE translate: observed 500/613
+REFERENCE translate: observed 600/613
+REFERENCE translate: 613 cases, 0 differences
+REFERENCE pipeline: observed 100/1118
+REFERENCE pipeline: observed 200/1118
+REFERENCE pipeline: observed 300/1118
+REFERENCE pipeline: observed 400/1118
+REFERENCE pipeline: observed 500/1118
+REFERENCE pipeline: observed 600/1118
+REFERENCE pipeline: observed 700/1118
+REFERENCE pipeline: observed 800/1118
+REFERENCE pipeline: observed 900/1118
+REFERENCE pipeline: observed 1000/1118
+REFERENCE pipeline: observed 1100/1118
+REFERENCE pipeline: 1118 cases, 0 differences
+REFERENCE parser: observed 100/261
+REFERENCE parser: observed 200/261
+REFERENCE parser: 261 cases, 0 differences
+REFERENCE surface: observed 100/926
+REFERENCE surface: observed 200/926
+REFERENCE surface: observed 300/926
+REFERENCE surface: observed 400/926
+REFERENCE surface: observed 500/926
+REFERENCE surface: observed 600/926
+REFERENCE surface: observed 700/926
+REFERENCE surface: observed 800/926
+REFERENCE surface: observed 900/926
+REFERENCE surface: 926 cases, 0 differences
+REFERENCE erase: 80 cases, 0 differences
+REFERENCE cli: 37 cases, 0 differences
+REFERENCE core-cli: 28 cases, 0 differences
+REFERENCE PASSED: /Users/oobi/Documents/mechanism-lang/_bend2/reference/recording-5hdrbnlz/report.json

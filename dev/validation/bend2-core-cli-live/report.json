@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "status": "passed",
+  "recorded_at": "2026-09-29T09:47:20.635213+00:00",
+  "slice": "Bend 2 port / slice 3: core CLI and Wasm live reference comparison",
+  "reference_head": "ed923e2130b8501ccbe500b538cfa3d39aa2bcda",
+  "reference": {
+    "cases": 3699,
+    "differences": 0,
+    "drift": [],
+    "suites": [
+      {
+        "name": "json",
+        "cases": 166,
+        "failed": 0,
+        "seconds": 6.699,
+        "observations": "json-observations.json",
+        "sha256": "9648db076ae88aee54ab4853471d45598d5e058dce5ab673ae69c286c4b48439"
+      },
+      {
+        "name": "export",
+        "cases": 470,
+        "failed": 0,
+        "seconds": 17.841,
+        "observations": "export-observations.json",
+        "sha256": "6352a046e281e77d6b919c57ef5915b7e708621116c50e04489a88ccbe923478"
+      },
+      {
+        "name": "translate",
+        "cases": 613,
+        "failed": 0,
+        "seconds": 22.783,
+        "observations": "translate-observations.json",
+        "sha256": "d56802657d72180d2bca0ea74208a5ca57846334bb4b442a60e34f65b5f79440"
+      },
+      {
+        "name": "pipeline",
+        "cases": 1118,
+        "failed": 0,
+        "seconds": 43.108,
+        "observations": "pipeline-observations.json",
+        "sha256": "7cc95362ed3a6b37991d7e6ca2df254ba82c5743178716ebe000327e5bee4076"
+      },
+      {
+        "name": "parser",
+        "cases": 261,
+        "failed": 0,
+        "seconds": 10.267,
+        "observations": "parser-observations.json",
+        "sha256": "59342cbf5d65412402cc9356c8588314fc00551089fdaa10193a41765f783d5b"
+      },
+      {
+        "name": "surface",
+        "cases": 926,
+        "failed": 0,
+        "seconds": 284.394,
+        "observations": "surface-observations.json",
+        "sha256": "bf6baab216756181cbf518f3f9b2438d6432de3ab3c9c17ded3bad9d6bc4680a"
+      },
+      {
+        "name": "erase",
+        "cases": 80,
+        "failed": 0,
+        "seconds": 3.107,
+        "observations": "erase-observations.json",
+        "sha256": "54158a2c24c108f0d9ff96c4628fe9b3bcb6bf1484f63844c40a9ce1a0ceb747"
+      },
+      {
+        "name": "cli",
+        "cases": 37,
+        "failed": 0,
+        "seconds": 2.22,
+        "observations": "cli-observations.json",
+        "sha256": "ae907169dc0c80cf5ee3c2c0a6b8c77f2d3386382ff9003e0546ff76fa85c093"
+      },
+      {
+        "name": "core-cli",
+        "cases": 28,
+        "failed": 0,
+        "seconds": 2.594,
+        "observations": "core-cli-observations.json",
+        "sha256": "8bfe33b3aa5868cca675f70a0f2b83ad2bf6795d82a54cefe4375e19acbd721f"
+      }
+    ],
+    "raw_report": "/Users/oobi/Documents/mechanism-lang/_bend2/reference/recording-5hdrbnlz/report.json",
+    "raw_report_sha256": "117ded3794bb6a1520a7dcff99ddb51d11481baa4d70b8de2417887d0ed0b069",
+    "unresolved_surface_attempts": 18
+  },
+  "bend2": {
+    "cases": 28,
+    "differences": 0,
+    "command": [
+      "python3",
+      "-P",
+      "bend2/tests/cli_core_check.py",
+      "--driver",
+      "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe"
+    ],
+    "backend": "native",
+    "bend_version": "2.0.27",
+    "production_inputs_verified": 140,
+    "source_pins": "bend2-production.sha256",
+    "artifacts": {
+      "_bend2/bin/mechanism-native": "9f535cf19a095a4f52f0958dc0e41bb68e353de0554439c9dc3abd0a06f0f1fc",
+      "_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+      "_bend2/bin/mechanism-native.build.json": "9c18aa100890e8a48a0565e6bcf868f9076a77d7bcdefa298eec1a6a056d8610"
+    },
+    "pins_verified_before_and_after_replay": true
+  },
+  "controls": {
+    "passed": 10,
+    "checks": [
+      "REFERENCE CONTROL changed-expectation PASS",
+      "REFERENCE CONTROL timeout PASS",
+      "REFERENCE CONTROL input-drift PASS",
+      "REFERENCE CONTROL core-missing-case PASS",
+      "REFERENCE CONTROL core-extra-case PASS",
+      "REFERENCE CONTROL core-invalid-bytes PASS",
+      "REFERENCE CONTROL core-invalid-status PASS",
+      "REFERENCE CONTROL core-wasm-bytes PASS",
+      "REFERENCE CONTROL core-runtime-answer PASS",
+      "REFERENCE CONTROL core-timeout PASS"
+    ]
+  },
+  "core_corpus_sha256": "bf0495aba5625e02e2486e3fa5c54260649d8ce65c601db2af6344664a4de610",
+  "source_pins": "sources.sha256",
+  "scope": "All nine OCaml reference suites, the native Bend core CLI suite, and the reference refusal controls."
+}
