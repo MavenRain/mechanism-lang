@@ -1,0 +1,9 @@
+poly (u, v, w) group ReuseChain where
+  specialize Box (u) as Source
+  specialize Box (v) as Middle
+  specialize Box (w) as Target
+  specialize Pair (u, v) as First with (Left := Source, Right := Middle)
+  specialize Pair (v, w) as Second with (Left := Middle, Right := Target)
+  specialize Pair (w, w) as Third with (Left := Target, Right := Target)
+  specialize Pair (w, w) as Identity with (Left := Target, Right := Target)
+end

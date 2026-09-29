@@ -1,0 +1,21 @@
+{
+  "command": [
+    "dune",
+    "build",
+    "--root",
+    "/Users/oobi/Documents/mechanism-lang",
+    "--build-dir",
+    "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/recording/ocaml-build",
+    "bin/mech.exe"
+  ],
+  "cases": 104,
+  "sources": {
+    "test/fixtures/prelude/template-composition.mech": "4c31cfd6dfade22459aec2fba19b5fa0eb61af23b56be66e6d4e9685276e1b52",
+    "test/fixtures/prelude/reuse-runtime-shared.mech": "15f90224f36ae9e17a20edc7038c49421439ebb3f53ec86707482803763b194d",
+    "test/fixtures/prelude/reuse-runtime-concrete.mech": "45f1f5e559b24c2edb7112acdcbe46521c2b696ff5b9a61f295b193c07e3ac28",
+    "test/fixtures/prelude/reuse-runtime-symbolic.mech": "a37abda29156c7cd13274f07fe07618080a0ab6344f7acfab035e16f1f6afc87"
+  },
+  "driver": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/recording/ocaml-build/default/bin/mech.exe",
+  "driver_sha256": "59849d0a0f036f538317cdbbf2a89e6b3ff9a2fc16610d3336abea029180f6dc",
+  "corpus_sha256": "31a3ecefc1feca3d89e107b542e26a8b30532a2d64b56f97f6df86b80b0e7f9c"
+}

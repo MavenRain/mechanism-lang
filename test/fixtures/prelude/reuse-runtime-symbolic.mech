@@ -1,0 +1,15 @@
+specialize ReuseChain (0, 0, 0) as Shared
+
+def reuseInput : Nat := 37
+def payload : Shared_Source Nat := box reuseInput
+def repeated : Nat := Shared_Target_unbox Nat
+  (Shared_Third_transfer Nat Nat (fun (n : Nat) => natAdd n 5)
+    (Shared_Second_transfer Nat Nat (fun (n : Nat) => natAdd n n)
+      (Shared_First_transfer Nat Nat (fun (n : Nat) => natAdd n 2) payload)))
+def offset : Nat := Shared_Target_unbox Nat
+  (Shared_Second_transfer Nat Nat (fun (n : Nat) => natAdd n n)
+    (Shared_First_transfer Nat Nat (fun (n : Nat) => natAdd n 3) payload))
+def identity : Nat := Shared_Target_unbox Nat
+  (Shared_Identity_transfer Nat Nat (fun (n : Nat) => n) (box reuseInput))
+def identityOffset : Nat := Shared_Target_unbox Nat
+  (Shared_Identity_transfer Nat Nat (fun (n : Nat) => natAdd n 7) (box reuseInput))

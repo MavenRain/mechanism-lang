@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-reuse-probe.py", line 19, in <module>
+    raise AssertionError(case['name'])
+AssertionError: concrete/original/repeatedObject/kernel

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py", line 30, in <module>
+    raise AssertionError((case['name'], actual))
+AssertionError: ('concrete/original/check', {'code': 'timeout', 'stdout': '', 'stderr': '', 'timeout': 20})

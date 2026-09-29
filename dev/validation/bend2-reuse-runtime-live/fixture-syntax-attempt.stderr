@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py", line 33, in <module>
+    raise AssertionError((case['name'], actual))
+AssertionError: ('concrete/original/check', {'code': 1, 'stdout': '', 'stderr': "line 44, column 47: unexpected character '+'\n", 'bytes': None})

@@ -3,18 +3,21 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME_SUITES = ("core-cli", "equality-runtime", "composition-runtime")
+RUNTIME_SUITES = ("core-cli", "equality-runtime", "composition-runtime", "reuse-runtime")
 CLI_SUITES = ("cli", *RUNTIME_SUITES)
 SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase", *CLI_SUITES)
 
@@ -56,13 +59,35 @@ def write_report(path: Path, report: dict) -> None:
     temporary.replace(path)
 
 
-def verify(reference: Path, output: Path, suites: list[str]) -> dict:
+def replay_runtime(helper, driver: Path, cases: list[dict], reference: Path, jobs: int) -> list[dict]:
+    def run(case):
+        try:
+            return helper.observe([str(driver)], case, cwd=reference)
+        except (OSError, subprocess.TimeoutExpired) as error:
+            return dict(error=str(error))
+
+    def terminated(signum, frame):
+        raise SystemExit(128 + signum)
+
+    on_main = threading.current_thread() is threading.main_thread()
+    previous = signal.signal(signal.SIGTERM, terminated) if on_main else None
+    try:
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            return list(pool.map(run, cases))
+    finally:
+        if on_main:
+            signal.signal(signal.SIGTERM, previous)
+
+
+def verify(reference: Path, output: Path, suites: list[str], jobs: int = 1) -> dict:
+    if type(jobs) is not int or not 1 <= jobs <= 8:
+        raise ValueError("runtime jobs must be an integer from 1 through 8")
     build = output / "ocaml-build"
     adapters = output / "adapters"
     adapters.mkdir()
     report = dict(version=1, status="running", reference=str(reference), suites=[],
                   scope=suites, normalizations=["CLI temporary root",
-                  "CLI mkdir process-specific staging path"], inputs={}, tools={})
+                  "CLI mkdir process-specific staging path"], runtime_jobs=jobs, inputs={}, tools={})
     report_path = output / "report.json"
     write_report(report_path, report)
     pins = report["inputs"]
@@ -174,6 +199,11 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
             report["unresolved_surface_attempts"] = evidence["baseline"]["unresolved_attempts"]
         observations = []
         started = time.monotonic()
+        replayed = None
+        if suite in RUNTIME_SUITES and jobs > 1:
+            driver = build / "default/bin/mech.exe"
+            pin(driver)
+            replayed = replay_runtime(runtime_helpers[suite], driver, evidence["cases"], reference, jobs)
         for index, case in enumerate(evidence["cases"]):
             expected = case.get("expected")
             if expected is None:
@@ -188,9 +218,12 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
                 driver = build / "default/bin" / filename
                 pin(driver)
                 try:
-                    actual = (runtime_helpers[suite].observe([str(driver)], case, cwd=reference)
-                              if suite in RUNTIME_SUITES
-                              else cli.observe([str(driver)], case))
+                    if replayed is not None:
+                        actual = replayed[index]
+                    elif suite in RUNTIME_SUITES:
+                        actual = runtime_helpers[suite].observe([str(driver)], case, cwd=reference)
+                    else:
+                        actual = cli.observe([str(driver)], case)
                 except (OSError, subprocess.TimeoutExpired) as error:
                     actual = dict(error=str(error))
                 passed = (actual == expected if suite in RUNTIME_SUITES else
@@ -239,6 +272,8 @@ def main() -> int:
     parser.add_argument("--output", type=Path,
                         help="fresh evidence directory (default: unique directory under _bend2/reference)")
     parser.add_argument("--suite", choices=SUITES, action="append")
+    parser.add_argument("--jobs", type=int, choices=range(1, 9), default=1,
+                        help="concurrent runtime observations (default: 1; other suites stay serial)")
     args = parser.parse_args()
     reference = args.reference.resolve()
     if not (reference / "dune-project").is_file():
@@ -255,7 +290,7 @@ def main() -> int:
         local_output.mkdir(parents=True, exist_ok=True)
         output = Path(tempfile.mkdtemp(prefix="recording-", dir=local_output))
     try:
-        report = verify(reference, output, list(dict.fromkeys(args.suite or SUITES)))
+        report = verify(reference, output, list(dict.fromkeys(args.suite or SUITES)), jobs=args.jobs)
     except (OSError, ValueError, LookupError, TypeError, AttributeError, RuntimeError,
             subprocess.TimeoutExpired) as error:
         message = f"{type(error).__name__}: {error}"

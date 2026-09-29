@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py", line 33, in <module>
+    raise AssertionError((case['name'], actual))
+AssertionError: ('symbolic/changed/repeatedObject/emit', {'code': 'timeout', 'stdout': '', 'stderr': '', 'timeout': 60})

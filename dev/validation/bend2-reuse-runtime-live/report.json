@@ -1,0 +1,567 @@
+{
+  "version": 1,
+  "status": "passed",
+  "reference_head": "cbdc7e9743029be55b9e178d2bfb29fc77d1a2e8",
+  "validated_checkout": "/Users/oobi/Documents/mechanism-lang",
+  "scope": [
+    "cli",
+    "core-cli",
+    "equality-runtime",
+    "composition-runtime",
+    "reuse-runtime"
+  ],
+  "live_reference_cases": 243,
+  "native_cases": 243,
+  "refusal_controls": {
+    "reference": 10,
+    "equality": 14,
+    "composition": 18,
+    "reuse": 26
+  },
+  "corpus_sha256": "31a3ecefc1feca3d89e107b542e26a8b30532a2d64b56f97f6df86b80b0e7f9c",
+  "source_pins": 206,
+  "native_artifacts": {
+    "_bend2/bin/mechanism-native": "9f535cf19a095a4f52f0958dc0e41bb68e353de0554439c9dc3abd0a06f0f1fc",
+    "_bend2/bin/mechanism-native.build.json": "9c18aa100890e8a48a0565e6bcf868f9076a77d7bcdefa298eec1a6a056d8610",
+    "_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+    "_bend2/bin/mech_cert.exe": "cb2c7d0443bd3c538d520a0f3889a09746e82ae503f8c53fed2f18a84f81a499"
+  },
+  "attempts": {
+    "compiler-selection-attempt": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-o7sYGZ",
+      "status": "complete",
+      "exitCode": 1,
+      "counts": {
+        "stdout_bytes": 0,
+        "stderr_bytes": 59,
+        "stdout_lines": 0,
+        "stderr_lines": 1,
+        "error_lines": 1,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "dev/bend2-build.py",
+            "--target",
+            "production",
+            "--backend",
+            "native"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 1,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-o7sYGZ/command-0001.stdout",
+            "bytes": 0,
+            "lines": 0
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-o7sYGZ/command-0001.stderr",
+            "bytes": 59,
+            "lines": 1
+          }
+        }
+      ]
+    },
+    "category-recording-20s": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-SCbdUD",
+      "status": "complete",
+      "exitCode": 1,
+      "counts": {
+        "stdout_bytes": 0,
+        "stderr_bytes": 276,
+        "stdout_lines": 0,
+        "stderr_lines": 4,
+        "error_lines": 2,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 1,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-SCbdUD/command-0001.stdout",
+            "bytes": 0,
+            "lines": 0
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-SCbdUD/command-0001.stderr",
+            "bytes": 276,
+            "lines": 4
+          }
+        }
+      ]
+    },
+    "category-check-probe": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-I4fxAc",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 132,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-probe.py"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-I4fxAc/command-0001.stdout",
+            "bytes": 132,
+            "lines": 1
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-I4fxAc/command-0001.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "category-recording-60s": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-z5JQrg",
+      "status": "complete",
+      "exitCode": 1,
+      "counts": {
+        "stdout_bytes": 3752,
+        "stderr_bytes": 289,
+        "stdout_lines": 80,
+        "stderr_lines": 4,
+        "error_lines": 2,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 1,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-z5JQrg/command-0001.stdout",
+            "bytes": 3752,
+            "lines": 80
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-z5JQrg/command-0001.stderr",
+            "bytes": 289,
+            "lines": 4
+          }
+        }
+      ]
+    },
+    "category-native-probe-60s": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-fSDOZ1",
+      "status": "complete",
+      "exitCode": 1,
+      "counts": {
+        "stdout_bytes": 156,
+        "stderr_bytes": 213,
+        "stdout_lines": 1,
+        "stderr_lines": 4,
+        "error_lines": 2,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-probe.py",
+            "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 1,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-fSDOZ1/command-0001.stdout",
+            "bytes": 156,
+            "lines": 1
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-fSDOZ1/command-0001.stderr",
+            "bytes": 213,
+            "lines": 4
+          }
+        }
+      ]
+    },
+    "fixture-syntax-attempt": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-yKTIOQ",
+      "status": "complete",
+      "exitCode": 1,
+      "counts": {
+        "stdout_bytes": 0,
+        "stderr_bytes": 314,
+        "stdout_lines": 0,
+        "stderr_lines": 4,
+        "error_lines": 2,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-record.py"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 1,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-yKTIOQ/command-0001.stdout",
+            "bytes": 0,
+            "lines": 0
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-yKTIOQ/command-0001.stderr",
+            "bytes": 314,
+            "lines": 4
+          }
+        }
+      ]
+    },
+    "focused-native-probe": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-tL357i",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 299,
+        "stderr_bytes": 0,
+        "stdout_lines": 2,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/gpt6/mechanism-reuse-probe.py",
+            "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-tL357i/command-0001.stdout",
+            "bytes": 299,
+            "lines": 2
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-tL357i/command-0001.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "recording": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 4492,
+        "stderr_bytes": 0,
+        "stdout_lines": 105,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/record.py"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/recording.stdout",
+            "bytes": 4492,
+            "lines": 105
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/recording.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "production-build": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 37,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "env",
+            "BEND=/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+            "python3",
+            "-P",
+            "dev/bend2-build.py",
+            "--target",
+            "production",
+            "--backend",
+            "native"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/production-build.stdout",
+            "bytes": 37,
+            "lines": 1
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/production-build.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "reference": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 391,
+        "stderr_bytes": 0,
+        "stdout_lines": 7,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "dev/bend2-reference-check.py",
+            "--output",
+            "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/reference-live",
+            "--suite",
+            "cli",
+            "--suite",
+            "core-cli",
+            "--suite",
+            "equality-runtime",
+            "--suite",
+            "composition-runtime",
+            "--suite",
+            "reuse-runtime",
+            "--jobs",
+            "4"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/reference.stdout",
+            "bytes": 391,
+            "lines": 7
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/reference.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "native": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 7542,
+        "stderr_bytes": 0,
+        "stdout_lines": 217,
+        "stderr_lines": 0,
+        "error_lines": 5,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/native.py"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/native.stdout",
+            "bytes": 7542,
+            "lines": 217
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/native.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "previous-controls": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-A3NSiT",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 2238,
+        "stderr_bytes": 0,
+        "stdout_lines": 49,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "zsh",
+            "-c",
+            "python3 -P dev/bend2-reference-test.py --reference \"$PWD\" && python3 -P dev/bend2-equality-runtime-test.py --reference \"$PWD\" && python3 -P dev/bend2-composition-runtime-test.py --reference \"$PWD\""
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-A3NSiT/command-0001.stdout",
+            "bytes": 2238,
+            "lines": 49
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-slice6/.kanon-exec/run-A3NSiT/command-0001.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "controls": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 3893,
+        "stderr_bytes": 0,
+        "stdout_lines": 81,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "make",
+            "bend2-reference-test"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/controls.stdout",
+            "bytes": 3893,
+            "lines": 81
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-reuse-runtime-review/logs/controls.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    }
+  },
+  "limitation": "Five suites were compared. The full 3877-case inventory was not rerun.",
+  "broader_category_limit": "Initial category/functor reuse fixtures timed out during OCaml recording at 20 and 60 seconds and during a native probe at 60 seconds under local load. Those broader fixtures remain outside the passing reuse inventory. Retained diagnostic attempts are not performance benchmarks.",
+  "runtime_jobs": 4,
+  "runtime_timeout_seconds": 20
+}

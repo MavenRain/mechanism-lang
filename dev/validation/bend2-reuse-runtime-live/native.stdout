@@ -1,0 +1,217 @@
+NATIVE SUITE dev/bend2-cli-check.py
+{"cases": 37, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-cli/report.json"}
+NATIVE SUITE bend2/tests/cli_core_check.py
+passed: usage
+passed: help passthrough
+passed: unknown
+passed: spec-count
+passed: check
+passed: checked form
+passed: checked trailing args
+passed: erased form
+passed: check failure
+passed: missing input
+passed: axioms
+passed: circuit
+passed: circuit refusal silent stderr
+passed: emit
+passed: emit missing export
+passed: emit output path
+passed: build
+passed: build interspersed flags
+passed: build repeated output
+passed: build repeated export
+passed: run kernel
+passed: run node
+passed: run wasmtime
+passed: run both
+passed: run kernel trap
+passed: run both trap
+passed: run bad host
+passed: run missing file
+{"passed": 28, "failed": []}
+NATIVE SUITE dev/bend2-equality-runtime-check.py
+passed: original/check
+passed: original/axioms
+passed: original/Literal/emit
+passed: original/Literal/kernel
+passed: original/Literal/node
+passed: original/Literal/wasmtime
+passed: original/Literal/both
+passed: original/Struct/emit
+passed: original/Struct/kernel
+passed: original/Struct/node
+passed: original/Struct/wasmtime
+passed: original/Struct/both
+passed: original/Closure/emit
+passed: original/Closure/kernel
+passed: original/Closure/node
+passed: original/Closure/wasmtime
+passed: original/Closure/both
+passed: changed/check
+passed: changed/axioms
+passed: changed/Literal/emit
+passed: changed/Literal/kernel
+passed: changed/Literal/node
+passed: changed/Literal/wasmtime
+passed: changed/Literal/both
+passed: changed/Struct/emit
+passed: changed/Struct/kernel
+passed: changed/Struct/node
+passed: changed/Struct/wasmtime
+passed: changed/Struct/both
+passed: changed/Closure/emit
+passed: changed/Closure/kernel
+passed: changed/Closure/node
+passed: changed/Closure/wasmtime
+passed: changed/Closure/both
+{"passed": 34, "failed": []}
+NATIVE SUITE dev/bend2-composition-runtime-check.py
+passed: original/check
+passed: original/axioms
+passed: original/forward/emit
+passed: original/forward/build
+passed: original/forward/kernel
+passed: original/forward/node
+passed: original/forward/wasmtime
+passed: original/forward/both
+passed: original/reverse/emit
+passed: original/reverse/build
+passed: original/reverse/kernel
+passed: original/reverse/node
+passed: original/reverse/wasmtime
+passed: original/reverse/both
+passed: original/nested/emit
+passed: original/nested/build
+passed: original/nested/kernel
+passed: original/nested/node
+passed: original/nested/wasmtime
+passed: original/nested/both
+passed: changed/check
+passed: changed/axioms
+passed: changed/forward/emit
+passed: changed/forward/build
+passed: changed/forward/kernel
+passed: changed/forward/node
+passed: changed/forward/wasmtime
+passed: changed/forward/both
+passed: changed/reverse/emit
+passed: changed/reverse/build
+passed: changed/reverse/kernel
+passed: changed/reverse/node
+passed: changed/reverse/wasmtime
+passed: changed/reverse/both
+passed: changed/nested/emit
+passed: changed/nested/build
+passed: changed/nested/kernel
+passed: changed/nested/node
+passed: changed/nested/wasmtime
+passed: changed/nested/both
+{"passed": 40, "failed": []}
+NATIVE SUITE dev/bend2-reuse-runtime-check.py --jobs 4
+passed: concrete/original/check
+passed: concrete/original/axioms
+passed: concrete/original/repeated/emit
+passed: concrete/original/repeated/build
+passed: concrete/original/repeated/kernel
+passed: concrete/original/repeated/node
+passed: concrete/original/repeated/wasmtime
+passed: concrete/original/repeated/both
+passed: concrete/original/offset/emit
+passed: concrete/original/offset/build
+passed: concrete/original/offset/kernel
+passed: concrete/original/offset/node
+passed: concrete/original/offset/wasmtime
+passed: concrete/original/offset/both
+passed: concrete/original/identity/emit
+passed: concrete/original/identity/build
+passed: concrete/original/identity/kernel
+passed: concrete/original/identity/node
+passed: concrete/original/identity/wasmtime
+passed: concrete/original/identity/both
+passed: concrete/original/identityOffset/emit
+passed: concrete/original/identityOffset/build
+passed: concrete/original/identityOffset/kernel
+passed: concrete/original/identityOffset/node
+passed: concrete/original/identityOffset/wasmtime
+passed: concrete/original/identityOffset/both
+passed: concrete/changed/check
+passed: concrete/changed/axioms
+passed: concrete/changed/repeated/emit
+passed: concrete/changed/repeated/build
+passed: concrete/changed/repeated/kernel
+passed: concrete/changed/repeated/node
+passed: concrete/changed/repeated/wasmtime
+passed: concrete/changed/repeated/both
+passed: concrete/changed/offset/emit
+passed: concrete/changed/offset/build
+passed: concrete/changed/offset/kernel
+passed: concrete/changed/offset/node
+passed: concrete/changed/offset/wasmtime
+passed: concrete/changed/offset/both
+passed: concrete/changed/identity/emit
+passed: concrete/changed/identity/build
+passed: concrete/changed/identity/kernel
+passed: concrete/changed/identity/node
+passed: concrete/changed/identity/wasmtime
+passed: concrete/changed/identity/both
+passed: concrete/changed/identityOffset/emit
+passed: concrete/changed/identityOffset/build
+passed: concrete/changed/identityOffset/kernel
+passed: concrete/changed/identityOffset/node
+passed: concrete/changed/identityOffset/wasmtime
+passed: concrete/changed/identityOffset/both
+passed: symbolic/original/check
+passed: symbolic/original/axioms
+passed: symbolic/original/repeated/emit
+passed: symbolic/original/repeated/build
+passed: symbolic/original/repeated/kernel
+passed: symbolic/original/repeated/node
+passed: symbolic/original/repeated/wasmtime
+passed: symbolic/original/repeated/both
+passed: symbolic/original/offset/emit
+passed: symbolic/original/offset/build
+passed: symbolic/original/offset/kernel
+passed: symbolic/original/offset/node
+passed: symbolic/original/offset/wasmtime
+passed: symbolic/original/offset/both
+passed: symbolic/original/identity/emit
+passed: symbolic/original/identity/build
+passed: symbolic/original/identity/kernel
+passed: symbolic/original/identity/node
+passed: symbolic/original/identity/wasmtime
+passed: symbolic/original/identity/both
+passed: symbolic/original/identityOffset/emit
+passed: symbolic/original/identityOffset/build
+passed: symbolic/original/identityOffset/kernel
+passed: symbolic/original/identityOffset/node
+passed: symbolic/original/identityOffset/wasmtime
+passed: symbolic/original/identityOffset/both
+passed: symbolic/changed/check
+passed: symbolic/changed/axioms
+passed: symbolic/changed/repeated/emit
+passed: symbolic/changed/repeated/build
+passed: symbolic/changed/repeated/kernel
+passed: symbolic/changed/repeated/node
+passed: symbolic/changed/repeated/wasmtime
+passed: symbolic/changed/repeated/both
+passed: symbolic/changed/offset/emit
+passed: symbolic/changed/offset/build
+passed: symbolic/changed/offset/kernel
+passed: symbolic/changed/offset/node
+passed: symbolic/changed/offset/wasmtime
+passed: symbolic/changed/offset/both
+passed: symbolic/changed/identity/emit
+passed: symbolic/changed/identity/build
+passed: symbolic/changed/identity/kernel
+passed: symbolic/changed/identity/node
+passed: symbolic/changed/identity/wasmtime
+passed: symbolic/changed/identity/both
+passed: symbolic/changed/identityOffset/emit
+passed: symbolic/changed/identityOffset/build
+passed: symbolic/changed/identityOffset/kernel
+passed: symbolic/changed/identityOffset/node
+passed: symbolic/changed/identityOffset/wasmtime
+passed: symbolic/changed/identityOffset/both
+{"passed": 104, "failed": []}
+NATIVE PASS suites=5 cases=243

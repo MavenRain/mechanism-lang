@@ -1,0 +1,81 @@
+python3 -P dev/bend2-reference-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+REFERENCE json: 3 cases, 2 differences
+REFERENCE CONTROL changed-expectation PASS
+REFERENCE CONTROL timeout PASS
+REFERENCE json: 2 cases, 0 differences
+REFERENCE CONTROL input-drift PASS
+REFERENCE CONTROL core-missing-case PASS
+REFERENCE CONTROL core-extra-case PASS
+REFERENCE CONTROL core-invalid-bytes PASS
+REFERENCE CONTROL core-invalid-status PASS
+REFERENCE core-cli: 28 cases, 3 differences
+REFERENCE CONTROL core-wasm-bytes PASS
+REFERENCE CONTROL core-runtime-answer PASS
+REFERENCE CONTROL core-timeout PASS
+python3 -P dev/bend2-equality-runtime-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+EQUALITY REFERENCE CONTROL missing-case PASS
+EQUALITY REFERENCE CONTROL extra-case PASS
+EQUALITY REFERENCE CONTROL invalid-bytes PASS
+EQUALITY REFERENCE CONTROL invalid-status PASS
+EQUALITY REFERENCE CONTROL missing-wasm PASS
+EQUALITY REFERENCE CONTROL extra-wasm PASS
+EQUALITY REFERENCE CONTROL changed-answer PASS
+EQUALITY REFERENCE CONTROL missing-source PASS
+EQUALITY REFERENCE CONTROL changed-source PASS
+EQUALITY REFERENCE CONTROL mutation-anchor PASS
+REFERENCE equality-runtime: 34 cases, 3 differences
+EQUALITY REFERENCE CONTROL runtime-answer PASS
+EQUALITY REFERENCE CONTROL wasm-bytes PASS
+EQUALITY REFERENCE CONTROL timeout-output PASS
+EQUALITY REFERENCE CONTROL source-drift PASS
+EQUALITY REFERENCE CONTROLS PASS controls=14
+python3 -P dev/bend2-composition-runtime-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+COMPOSITION REFERENCE CONTROL missing-case PASS
+COMPOSITION REFERENCE CONTROL extra-case PASS
+COMPOSITION REFERENCE CONTROL invalid-bytes PASS
+COMPOSITION REFERENCE CONTROL invalid-status PASS
+COMPOSITION REFERENCE CONTROL missing-wasm PASS
+COMPOSITION REFERENCE CONTROL extra-wasm PASS
+COMPOSITION REFERENCE CONTROL changed-answer PASS
+COMPOSITION REFERENCE CONTROL composition-order PASS
+COMPOSITION REFERENCE CONTROL missing-source PASS
+COMPOSITION REFERENCE CONTROL changed-template PASS
+COMPOSITION REFERENCE CONTROL changed-input PASS
+COMPOSITION REFERENCE CONTROL mutation-anchor PASS
+COMPOSITION REFERENCE CONTROL unknown-variant PASS
+REFERENCE composition-runtime: 40 cases, 4 differences
+COMPOSITION REFERENCE CONTROL runtime-answer PASS
+COMPOSITION REFERENCE CONTROL wasm-bytes PASS
+COMPOSITION REFERENCE CONTROL build-bytes PASS
+COMPOSITION REFERENCE CONTROL timeout-output PASS
+COMPOSITION REFERENCE CONTROL source-drift PASS
+COMPOSITION REFERENCE CONTROLS PASS controls=18
+python3 -P dev/bend2-reuse-runtime-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+REUSE REFERENCE CONTROL missing-case PASS
+REUSE REFERENCE CONTROL missing-symbolic-case PASS
+REUSE REFERENCE CONTROL extra-case PASS
+REUSE REFERENCE CONTROL invalid-bytes PASS
+REUSE REFERENCE CONTROL invalid-status PASS
+REUSE REFERENCE CONTROL missing-wasm PASS
+REUSE REFERENCE CONTROL extra-wasm PASS
+REUSE REFERENCE CONTROL changed-answer PASS
+REUSE REFERENCE CONTROL export-swap PASS
+REUSE REFERENCE CONTROL missing-source PASS
+REUSE REFERENCE CONTROL changed-template PASS
+REUSE REFERENCE CONTROL changed-chain PASS
+REUSE REFERENCE CONTROL changed-concrete-input PASS
+REUSE REFERENCE CONTROL changed-symbolic-input PASS
+REUSE REFERENCE CONTROL concrete-missing-anchor PASS
+REUSE REFERENCE CONTROL concrete-duplicate-anchor PASS
+REUSE REFERENCE CONTROL symbolic-missing-anchor PASS
+REUSE REFERENCE CONTROL symbolic-duplicate-anchor PASS
+REUSE REFERENCE CONTROL unknown-mode PASS
+REUSE REFERENCE CONTROL unknown-variant PASS
+REFERENCE reuse-runtime: 6 cases, 5 differences
+REUSE REFERENCE CONTROL concrete-answer PASS
+REUSE REFERENCE CONTROL symbolic-answer PASS
+REUSE REFERENCE CONTROL wasm-bytes PASS
+REUSE REFERENCE CONTROL build-bytes PASS
+REUSE REFERENCE CONTROL timeout-output PASS
+REUSE REFERENCE CONTROL source-drift PASS
+REUSE REFERENCE CONTROLS PASS controls=26

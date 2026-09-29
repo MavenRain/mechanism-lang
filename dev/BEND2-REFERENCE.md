@@ -1,8 +1,8 @@
 # Bend 2 live reference checks
 
 The live reference checks compare the frozen cases with the OCaml implementation
-in this repository. The fifth port slice adds template composition across the
-kernel, multi-file builds, Wasm emission and runtime hosts. Run the full comparison with:
+in this repository. The sixth port slice adds concrete and symbolic family reuse
+across the kernel, multi-file builds, Wasm emission and runtime hosts. Run the full comparison with:
 
 ```sh
 make bend2-diff
@@ -11,14 +11,14 @@ make bend2-reference-test
 
 `bend2-diff` builds fresh OCaml libraries and seven observation adapters,
 compares their results with the checked-in expectations, verifies the Bend 2
-build, and replays the same eleven case sets through Bend 2. The Bend builder
+build, and replays the same twelve case sets through Bend 2. The Bend builder
 checks source, compiler, and artifact fingerprints before reusing binaries.
 Select the intended OCaml switch in `PATH`. The reference build needs `git`,
 `dune`, `ocamlfind`, `ocamlc`, `ocamlopt`, `ocamlrun`, and the `zarith` and
 `unix` packages. The reference directory must be the root of a git work tree,
 because the report records its `HEAD` commit.
 The Bend toolchain is configured as for `make bend2-build`.
-The core CLI, equality runtime and composition runtime cases also require
+The core CLI, equality, composition and reuse runtime cases also require
 `node`, `wasmtime`, `zsh`, and `rg` in `PATH`.
 Their executable hashes and both runtime scripts are recorded in the report.
 
@@ -35,7 +35,8 @@ Their executable hashes and both runtime scripts are recorded in the report.
 | Core CLI, Wasm bytes and runtime hosts | 28 |
 | Equality transport, Wasm bytes and runtime hosts | 34 |
 | Template composition, multi-file builds and runtime hosts | 40 |
-| Total | 3,773 |
+| Concrete and symbolic family reuse and runtime hosts | 104 |
+| Total | 3,877 |
 
 The core CLI cases compare exact Wasm bytes for emission and multi-file builds,
 plus results from the kernel, Node, Wasmtime and combined hosts. They also cover
@@ -113,6 +114,45 @@ variants, missing or changed source hashes, runtime and build mismatches,
 timeouts with captured output, and drift in either source file.
 `bend2-reference-test` runs these controls with the existing reference and
 equality controls.
+
+The reuse runtime cases use `reuse-runtime-concrete.mech` and
+`reuse-runtime-symbolic.mech`, with the existing `Box` and `Pair` templates
+from `template-composition.mech`. `reuse-runtime-shared.mech` checks reuse
+inside a group with three independent universe variables. Both modes share
+source, intermediate and target box families across repeated transfers,
+including two dependencies bound to one family. Input 37 produces 83, 80,
+37 and 44 for `repeated`, `offset`, `identity` and `identityOffset`;
+input 41 produces 91,
+88, 41 and 48. Each mode and input checks without axioms, compares exact Wasm
+bytes from emission and builds with separate prelude and fixture files, and
+runs on the kernel, Node, Wasmtime and combined hosts. Observations have fresh
+temporary directories, a 20-second limit and shared process cleanup. All four
+source files are pinned before replay and checked for drift afterward.
+
+Run this family alone with:
+
+```sh
+python3 -P dev/bend2-reference-check.py --suite reuse-runtime
+python3 -P dev/bend2-reuse-runtime-check.py
+python3 -P dev/bend2-reuse-runtime-test.py --reference "$PWD"
+```
+
+The frozen observations are in `dev/bend2/reuse-runtime-cases.json`.
+Twenty-six refusal controls exercise missing concrete or symbolic cases,
+malformed observations, absent or extra Wasm, incorrect exported
+answers, missing or changed source pins, missing or duplicated payload anchors,
+unknown modes and variants, altered live runtime answers and Wasm bytes,
+timeouts with captured output, and source drift. `bend2-reference-test` runs
+these controls along with the previous reference and runtime controls.
+The controls validate all 104 cases before selecting six live observations
+to damage. For machines with spare CPU capacity, both the reference runner
+and reuse replay accept `--jobs N` with one through eight workers (default
+one). The reference runner parallelizes runtime suites only. Each observation
+keeps its own temporary directory and timeout; report order remains the case
+inventory order, and source drift checks still run after all observations.
+With more than one worker, an interrupt or a termination signal stops new
+observations, and the runner waits for the running observations to end. Each
+running observation can use its full timeout.
 
 The surface corpus also references 18 unresolved historical attempts in
 `dev/bend2/surface-baseline-unresolved.json`. Those attempts retain their
@@ -198,4 +238,23 @@ Verify the source and evidence pins from the repository root with:
 
 ```sh
 shasum -a 256 -c dev/validation/bend2-composition-runtime-live/sources.sha256
+```
+
+The sixth-slice receipt is in `dev/validation/bend2-reuse-runtime-live/`.
+It records 243 live OCaml and 243 native Bend observations across the CLI,
+core CLI, equality, composition and reuse runtime suites, plus 68 refusal
+controls. The 104 new observations were recorded from a fresh OCaml build
+and compared with a second fresh build and a freshly compiled native Bend
+executable. Runtime comparisons and the new live refusal controls used four
+workers. The receipt includes full output, per-case observations, source pins
+and the production build fingerprint. The full 3,877-case corpus was not rerun.
+
+Earlier attempts with the full category and functor reuse fixtures exceeded
+20- and 60-second limits during OCaml recording and a 60-second limit in a
+native probe under local load. Their logs are retained in the receipt. Those
+broader fixtures remain outside this slice's passing coverage. The final
+focused fixtures retain the 20-second observation limit.
+
+```sh
+shasum -a 256 -c dev/validation/bend2-reuse-runtime-live/sources.sha256
 ```

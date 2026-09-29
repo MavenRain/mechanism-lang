@@ -1,0 +1,21 @@
+specialize Box (0) as Source
+specialize Box (0) as Middle
+specialize Box (0) as Target
+specialize Pair (0, 0) as First with (Left := Source, Right := Middle)
+specialize Pair (0, 0) as Second with (Left := Middle, Right := Target)
+specialize Pair (0, 0) as Third with (Left := Target, Right := Target)
+specialize Pair (0, 0) as Identity with (Left := Target, Right := Target)
+
+def reuseInput : Nat := 37
+def payload : Source Nat := box reuseInput
+def repeated : Nat := Target_unbox Nat
+  (Third_transfer Nat Nat (fun (n : Nat) => natAdd n 5)
+    (Second_transfer Nat Nat (fun (n : Nat) => natAdd n n)
+      (First_transfer Nat Nat (fun (n : Nat) => natAdd n 2) payload)))
+def offset : Nat := Target_unbox Nat
+  (Second_transfer Nat Nat (fun (n : Nat) => natAdd n n)
+    (First_transfer Nat Nat (fun (n : Nat) => natAdd n 3) payload))
+def identity : Nat := Target_unbox Nat
+  (Identity_transfer Nat Nat (fun (n : Nat) => n) (box reuseInput))
+def identityOffset : Nat := Target_unbox Nat
+  (Identity_transfer Nat Nat (fun (n : Nat) => natAdd n 7) (box reuseInput))
