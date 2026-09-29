@@ -2,6 +2,7 @@ _build/
 *.install
 .gatework/
 .kanon-exec/
+.kanon-replies/
 .kanon-wait/
 .kanonx/
 .venv/
@@ -10,3 +11,5 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.bend2-local.mk
+_bend2/
