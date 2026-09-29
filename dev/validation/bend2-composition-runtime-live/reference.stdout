@@ -1,0 +1,5 @@
+REFERENCE cli: 37 cases, 0 differences
+REFERENCE core-cli: 28 cases, 0 differences
+REFERENCE equality-runtime: 34 cases, 0 differences
+REFERENCE composition-runtime: 40 cases, 0 differences
+REFERENCE PASSED: /Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/reference-live/report.json

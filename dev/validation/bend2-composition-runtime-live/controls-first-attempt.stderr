@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-lang-slice5/dev/bend2-equality-runtime-test.py", line 150, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/oobi/Documents/gpt6/mechanism-lang-slice5/dev/bend2-equality-runtime-test.py", line 142, in main
+    raise AssertionError(f"equality runtime timeout or its output was lost: {timeout}")
+AssertionError: equality runtime timeout or its output was lost: {'code': 'timeout', 'stdout': '', 'stderr': '', 'timeout': 0.5}
+make: *** [bend2-reference-test] Error 1

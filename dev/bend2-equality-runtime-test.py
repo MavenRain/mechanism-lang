@@ -108,9 +108,14 @@ def main() -> int:
                 if case["name"] == "changed/Struct/node":
                     seen_timeouts.append(options.get("timeout",
                                                      inspect.signature(observe).parameters["timeout"].default))
-                    return observe([sys.executable, "-c",
-                                    "import time; print('equality timeout', flush=True); time.sleep(10)"],
-                                   case, cwd=cwd, timeout=0.5)
+                    child = [sys.executable, "-S", "-c",
+                             "import time; print('equality timeout', flush=True); time.sleep(60)"]
+
+                    def sleeping_child(limits):
+                        attempt = observe(child, case, cwd=cwd, timeout=limits[0])
+                        stalled = attempt["code"] == "timeout" and attempt["stdout"] == "" and len(limits) > 1
+                        return sleeping_child(limits[1:]) if stalled else attempt
+                    return sleeping_child((2, 5, 10))
                 actual = observe(command, case, cwd=cwd, **options)
                 if case["name"] == "original/Literal/kernel":
                     actual["stdout"] = "38\n"

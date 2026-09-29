@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "status": "passed",
+  "reference_head": "ec0ba9419b74420c63b39acad2ed35f47329ad8f",
+  "validated_checkout": "/Users/oobi/Documents/mechanism-lang",
+  "scope": [
+    "cli",
+    "core-cli",
+    "equality-runtime",
+    "composition-runtime"
+  ],
+  "live_reference_cases": 139,
+  "native_cases": 139,
+  "refusal_controls": {
+    "reference": 10,
+    "equality": 14,
+    "composition": 18
+  },
+  "corpus_sha256": "1f3bbba3266bd6b7b0528e8297f42b68aaa747f0c10598b3b74b691c076b5596",
+  "source_pins": 200,
+  "native_artifacts": {
+    "_bend2/bin/mechanism-native": "9f535cf19a095a4f52f0958dc0e41bb68e353de0554439c9dc3abd0a06f0f1fc",
+    "_bend2/bin/mechanism-native.build.json": "9c18aa100890e8a48a0565e6bcf868f9076a77d7bcdefa298eec1a6a056d8610",
+    "_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+    "_bend2/bin/mech_cert.exe": "cb2c7d0443bd3c538d520a0f3889a09746e82ae503f8c53fed2f18a84f81a499"
+  },
+  "attempts": {
+    "recording": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 1407,
+        "stderr_bytes": 0,
+        "stdout_lines": 42,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/record.py"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/recording.stdout",
+            "bytes": 1407,
+            "lines": 42
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/recording.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "production-build": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 37,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "env",
+            "BEND=/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+            "python3",
+            "-P",
+            "dev/bend2-build.py",
+            "--target",
+            "production",
+            "--backend",
+            "native"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/production-build.stdout",
+            "bytes": 37,
+            "lines": 1
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/production-build.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "reference": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 305,
+        "stderr_bytes": 0,
+        "stdout_lines": 5,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "dev/bend2-reference-check.py",
+            "--suite",
+            "cli",
+            "--suite",
+            "core-cli",
+            "--suite",
+            "equality-runtime",
+            "--suite",
+            "composition-runtime",
+            "--output",
+            "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/reference-live"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/reference.stdout",
+            "bytes": 305,
+            "lines": 5
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/reference.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "native": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 3201,
+        "stderr_bytes": 0,
+        "stdout_lines": 111,
+        "stderr_lines": 0,
+        "error_lines": 4,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "python3",
+            "-P",
+            "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/native.py"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/native.stdout",
+            "bytes": 3201,
+            "lines": 111
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/native.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    },
+    "controls-first-attempt": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-slice5/.kanon-exec/run-q9dqFk",
+      "status": "complete",
+      "exitCode": 2,
+      "counts": {
+        "stdout_bytes": 1235,
+        "stderr_bytes": 578,
+        "stdout_lines": 26,
+        "stderr_lines": 8,
+        "error_lines": 3,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "make",
+            "bend2-reference-test"
+          ],
+          "cwd": "/Users/oobi/Documents/gpt6/mechanism-lang-slice5",
+          "exitCode": 2,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-lang-slice5/.kanon-exec/run-q9dqFk/command-0001.stdout",
+            "bytes": 1235,
+            "lines": 26
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/gpt6/mechanism-lang-slice5/.kanon-exec/run-q9dqFk/command-0001.stderr",
+            "bytes": 578,
+            "lines": 8
+          }
+        }
+      ]
+    },
+    "controls": {
+      "schemaVersion": 2,
+      "artifact": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs",
+      "status": "complete",
+      "exitCode": 0,
+      "counts": {
+        "stdout_bytes": 2525,
+        "stderr_bytes": 0,
+        "stdout_lines": 52,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "commands": [
+        {
+          "index": 1,
+          "argv": [
+            "make",
+            "bend2-reference-test"
+          ],
+          "cwd": "/Users/oobi/Documents/mechanism-lang",
+          "exitCode": 0,
+          "signal": 0,
+          "timedOut": false,
+          "spawnError": "",
+          "stdout": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/controls.stdout",
+            "bytes": 2525,
+            "lines": 52
+          },
+          "stderr": {
+            "path": "/Users/oobi/Documents/mechanism-lang-bend2-composition-runtime-review/logs/controls.stderr",
+            "bytes": 0,
+            "lines": 0
+          }
+        }
+      ]
+    }
+  },
+  "limitation": "Scoped comparison of four suites, not the full 3773-case corpus.",
+  "timeout_control_fix": "Skip Python site initialization, allow two seconds for the sleeping control child, and retry at five and then ten seconds only when the child printed nothing; runtime observations retain their 20-second limit."
+}

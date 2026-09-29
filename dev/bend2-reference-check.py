@@ -14,7 +14,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME_SUITES = ("core-cli", "equality-runtime")
+RUNTIME_SUITES = ("core-cli", "equality-runtime", "composition-runtime")
 CLI_SUITES = ("cli", *RUNTIME_SUITES)
 SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase", *CLI_SUITES)
 
