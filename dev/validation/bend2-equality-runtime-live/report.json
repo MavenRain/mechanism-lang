@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "status": "passed",
+  "recorded_at": "2026-09-29T10:29:17.229919+00:00",
+  "slice": "Bend 2 port slice 4: equality transport runtime reference",
+  "reference_head": "c584f15dd557b60a132fd13ef0558683e02bf555",
+  "reference": {
+    "cases": 99,
+    "failed": 0,
+    "suites": [
+      {
+        "name": "cli",
+        "cases": 37,
+        "failed": 0,
+        "seconds": 1.799,
+        "observations": "cli-observations.json",
+        "sha256": "c771d322d6c9d4bf9997ae9848bd26779116c90710b0c5a2dcafdd1be97abfb3"
+      },
+      {
+        "name": "core-cli",
+        "cases": 28,
+        "failed": 0,
+        "seconds": 1.955,
+        "observations": "core-cli-observations.json",
+        "sha256": "8bfe33b3aa5868cca675f70a0f2b83ad2bf6795d82a54cefe4375e19acbd721f"
+      },
+      {
+        "name": "equality-runtime",
+        "cases": 34,
+        "failed": 0,
+        "seconds": 4.932,
+        "observations": "equality-runtime-observations.json",
+        "sha256": "d63f404cbb089696fc0a315811f635f1c67d8b92adae6f030f679d78fcceb9ab"
+      }
+    ],
+    "raw_report": "/Users/oobi/Documents/gpt6/mechanism-equality-live-20260929/report.json",
+    "raw_report_sha256": "466605a4d574ad63db3faac438c5255286f8147335dc2a0511f67df30b7def7a",
+    "source_pins": "sources.sha256",
+    "pinned_repository_inputs": 123,
+    "tools": "tools.json"
+  },
+  "bend2": {
+    "cases": 99,
+    "failed": 0,
+    "backend": "native",
+    "version": "2.0.27",
+    "artifact": "_bend2/bin/mechanism-native",
+    "artifact_sha256": "9f535cf19a095a4f52f0958dc0e41bb68e353de0554439c9dc3abd0a06f0f1fc",
+    "build_manifest": "_bend2/bin/mechanism-native.build.json",
+    "build_manifest_sha256": "9c18aa100890e8a48a0565e6bcf868f9076a77d7bcdefa298eec1a6a056d8610",
+    "production_inputs_verified": true,
+    "production_inputs": 140,
+    "launchers": {
+      "mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+      "mech_cert.exe": "cb2c7d0443bd3c538d520a0f3889a09746e82ae503f8c53fed2f18a84f81a499"
+    }
+  },
+  "controls": {
+    "existing": 10,
+    "equality_runtime": 14,
+    "failed": 0
+  },
+  "equality_corpus_sha256": "15ebd7c85157177e1aa1ce81728a8e83543958a9dd6fd22da84a69d075520cee",
+  "commands": {
+    "production-build": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-EHaxc3",
+      "capture_manifest_sha256": "635286eb7c04f19f3176977dadf09b3a665b176dbe1ab23d167ff467d8431378",
+      "stdout": {
+        "path": "production-build.stdout",
+        "sha256": "4a3af71bd902bb1abe3ee77fe080af39b9fb3c7c0347f46cb102aa5a27b44924"
+      },
+      "stderr": {
+        "path": "production-build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "reference": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-vTAM0d",
+      "capture_manifest_sha256": "72e950ef5019b829f9a4153c628f70729fca97eabbaee0fbbd8b1224d6f6bab5",
+      "stdout": {
+        "path": "reference.stdout",
+        "sha256": "8e29ddb0e668eb4002a764a50882837996e875cae7c924ffa8b8062045503fba"
+      },
+      "stderr": {
+        "path": "reference.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "bend-equality": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-FA9erC",
+      "capture_manifest_sha256": "36ff1c58d7513b1a7b15e1dbb414bc9e413b2c13273810e9b430eddd570bb5be",
+      "stdout": {
+        "path": "bend-equality.stdout",
+        "sha256": "6b069751064e816e9e874bec48be8e56d29685f45e6a0478956f3ead61f56179"
+      },
+      "stderr": {
+        "path": "bend-equality.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "bend-core-cli": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-d1n4cD",
+      "capture_manifest_sha256": "409cbae77a85e5845a143a936effe72218004683bd137edc2992632af53d324c",
+      "stdout": {
+        "path": "bend-core-cli.stdout",
+        "sha256": "7889c7d57898e1c1d72144d931761118335c2e4dc31129b61716bcd797b9f730"
+      },
+      "stderr": {
+        "path": "bend-core-cli.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "bend-cli": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-Q23Qon",
+      "capture_manifest_sha256": "8d9e13df3d3b68ea4558f3d0eba5916e60935080af08acc3b9a884e458c1887d",
+      "stdout": {
+        "path": "bend-cli.stdout",
+        "sha256": "b32e4c6c5e6ff9d1620abc2bfe952da2d1fe4e69067c7ab85caa18b7b3acd9f5"
+      },
+      "stderr": {
+        "path": "bend-cli.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "reference-test": {
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/.kanon-exec/run-7dOG3v",
+      "capture_manifest_sha256": "e1fd6feadc7d21daf564ea6e4e0c7211039f460e06cd7ba5c34b0b755f019aa3",
+      "stdout": {
+        "path": "reference-test.stdout",
+        "sha256": "dd49fb5ab2d52e40cf836068eb82b6bf4bf4eb37c155e67f184e1a37e351c826"
+      },
+      "stderr": {
+        "path": "reference-test.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "scope": "CLI, core CLI and equality runtime suites; the other seven suites were not rerun for this slice."
+}

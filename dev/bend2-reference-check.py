@@ -14,7 +14,9 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase", "cli", "core-cli")
+RUNTIME_SUITES = ("core-cli", "equality-runtime")
+CLI_SUITES = ("cli", *RUNTIME_SUITES)
+SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase", *CLI_SUITES)
 
 
 def sha(path: Path) -> str:
@@ -71,8 +73,10 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
             raise ValueError(f"input changed during reference replay: {path}")
 
     native = any(name in suites for name in ("surface", "erase"))
-    hosts = ("node", "wasmtime", "zsh", "rg") if "core-cli" in suites else ()
-    for name in ("dune", "ocamlfind", "ocamlc", "ocamlrun", *(["ocamlopt"] if native else []), *hosts):
+    runtime_helpers = {name: load_helper(name) for name in suites if name in RUNTIME_SUITES}
+    hosts = ("node", "wasmtime", "zsh", "rg") if runtime_helpers else ()
+    native_tool = native or any(name in CLI_SUITES for name in suites)
+    for name in ("dune", "ocamlfind", "ocamlc", "ocamlrun", *(["ocamlopt"] if native_tool else []), *hosts):
         tool = shutil.which(name)
         if tool is None:
             raise RuntimeError(f"missing reference tool: {name}")
@@ -97,9 +101,13 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
     pin(Path(__file__).resolve())
     for name in ("cli", "surface"):
         pin(ROOT / "dev" / f"bend2-{name}-check.py")
-    if "core-cli" in suites:
+    if runtime_helpers:
         pin(ROOT / "bend2/tests/cli_core_check.py")
         pin(ROOT / "dev/bend2-process.py")
+        for helper in runtime_helpers.values():
+            pin(Path(helper.__file__))
+            for path in getattr(helper, "SOURCE_PATHS", ()):
+                pin(path)
         # The OCaml host resolves dev/ four parents above its executable.
         runtime = output / "dev"
         runtime.mkdir()
@@ -112,7 +120,7 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
     targets = [f"{directory}/{name}.cma" for directory, name in libraries]
     if native:
         targets += [f"{directory}/{name}.cmxa" for directory, name in libraries]
-    if any(name in suites for name in ("cli", "core-cli")):
+    if any(name in CLI_SUITES for name in suites):
         targets += ["bin/mech.exe", "bin/mech_cert.exe"]
     # dunecho accepts only a mode, so invoke dune for these isolated targets.
     checked(["dune", "build", "--root", str(reference), "--build-dir", str(build),
@@ -131,7 +139,7 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
             pin(path)
     drivers = {}
     for suite in suites:
-        if suite in ("cli", "core-cli"):
+        if suite in CLI_SUITES:
             continue
         name = suite
         if name in drivers:
@@ -149,12 +157,11 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
         pin(driver)
     cli = load_helper("cli")
     surface = load_helper("surface")
-    core_cli = load_helper("core-cli") if "core-cli" in suites else None
     for suite in suites:
         corpus = (ROOT / "bend2/tests/cli_core_expected.json" if suite == "core-cli"
                   else ROOT / "dev/bend2" / f"{suite}-cases.json")
         pin(corpus)
-        evidence = (dict(cases=core_cli.load_cases(corpus)) if suite == "core-cli"
+        evidence = (dict(cases=runtime_helpers[suite].load_cases(corpus)) if suite in RUNTIME_SUITES
                     else json.loads(corpus.read_text()))
         if not isinstance(evidence.get("cases"), list) or not evidence["cases"]:
             raise ValueError(f"empty or missing case inventory: {suite}")
@@ -175,17 +182,18 @@ def verify(reference: Path, output: Path, suites: list[str]) -> dict:
                 raise ValueError(f"invalid historical exit status: {suite}/{index}")
             if any(not isinstance(expected.get(key), str) for key in ("stdout", "stderr")):
                 raise ValueError(f"invalid historical output: {suite}/{index}")
-            if suite in ("cli", "core-cli"):
-                filename = ("mech.exe" if suite == "core-cli"
+            if suite in CLI_SUITES:
+                filename = ("mech.exe" if suite in RUNTIME_SUITES
                             else {"mech": "mech.exe", "cert": "mech_cert.exe"}[case["mode"]])
                 driver = build / "default/bin" / filename
                 pin(driver)
                 try:
-                    actual = (core_cli.observe([str(driver)], case, cwd=reference) if suite == "core-cli"
+                    actual = (runtime_helpers[suite].observe([str(driver)], case, cwd=reference)
+                              if suite in RUNTIME_SUITES
                               else cli.observe([str(driver)], case))
                 except (OSError, subprocess.TimeoutExpired) as error:
                     actual = dict(error=str(error))
-                passed = (actual == expected if suite == "core-cli" else
+                passed = (actual == expected if suite in RUNTIME_SUITES else
                           cli.comparable(case["name"], actual) == cli.comparable(case["name"], expected))
             else:
                 source = case.get("source")

@@ -1,0 +1,31 @@
+python3 -P dev/bend2-reference-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+REFERENCE json: 3 cases, 2 differences
+REFERENCE CONTROL changed-expectation PASS
+REFERENCE CONTROL timeout PASS
+REFERENCE json: 2 cases, 0 differences
+REFERENCE CONTROL input-drift PASS
+REFERENCE CONTROL core-missing-case PASS
+REFERENCE CONTROL core-extra-case PASS
+REFERENCE CONTROL core-invalid-bytes PASS
+REFERENCE CONTROL core-invalid-status PASS
+REFERENCE core-cli: 28 cases, 3 differences
+REFERENCE CONTROL core-wasm-bytes PASS
+REFERENCE CONTROL core-runtime-answer PASS
+REFERENCE CONTROL core-timeout PASS
+python3 -P dev/bend2-equality-runtime-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+EQUALITY REFERENCE CONTROL missing-case PASS
+EQUALITY REFERENCE CONTROL extra-case PASS
+EQUALITY REFERENCE CONTROL invalid-bytes PASS
+EQUALITY REFERENCE CONTROL invalid-status PASS
+EQUALITY REFERENCE CONTROL missing-wasm PASS
+EQUALITY REFERENCE CONTROL extra-wasm PASS
+EQUALITY REFERENCE CONTROL changed-answer PASS
+EQUALITY REFERENCE CONTROL missing-source PASS
+EQUALITY REFERENCE CONTROL changed-source PASS
+EQUALITY REFERENCE CONTROL mutation-anchor PASS
+REFERENCE equality-runtime: 34 cases, 3 differences
+EQUALITY REFERENCE CONTROL runtime-answer PASS
+EQUALITY REFERENCE CONTROL wasm-bytes PASS
+EQUALITY REFERENCE CONTROL timeout-output PASS
+EQUALITY REFERENCE CONTROL source-drift PASS
+EQUALITY REFERENCE CONTROLS PASS controls=14

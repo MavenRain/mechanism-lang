@@ -69,31 +69,33 @@ def cases() -> list[dict]:
     return result
 
 
-def load_cases(path: Path = EXPECTED) -> list[dict]:
+def load_cases(path: Path = EXPECTED, *, inventory: list[dict] | None = None,
+               label: str = "core CLI") -> list[dict]:
     expected = json.loads(path.read_text())["observations"]
-    inventory = cases()
+    inventory = cases() if inventory is None else inventory
     if not isinstance(expected, dict) or set(expected) != {case["name"] for case in inventory}:
-        raise ValueError("core CLI expected observations do not match the case inventory")
+        raise ValueError(f"{label} expected observations do not match the case inventory")
     for case in inventory:
         observation = expected[case["name"]]
         if not isinstance(observation, dict) or set(observation) != {"code", "stdout", "stderr", "bytes"}:
-            raise ValueError(f"invalid core CLI observation: {case['name']}")
+            raise ValueError(f"invalid {label} observation: {case['name']}")
         if type(observation["code"]) is not int or not 0 <= observation["code"] <= 255:
-            raise ValueError(f"invalid core CLI exit status: {case['name']}")
+            raise ValueError(f"invalid {label} exit status: {case['name']}")
         if any(not isinstance(observation[key], str) for key in ("stdout", "stderr")):
-            raise ValueError(f"invalid core CLI output: {case['name']}")
+            raise ValueError(f"invalid {label} output: {case['name']}")
         artifact = observation["bytes"]
         if artifact is not None:
             if not isinstance(artifact, str) or re.fullmatch(r"(?:[0-9a-f]{2})*", artifact) is None:
-                raise ValueError(f"invalid core CLI artifact: {case['name']}")
+                raise ValueError(f"invalid {label} artifact: {case['name']}")
         case["expected"] = observation
     return inventory
 
 
-def observe(command: list[str], case: dict, cwd: Path = ROOT, timeout: float = 30) -> dict:
+def observe(command: list[str], case: dict, cwd: Path = ROOT, timeout: float = 30,
+            *, sources: dict[str, str] | None = None) -> dict:
     with tempfile.TemporaryDirectory(prefix="bend-cli-core-") as directory:
         root = Path(directory)
-        for name, source in SOURCES.items():
+        for name, source in (SOURCES if sources is None else sources).items():
             (root / name).write_text(source)
         args = [argument.replace("$ROOT", directory) for argument in case["args"]]
         artifact = case["artifact"]

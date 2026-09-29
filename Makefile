@@ -36,6 +36,7 @@ bend2-reference-check:
 
 bend2-reference-test:
 	$(PYTHON) -P dev/bend2-reference-test.py --reference "$(CURDIR)"
+	$(PYTHON) -P dev/bend2-equality-runtime-test.py --reference "$(CURDIR)"
 
 bend2-diff: bend2-reference-check bend2-build
 	$(PYTHON) -P dev/bend2-json-check.py
@@ -47,3 +48,4 @@ bend2-diff: bend2-reference-check bend2-build
 	$(PYTHON) -P dev/bend2-erase-check.py
 	$(PYTHON) -P dev/bend2-cli-check.py
 	$(PYTHON) -P bend2/tests/cli_core_check.py
+	$(PYTHON) -P dev/bend2-equality-runtime-check.py

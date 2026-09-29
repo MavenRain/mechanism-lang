@@ -1,8 +1,8 @@
 # Bend 2 live reference checks
 
 The live reference checks compare the frozen cases with the OCaml implementation
-in this repository. The third port slice adds core CLI, Wasm emission and runtime
-host comparisons. Run the full comparison with:
+in this repository. The fourth port slice adds equality transport across the
+kernel, Wasm emission and runtime hosts. Run the full comparison with:
 
 ```sh
 make bend2-diff
@@ -11,14 +11,15 @@ make bend2-reference-test
 
 `bend2-diff` builds fresh OCaml libraries and seven observation adapters,
 compares their results with the checked-in expectations, verifies the Bend 2
-build, and replays the same nine case sets through Bend 2. The Bend builder
+build, and replays the same ten case sets through Bend 2. The Bend builder
 checks source, compiler, and artifact fingerprints before reusing binaries.
 Select the intended OCaml switch in `PATH`. The reference build needs `git`,
 `dune`, `ocamlfind`, `ocamlc`, `ocamlopt`, `ocamlrun`, and the `zarith` and
 `unix` packages. The reference directory must be the root of a git work tree,
 because the report records its `HEAD` commit.
 The Bend toolchain is configured as for `make bend2-build`.
-The core CLI cases also require `node`, `wasmtime`, `zsh`, and `rg` in `PATH`.
+The core CLI and equality runtime cases also require `node`, `wasmtime`, `zsh`,
+and `rg` in `PATH`.
 Their executable hashes and both runtime scripts are recorded in the report.
 
 | Case set | Cases |
@@ -32,7 +33,8 @@ Their executable hashes and both runtime scripts are recorded in the report.
 | Erasure | 80 |
 | CLI and publication | 37 |
 | Core CLI, Wasm bytes and runtime hosts | 28 |
-| Total | 3,699 |
+| Equality transport, Wasm bytes and runtime hosts | 34 |
+| Total | 3,733 |
 
 The core CLI cases compare exact Wasm bytes for emission and multi-file builds,
 plus results from the kernel, Node, Wasmtime and combined hosts. They also cover
@@ -53,6 +55,34 @@ python3 -P bend2/tests/cli_core_check.py
 The frozen core CLI expectations remain in
 `bend2/tests/cli_core_expected.json`. The reference runner and Bend replay use
 the same case definitions and observation helper.
+
+The equality runtime cases reuse `prelude/init.mech` and
+`test/fixtures/prelude/equality-runtime.mech`. They transport a literal, a data
+value and a closure, with fixed answers of 37, 2 and 42. Changing the payload
+to 41 must change those answers to 41, 2 and 46. Both variants check without
+axioms and compare exact emitted Wasm bytes and answers from the kernel, Node,
+Wasmtime and combined hosts. Each observation has the existing equality gate's
+20-second limit, a fresh temporary directory, and the shared process cleanup.
+The fixture and prelude are pinned before the live reference build and checked
+again after replay. The Bend replay also checks the hashes of both files again
+after the last case.
+
+Run this family alone with:
+
+```sh
+python3 -P dev/bend2-reference-check.py --suite equality-runtime
+python3 -P dev/bend2-equality-runtime-check.py
+python3 -P dev/bend2-equality-runtime-test.py --reference "$PWD"
+```
+
+The frozen observations are in `dev/bend2/equality-runtime-cases.json`.
+The loader checks source hashes, the complete case inventory, observation types,
+Wasm headers and fixed answers before replay. Fourteen refusal controls cover missing and extra
+cases, malformed observations, missing or unexpected Wasm, a changed answer,
+a stale payload mutation, wrong runtime answers, changed Wasm bytes, a timeout
+with captured output, missing or changed source hashes, and fixture drift.
+`bend2-reference-test` runs these controls
+alongside the existing controls.
 
 The surface corpus also references 18 unresolved historical attempts in
 `dev/bend2/surface-baseline-unresolved.json`. Those attempts retain their
@@ -107,3 +137,16 @@ these pins, run
 `shasum -a 256 -c dev/validation/bend2-core-cli-live/sources.sha256` from the
 repository root. The second-slice pins record the second-slice run. Files
 that a later slice changed do not agree with these pins.
+
+The fourth-slice receipt is in `dev/validation/bend2-equality-runtime-live/`.
+It records 99 live OCaml and 99 native Bend observations across the CLI,
+core CLI and equality runtime suites, plus ten existing and fourteen new
+refusal controls. The fresh OCaml report pins both equality source files,
+the runtime scripts, tools and compiled artifacts. The receipt also records
+the current Bend production build fingerprints. `sources.sha256` pins the
+repository inputs read by the reference run and the slice files; verify it
+from the repository root with:
+
+```sh
+shasum -a 256 -c dev/validation/bend2-equality-runtime-live/sources.sha256
+```

@@ -1,0 +1,4 @@
+REFERENCE cli: 37 cases, 0 differences
+REFERENCE core-cli: 28 cases, 0 differences
+REFERENCE equality-runtime: 34 cases, 0 differences
+REFERENCE PASSED: /Users/oobi/Documents/gpt6/mechanism-equality-live-20260929/report.json
