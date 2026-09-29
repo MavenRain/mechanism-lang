@@ -1,0 +1,6 @@
+python3 -P dev/bend2-reference-test.py --reference "/Users/oobi/Documents/mechanism-lang"
+REFERENCE json: 3 cases, 2 differences
+REFERENCE CONTROL changed-expectation PASS
+REFERENCE CONTROL timeout PASS
+REFERENCE json: 2 cases, 0 differences
+REFERENCE CONTROL input-drift PASS

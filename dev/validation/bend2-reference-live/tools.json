@@ -1,0 +1,22 @@
+{
+  "dune": {
+    "sha256": "ab7a3967e9bffe086bf80cdf24130d2da309ff460d3be532e30d4f5208f5732c",
+    "version": "3.24.2"
+  },
+  "ocamlfind": {
+    "sha256": "439b75d80551c74e0f783b15168277e7ca333f5ee1b18325f9a3d088bc5d1e68",
+    "version": "1.9.8"
+  },
+  "ocamlc": {
+    "sha256": "7f9a5f32a88bdf673384fe9b95483902d3f020a36dd37a6bd449889abd6c57e6",
+    "version": "5.2.1"
+  },
+  "ocamlrun": {
+    "sha256": "c1faa0eaca0dab60079c18b4ca89d72edfcb75ea058f4e9ff5b0be3c4252247d",
+    "version": "The OCaml runtime, version 5.2.1"
+  },
+  "ocamlopt": {
+    "sha256": "d9026dd79400551418af67351c4443160a38903b97fc566eea7bf93a3ea7d02b",
+    "version": "5.2.1"
+  }
+}

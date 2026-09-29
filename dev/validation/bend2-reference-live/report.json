@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "status": "passed",
+  "recorded_at": "2026-09-29T07:50:24.261729+00:00",
+  "slice": "Bend 2 port / slice 2: live OCaml reference comparison",
+  "reference_head": "224498eed2c046de7abd88e86ba8ca63cbb7589f",
+  "cases": 3671,
+  "suites": [
+    {
+      "name": "json",
+      "cases": 166,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "2540d29ddf4c8cd4439060351054624fa9c296abec581496fa5d084ac134ebfd",
+      "reference_observations_sha256": "9648db076ae88aee54ab4853471d45598d5e058dce5ab673ae69c286c4b48439",
+      "bend2_report": "build/bend2-json/report.json",
+      "bend2_report_sha256": "e99e7407d2c7a29e314179ec4782cd6bf19eb042b4410f5837ee81d8ed969db4",
+      "bend2_artifacts": {
+        "_bend2/test/import_json.exe": "bfef810acf610f51ab0bfd623265d6be673a95ddc4c0213db32e01f4956d35da"
+      }
+    },
+    {
+      "name": "export",
+      "cases": 470,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "d0e9c6a054d0f8d3241afe80771437d8fbeac661507fbc6c2df680c1e8a4291b",
+      "reference_observations_sha256": "6352a046e281e77d6b919c57ef5915b7e708621116c50e04489a88ccbe923478",
+      "bend2_report": "build/bend2-export/report.json",
+      "bend2_report_sha256": "7aebe815bfe528d40ab9ca089f830f97d5224281db4430d9bc4fba6366caea74",
+      "bend2_artifacts": {
+        "_bend2/test/import_export.exe": "fbfff72b41032ffb9427de3a89aa8b5456b6b2ac7984d1bb817a3a8d6541cbd0"
+      }
+    },
+    {
+      "name": "translate",
+      "cases": 613,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "0db63aa598b79b461652249af8baaeedf04008eaae69521260234edbec46caf3",
+      "reference_observations_sha256": "d56802657d72180d2bca0ea74208a5ca57846334bb4b442a60e34f65b5f79440",
+      "bend2_report": "build/bend2-translate/report.json",
+      "bend2_report_sha256": "5b5aa0fe56cfeceef1f206f2ff8b99116973c8adfaf926aa0e0190686f8fc71c",
+      "bend2_artifacts": {
+        "_bend2/test/import_translate.exe": "4b088695b42b4f569501b366cf423a3863e59f2ec3b75d8dc54aca495097db39"
+      }
+    },
+    {
+      "name": "pipeline",
+      "cases": 1118,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "5a0e51075d367be42b87a9fa4a981c37e4ff47f9e1f7b05f4325db6c03caf885",
+      "reference_observations_sha256": "7cc95362ed3a6b37991d7e6ca2df254ba82c5743178716ebe000327e5bee4076",
+      "bend2_report": "build/bend2-pipeline/report.json",
+      "bend2_report_sha256": "86c265b2bb3faa47d3315b7be8aa7ba23a6809089cfe11194d06616c0b95a34d",
+      "bend2_artifacts": {
+        "_bend2/test/import_pipeline.exe": "a52d889eaa148aac875856636f4384f3dbf38e1d3a60dd1b93f9729bf8c5ac73"
+      }
+    },
+    {
+      "name": "parser",
+      "cases": 261,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "899a913a6761a49a8218f521d8150ad1e5ac9d17db7bfb2d9c76e03038c63d88",
+      "reference_observations_sha256": "59342cbf5d65412402cc9356c8588314fc00551089fdaa10193a41765f783d5b",
+      "bend2_report": "build/bend2-parser/report.json",
+      "bend2_report_sha256": "876c3238952b16cb26d8515d3dc037263dc0021ee0bcc07c9a822a54229cbbec",
+      "bend2_artifacts": {
+        "_bend2/test/surface_driver.exe": "6d3e6d0061a38405f527bbfdabebd7fa208ce1f3461c6f21e48c57211e9fdf44"
+      }
+    },
+    {
+      "name": "surface",
+      "cases": 926,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "0b9363d99eee254240340524562ec674265e628cc4cbf9e55b2041fc85a7c793",
+      "reference_observations_sha256": "bf6baab216756181cbf518f3f9b2438d6432de3ab3c9c17ded3bad9d6bc4680a",
+      "bend2_report": "build/bend2-surface-check/report.json",
+      "bend2_report_sha256": "462bad0a55b7b17eca80810e040d7d338c0c8b6e93245b7f8a56ecb46b97ccae",
+      "bend2_artifacts": {
+        "_bend2/test/surface_check_driver.exe": "5575019aeaddcd23bd940df9fa5ef86b15dc6897db2e15757fc0ae019cc490ed"
+      }
+    },
+    {
+      "name": "erase",
+      "cases": 80,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "7662d5969ed9120554906cb24d6c85484a3c3a2b397dfc980ef078358598f35b",
+      "reference_observations_sha256": "54158a2c24c108f0d9ff96c4628fe9b3bcb6bf1484f63844c40a9ce1a0ceb747",
+      "bend2_report": "build/bend2-erasure/report.json",
+      "bend2_report_sha256": "9131eab3e270a8f76966ebd56815a7fc8e4414b9b0dd834bf4d387d55ae98ef7",
+      "bend2_artifacts": {
+        "_bend2/test/kernel_erase_driver.exe": "e1aae25804d1a1e836755845b6a5f89236a86d54b317ce98d71082881e1f5473"
+      }
+    },
+    {
+      "name": "cli",
+      "cases": 37,
+      "reference_differences": 0,
+      "bend2_differences": 0,
+      "corpus_sha256": "fc3a6d62c3540bba9810b9188bee3c4b13bd0c92c1b40f89f46589a941bccdeb",
+      "reference_observations_sha256": "a44b22a2521b9a94e04c137432a70021e9662fa2d884c933ab2e713c96dbdf6a",
+      "bend2_report": "build/bend2-cli/report.json",
+      "bend2_report_sha256": "73e945e20d486bee56167b47840374058b432ec80814810f4236fd1d3137cad0",
+      "bend2_artifacts": {
+        "_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+        "_bend2/bin/mech_cert.exe": "cb2c7d0443bd3c538d520a0f3889a09746e82ae503f8c53fed2f18a84f81a499"
+      }
+    }
+  ],
+  "normalizations": [
+    "CLI temporary root",
+    "CLI mkdir process-specific staging path"
+  ],
+  "unresolved_surface_attempts": 18,
+  "unresolved_status": "Historical attempts remain unresolved and are outside the passing case inventory.",
+  "reference_report": "_bend2/reference/recording-j4zumf8t/report.json",
+  "reference_report_sha256": "0c9e18d259b88281ff5ff9c7300acdc1f072425acd9d87e658eb42844c8c4907",
+  "reference_report_scope": "local and not checked in; in-repo inputs are in sources.sha256",
+  "bend2_tree": "354ceb691310011a894dfb7b969a22f049cbad98",
+  "bend2_tree_clean": true,
+  "bend2_fingerprints": {
+    "_bend2/bin/mechanism-native.build.json": "9c18aa100890e8a48a0565e6bcf868f9076a77d7bcdefa298eec1a6a056d8610",
+    "_bend2/test/bend_import.js.build.json": "15bdba70f25a314270174c1339ab5332e6f5d43e7007f9b40ec35e1ea98376e2",
+    "_bend2/test/bend_protocol.js.build.json": "284daf688e18c90a4823fb4beb1acff8c87afc3ce8b53bc42613ccd9fc0c280e"
+  },
+  "source_sha256": {
+    "Makefile": "f45bf532361d7b52d94dafe3375717af8cc97be7dab6ac61dda9ea94b1a966e7",
+    "dev/bend2-cli-check.py": "96749024cb9138e33e7922018836ca0045883e1d80254b09bf151fe961831ff0",
+    "dev/bend2-erase-check.py": "2cd3765442919acab74ece478f0335067b7da6cb2ad69473eb7a2c8cf3b44e9e",
+    "dev/bend2-export-check.py": "5f004636acfd47769462929c58c5eadb4fea17ea610d8f76895d18cb83f1aa4e",
+    "dev/bend2-json-check.py": "1864d6253fdae3126bf51554ad0fa50e4a1ef2fde41d8ee514cfcb19a501e0cf",
+    "dev/bend2-parser-check.py": "93ec55049c9ac249d98d08f7682b6b917edcc085c508504717ebac46c9dad3d4",
+    "dev/bend2-pipeline-check.py": "2ded7bb8807ee12aab84f8d1b49a5855c58a6f7e78b45f10eb16aa69ee2b86b6",
+    "dev/bend2-reference-check.py": "c75c607fe3d5fccea9647cfa8e5f4761c8af46975a7da41b0b6b2c72c449bb58",
+    "dev/bend2-reference-test.py": "167526d8b9ed2ed15adb2807b07849647bbff515e80b73eacd22ad084c618cbb",
+    "dev/bend2-surface-check.py": "67e07926493c0f2622157d86789a54c4dbe53222f96bf2ee00f6140ffe184120",
+    "dev/bend2-translate-check.py": "ca240aab3c3cd2366a8a986fab6e6cc01b9cac908639ccade4f057d5fcb5f2ae",
+    "dev/bend2/reference/erase.ml": "1e108f0ed33fd779bf762f9679fd94fcfaefdff16259e1e7f8743e51123e7a76",
+    "dev/bend2/reference/export.ml": "500a26e41b181cfeaa77f60828e8e35249ac5b83ceb8f1e8897c702608ce4b5d",
+    "dev/bend2/reference/json.ml": "64a211b647abca7998618b86f1b934a9acf4b54a89ea8ef17ded1a336589bdc5",
+    "dev/bend2/reference/parser.ml": "6af2e530ceeaceb72ffbae00eadd767c701ab64fc6c8dc57df7d076a436c3e99",
+    "dev/bend2/reference/pipeline.ml": "2e09b1a5ec05c74d7fe10da7fa04246afae4a875f42b7ed02831e1fe6976cb53",
+    "dev/bend2/reference/surface.ml": "8a3454ced292f9b6ca656a1f5d3e30a4fb943ef9eca3242665b77b853441b910",
+    "dev/bend2/reference/translate.ml": "592e9c48fa62bf511e074a9ee1d8436ab5807e9e1cb9ed4d62a968269236b7e6"
+  },
+  "checks": [
+    {
+      "command": "make bend2-reference-check",
+      "exit_code": 0,
+      "capture": "reference-check.stdout",
+      "capture_origin": "/Users/oobi/Documents/mechanism-lang-bend2-reference-review/logs/reference-check.stdout"
+    },
+    {
+      "command": "make bend2-reference-test",
+      "exit_code": 0,
+      "controls": [
+        "changed-expectation",
+        "timeout",
+        "input-drift"
+      ],
+      "capture": "reference-test.stdout",
+      "capture_origin": "/Users/oobi/Documents/mechanism-lang-bend2-reference-review/logs/reference-test.stdout"
+    },
+    {
+      "command": "make -o bend2-reference-check -o bend2-build bend2-diff",
+      "exit_code": 0,
+      "prerequisite_reuse": "This Bend 2 replay was not rerun. Its prerequisites were validated in .kanon-exec/run-XBuzkA and .kanon-exec/run-lJFiKB.",
+      "capture": "diff.stdout",
+      "capture_origin": ".kanon-exec/run-JBMj8D",
+      "reuse_reason": "No fix touched the bend2-diff recipe or a Bend 2 replay input."
+    }
+  ]
+}

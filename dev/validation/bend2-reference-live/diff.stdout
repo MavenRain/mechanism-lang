@@ -1,0 +1,25 @@
+python3 -P dev/bend2-json-check.py
+{"cases": 166, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-json/report.json"}
+python3 -P dev/bend2-export-check.py
+{"cases": 470, "failed": 0, "acceptance_mismatches": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-export/report.json"}
+python3 -P dev/bend2-translate-check.py
+{"cases": 613, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-translate/report.json"}
+python3 -P dev/bend2-pipeline-check.py
+{"cases": 1118, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-pipeline/report.json"}
+python3 -P dev/bend2-parser-check.py
+{"cases": 261, "failed": 0, "acceptance_mismatches": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-parser/report.json"}
+python3 -P dev/bend2-surface-check.py --driver _bend2/test/surface_check_driver.exe
+{"compared": 100, "failed": 0}
+{"compared": 200, "failed": 0}
+{"compared": 300, "failed": 0}
+{"compared": 400, "failed": 0}
+{"compared": 500, "failed": 0}
+{"compared": 600, "failed": 0}
+{"compared": 700, "failed": 0}
+{"compared": 800, "failed": 0}
+{"compared": 900, "failed": 0}
+{"cases": 926, "failed": 0, "baseline_unresolved": 18, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-surface-check/report.json"}
+python3 -P dev/bend2-erase-check.py
+{"cases": 80, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-erasure/report.json"}
+python3 -P dev/bend2-cli-check.py
+{"cases": 37, "failed": 0, "report": "/Users/oobi/Documents/mechanism-lang/build/bend2-cli/report.json"}
