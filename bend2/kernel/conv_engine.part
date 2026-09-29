@@ -1,0 +1,407 @@
+# Conversion implementation appended to check_engine.bend by its owner.
+
+def conv_placeholder() -> Value.T:
+  Value.VUniv{Level.zero()}
+
+def conv_and(flag:Bool,next:B.Comp(Bool)) -> B.Comp(Bool):
+  match flag:
+    case True{}: next
+    case False{}: B.pure(Bool,False{})
+
+def conv_supported(s:Shape.T<Value.T>) -> B.Comp(Unit):
+  match s:
+    case Shape.SPar{a,b}: B.failed(Unit,Error.Not_yet{"SPar arrives at M1"})
+    case Shape.SNu{n,args}: B.failed(Unit,Error.Not_yet{"SNu arrives at M2"})
+    case _: B.pure(Unit,Unit{})
+
+def conv_grow(n:Nat,ctx:C.Ctx) -> C.Ctx:
+  match n:
+    case 0n: ctx
+    case 1n+p: conv_grow(p,C.bind("_",Q.QMany{},conv_placeholder(),ctx))
+
+def conv_fresh(n:Nat,+size:Nat) -> List<&2,Value.T>:
+  match n:
+    case 0n: []
+    case 1n+ +p: Value.var(Nat.add(size,p)) <> conv_fresh(p,size)
+
+@unsafe def conv_list(+ctx:C.Ctx,xs:List<&2,Value.T>,ys:List<&2,Value.T>) -> B.Comp(Bool):
+  match xs ys:
+    case Nil{} Nil{}: B.pure(Bool,True{})
+    case Con{x,xs} Con{y,ys}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_type(ctx,x,y)
+        conv_and(same,conv_list(ctx,xs,ys))
+    case _ _: B.pure(Bool,False{})
+
+@unsafe def conv_shape(+ctx:C.Ctx,a:Shape.T<Value.T>,b:Shape.T<Value.T>) -> B.Comp(Bool):
+  match a b:
+    case Shape.SPi{q1,n1,d1} Shape.SPi{q2,n2,d2}: conv_and(Q.equal(q1,q2),conv_type(ctx,d1,d2))
+    case Shape.SColl{n1} Shape.SColl{n2}: B.pure(Bool,Big.equal(n1,n2))
+    case Shape.SPar{a1,b1} Shape.SPar{a2,b2}: B.failed(Bool,Error.Not_yet{"SPar arrives at M1"})
+    case Shape.SMu{n1,as1} Shape.SMu{n2,as2}: conv_and(String.eq(n1,n2),conv_list(ctx,as1,as2))
+    case Shape.SNu{n1,as1} Shape.SNu{n2,as2}: B.failed(Bool,Error.Not_yet{"SNu arrives at M2"})
+    case Shape.SZk{q1,n1,d1} Shape.SZk{q2,n2,d2}: conv_and(Q.equal(q1,q2),conv_type(ctx,d1,d2))
+    case Shape.SFhc{l1} Shape.SFhc{l2}: conv_type(ctx,l1,l2)
+    case Shape.SMpc{p1,a1} Shape.SMpc{p2,a2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_type(ctx,p1,p2)
+        conv_and(same,conv_type(ctx,a1,a2))
+    case _ _: B.pure(Bool,False{})
+
+@unsafe def conv_at_type(+ctx:C.Ctx,ty:Maybe<&2,Value.T>,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match ty:
+    case None{}: conv_type(ctx,a,b)
+    case Some{t}: conv(ctx,t,a,b)
+
+def conv_addr(+ctx:C.Ctx,ty:Maybe<&2,Value.T>,a:Value.VAddr<Value.T>,b:Value.VAddr<Value.T>) -> B.Comp(Bool):
+  match a b:
+    case Value.VAPt{q1,v1} Value.VAPt{q2,v2}: conv_at_type(ctx,ty,v1,v2)
+    case Value.VALeg{k1} Value.VALeg{k2}: B.pure(Bool,Big.equal(k1,k2))
+    case Value.VACtor{c1} Value.VACtor{c2}: B.pure(Bool,String.eq(c1,c2))
+    case _ _: B.pure(Bool,False{})
+
+@unsafe def conv_closure_same(same:Bool,+ctx:C.Ctx,+arity:Nat,x:Value.Closure<Value.T>,y:Value.Closure<Value.T>) -> B.Comp(Bool):
+  match same x y:
+    case False{} _ _: B.pure(Bool,False{})
+    case True{} Value.Closure{e1,b1} Value.Closure{e2,b2}:
+      +fresh = conv_fresh(arity,C.size_of(ctx))
+      do B.Comp<Bool>:
+        v1 : Value.T <- B.lift(Value.T,Eval.eval(C.globals_of(ctx),List.append(&2,Value.T,fresh,e1),b1))
+        v2 : Value.T <- B.lift(Value.T,Eval.eval(C.globals_of(ctx),List.append(&2,Value.T,fresh,e2),b2))
+        conv_type(conv_grow(arity,ctx),v1,v2)
+
+def conv_closures(+ctx:C.Ctx,+arity:Nat,x:Value.Closure<Value.T>,other:Nat,y:Value.Closure<Value.T>) -> B.Comp(Bool):
+  conv_closure_same(Nat.is_eq(arity,other),ctx,arity,x,y)
+
+@unsafe def conv_legs(+ctx:C.Ctx,xs:List<&2,Value.VLeg<Value.T>>,ys:List<&2,Value.VLeg<Value.T>>) -> B.Comp(Bool):
+  match xs ys:
+    case Nil{} Nil{}: B.pure(Bool,True{})
+    case Con{Value.VLeg{bs1,c1},xs} Con{Value.VLeg{bs2,c2},ys}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_closures(ctx,List.length(&2,Pair.Pair<Q.T,String>,bs1),c1,List.length(&2,Pair.Pair<Q.T,String>,bs2),c2)
+        conv_and(same,conv_legs(ctx,xs,ys))
+    case _ _: B.pure(Bool,False{})
+
+@unsafe def conv_branch_addr(+ctx:C.Ctx,env1:List<&2,Value.T>,env2:List<&2,Value.T>,a:Term.Addr<Term.T>,b:Term.Addr<Term.T>) -> B.Comp(Bool):
+  match a b:
+    case Term.APt{q1,t1} Term.APt{q2,t2}:
+      do B.Comp<Bool>:
+        v1 : Value.T <- B.lift(Value.T,Eval.eval(C.globals_of(ctx),env1,t1))
+        v2 : Value.T <- B.lift(Value.T,Eval.eval(C.globals_of(ctx),env2,t2))
+        conv_type(ctx,v1,v2)
+    case Term.ALeg{k1} Term.ALeg{k2}: B.pure(Bool,Big.equal(k1,k2))
+    case Term.ACtor{c1} Term.ACtor{c2}: B.pure(Bool,String.eq(c1,c2))
+    case _ _: B.pure(Bool,False{})
+
+@unsafe def conv_branches(+ctx:C.Ctx,+env1:List<&2,Value.T>,+env2:List<&2,Value.T>,bs1:List<&2,Pair.Pair<Term.Addr<Term.T>,Term.Leg<Term.T>>>,bs2:List<&2,Pair.Pair<Term.Addr<Term.T>,Term.Leg<Term.T>>>) -> B.Comp(Bool):
+  match bs1 bs2:
+    case Nil{} Nil{}: B.pure(Bool,True{})
+    case Con{Pair.Pair{a1,Term.Leg{bind1,b1}},rest1} Con{Pair.Pair{a2,Term.Leg{bind2,b2}},rest2}:
+      do B.Comp<Bool>:
+        addr : Bool <- conv_branch_addr(ctx,env1,env2,a1,a2)
+        same : Bool <- conv_and(addr,conv_closures(ctx,List.length(&2,Pair.Pair<Q.T,String>,bind1),Value.Closure{env1,b1},List.length(&2,Pair.Pair<Q.T,String>,bind2),Value.Closure{env2,b2}))
+        conv_and(same,conv_branches(ctx,env1,env2,rest1,rest2))
+    case _ _: B.pure(Bool,False{})
+
+def conv_motives(+ctx:C.Ctx,env1:List<&2,Value.T>,env2:List<&2,Value.T>,m1:Maybe<&2,Term.Motive<Term.T>>,m2:Maybe<&2,Term.Motive<Term.T>>) -> B.Comp(Bool):
+  match m1 m2:
+    case None{} None{}: B.pure(Bool,True{})
+    case Some{Term.Motive{ind1,ix1,self1,b1}} Some{Term.Motive{ind2,ix2,self2,b2}}:
+      conv_closures(ctx,1n+List.length(&2,String,ix1),Value.Closure{env1,b1},1n+List.length(&2,String,ix2),Value.Closure{env2,b2})
+    case _ _: B.pure(Bool,False{})
+
+def conv_stuck(+ctx:C.Ctx,m1:Value.StuckElim<Value.T>,m2:Value.StuckElim<Value.T>) -> B.Comp(Bool):
+  match m1 m2:
+    case Value.StuckElim{s1,q1,mo1,bs1,+env1} Value.StuckElim{s2,q2,mo2,bs2,+env2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_shape(ctx,s1,s2)
+        mot : Bool <- conv_motives(ctx,env1,env2,mo1,mo2)
+        conv_and(same && Q.equal(q1,q2) && mot,conv_branches(ctx,env1,env2,bs1,bs2))
+
+type ConvStep is Data:
+  ConvStep{argument:Maybe<&2,Value.T>,next:Value.T}
+
+def conv_step_default() -> ConvStep:
+  ConvStep{None{},conv_placeholder()}
+
+def conv_step_arg(s:ConvStep) -> Maybe<&2,Value.T>:
+  match s:
+    case ConvStep{a,n}: a
+
+def conv_step_next(s:ConvStep) -> Value.T:
+  match s:
+    case ConvStep{a,n}: n
+
+def conv_spine_leg(+ctx:C.Ctx,lg:Maybe<&2,Value.VLeg<Value.T>>) -> B.Comp(ConvStep):
+  match lg:
+    case None{}: B.pure(ConvStep,conv_step_default())
+    case Some{Value.VLeg{bs,clo}}:
+      do B.Comp<ConvStep>:
+        t : Value.T <- open(ctx,clo,[])
+        return ConvStep{None{},t}
+
+def conv_spine_former(+ctx:C.Ctx,w:Value.T,s:Shape.T<Value.T>,addr:Value.VAddr<Value.T>) -> B.Comp(ConvStep):
+  match w s addr:
+    case Value.VRan{ws,d,u} Shape.SPi{q,n,dom} Value.VAPt{qa,arg}:
+      do B.Comp<ConvStep>:
+        cod : Value.T <- open(ctx,d,[arg])
+        return ConvStep{Some{dom},cod}
+    case Value.VRan{ws,d,u} Shape.SColl{n} Value.VALeg{k}:
+      do B.Comp<ConvStep>:
+        ls : List<&2,Value.VLeg<Value.T>> <- B.lift(List<&2,Value.VLeg<Value.T>>,R.coll_legs_of(ctx,d))
+        conv_spine_leg(ctx,Big.at(Value.VLeg<Value.T>,ls,k))
+    case Value.VRan{ws,d,u} _ _:
+      do B.Comp<ConvStep>:
+        conv_supported(s)
+        return conv_step_default()
+    case _ _ _: B.pure(ConvStep,conv_step_default())
+
+def conv_spine_step(+ctx:C.Ctx,hty:Value.T,s:Shape.T<Value.T>,a:Value.VAddr<Value.T>) -> B.Comp(ConvStep):
+  do B.Comp<ConvStep>:
+    w : Value.T <- whnf(ctx,hty)
+    conv_spine_former(ctx,w,s,a)
+
+@unsafe def conv_spines(+ctx:C.Ctx,hty:Value.T,xs:List<&2,Value.Spine<Value.T>>,ys:List<&2,Value.Spine<Value.T>>) -> B.Comp(Bool):
+  match xs ys:
+    case Nil{} Nil{}: B.pure(Bool,True{})
+    case Con{Value.SOut{+s1,+a1},r1} Con{Value.SOut{s2,a2},r2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_shape(ctx,s1,s2)
+        +step : ConvStep <- conv_spine_step(ctx,hty,s1,a1)
+        addr : Bool <- conv_addr(ctx,conv_step_arg(step),a1,a2)
+        conv_and(same && addr,conv_spines(ctx,conv_step_next(step),r1,r2))
+    case Con{Value.SElim{m1},r1} Con{Value.SElim{m2},r2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_stuck(ctx,m1,m2)
+        conv_and(same,conv_spines(ctx,conv_placeholder(),r1,r2))
+    case _ _: B.pure(Bool,False{})
+
+def conv_level_default(u:Maybe<&2,Level.T>) -> Level.T:
+  match u:
+    case None{}: Level.zero()
+    case Some{l}: l
+
+def conv_annotation_width(zero:Bool,u1:Maybe<&2,Level.T>,u2:Maybe<&2,Level.T>) -> B.Comp(Bool):
+  match zero:
+    case True{}: LevelEq.decide_m(conv_level_default(u1),conv_level_default(u2),True{})
+    case False{}: B.pure(Bool,True{})
+
+def conv_annotations(s:Shape.T<Value.T>,u1:Maybe<&2,Level.T>,u2:Maybe<&2,Level.T>) -> B.Comp(Bool):
+  match s:
+    case Shape.SColl{n}: conv_annotation_width(Big.equal(n,Big.zero()),u1,u2)
+    case _: B.pure(Bool,True{})
+
+@unsafe def conv_diagram(+ctx:C.Ctx,s:Shape.T<Value.T>,d1:Value.Closure<Value.T>,d2:Value.Closure<Value.T>) -> B.Comp(Bool):
+  match s:
+    case Shape.SPi{q,n,dom}:
+      +v = Value.var(C.size_of(ctx))
+      do B.Comp<Bool>:
+        a : Value.T <- open(ctx,d1,[v])
+        b : Value.T <- open(ctx,d2,[v])
+        conv_type(C.bind(n,q,dom,ctx),a,b)
+    case Shape.SZk{q,n,dom}:
+      +v = Value.var(C.size_of(ctx))
+      do B.Comp<Bool>:
+        a : Value.T <- open(ctx,d1,[v])
+        b : Value.T <- open(ctx,d2,[v])
+        conv_type(C.bind(n,q,dom,ctx),a,b)
+    case _:
+      do B.Comp<Bool>:
+        a : Value.T <- open(ctx,d1,[])
+        b : Value.T <- open(ctx,d2,[])
+        conv_type(ctx,a,b)
+
+def conv_former_annotations(same:Bool,+ctx:C.Ctx,+s:Shape.T<Value.T>,d1:Value.Closure<Value.T>,u1:Maybe<&2,Level.T>,d2:Value.Closure<Value.T>,u2:Maybe<&2,Level.T>) -> B.Comp(Bool):
+  match same:
+    case False{}: B.pure(Bool,False{})
+    case True{}:
+      do B.Comp<Bool>:
+        levels : Bool <- conv_annotations(s,u1,u2)
+        conv_and(levels,conv_diagram(ctx,s,d1,d2))
+
+def conv_formers(+ctx:C.Ctx,+s1:Shape.T<Value.T>,d1:Value.Closure<Value.T>,u1:Maybe<&2,Level.T>,s2:Shape.T<Value.T>,d2:Value.Closure<Value.T>,u2:Maybe<&2,Level.T>) -> B.Comp(Bool):
+  do B.Comp<Bool>:
+    conv_supported(s1)
+    same : Bool <- conv_shape(ctx,s1,s2)
+    conv_former_annotations(same,ctx,s1,d1,u1,d2,u2)
+
+def conv_neutrals(same:Bool,+ctx:C.Ctx,h:Value.Head,sp1:List<&2,Value.Spine<Value.T>>,sp2:List<&2,Value.Spine<Value.T>>) -> B.Comp(Bool):
+  match same:
+    case False{}: B.pure(Bool,False{})
+    case True{}:
+      do B.Comp<Bool>:
+        ty : Value.T <- head_ty(ctx,h)
+        conv_spines(ctx,ty,List.reverse(&2,Value.Spine<Value.T>,sp1),List.reverse(&2,Value.Spine<Value.T>,sp2))
+
+def conv_structural_whnf(+ctx:C.Ctx,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match a b:
+    case Value.VUniv{l1} Value.VUniv{l2}: LevelEq.decide_m(l1,l2,True{})
+    case Value.VLit{x} Value.VLit{y}: B.pure(Bool,Literal.equal(x,y))
+    case Value.VRan{s1,d1,u1} Value.VRan{s2,d2,u2}: conv_formers(ctx,s1,d1,u1,s2,d2,u2)
+    case Value.VLan{s1,d1,u1} Value.VLan{s2,d2,u2}: conv_formers(ctx,s1,d1,u1,s2,d2,u2)
+    case Value.VIn{s1,a1,args1} Value.VIn{s2,a2,args2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_shape(ctx,s1,s2)
+        addr : Bool <- conv_addr(ctx,None{},a1,a2)
+        conv_and(same && addr,conv_list(ctx,args1,args2))
+    case Value.VSec{s1,ls1} Value.VSec{s2,ls2}:
+      do B.Comp<Bool>:
+        same : Bool <- conv_shape(ctx,s1,s2)
+        conv_and(same,conv_legs(ctx,ls1,ls2))
+    case Value.VNeutral{+h1,sp1} Value.VNeutral{h2,sp2}: conv_neutrals(Value.head_equal(h1,h2),ctx,h1,sp1,sp2)
+    case _ _: B.pure(Bool,False{})
+
+def conv_structural(+ctx:C.Ctx,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  do B.Comp<Bool>:
+    wa : Value.T <- whnf(ctx,a)
+    wb : Value.T <- whnf(ctx,b)
+    conv_structural_whnf(ctx,wa,wb)
+
+@unsafe def conv_prop_probe(+ctx:C.Ctx,ty:Value.T) -> B.Comp(Bool):
+  do B.Comp<Bool>:
+    t : Term.T <- quote(ctx,ty)
+    l : Level.T <- infer_univ(ctx,t)
+    return Level.equal(l,Level.zero())
+
+def conv_prop_failure(error:Error.T) -> B.Comp(Bool):
+  match error:
+    case Error.Budget_exhausted{message}: B.failed(Bool,Error.Budget_exhausted{message})
+    case _: B.pure(Bool,False{})
+
+def conv_is_prop(ctx:C.Ctx,ty:Value.T) -> B.Comp(Bool):
+  B.recover(Bool,conv_prop_probe(ctx,ty),conv_prop_failure)
+
+def conv_fields_zero(xs:Positivity.Telescope) -> Bool:
+  match xs:
+    case Nil{}: True{}
+    case Con{Positivity.Binder{q,n,ty},rest}: Q.equal(q,Q.QZero{}) && conv_fields_zero(rest)
+
+def conv_ctor_zero(c:Maybe<&2,Positivity.Ctor>) -> Bool:
+  match c:
+    case None{}: False{}
+    case Some{Positivity.Ctor{n,args,indices,arity,rec}}: conv_fields_zero(args) && Bool.not(rec)
+
+def conv_family_zero(f:Positivity.Family) -> Bool:
+  match f:
+    case Positivity.Family{n,ps,ix,level,Positivity.Complete{Nil{}},cs,positive}: Level.equal(level,Level.zero())
+    case Positivity.Family{+n,+ps,+ix,+level,Positivity.Complete{Con{+name,Nil{}}},+cs,+positive}:
+      Level.equal(level,Level.zero()) && conv_ctor_zero(Positivity.ctor_of(name,Positivity.Family{n,ps,ix,level,Positivity.Complete{[name]},cs,positive}))
+    case _: False{}
+
+def conv_family_probe(r:Result<&2,&2,Error.T,Positivity.Family>) -> Bool:
+  match r:
+    case Fail{e}: False{}
+    case Done{f}: conv_family_zero(f)
+
+def conv_subsingleton(ctx:C.Ctx,w:Value.T) -> B.Comp(Bool):
+  match w:
+    case Value.VLan{Shape.SMu{n,args},d,u}: B.pure(Bool,conv_family_probe(R.mu_family(ctx,n)))
+    case Value.VLan{s,d,u}:
+      do B.Comp<Bool>:
+        conv_supported(s)
+        return False{}
+    case _: B.pure(Bool,False{})
+
+def conv_out(ctx:C.Ctx,s:Shape.T<Value.T>,a:Value.VAddr<Value.T>,v:Value.T) -> B.Comp(Value.T):
+  B.lift(Value.T,Eval.out_value(C.globals_of(ctx),s,a,v))
+
+def conv_proj_branches(q:Q.T,which:Nat) -> List<&2,Pair.Pair<Term.Addr<Term.T>,Term.Leg<Term.T>>>:
+  [Pair.Pair{Term.aleg(Term.T,0n),Term.Leg{[Pair.Pair{q,"x"},Pair.Pair{Q.QMany{},"y"}],Term.Var{Bool.pick(Nat,Nat.is_eq(which,0n),1n,0n)}}}]
+
+def conv_project(+ctx:C.Ctx,s:Shape.T<Value.T>,q:Q.T,scrut_q:Q.T,mo:Maybe<&2,Term.Motive<Term.T>>,which:Nat,v:Value.T) -> B.Comp(Value.T):
+  B.lift(Value.T,Eval.elim_value(C.globals_of(ctx),Value.StuckElim{s,scrut_q,mo,conv_proj_branches(q,which),C.env_of(ctx)},v))
+
+def conv_proj_motive_body(which:Nat,+ctx:C.Ctx,s:Shape.T<Value.T>,d:Value.Closure<Value.T>,+q:Q.T,+dom:Value.T) -> B.Comp(Value.T):
+  match which:
+    case 0n: B.pure(Value.T,dom)
+    case 1n+p:
+      do B.Comp<Value.T>:
+        domain : Term.T <- quote(C.bind("self",q,dom,ctx),dom)
+        point : Value.T <- conv_project(ctx,s,q,Q.QOne{},Some{Term.Motive{None{},[],"self",domain}},0n,Value.var(C.size_of(ctx)))
+        open(ctx,d,[point])
+
+def conv_proj_motive(+ctx:C.Ctx,s:Shape.T<Value.T>,d:Value.Closure<Value.T>,+q:Q.T,n:String,+dom:Value.T,which:Nat) -> B.Comp(Maybe<&2,Term.Motive<Term.T>>):
+  do B.Comp<Maybe<&2,Term.Motive<Term.T>>>:
+    v : Value.T <- conv_proj_motive_body(which,ctx,s,d,q,dom)
+    body : Term.T <- quote(C.bind(n,q,dom,ctx),v)
+    return Some{Term.Motive{None{},[],"self",body}}
+
+@unsafe def conv_eta_pair_second(first:Bool,+ctx:C.Ctx,+s:Shape.T<Value.T>,+d:Value.Closure<Value.T>,+q:Q.T,n:String,dom:Value.T,a1:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match first:
+    case False{}: B.pure(Bool,False{})
+    case True{}:
+      do B.Comp<Bool>:
+        cod : Value.T <- open(ctx,d,[a1])
+        +mo : Maybe<&2,Term.Motive<Term.T>> <- conv_proj_motive(ctx,s,d,q,n,dom,1n)
+        a2 : Value.T <- conv_project(ctx,s,q,Q.QOne{},mo,1n,a)
+        b2 : Value.T <- conv_project(ctx,s,q,Q.QOne{},mo,1n,b)
+        conv(ctx,cod,a2,b2)
+
+@unsafe def conv_eta_pair(+ctx:C.Ctx,+s:Shape.T<Value.T>,+d:Value.Closure<Value.T>,+q:Q.T,+n:String,+dom:Value.T,+a:Value.T,+b:Value.T) -> B.Comp(Bool):
+  do B.Comp<Bool>:
+    +mo : Maybe<&2,Term.Motive<Term.T>> <- conv_proj_motive(ctx,s,d,q,n,dom,0n)
+    +a1 : Value.T <- conv_project(ctx,s,q,Q.QOne{},mo,0n,a)
+    b1 : Value.T <- conv_project(ctx,s,q,Q.QOne{},mo,0n,b)
+    first : Bool <- conv(ctx,dom,a1,b1)
+    conv_eta_pair_second(first,ctx,s,d,q,n,dom,a1,a,b)
+
+@unsafe def conv_eta_coll(sign:Cmp,n:Big.T,+index:Big.T,+ctx:C.Ctx,+s:Shape.T<Value.T>,+legs:List<&2,Value.VLeg<Value.T>>,+a:Value.T,+b:Value.T) -> B.Comp(Bool):
+  match sign:
+    case EQ{}: B.pure(Bool,True{})
+    case LT{}: B.failed(Bool,Error.Mismatch{"a collection width must be nonnegative"})
+    case GT{}:
+      do B.Comp<Bool>:
+        ty : Value.T <- B.lift(Value.T,R.coll_leg_ty(ctx,legs,index))
+        x : Value.T <- conv_out(ctx,s,Value.VALeg{index},a)
+        y : Value.T <- conv_out(ctx,s,Value.VALeg{index},b)
+        same : Bool <- conv(ctx,ty,x,y)
+        +next : Big.T = Big.sub(n,Big.one())
+        conv_and(same,conv_eta_coll(Big.sign(next),next,Big.add(index,Big.one()),ctx,s,legs,a,b))
+
+@unsafe def conv_eta_or_structural(+ctx:C.Ctx,w:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match w:
+    case Value.VRan{Shape.SPi{+q,+n,+dom},d,u}:
+      +v = Value.var(C.size_of(ctx))
+      +s = {Shape.SPi{q,n,dom}:Shape.T<Value.T>}
+      do B.Comp<Bool>:
+        cod : Value.T <- open(ctx,d,[v])
+        fa : Value.T <- conv_out(ctx,s,Value.VAPt{q,v},a)
+        fb : Value.T <- conv_out(ctx,s,Value.VAPt{q,v},b)
+        conv(C.bind(n,q,dom,ctx),cod,fa,fb)
+    case Value.VLan{Shape.SPi{+q,+n,+dom},d,u}: conv_eta_pair(ctx,Shape.SPi{q,n,dom},d,q,n,dom,a,b)
+    case Value.VRan{Shape.SColl{+n},d,u}:
+      do B.Comp<Bool>:
+        legs : List<&2,Value.VLeg<Value.T>> <- B.lift(List<&2,Value.VLeg<Value.T>>,R.coll_legs_of(ctx,d))
+        conv_eta_coll(Big.sign(n),n,Big.zero(),ctx,Shape.SColl{n},legs,a,b)
+    case Value.VRan{s,d,u}:
+      do B.Comp<Bool>:
+        conv_supported(s)
+        conv_structural(ctx,a,b)
+    case Value.VLan{s,d,u}:
+      do B.Comp<Bool>:
+        conv_supported(s)
+        conv_structural(ctx,a,b)
+    case _: conv_structural(ctx,a,b)
+
+def conv_after_sub(sub:Bool,ctx:C.Ctx,w:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match sub:
+    case True{}: B.pure(Bool,True{})
+    case False{}: conv_eta_or_structural(ctx,w,a,b)
+
+def conv_after_prop(prop:Bool,+ctx:C.Ctx,ty:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match prop:
+    case True{}: B.pure(Bool,True{})
+    case False{}:
+      do B.Comp<Bool>:
+        +w : Value.T <- whnf(ctx,ty)
+        sub : Bool <- conv_subsingleton(ctx,w)
+        conv_after_sub(sub,ctx,w,a,b)
+
+@unsafe def conv(ctx,ty,a,b):
+  +ty = ty
+  do B.Comp<Bool>:
+    prop : Bool <- conv_is_prop(ctx,ty)
+    conv_after_prop(prop,ctx,ty,a,b)
+
+@unsafe def conv_type(ctx,a,b):
+  conv(ctx,conv_placeholder(),a,b)

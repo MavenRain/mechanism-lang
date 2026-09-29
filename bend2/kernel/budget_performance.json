@@ -1,0 +1,213 @@
+{
+  "inputs": {
+    "direct": {
+      "path": "build/import-pipeline-lazy.js",
+      "sha256": "ef4fdd528d15ebfe2994f11cbbe392750d29d68e5fd62ebba4eb883d94e53ddf"
+    },
+    "poll": {
+      "path": "build/kernel-budget-callback-check.js",
+      "sha256": "1dbe26d9fe9390e0a83412f66e978a2a66311433f9459d2860da15d4c5319f57"
+    }
+  },
+  "direct": [
+    {
+      "depth": 100,
+      "elapsed_ms": 34.26712499999999,
+      "bind_calls": 1816,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "998991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 200,
+      "elapsed_ms": 19.368459,
+      "bind_calls": 3616,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "997991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 400,
+      "elapsed_ms": 33.57408299999999,
+      "bind_calls": 7216,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "995991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 800,
+      "elapsed_ms": 65.267708,
+      "bind_calls": 14416,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "991991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    }
+  ],
+  "free_poll": [
+    {
+      "depth": 100,
+      "elapsed_ms": 78.37604200000001,
+      "bind_calls": 54133,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "998991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 200,
+      "elapsed_ms": 126.471666,
+      "bind_calls": 208233,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "997991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 400,
+      "elapsed_ms": 251.458417,
+      "bind_calls": 816433,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "995991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 800,
+      "elapsed_ms": 1193.478625,
+      "bind_calls": 3232833,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "991991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    }
+  ],
+  "continuations": [
+    {
+      "depth": 100,
+      "elapsed_ms": 31.039416000000003,
+      "bind_calls": 1816,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "998991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 200,
+      "elapsed_ms": 23.63024999999999,
+      "bind_calls": 3616,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "997991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 400,
+      "elapsed_ms": 20.237209000000007,
+      "bind_calls": 7216,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "995991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    },
+    {
+      "depth": 800,
+      "elapsed_ms": 17.506207999999987,
+      "bind_calls": 14416,
+      "result": {
+        "$": "Pair",
+        "first": {
+          "$": "Polls",
+          "remaining": "991991"
+        },
+        "second": {
+          "$": "Done",
+          "value": true
+        }
+      }
+    }
+  ],
+  "budget_sha256": "98c5201e2b5ef0ed429a1df0e255ea0f6f9b11a8a2db902b4960ca4540865e84",
+  "cps_artifact_sha256": "cbf8a55c760973dc6d27576b9579b3489b68270cfb0bea993467519d2b3db1b7",
+  "status": "builder_validated_independent_review_pending"
+}

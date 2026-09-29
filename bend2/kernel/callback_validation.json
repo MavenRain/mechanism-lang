@@ -1,0 +1,31 @@
+{
+  "status": "builder_validated_independent_review_pending",
+  "sources": {
+    "bend2/kernel/budget.bend": "418cb0770361af65e2731aa73525a5ea30814c1d159593af38d36f23767fd61d",
+    "bend2/kernel/totality.bend": "30654a3145030a25cd0e2477cd15180a123178358d06227a035d9f9d830f8234",
+    "bend2/import/lower.bend": "ecf9d7d3bf3aac7f84037307502d755864cad613a6b819ae7cdb0b929c5eaa01",
+    "bend2/tests/kernel_budget_callbacks.bend": "da297978311dfae3988e75c9eb22cd9fdab7db7a0b053bdc40bf33168f2c29c7",
+    "bend2/tests/kernel_budget_callback_check.bend": "7089bd8917f6c55815255ffd831130dc1762f064bbc833a28151b76a8b6ace0a",
+    "bend2/tests/surface_program.bend": "d2f977df6363918e475df9bf3ca404752797b51edabaa6550127231299173e93",
+    "bend2/tests/surface_boundary.bend": "e88b7d75c4b18e6724b1ae633de385be57c02df5cc0f16744c42bb2b2d00e13b",
+    "bend2/kernel/API.md": "78871c11df575d21649daa864255f84d8a1d5f69a5a4eb622c6cad1d67adfe6a",
+    "bend2/kernel/VALIDATION.md": "7068a8f7660fb899e8acaaeb8927098283fefb309f4140e6ee19686480502902"
+  },
+  "artifacts": {
+    "build/kernel-budget-callback-check.js": "1dbe26d9fe9390e0a83412f66e978a2a66311433f9459d2860da15d4c5319f57",
+    "build/surface-boundary-callbacks.js": "829189272262c2c760efb600c5cb4d62f6c5525f04810edd3d0d229ac148e1fa"
+  },
+  "captures": {
+    "budget_check": ".kanon-exec/run-R54jOn",
+    "callback_native": ".kanon-exec/run-PiExrA",
+    "kernel_compile": ".kanon-exec/run-qumYpe",
+    "kernel_execution": ".kanon-exec/run-EnCbY4",
+    "boundary_compile": ".kanon-exec/run-dhLSyD",
+    "boundary_execution": ".kanon-exec/run-ASHeDN"
+  },
+  "pending": [
+    "independent callback review",
+    "whole runner and differential replay",
+    "register both new IO fixtures in dev/bend2/test-manifest.json and bend2/tests/runner.bend"
+  ]
+}

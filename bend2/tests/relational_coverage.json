@@ -1,0 +1,628 @@
+{
+  "schema": 1,
+  "assertion_count_note": "original_require_sites counts direct static require call sites, including shared helper/loop bodies; marker fields preserve expanded computation, refusal and inventory counts. Execution and mutation validation remain pending.",
+  "protocols": [
+    {
+      "original": "test/prelude_category.ml",
+      "original_sha256": "4d2b345b116eb629f42e54756a44b37914914c06d94481e19716c3be9e9fb99c",
+      "module": "bend2/tests/prelude_category.bend",
+      "module_sha256": "023341c6d29c8765441dfe3446ce92bbbec3799ec3b6909e7328afb566ae258f",
+      "mode": "prelude-category",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_category.exe",
+      "marker": "PRELUDE-CATEGORY-OK entries=181 computations=7 negatives=9 quotation=3",
+      "original_require_sites": 9,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "native-pass",
+      "original_revision": "af5b7f0",
+      "runtime_receipt": ".kanon-exec/run-A5bE0g",
+      "runtime_seconds": 490.0319022909971,
+      "runtime_artifact_sha256": "1ce75d03db017575983e3a2a9090154463c8ead68fc672447a3efcde947e7b24",
+      "original_gate": {
+        "gate": "PRELUDE-CATEGORY",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "latest_completed_observation": {
+        "functional_passed": true,
+        "seconds": 987.7870653750142,
+        "original_gate_passed": false,
+        "report": "build/relational-shard-0-runtime.json",
+        "source_state": "before relational distinct_fields native correction"
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "category",
+        "original_gate": "PRELUDE-CATEGORY",
+        "original_tier": "CATEGORY",
+        "timeout_seconds": 900,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-CATEGORY-OK entries=181 computations=7 negatives=9 quotation=3\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 822.1547613750445,
+        "report": "build/relational-shard-0-final-runtime.json",
+        "report_sha256": "701ca5d0b9aa1fd06cbce2f473df5c158e3a3fff3ede86a5d7ca3260aa03c3ea",
+        "bundle_manifest_sha256": "81ef076804a7898b69ac4638844b2c45ddc3150694d0eaa739144d473159e2b4"
+      }
+    },
+    {
+      "original": "test/prelude_composable_functors.ml",
+      "original_sha256": "daa633879de1e71a1ea1d5eaa0534c65c032b127dffdfc24be4f9cc9aa367c61",
+      "module": "bend2/tests/prelude_composable_functors.bend",
+      "module_sha256": "59bf07e1fb6f42a5f0d23fd0a7170da7dd7cdd9e2715e4f6151c4009ff89ddb4",
+      "mode": "prelude-composable-functors",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_composable_functors.exe",
+      "marker": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12",
+      "original_require_sites": 15,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-COMPOSABLE-FUNCTORS",
+        "tier": "SLOW",
+        "seconds": 120
+      },
+      "latest_completed_observation": {
+        "functional_passed": true,
+        "seconds": 134.00750424998114,
+        "original_gate_passed": false,
+        "report": "build/relational-shard-1-runtime.json",
+        "source_state": "before relational distinct_fields native correction"
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "composable-functors",
+        "original_gate": "PRELUDE-COMPOSABLE-FUNCTORS",
+        "original_tier": "SLOW",
+        "timeout_seconds": 120,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 73.69923924998147,
+        "report": "build/relational-shard-1-final-runtime.json",
+        "report_sha256": "faa361001191ad52d6bd46e179044af83c6c0813fd4f89fd146242ea06f22e6b",
+        "bundle_manifest_sha256": "33a57ba5688d159c4a462cbe9746cb49bf881b17c6e8e564ad125a78e1d4c44c"
+      }
+    },
+    {
+      "original": "test/prelude_functor.ml",
+      "original_sha256": "60a8b652699ef4ab09b17b54fb29ba6658d48532d07d1a9647424299d8b9b47a",
+      "module": "bend2/tests/prelude_functor.bend",
+      "module_sha256": "cd2f9a4f4588f10ac0691685601f3da80bbad20799211b5afa45885abfdf6135",
+      "mode": "prelude-functor",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_functor.exe",
+      "marker": "PRELUDE-FUNCTOR-OK entries=177 instances=4 computations=7 negatives=8",
+      "original_require_sites": 11,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-FUNCTOR",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_heterogeneous_functor.ml",
+      "original_sha256": "ef397753e8f55e0e5133aacf21d5ad706327babac4550d16c517167ef25c8039",
+      "module": "bend2/tests/prelude_heterogeneous_functor.bend",
+      "module_sha256": "b8ea579a3016ce2b0f0297cf872f71fcf827db427a637a641bdbb1b41fb03139",
+      "mode": "prelude-heterogeneous-functor",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_heterogeneous_functor.exe",
+      "marker": "PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12",
+      "original_require_sites": 16,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "native-pass",
+      "original_revision": "af5b7f0",
+      "runtime_receipt": ".kanon-exec/run-A5bE0g",
+      "runtime_seconds": 18.127280958986375,
+      "runtime_artifact_sha256": "1ce75d03db017575983e3a2a9090154463c8ead68fc672447a3efcde947e7b24",
+      "original_gate": {
+        "gate": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+        "tier": "SLOW",
+        "seconds": 120
+      },
+      "latest_completed_observation": {
+        "functional_passed": true,
+        "seconds": 33.768544624967035,
+        "original_gate_passed": true,
+        "report": "build/relational-shard-1-runtime.json",
+        "source_state": "before relational distinct_fields native correction"
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "heterogeneous-functor",
+        "original_gate": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+        "original_tier": "SLOW",
+        "timeout_seconds": 120,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 24.23037766700145,
+        "report": "build/relational-shard-1-final-runtime.json",
+        "report_sha256": "faa361001191ad52d6bd46e179044af83c6c0813fd4f89fd146242ea06f22e6b",
+        "bundle_manifest_sha256": "33a57ba5688d159c4a462cbe9746cb49bf881b17c6e8e564ad125a78e1d4c44c"
+      }
+    },
+    {
+      "original": "test/prelude_heterogeneous_left_kan.ml",
+      "original_sha256": "2b63ee80f8b97054688b8e2b6e429d3117ab2db925ef91fe5415e210e38be8c6",
+      "module": "bend2/tests/prelude_heterogeneous_left_kan.bend",
+      "module_sha256": "a5072ec4e5834eb42959c3f42ed748a14a63e8a643ec53ed510287d643921ba5",
+      "mode": "prelude-heterogeneous-left-kan",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_heterogeneous_left_kan.exe",
+      "marker": "PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15",
+      "original_require_sites": 13,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "latest_completed_observation": {
+        "functional_passed": false,
+        "seconds": 593.1246136670234,
+        "original_gate_passed": false,
+        "report": "build/relational-shard-1-runtime.json",
+        "source_state": "before relational distinct_fields native correction"
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "heterogeneous-left-kan",
+        "original_gate": "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+        "original_tier": "SUITE",
+        "timeout_seconds": 300,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 236.22566104202997,
+        "report": "build/relational-quiet-heterogeneous-left-kan.json",
+        "report_sha256": "a45cd18a314977b34d8932c93f7af6874c983f7721ba0ce4ba0be12b60c7fdc3",
+        "bundle_manifest_sha256": "33a57ba5688d159c4a462cbe9746cb49bf881b17c6e8e564ad125a78e1d4c44c"
+      }
+    },
+    {
+      "original": "test/prelude_heterogeneous_nattrans.ml",
+      "original_sha256": "a050abe104374e0fe6138ecaad187cd8e5f6b0eb4afadc949210f21b266fb9e9",
+      "module": "bend2/tests/prelude_heterogeneous_nattrans.bend",
+      "module_sha256": "39c1ea9a8b24cbcac9cffeecdb0df287fcaa7d03f0357165da6e903532cbad95",
+      "mode": "prelude-heterogeneous-nattrans",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_heterogeneous_nattrans.exe",
+      "marker": "PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=150 instances=4 computations=5 negatives=13",
+      "original_require_sites": 15,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-HETEROGENEOUS-NATTRANS",
+        "tier": "SLOW",
+        "seconds": 120
+      },
+      "latest_completed_observation": {
+        "functional_passed": false,
+        "seconds": 144.89816070796223,
+        "original_gate_passed": false,
+        "report": "build/relational-shard-1-runtime.json",
+        "source_state": "before relational distinct_fields native correction"
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "heterogeneous-nattrans",
+        "original_gate": "PRELUDE-HETEROGENEOUS-NATTRANS",
+        "original_tier": "SLOW",
+        "timeout_seconds": 120,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=150 instances=4 computations=5 negatives=13\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 77.871176708024,
+        "report": "build/relational-shard-1-final-runtime.json",
+        "report_sha256": "faa361001191ad52d6bd46e179044af83c6c0813fd4f89fd146242ea06f22e6b",
+        "bundle_manifest_sha256": "33a57ba5688d159c4a462cbe9746cb49bf881b17c6e8e564ad125a78e1d4c44c"
+      }
+    },
+    {
+      "original": "test/prelude_heterogeneous_whiskering.ml",
+      "original_sha256": "00228f207c59baf91f1d2f589f99c7a1157bcc28a05169d238d39bf7779a77dd",
+      "module": "bend2/tests/prelude_heterogeneous_whiskering.bend",
+      "module_sha256": "adf407cbc5201918a759b000f3b85f3eaa3d2b913ce707daed54a08ee1e01521",
+      "mode": "prelude-heterogeneous-whiskering",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_heterogeneous_whiskering.exe",
+      "marker": "PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16",
+      "original_require_sites": 15,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-HETEROGENEOUS-WHISKERING",
+        "tier": "SLOW",
+        "seconds": 120
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "heterogeneous-whiskering",
+        "original_gate": "PRELUDE-HETEROGENEOUS-WHISKERING",
+        "original_tier": "SLOW",
+        "timeout_seconds": 120,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 114.53857170901028,
+        "report": "build/relational-quiet-heterogeneous-whiskering.json",
+        "report_sha256": "a48006349961f76e070bdc3424f9df336aaa7dda3c1c0e21d214d384c2bee77f",
+        "bundle_manifest_sha256": "11b1475cae57e083c331c60dbe99e80c5a3cb60a3b7554da77bc2fe5c29f9084"
+      }
+    },
+    {
+      "original": "test/prelude_horizontal_associativity.ml",
+      "original_sha256": "51aaedcbfa3dbee65f43e483d9306fb2a8921f80e1d4607314ce109c1a95af66",
+      "module": "bend2/tests/prelude_horizontal_associativity.bend",
+      "module_sha256": "70a22c95e86b4e8c48a4325e8761cf7dbdb001235397717e7319a08bcf1272c9",
+      "mode": "prelude-horizontal-associativity",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_horizontal_associativity.exe",
+      "marker": "PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK entries=2328 families=15 computations=6 negatives=7",
+      "original_require_sites": 12,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-HORIZONTAL-ASSOCIATIVITY",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_horizontal_laws.ml",
+      "original_sha256": "37b4e9bd9f1997b37d3b9472c74545f7c46f4f11cd3ccae2a3d6fb39efd11402",
+      "module": "bend2/tests/prelude_horizontal_laws.bend",
+      "module_sha256": "74ece9c98021b3e1bd3b48abcd0922f12837b0b818b6d64dbc5feb41b60d0d48",
+      "mode": "prelude-horizontal-laws",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_horizontal_laws.exe",
+      "marker": "PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7",
+      "original_require_sites": 11,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-HORIZONTAL-LAWS",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_iterated_whiskering.ml",
+      "original_sha256": "dd07a51d1f11b212759358e11997440bc7157b74254958c707bf843aa11160c0",
+      "module": "bend2/tests/prelude_iterated_whiskering.bend",
+      "module_sha256": "5200f54862e1363ac8becaeef376edfb42f91cd3a2b636b6b08eeef7a4ff69de",
+      "mode": "prelude-iterated-whiskering",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_iterated_whiskering.exe",
+      "marker": "PRELUDE-ITERATED-WHISKERING-OK entries=902 families=14 computations=18 negatives=6",
+      "original_require_sites": 11,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-ITERATED-WHISKERING",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_left_kan.ml",
+      "original_sha256": "25a6bf825b1c30444f1273e4e28220127eb029c56927b6afe9a9f136c92569ac",
+      "module": "bend2/tests/prelude_left_kan.bend",
+      "module_sha256": "f4317c0d9183f4f24e687a4856804bab04630cd392dd0bf75e3cefabc97b3a13",
+      "mode": "prelude-left-kan",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_left_kan.exe",
+      "marker": "PRELUDE-LEFT-KAN-OK entries=203 instances=4 computations=6 negatives=7",
+      "original_require_sites": 10,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-LEFT-KAN",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_left_kan_laws.ml",
+      "original_sha256": "b591a91e10ccaf7ae4a8197e87cbe29a69731c1bc2ab27bce1b4bf64b893e651",
+      "module": "bend2/tests/prelude_left_kan_laws.bend",
+      "module_sha256": "50d62a660b529d94107c4ea59f66ef5d6114cbfa54884083a0067fc34f052b9c",
+      "mode": "prelude-left-kan-laws",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_left_kan_laws.exe",
+      "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10",
+      "original_require_sites": 14,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-LEFT-KAN-LAWS",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "left-kan-laws",
+        "original_gate": "PRELUDE-LEFT-KAN-LAWS",
+        "original_tier": "CATEGORY",
+        "timeout_seconds": 900,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 455.3726449999958,
+        "report": "build/relational-quiet-left-kan-laws.json",
+        "report_sha256": "23e41a9ccc7702f7713c9a9de121a06e5fdaaba25b6c5898d8a5b02d056dbe19",
+        "bundle_manifest_sha256": "11b1475cae57e083c331c60dbe99e80c5a3cb60a3b7554da77bc2fe5c29f9084"
+      }
+    },
+    {
+      "original": "test/prelude_nattrans.ml",
+      "original_sha256": "5c9c8473d6aa79d29ba79f500c4ba6646f8c6af8f9aee5be3ff7a4d5b9460eb7",
+      "module": "bend2/tests/prelude_nattrans.bend",
+      "module_sha256": "13ae381df0dadc5a36e33402e35c0a3a2652575438f778671bc976ff6317149b",
+      "mode": "prelude-nattrans",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_nattrans.exe",
+      "marker": "PRELUDE-NATTRANS-OK entries=183 instances=4 computations=8 negatives=7",
+      "original_require_sites": 11,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-NATTRANS",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_nattrans_laws.ml",
+      "original_sha256": "d23073b5c9b4b4c8dc031645cd0cb337d0ee649da48dbaec3086e49db06b4ff6",
+      "module": "bend2/tests/prelude_nattrans_laws.bend",
+      "module_sha256": "854e5a0b9781e1ac8c630a227557f5159529d28d20b7f4960a2bf379789cb5fb",
+      "mode": "prelude-nattrans-laws",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_nattrans_laws.exe",
+      "marker": "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6",
+      "original_require_sites": 10,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-NATTRANS-LAWS",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "mode": "nattrans-laws",
+        "original_gate": "PRELUDE-NATTRANS-LAWS",
+        "original_tier": "SUITE",
+        "timeout_seconds": 300,
+        "functional_watchdog_seconds": 1800,
+        "exit_code": 0,
+        "stdout": "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6\n",
+        "stderr": "",
+        "passed": true,
+        "seconds": 126.04030325001804,
+        "report": "build/relational-shard-3-final-runtime.json",
+        "report_sha256": "83a32289decb160eac04da0f0dd3bcbcc5f6e959047181f51215f799cd3003d7",
+        "bundle_manifest_sha256": "2807395a9615c861fce0c656a5f89042774b7e959dbcb2ab4a06071a0210d578"
+      }
+    },
+    {
+      "original": "test/prelude_nattrans_units.ml",
+      "original_sha256": "30177c5880b3b93d3f68b5a1437796d918972466c2889d0fdc221393914bbb7b",
+      "module": "bend2/tests/prelude_nattrans_units.bend",
+      "module_sha256": "6135978ff68c378768fad3c0abfb805fe80a84b26d56f99aa8a2ccfac1883db2",
+      "mode": "prelude-nattrans-units",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_nattrans_units.exe",
+      "marker": "PRELUDE-NATTRANS-UNITS-OK entries=1281 families=9 computations=15 negatives=6",
+      "original_require_sites": 14,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-NATTRANS-UNITS",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_shared_left_kan.ml",
+      "original_sha256": "4ab81c10934a3e04fd412ef4857db15d022ad261e38814f5e50c991f70f24c5c",
+      "module": "bend2/tests/prelude_shared_left_kan.bend",
+      "module_sha256": "0d03a62f73defb320a1f83fb4f1e05bdcd10d730f33d188dfe43281d38e8dda5",
+      "mode": "prelude-shared-left-kan",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_shared_left_kan.exe",
+      "marker": "PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7",
+      "original_require_sites": 11,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-SHARED-LEFT-KAN",
+        "tier": "CATEGORY",
+        "seconds": 900
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_shared_nattrans.ml",
+      "original_sha256": "d69886f30724495d1beac40d0af73c104de93397605c8d201101c8f751b3696b",
+      "module": "bend2/tests/prelude_shared_nattrans.bend",
+      "module_sha256": "dba5243b6fb392da9326c647af4104181686f81c6aee28dee745e48a8db2667d",
+      "mode": "prelude-shared-nattrans",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_shared_nattrans.exe",
+      "marker": "PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6",
+      "original_require_sites": 10,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-SHARED-NATTRANS",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    },
+    {
+      "original": "test/prelude_whiskering_laws.ml",
+      "original_sha256": "5e7d84cedad0eec943e98801ec96aa33ed66c6b5f911c03b7bc3d528c4036fef",
+      "module": "bend2/tests/prelude_whiskering_laws.bend",
+      "module_sha256": "3b21d3e967c7eebdd013438290a3f55b3e3661be242dce38607b10abac431592",
+      "mode": "prelude-whiskering-laws",
+      "entry": "arguments",
+      "arguments": [
+        "ROOT"
+      ],
+      "legacy_alias": "prelude_whiskering_laws.exe",
+      "marker": "PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24 negatives=6",
+      "original_require_sites": 10,
+      "check_receipt": ".kanon-exec/run-cDOiFl",
+      "execution": "pending",
+      "original_revision": "af5b7f0",
+      "original_gate": {
+        "gate": "PRELUDE-WHISKERING-LAWS",
+        "tier": "SUITE",
+        "seconds": 300
+      },
+      "current_validation": "pending coordinated rebuild after test-helper correction and indexed-global decision",
+      "final_2_0_27": {
+        "status": "pending final frozen-source execution"
+      }
+    }
+  ],
+  "combined_build_receipt": ".kanon-exec/run-6YveP4",
+  "combined_artifact_sha256": "ed460ab2dccffb69fbedb4d6b72f95436578f1c6ab284c5da2bff09e27acbec0",
+  "checker_sha256": "48d4bcc86eec3599029e0ee56abb53cf000f83c2de72d0386e61c71d5d79af3b",
+  "runtime_report": "build/relational-runtime-report.json",
+  "final_runtime_status": "18/18 full final2.0.27 relational protocols PASS under original gate caps; separate strict mutation baseline120 failure remains",
+  "quiet_exit_regression": ".kanon-exec/run-UDfOpr",
+  "native_small_runner": "bend2/tests/relational_native.bend",
+  "native_small_check_receipt": ".kanon-exec/run-TKeVIc",
+  "native_runtime_report": "build/relational-native-baselines.json",
+  "native_runtime_receipt": ".kanon-exec/run-A5bE0g",
+  "current_checker_sha256": "f3a65c65bd9602595c316da41273bc7e337c3c3aa36ee9df52ad36b700b42af3",
+  "original_gate_source": {
+    "path": "dev/gates.sh",
+    "sha256": "b384d60a1e4b5bd76aa9a26c99732cedfd5a11f06266aa205481c98529829b43"
+  },
+  "oracle_regression": "build/relational-native-oracle-regression.json",
+  "final_observations": "build/relational-final-2.0.27-observations.json"
+}

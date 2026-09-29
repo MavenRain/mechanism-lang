@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "reference": {
+    "mech": "59849d0a0f036f538317cdbbf2a89e6b3ff9a2fc16610d3336abea029180f6dc",
+    "cert": "d014121feb3d5c69e332671221360c6013d80a60b68441bc55ac974e8ce73c14"
+  },
+  "cases": [
+    {
+      "name": "usage",
+      "mode": "mech",
+      "args": [],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "import-usage",
+      "mode": "mech",
+      "args": [
+        "import"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "import-extra",
+      "mode": "mech",
+      "args": [
+        "import",
+        "a",
+        "b"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "parity-usage",
+      "mode": "mech",
+      "args": [
+        "diff-parity"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "mapping-usage",
+      "mode": "mech",
+      "args": [
+        "map-inventory",
+        "--never"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "unknown-command",
+      "mode": "mech",
+      "args": [
+        "wat"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 64,
+        "stdout": "",
+        "stderr": "usage: kanon check [--print|--erased] FILE | axioms FILE | circuit FILE | emit FILE -o OUT.wasm --export NAME | run FILE --export NAME [--host node|wasmtime|kernel|both] | build FILE... -o OUT.wasm --export NAME... | spec-count\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "missing-export",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/missing.jsonl"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "mech: $ROOT/missing.jsonl:0: $ROOT/missing.jsonl: No such file or directory\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "malformed-export",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/bad.jsonl"
+      ],
+      "files": {
+        "bad.jsonl": "not json\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "mech: $ROOT/bad.jsonl:1: JSON column 2: expected 'u'\n",
+        "tree": {
+          "bad.jsonl": "not json\n"
+        }
+      }
+    },
+    {
+      "name": "export-1083.jsonl-summary",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export-1083.jsonl"
+      ],
+      "files": {
+        "export-1083.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"bvar\":0}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":1,\"body\":2,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":3,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=18 names=7 levels=6 expressions=3 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=0 external_declared=1 const_names=0\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1083.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"bvar\":0}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":1,\"body\":2,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":3,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1083.jsonl-parity",
+      "mode": "mech",
+      "args": [
+        "diff-parity",
+        "--export",
+        "$ROOT/export-1083.jsonl"
+      ],
+      "files": {
+        "export-1083.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"bvar\":0}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":1,\"body\":2,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":3,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=18 names=7 levels=6 expressions=3 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=0 external_declared=1 const_names=0\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1083.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"bvar\":0}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":1,\"body\":2,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":3,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1086.jsonl-summary",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export-1086.jsonl"
+      ],
+      "files": {
+        "export-1086.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":0}\n{\"ie\":2,\"sort\":1}\n{\"ie\":3,\"bvar\":0}\n{\"ie\":4,\"letE\":{\"name\":3,\"type\":2,\"value\":1,\"body\":3,\"nondep\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":4,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=19 names=7 levels=6 expressions=4 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=0 external_declared=1 const_names=0\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1086.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":0}\n{\"ie\":2,\"sort\":1}\n{\"ie\":3,\"bvar\":0}\n{\"ie\":4,\"letE\":{\"name\":3,\"type\":2,\"value\":1,\"body\":3,\"nondep\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":4,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1086.jsonl-parity",
+      "mode": "mech",
+      "args": [
+        "diff-parity",
+        "--export",
+        "$ROOT/export-1086.jsonl"
+      ],
+      "files": {
+        "export-1086.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":0}\n{\"ie\":2,\"sort\":1}\n{\"ie\":3,\"bvar\":0}\n{\"ie\":4,\"letE\":{\"name\":3,\"type\":2,\"value\":1,\"body\":3,\"nondep\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":4,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=19 names=7 levels=6 expressions=4 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=0 external_declared=1 const_names=0\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1086.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":0}\n{\"ie\":2,\"sort\":1}\n{\"ie\":3,\"bvar\":0}\n{\"ie\":4,\"letE\":{\"name\":3,\"type\":2,\"value\":1,\"body\":3,\"nondep\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":4,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1087.jsonl-summary",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export-1087.jsonl"
+      ],
+      "files": {
+        "export-1087.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":5,\"us\":[]}}\n{\"axiom\":{\"name\":5,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":2,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=18 names=7 levels=6 expressions=2 format=3.1.0\nIMPORT-COUNTS declarations=2 external_referenced=1 external_declared=2 const_names=1\nPARITY-KIND axiom declared=2 scoped_types=2 kernel_types=1 deferred=1 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1087.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":5,\"us\":[]}}\n{\"axiom\":{\"name\":5,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":2,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1087.jsonl-parity",
+      "mode": "mech",
+      "args": [
+        "diff-parity",
+        "--export",
+        "$ROOT/export-1087.jsonl"
+      ],
+      "files": {
+        "export-1087.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":5,\"us\":[]}}\n{\"axiom\":{\"name\":5,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":2,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=18 names=7 levels=6 expressions=2 format=3.1.0\nIMPORT-COUNTS declarations=2 external_referenced=1 external_declared=2 const_names=1\nPARITY-KIND axiom declared=2 scoped_types=2 kernel_types=1 deferred=1 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1087.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":5,\"us\":[]}}\n{\"axiom\":{\"name\":5,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":2,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1100.jsonl-summary",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export-1100.jsonl"
+      ],
+      "files": {
+        "export-1100.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":7,\"us\":[]}}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":2,\"body\":1,\"binderInfo\":\"default\"}}\n{\"ie\":4,\"bvar\":0}\n{\"ie\":5,\"natVal\":\"123456789012345678901234567890\"}\n{\"ie\":6,\"app\":{\"fn\":4,\"arg\":5}}\n{\"ie\":7,\"forallE\":{\"name\":3,\"type\":3,\"body\":6,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":7,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":7,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=23 names=7 levels=6 expressions=7 format=3.1.0\nIMPORT-COUNTS declarations=2 external_referenced=1 external_declared=2 const_names=1\nPARITY-KIND axiom declared=2 scoped_types=2 kernel_types=1 deferred=1 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1100.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":7,\"us\":[]}}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":2,\"body\":1,\"binderInfo\":\"default\"}}\n{\"ie\":4,\"bvar\":0}\n{\"ie\":5,\"natVal\":\"123456789012345678901234567890\"}\n{\"ie\":6,\"app\":{\"fn\":4,\"arg\":5}}\n{\"ie\":7,\"forallE\":{\"name\":3,\"type\":3,\"body\":6,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":7,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":7,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1100.jsonl-parity",
+      "mode": "mech",
+      "args": [
+        "diff-parity",
+        "--export",
+        "$ROOT/export-1100.jsonl"
+      ],
+      "files": {
+        "export-1100.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":7,\"us\":[]}}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":2,\"body\":1,\"binderInfo\":\"default\"}}\n{\"ie\":4,\"bvar\":0}\n{\"ie\":5,\"natVal\":\"123456789012345678901234567890\"}\n{\"ie\":6,\"app\":{\"fn\":4,\"arg\":5}}\n{\"ie\":7,\"forallE\":{\"name\":3,\"type\":3,\"body\":6,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":7,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":7,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=23 names=7 levels=6 expressions=7 format=3.1.0\nIMPORT-COUNTS declarations=2 external_referenced=1 external_declared=2 const_names=1\nPARITY-KIND axiom declared=2 scoped_types=2 kernel_types=1 deferred=1 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1100.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"x\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"test\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"F\"}}\n{\"in\":6,\"str\":{\"pre\":0,\"str\":\"v\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"il\":1,\"succ\":0}\n{\"il\":2,\"param\":1}\n{\"il\":3,\"param\":6}\n{\"il\":4,\"imax\":[2,3]}\n{\"il\":5,\"succ\":4}\n{\"il\":6,\"max\":[2,3]}\n{\"ie\":1,\"sort\":1}\n{\"ie\":2,\"const\":{\"name\":7,\"us\":[]}}\n{\"ie\":3,\"forallE\":{\"name\":3,\"type\":2,\"body\":1,\"binderInfo\":\"default\"}}\n{\"ie\":4,\"bvar\":0}\n{\"ie\":5,\"natVal\":\"123456789012345678901234567890\"}\n{\"ie\":6,\"app\":{\"fn\":4,\"arg\":5}}\n{\"ie\":7,\"forallE\":{\"name\":3,\"type\":3,\"body\":6,\"binderInfo\":\"default\"}}\n{\"axiom\":{\"name\":7,\"levelParams\":[],\"type\":1,\"isUnsafe\":false}}\n{\"axiom\":{\"name\":4,\"levelParams\":[],\"type\":7,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1117.jsonl-summary",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export-1117.jsonl"
+      ],
+      "files": {
+        "export-1117.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=41 names=22 levels=0 expressions=17 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=12 external_declared=1 const_names=16\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1117.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "export-1117.jsonl-parity",
+      "mode": "mech",
+      "args": [
+        "diff-parity",
+        "--export",
+        "$ROOT/export-1117.jsonl"
+      ],
+      "files": {
+        "export-1117.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=41 names=22 levels=0 expressions=17 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=12 external_declared=1 const_names=16\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export-1117.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "mapping",
+      "mode": "mech",
+      "args": [
+        "map-inventory",
+        "--export",
+        "$ROOT/export.jsonl"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "lean_name\ttarget\tverdict\nA\t-\tUNMAPPED\nBool\tMechBool\tNAME_ONLY\nEq.rec\tmechJ\tNAME_ONLY\nLean.Omega\t-\tNEVER\nLean.Omega.reflect\t-\tNEVER\nLean.OmegaExtra\t-\tUNMAPPED\nLean.Private\t-\tUNMAPPED\nNat\tMechNat\tNAME_ONLY\nNat.succ\tmechSucc\tNAME_ONLY\nNat.zero\tmechZero\tNAME_ONLY\nOutside.\u00ab\"\u03b2\"\u00bb\t-\tUNMAPPED\nZ\t-\tUNMAPPED\n",
+        "stderr": "",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "mapping-never",
+      "mode": "mech",
+      "args": [
+        "map-inventory",
+        "--export",
+        "$ROOT/export.jsonl",
+        "--never"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "lean_name\tratification\tmilestone\nLean.Omega\tR-V4:omega-reflection\tNEVER\nLean.Omega.reflect\tR-V4:omega-reflection\tNEVER\n",
+        "stderr": "",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "publish",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export.jsonl",
+        "--out",
+        "$ROOT/reports"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "IMPORT-GRAMMAR lines=41 names=22 levels=0 expressions=17 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=12 external_declared=1 const_names=16\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+        "stderr": "",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}",
+          "reports": null,
+          "reports/manifest.json": "{\"schema\":\"mechanism-types-0.1\",\"format_version\":\"3.1.0\",\"lean_version\":\"4.19.0\",\"lean_githash\":\"test\",\"exporter_name\":\"lean4export\",\"exporter_version\":\"3.1.0\",\"declarations\":1,\"mapping_checked\":false,\"values_translated\":false}\n",
+          "reports/summary.txt": "IMPORT-GRAMMAR lines=41 names=22 levels=0 expressions=17 format=3.1.0\nIMPORT-COUNTS declarations=1 external_referenced=12 external_declared=1 const_names=16\nPARITY-KIND axiom declared=1 scoped_types=1 kernel_types=1 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND def declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND thm declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND opaque declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND quot declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND inductive declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND constructor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-KIND recursor declared=0 scoped_types=0 kernel_types=0 deferred=0 unsupported=0 kernel_errors=0 NEVER=0\nPARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)\n",
+          "reports/types.ndjson": "{\"name\":0,\"anonymous\":true}\n{\"name\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"name\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"name\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"name\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"name\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"name\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"name\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"name\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"name\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"name\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"name\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"name\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"name\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"name\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"name\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"name\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"name\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"name\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"name\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"name\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"name\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"name\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"level\":0,\"zero\":true}\n{\"expr\":0,\"sort\":0}\n{\"declaration\":{\"source_name\":22,\"name\":\"Unused\",\"kind\":\"axiom\",\"source_line\":41,\"source_level_params\":[],\"parameters\":[],\"type\":0,\"dependencies\":[],\"status\":\"KERNEL_TYPE\",\"kernel_debug\":\"Type 0\"}}\n"
+        }
+      }
+    },
+    {
+      "name": "publish-existing-directory",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export.jsonl",
+        "--out",
+        "$ROOT/reports"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}",
+        "reports/keep": "preserve me\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "mech: output already exists: $ROOT/reports\n",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}",
+          "reports": null,
+          "reports/keep": "preserve me\n"
+        }
+      }
+    },
+    {
+      "name": "publish-existing-file",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export.jsonl",
+        "--out",
+        "$ROOT/reports"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}",
+        "reports": "preserve me\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "mech: output already exists: $ROOT/reports\n",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}",
+          "reports": "preserve me\n"
+        }
+      }
+    },
+    {
+      "name": "publish-missing-parent",
+      "mode": "mech",
+      "args": [
+        "import",
+        "$ROOT/export.jsonl",
+        "--out",
+        "$ROOT/missing/reports"
+      ],
+      "files": {
+        "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "mech: mkdir $ROOT/missing/reports.tmp-33387: No such file or directory\n",
+        "tree": {
+          "export.jsonl": "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"test\",\"version\":\"4.19.0\"},\"format\":{\"version\":\"3.1.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"Nat\"}}\n{\"in\":2,\"str\":{\"pre\":1,\"str\":\"zero\"}}\n{\"in\":3,\"str\":{\"pre\":1,\"str\":\"succ\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"Bool\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"Eq\"}}\n{\"in\":6,\"str\":{\"pre\":5,\"str\":\"rec\"}}\n{\"in\":7,\"str\":{\"pre\":0,\"str\":\"Lean\"}}\n{\"in\":8,\"str\":{\"pre\":7,\"str\":\"Omega\"}}\n{\"in\":9,\"str\":{\"pre\":8,\"str\":\"reflect\"}}\n{\"in\":10,\"str\":{\"pre\":7,\"str\":\"OmegaExtra\"}}\n{\"in\":11,\"str\":{\"pre\":7,\"str\":\"Private\"}}\n{\"in\":12,\"str\":{\"pre\":0,\"str\":\"UnifiedAggregation\"}}\n{\"in\":13,\"str\":{\"pre\":12,\"str\":\"x\"}}\n{\"in\":14,\"str\":{\"pre\":0,\"str\":\"ArrowCat\"}}\n{\"in\":15,\"str\":{\"pre\":14,\"str\":\"y\"}}\n{\"in\":16,\"str\":{\"pre\":0,\"str\":\"CompCatTheory\"}}\n{\"in\":17,\"str\":{\"pre\":16,\"str\":\"z\"}}\n{\"in\":18,\"str\":{\"pre\":0,\"str\":\"Outside\"}}\n{\"in\":19,\"str\":{\"pre\":18,\"str\":\"\u03b2\"}}\n{\"in\":20,\"str\":{\"pre\":0,\"str\":\"A\"}}\n{\"in\":21,\"str\":{\"pre\":0,\"str\":\"Z\"}}\n{\"in\":22,\"str\":{\"pre\":0,\"str\":\"Unused\"}}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"const\":{\"name\":1,\"us\":[]}}\n{\"ie\":2,\"const\":{\"name\":2,\"us\":[]}}\n{\"ie\":3,\"const\":{\"name\":3,\"us\":[]}}\n{\"ie\":4,\"const\":{\"name\":4,\"us\":[]}}\n{\"ie\":5,\"const\":{\"name\":6,\"us\":[]}}\n{\"ie\":6,\"const\":{\"name\":8,\"us\":[]}}\n{\"ie\":7,\"const\":{\"name\":9,\"us\":[]}}\n{\"ie\":8,\"const\":{\"name\":10,\"us\":[]}}\n{\"ie\":9,\"const\":{\"name\":11,\"us\":[]}}\n{\"ie\":10,\"const\":{\"name\":12,\"us\":[]}}\n{\"ie\":11,\"const\":{\"name\":13,\"us\":[]}}\n{\"ie\":12,\"const\":{\"name\":15,\"us\":[]}}\n{\"ie\":13,\"const\":{\"name\":17,\"us\":[]}}\n{\"ie\":14,\"const\":{\"name\":19,\"us\":[]}}\n{\"ie\":15,\"const\":{\"name\":20,\"us\":[]}}\n{\"ie\":16,\"const\":{\"name\":21,\"us\":[]}}\n{\"axiom\":{\"name\":22,\"levelParams\":[],\"type\":0,\"isUnsafe\":false}}"
+        }
+      }
+    },
+    {
+      "name": "cert-check",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-one",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "small"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\nsmall\t42\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-big",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "large"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\nlarge\t184467440737095516170\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-computed",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "plus"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\nplus\t43\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-ordered",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "large",
+        "small",
+        "plus"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\nlarge\t184467440737095516170\nsmall\t42\nplus\t43\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-duplicate",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "small",
+        "small"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 0,
+        "stdout": "CHECKED axioms=0\nsmall\t42\nsmall\t42\n",
+        "stderr": "",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-missing",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "small",
+        "unknown"
+      ],
+      "files": {
+        "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "unbound: unknown\n",
+        "tree": {
+          "cert.mech": "def small : Nat := 42\ndef large : Nat := 184467440737095516170\ndef plus : Nat := natAdd small 1\n"
+        }
+      }
+    },
+    {
+      "name": "cert-usage",
+      "mode": "cert",
+      "args": [],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "usage: mech_cert SOURCE [NAT_EXPORT ...]\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "cert-missing-file",
+      "mode": "cert",
+      "args": [
+        "$ROOT/missing.mech"
+      ],
+      "files": {},
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "$ROOT/missing.mech: No such file or directory\n",
+        "tree": {}
+      }
+    },
+    {
+      "name": "cert-axioms",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "main"
+      ],
+      "files": {
+        "cert.mech": "axiom hole : Nat\ndef main : Nat := 42\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "certificate declares axioms: hole\n",
+        "tree": {
+          "cert.mech": "axiom hole : Nat\ndef main : Nat := 42\n"
+        }
+      }
+    },
+    {
+      "name": "cert-nonliteral",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "main"
+      ],
+      "files": {
+        "cert.mech": "def main : Nat -> Nat := fun (x : Nat) => x\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "not a literal: main\n",
+        "tree": {
+          "cert.mech": "def main : Nat -> Nat := fun (x : Nat) => x\n"
+        }
+      }
+    },
+    {
+      "name": "cert-string",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech",
+        "main"
+      ],
+      "files": {
+        "cert.mech": "def main : String := \"hello\"\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "line 1, column 22: unexpected character '\"'\n",
+        "tree": {
+          "cert.mech": "def main : String := \"hello\"\n"
+        }
+      }
+    },
+    {
+      "name": "cert-invalid",
+      "mode": "cert",
+      "args": [
+        "$ROOT/cert.mech"
+      ],
+      "files": {
+        "cert.mech": "def main : Nat := unknown\n"
+      },
+      "directories": [],
+      "expected": {
+        "code": 1,
+        "stdout": "",
+        "stderr": "unbound: unknown\n",
+        "tree": {
+          "cert.mech": "def main : Nat := unknown\n"
+        }
+      }
+    }
+  ]
+}

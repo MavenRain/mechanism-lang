@@ -1,0 +1,1207 @@
+{
+  "version": 1,
+  "historical_inputs": [
+    {
+      "path": "fixtures/a01-fun-app.kan",
+      "sha256": "5cd49ce0e31f4b5b2c757a4e4f12a023cac8d4ce953dd7520aef1ebc20d8b1b7"
+    },
+    {
+      "path": "golden/a01-fun-app.erased",
+      "sha256": "697d8d8bd0ff21f1a985be3234624637b5a3723fcb03000d2b394241b5c7290d"
+    },
+    {
+      "path": "fixtures/a02-arrow-star.kan",
+      "sha256": "ed94f53600056fb378b37bdf7b0ece1c021c6fc7fe0a886345a82308cddf782b"
+    },
+    {
+      "path": "golden/a02-arrow-star.erased",
+      "sha256": "dffc22601f63b3964ad526f7b50af66408826787ec7602dea1bac57e33c34bcd"
+    },
+    {
+      "path": "fixtures/a03-pair-proj.kan",
+      "sha256": "8a19b9ed02d0b02beb88a3350b4cd36039fda2c0db69e2e3852b539e3920d4d8"
+    },
+    {
+      "path": "golden/a03-pair-proj.erased",
+      "sha256": "aed7d48f9c456a2a435e4e9eaaa9b718cb4d06497e4dd50ea5dfcbca0b474b9b"
+    },
+    {
+      "path": "fixtures/a04-inj-case.kan",
+      "sha256": "486c9726126942e86529c9afd0af8793a486eb96cb491a04183222615e42558d"
+    },
+    {
+      "path": "golden/a04-inj-case.erased",
+      "sha256": "c297aa7fdbfa38fbd22e00652494b5bf20f1979aa389353395659c365003e76e"
+    },
+    {
+      "path": "fixtures/a05-tuple-proj.kan",
+      "sha256": "2c448f2ce3c9be232b667885d5fcddfec086d4c2accabf5dc350f192f7039cec"
+    },
+    {
+      "path": "golden/a05-tuple-proj.erased",
+      "sha256": "7919aa41eca19e89c7aed80a224685bf93655848e268454cdf1484299fc9214b"
+    },
+    {
+      "path": "fixtures/a06-unit-absurd.kan",
+      "sha256": "87f1e26ba3d705aaaea8bbcda7de910e1b502d43a760c41e104de6db75e02111"
+    },
+    {
+      "path": "golden/a06-unit-absurd.erased",
+      "sha256": "fa4d9434bad7c2d968ac5db46fc55065c0b6ce283e7981984fd44893db661cbd"
+    },
+    {
+      "path": "fixtures/a07-universes.kan",
+      "sha256": "8fd432bb9f62dec19d4f416b29bf1ba86b13c441f160e1c3ea0386a4c7fcd75d"
+    },
+    {
+      "path": "golden/a07-universes.erased",
+      "sha256": "2859b7a58884f023904511d7f2fe6521026337ccac81f8eb7cd8750576037c5e"
+    },
+    {
+      "path": "fixtures/a08-nat-prims.kan",
+      "sha256": "b4b947aa9aed736a70cbbff35145024432c9cdaf7226dfa056bb645fe909ff06"
+    },
+    {
+      "path": "golden/a08-nat-prims.erased",
+      "sha256": "22f62e2deb393a702a32408fea9513743078bb8a1b71d4a7dcd5789daf0ca893"
+    },
+    {
+      "path": "fixtures/a09-let-ann.kan",
+      "sha256": "cd7a24161f6ba55193c2aab43f38671abcaf73de7dcfb3ba65c6b434c8106e19"
+    },
+    {
+      "path": "golden/a09-let-ann.erased",
+      "sha256": "054eb855defc0107d1ca9c4b5d3a657856073d052c1607310746bc290e2ba350"
+    },
+    {
+      "path": "fixtures/a10-def-axiom.kan",
+      "sha256": "6affe3bf8b87551c56afba78dca78b347f072a25a445dea28cc2de6edbc93f85"
+    },
+    {
+      "path": "golden/a10-def-axiom.erased",
+      "sha256": "e69f3c09409268a1b901bb1f7482dd241316f42f7270b1e273435a3b30628198"
+    },
+    {
+      "path": "fixtures/b01-function-eta.kan",
+      "sha256": "4239b05bdb39feac75ef70ac6bb640a17ef73bfb7c6dd648258d92073ad84ec7"
+    },
+    {
+      "path": "golden/b01-function-eta.erased",
+      "sha256": "e1e9e6ae708c314e5ef1e538b41b93542be9883eb94ec6301dca2ad290500091"
+    },
+    {
+      "path": "fixtures/b02-pair-eta.kan",
+      "sha256": "69b79880b88f00685c69302b67da5b92125f5cd20037b5189b596e790ad05a88"
+    },
+    {
+      "path": "golden/b02-pair-eta.erased",
+      "sha256": "be50cb612a477b00175ca430697d5866930f36293bbd902458255afa9a86cd27"
+    },
+    {
+      "path": "fixtures/b03-tuple-eta.kan",
+      "sha256": "8989ad87d1e99c6c00680d0225d4cbb3c0e40c90f7a76940f9158e62b9809137"
+    },
+    {
+      "path": "golden/b03-tuple-eta.erased",
+      "sha256": "f4f91c6ea8675c9d09f7317e3923b3b75869f38e64eeca41cbe3210ca08f8620"
+    },
+    {
+      "path": "fixtures/b04-unit-eta.kan",
+      "sha256": "4a2e1ea9d0633dae75548f71018997b422344ab1db6f1b9bb298838c0fd180e3"
+    },
+    {
+      "path": "golden/b04-unit-eta.erased",
+      "sha256": "1248f177162230160d4455a884e52380ebdeb5e59793e5897fd3e415f9cc8529"
+    },
+    {
+      "path": "fixtures/b05-proof-irrelevance.kan",
+      "sha256": "eea6ffb1deac8d69a06e18b6961920ca7c598429dc609f8d8b1ee313dd192324"
+    },
+    {
+      "path": "golden/b05-proof-irrelevance.erased",
+      "sha256": "1b4864c93d804617127b166d308f25594cc8136ca1be70b749869209de0d7f60"
+    },
+    {
+      "path": "fixtures/b06-impredicativity.kan",
+      "sha256": "52a7cc88ffc7e92c92d5a0d0f93140ba4cbf35fdba5e225a58a4e49f1819ec54"
+    },
+    {
+      "path": "golden/b06-impredicativity.erased",
+      "sha256": "536e8988c1dc5c15e0557a0e2741df573688089765dc71dd1bd57de52fe175b3"
+    },
+    {
+      "path": "fixtures/b07-nat-fast-path.kan",
+      "sha256": "f54dc268b4f44129de0f4952e5f71b7dc9db94e33552a298eebceeb913dab660"
+    },
+    {
+      "path": "golden/b07-nat-fast-path.erased",
+      "sha256": "3de0b152eab9a79ab84a50d577bb7aea6e3ad791f23245b09c386264ebad309d"
+    },
+    {
+      "path": "fixtures/b08-axiom-disclosure.kan",
+      "sha256": "27d603e90ce4cd69633094d5a938cf308abee4b3e3743c49baacab5aa5d9fa1d"
+    },
+    {
+      "path": "golden/b08-axiom-disclosure.erased",
+      "sha256": "2a5e87da7ab298564fd052701c4b79c6ea098c715a9598887ed39d90c3ce9fcb"
+    },
+    {
+      "path": "fixtures/b09-sum-prod.kan",
+      "sha256": "9051de35f672a1cadfe9f5ba02b7988b0f1a8971d14c16f82bede01ea471b152"
+    },
+    {
+      "path": "golden/b09-sum-prod.erased",
+      "sha256": "1dfeee9e3657df85ba17daf1d3e268cf80e3ec7c2eacc6654b8de2cc887c9cfb"
+    },
+    {
+      "path": "fixtures/b10-case-motive.kan",
+      "sha256": "ed6edb64822a82bb8814afb593a3c590e05cf1116b123e00b130c2c9cf31dc03"
+    },
+    {
+      "path": "golden/b10-case-motive.erased",
+      "sha256": "ea22b23041111f11a60a9f8be001992a0eda5f6b2b5168b0ca1ee9c6dbb842f3"
+    },
+    {
+      "path": "fixtures/b11-leg-proj.kan",
+      "sha256": "d1366e8009d4fa05794ef7bf99c78015e6cc9a80f47183053543b608264f215b"
+    },
+    {
+      "path": "golden/b11-leg-proj.erased",
+      "sha256": "2d4977f058fd84876aa114a28a3252bd18d3c6240a61448a97394c016428967b"
+    },
+    {
+      "path": "fixtures/b12-bool-prims.kan",
+      "sha256": "0182e1d67ea60c586b5318d8bb239a1463c9767b752e66b48bf7625accdf2841"
+    },
+    {
+      "path": "golden/b12-bool-prims.erased",
+      "sha256": "d4bff5ada113f8b15ed01d7b9a3d21445f1953761756e614fe96618a2e8421f3"
+    },
+    {
+      "path": "fixtures/c01-prop-argument.kan",
+      "sha256": "f80f73a56b49c952bb29c6965d3e4cd21b7885d5e3fb144c3b877eec642e7141"
+    },
+    {
+      "path": "golden/c01-prop-argument.erased",
+      "sha256": "a72731e6b0a67ea596c03309dffacfa25b172cbb277c5e43fec79f7e337221fa"
+    },
+    {
+      "path": "fixtures/c02-zero-binder.kan",
+      "sha256": "3c3bd0357258692fd9d4344b7757fd3bbe87bb4a3f440706504e6835f2977c3c"
+    },
+    {
+      "path": "golden/c02-zero-binder.erased",
+      "sha256": "b899a13e9c5ee7132ed9dd7b889b745b51bc3fcccaae2e284fad1e798bca498d"
+    },
+    {
+      "path": "fixtures/c03-tail-call.kan",
+      "sha256": "e1af409ea91d746b40641043e0bdb64007753562e624679edb0e937d61efa2f6"
+    },
+    {
+      "path": "golden/c03-tail-call.erased",
+      "sha256": "a4d70925d113cdf34b2e951dbf9f0572a81504acf200b8720eef3cdf3f1e5809"
+    },
+    {
+      "path": "fixtures/c04-case-tags.kan",
+      "sha256": "9580c50438c0152bbe4fe347e5d7641206bf86054dcb3b58c86da6a75bb9e172"
+    },
+    {
+      "path": "golden/c04-case-tags.erased",
+      "sha256": "0c98167decb5138ede53bfb4e443df019d417df00c6c846399793907b3c9b7d0"
+    },
+    {
+      "path": "fixtures/c05-let-erased.kan",
+      "sha256": "8605d6b37045c5db1fad067c5d0851e6ae454c8f88df2df7707c9bc168f9e7e9"
+    },
+    {
+      "path": "golden/c05-let-erased.erased",
+      "sha256": "5cd2ef8a3ab2314d3ae5e76397456490978452fa8f9c27ec6a2ff8b6ad26136c"
+    },
+    {
+      "path": "fixtures/c06-dependent-pair.kan",
+      "sha256": "1bed2ecf2b4865e8ac1734d06bcba2b92bf7a2c2fd46d4e7399a61c6ed7325a6"
+    },
+    {
+      "path": "golden/c06-dependent-pair.erased",
+      "sha256": "5213a1f38ad59fb843ffbd1056066c27d02db7bd4a5330d9f37419ba67becd27"
+    },
+    {
+      "path": "fixtures/c07-dependent-case.kan",
+      "sha256": "c0b5e8fab940c57d86d956c08a088c4a893794e1e90dc6d5722b11b801fae519"
+    },
+    {
+      "path": "golden/c07-dependent-case.erased",
+      "sha256": "f79305b521889b2beea8b32a4e83d7475c31c7877d117246fbdf786fa1334262"
+    },
+    {
+      "path": "fixtures/c08-dependent-let.kan",
+      "sha256": "f0074692b294a71f11058383b3a75d7eca6cf561765eea4d77dc0598ed1f40f8"
+    },
+    {
+      "path": "golden/c08-dependent-let.erased",
+      "sha256": "c23b6695e52b85d7201ceeaab13e658d8ea4ada5745d69942206a3878b9ac84c"
+    },
+    {
+      "path": "fixtures/c09-partial-erased.kan",
+      "sha256": "2d93adb41b97ebf6003304ff5dc40dcba923a0c50f9eb5cc9a24389ecc79b06a"
+    },
+    {
+      "path": "golden/c09-partial-erased.erased",
+      "sha256": "9a08556c316e964ab0ef3321331b048d057552751154d7d45552414ef23e31a8"
+    },
+    {
+      "path": "fixtures/c10-eta-captures.kan",
+      "sha256": "01e329f98420ee9f09499dd1d72a8d035a8a65a77b01bdc69a54d1babd604996"
+    },
+    {
+      "path": "golden/c10-eta-captures.erased",
+      "sha256": "aa40f010a511c5ca4621ad4b1808b137f800584961fe42a71ae65a5e4884538d"
+    },
+    {
+      "path": "fixtures/circuit-fhc.kan",
+      "sha256": "e4ffb96b579ba1c73c95dbede06067cdced0ad4d403e6526a1d87e4098178b29"
+    },
+    {
+      "path": "golden/circuit-fhc.erased",
+      "sha256": "6b28e16415f0b827da9f0e7ed10f15da65f046140c5ff260b9f7dc5e3d02d056"
+    },
+    {
+      "path": "fixtures/circuit-named-tree.kan",
+      "sha256": "2cafefbd70a6584bddbf14b1951ae8606d907d29cf0466f3cbbc24134c7b07ba"
+    },
+    {
+      "path": "golden/circuit-named-tree.erased",
+      "sha256": "2b6f5a704c7aabd046bb39d658f5bda1ca9e7bfd6a7e42518faa1788bc511359"
+    },
+    {
+      "path": "fixtures/d01-lit-prims.kan",
+      "sha256": "7531993b8139c389b2802e3394951a88f9d8032e7b776651084d44e231f97e30"
+    },
+    {
+      "path": "golden/d01-lit-prims.erased",
+      "sha256": "a35c5098cefd3880af5bf78586b598962747fff011941f647d31687e99ec9d28"
+    },
+    {
+      "path": "fixtures/d02-tail-call.kan",
+      "sha256": "2fd253ec3ac9d9f6783f64e832ba1a446645c7fa3f9d33b6ded1919276f5bd7e"
+    },
+    {
+      "path": "golden/d02-tail-call.erased",
+      "sha256": "e24f3f8190e23b3ece6956fef0ff2bd933a247bca65b1e71df2485f7c1cc8e66"
+    },
+    {
+      "path": "fixtures/d03-pair.kan",
+      "sha256": "9968b696762bb0c24268525b268645e58f82517c7d5c31f847f4c630dc94ee99"
+    },
+    {
+      "path": "golden/d03-pair.erased",
+      "sha256": "ea51d5a006c0ef1afd678f5360837625e781afb710fe3b6ac556ec6a9f0d1db4"
+    },
+    {
+      "path": "fixtures/d04-tuple.kan",
+      "sha256": "7f558aec2f508e43a814758d2aee2b43570e666a68e91381677bddbf05076331"
+    },
+    {
+      "path": "golden/d04-tuple.erased",
+      "sha256": "fef35ee0e618439cd4165b26a09881d22407bd5316dc87411ed7e7cc1d34cf23"
+    },
+    {
+      "path": "fixtures/d05-sum-legs.kan",
+      "sha256": "341e583983e4bf2606a9e45287c35b67bca82a5473b2d1a4240d7c6db7703b59"
+    },
+    {
+      "path": "golden/d05-sum-legs.erased",
+      "sha256": "b712a38bd5917c3d8504646873117ba1586c6dbcaa6baea5b564516502ac14da"
+    },
+    {
+      "path": "fixtures/d06-closure-capture.kan",
+      "sha256": "818bc435d19113f3be9290da9e725520731ffa6d6d9f29bbdf43d23442155461"
+    },
+    {
+      "path": "golden/d06-closure-capture.erased",
+      "sha256": "16a5e67fb9909c56d51316083293032c62f86179952a63a185824e5e28f5f640"
+    },
+    {
+      "path": "fixtures/d07-partial-over.kan",
+      "sha256": "f20fe66101310a26c58bf0a31e6345467c39ab86c0212498c8b2ec6b6580c3f7"
+    },
+    {
+      "path": "golden/d07-partial-over.erased",
+      "sha256": "c32eccd67ed3f29320faa8f9299b4e16fd95bbc19bda8e1f33021d2fad389779"
+    },
+    {
+      "path": "fixtures/d08-erased-poly.kan",
+      "sha256": "c34709d818881773b77a0538b21fbd9e405d5908045be16684d82c5bc087ca65"
+    },
+    {
+      "path": "golden/d08-erased-poly.erased",
+      "sha256": "b2c3b98cfe3dee67476f39e826a860e911436ca4184d5efcc3ba215ef08f965e"
+    },
+    {
+      "path": "fixtures/d09-let-chain.kan",
+      "sha256": "70a43c7bd432b87978a4859edf87f707d027248ff19c22cb938fa0010d0191b2"
+    },
+    {
+      "path": "golden/d09-let-chain.erased",
+      "sha256": "8b03414ba946f2b1bfa8f1a48e68ff1f86a12a74e4d5ab073cc1f56429c1f918"
+    },
+    {
+      "path": "fixtures/d10-i31-boundary.kan",
+      "sha256": "8202bfe3ffdd5a1b97b0d13cc74ab2aa82a64506f7045e5da158d06f26ec6ced"
+    },
+    {
+      "path": "golden/d10-i31-boundary.erased",
+      "sha256": "d118a71d257c8ba519ed0caf17bb3cc91d66cb17bda3269ff66a09756e69a228"
+    },
+    {
+      "path": "fixtures/d11-poly-pair.kan",
+      "sha256": "3c3e5431db2c5468c5f76a17c5e8bbde3ccb21a0dab3df397cb4f03f346f7341"
+    },
+    {
+      "path": "golden/d11-poly-pair.erased",
+      "sha256": "c8a58f36d975ecae3cf1686b55515029a67d130efdb46452541f6c3175875ac3"
+    },
+    {
+      "path": "fixtures/d12-poly-case.kan",
+      "sha256": "07ad4a1375358378fa09314717d4a8bf5a3258154edfadb0bf1cd24dfa89a0b4"
+    },
+    {
+      "path": "golden/d12-poly-case.erased",
+      "sha256": "015304d1945fc0fc080a5a2689cd1f40787d0bb722ce999543665bb2065a5046"
+    },
+    {
+      "path": "fixtures/d13-function-case.kan",
+      "sha256": "653ad8c4d32409e24a6c558c62c943fe13f4ee9cc7291048955c7646a4e48b00"
+    },
+    {
+      "path": "golden/d13-function-case.erased",
+      "sha256": "57251b39b66e049052502aa50eac1c54b9aa024583fe41de09a8ba77255f29ca"
+    },
+    {
+      "path": "fixtures/d14-generic-capture.kan",
+      "sha256": "4b40f5316d0dbd429a842d139d488822fc29d3c87383539c38fa69a03cf6aed9"
+    },
+    {
+      "path": "golden/d14-generic-capture.erased",
+      "sha256": "d37a82900665bd9436226eed2a174ae610b48485eda2293504963e8242ded38d"
+    },
+    {
+      "path": "fixtures/d15-generic-aggregates.kan",
+      "sha256": "b42ee00a51b8b0148913ba8ebf1a218ae22a0f63a137c1ec67fd2f0e93fc381b"
+    },
+    {
+      "path": "golden/d15-generic-aggregates.erased",
+      "sha256": "be65c1e453f52cd7d7b28f0940848bd391be6c425c204aaa914c3368131befcb"
+    },
+    {
+      "path": "fixtures/def-params.kan",
+      "sha256": "62cd3f45a03d77252748398a3ca463b2b3b93a7bcb48d4aecf960e70d046f103"
+    },
+    {
+      "path": "golden/def-params.erased",
+      "sha256": "ce8887970776f321fd7c17f294d23893a83d232478e065a309aee310313dc8a3"
+    },
+    {
+      "path": "fixtures/grouped-binders.kan",
+      "sha256": "fa0d7ea676e4c285c2eba01a06be99cce84c31596901ebaf2d4a966665df6eb0"
+    },
+    {
+      "path": "golden/grouped-binders.erased",
+      "sha256": "30b45f640217bd2a0382ceaef0902b38471db7986ac70c695fce1e980f076215"
+    },
+    {
+      "path": "fixtures/mu-cata-depth.kan",
+      "sha256": "ef9c66379f286b769f56b975beff354eb622a32d157ebe6b9edcc3b5fbc2a8ec"
+    },
+    {
+      "path": "golden/mu-cata-depth.erased",
+      "sha256": "a09db3cd305359fc5405c1025ddd84291ffcf4bd9584db3788014613bf8a53f2"
+    },
+    {
+      "path": "fixtures/mu-constructor-scopes.kan",
+      "sha256": "7c49289283f6b75f9162a56bf00c1e7c117bc15e842010bed59f30d4e1e34ff8"
+    },
+    {
+      "path": "golden/mu-constructor-scopes.erased",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fixtures/mu-dependent-copy.kan",
+      "sha256": "d7c1ad51c2aaffe4134a610fdfef8eda0891412e8d26af8f8e31c479877972ea"
+    },
+    {
+      "path": "golden/mu-dependent-copy.erased",
+      "sha256": "af2d03d7c4258460a3a965cc2c8e932a26fb35fa71b9987823d57d432f3e8a58"
+    },
+    {
+      "path": "fixtures/mu-dependent-layout.kan",
+      "sha256": "6b76ed7c64636d6bf7a42aacf08d2e5f2d2d276866e237328b2c5b31d243e832"
+    },
+    {
+      "path": "golden/mu-dependent-layout.erased",
+      "sha256": "90f49c126cbc329dc40c5ddea29021264958354d6067db6d62051dee50d9c8d1"
+    },
+    {
+      "path": "fixtures/mu-direct.kan",
+      "sha256": "83c1486cbd6672c72b842e8658cd987fa405b6a4b5f3948ec37284cccc863382"
+    },
+    {
+      "path": "golden/mu-direct.erased",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fixtures/mu-empty-large-elim.kan",
+      "sha256": "fbb2e259a3ab8b2ba85e23f12afb62f8ee4346e3777b1028335c3bf91467a4ca"
+    },
+    {
+      "path": "golden/mu-empty-large-elim.erased",
+      "sha256": "ae1fa23e9b028326d9fb05746ce0597cb01a6fa92501c1db656f78a3b9f07952"
+    },
+    {
+      "path": "fixtures/mu-erase.kan",
+      "sha256": "b9cbc28c5de902542c35ad627430db55083c541d05c836b29abc791f85e93e74"
+    },
+    {
+      "path": "golden/mu-erase.erased",
+      "sha256": "0de8500fd7921887cd6e0d4467155453e731541728f777e2662221960e8b1078"
+    },
+    {
+      "path": "fixtures/mu-indexed.kan",
+      "sha256": "955324943c42fe31e5722a206f6561e14e6cbbacf37098f083ee75f2afbea465"
+    },
+    {
+      "path": "golden/mu-indexed.erased",
+      "sha256": "c576d6866670fd3fe522881a582838c78d9b4613491e2a1eaf22ca6583bbd98b"
+    },
+    {
+      "path": "fixtures/mu-mutual-emit.kan",
+      "sha256": "b91b7d0292c61b29e9af3b54c49016d51f2a36c8c6ad0f12f210541bf3330a2f"
+    },
+    {
+      "path": "golden/mu-mutual-emit.erased",
+      "sha256": "fb61f966093ae2a675a71e5df5b543ab12d8e08b42df05beb8617c3899549d24"
+    },
+    {
+      "path": "fixtures/mu-mutual.kan",
+      "sha256": "7f1bb4e7799f6478f7b69839b5579d9fc8d2d8c9516ebf1b9fb487e640eeb77e"
+    },
+    {
+      "path": "golden/mu-mutual.erased",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fixtures/mu-parameter-layout.kan",
+      "sha256": "ab21eadc26ef3edd136a52bf33ecebf6fdcef5337004641e2eb0bc85808580fa"
+    },
+    {
+      "path": "golden/mu-parameter-layout.erased",
+      "sha256": "5c2eccaeda81ad2533a1106a86910cc00cc69c7520d8313356a54760b539a279"
+    },
+    {
+      "path": "fixtures/mu-prop-large-elim.kan",
+      "sha256": "13c491101435a9515b21f815a32f04a25394ce462d08f61b42b0d1fa8f9d902c"
+    },
+    {
+      "path": "golden/mu-prop-large-elim.erased",
+      "sha256": "adc7b5503fff9944fe8c53673b4f5e95ae936f1b51b1de2274e4e4beda9f0acd"
+    },
+    {
+      "path": "fixtures/mu-rec-direct.kan",
+      "sha256": "2fda9a74e3f0c85dde4c661190b739b6011a61bb95a033efb50bc8b17d7a7826"
+    },
+    {
+      "path": "golden/mu-rec-direct.erased",
+      "sha256": "141f02bd735fab412150850a85f56da4c2167dd7c48f7d511c57de5e16f2eaaf"
+    },
+    {
+      "path": "fixtures/mu-rec-indexed.kan",
+      "sha256": "a99263d63ced45135c590d492ea4d31bc2243ddfbb3da4292fcd06b6499c0cba"
+    },
+    {
+      "path": "golden/mu-rec-indexed.erased",
+      "sha256": "74c0466add0b28d37063303453d0c80e686881092f3b5b5f78538d81cdc2bf48"
+    },
+    {
+      "path": "fixtures/mu-rec-mutual.kan",
+      "sha256": "a3e76767d1cf97e210f3a798fbd04c46aad360f69116154dbf69982ec34dde6d"
+    },
+    {
+      "path": "golden/mu-rec-mutual.erased",
+      "sha256": "271317c318cae0923ec429e246d18dbabe5904ed42c4f04d2669a26887e3e56b"
+    },
+    {
+      "path": "fixtures/nat-big.kan",
+      "sha256": "9c499c6e8463f92ddc6bc90b777c965252814fd285e3edb791561eceaee1167c"
+    },
+    {
+      "path": "golden/nat-big.erased",
+      "sha256": "f191c07dc1d5855b50a721805a35ffba4d578d453a77d4aac1e70130912957e5"
+    },
+    {
+      "path": "fixtures/nat-runtime-capture.kan",
+      "sha256": "40cb02e42e23208f177d1163e617f4b235a6721ba428a37f8f84af5fdc32b8a5"
+    },
+    {
+      "path": "golden/nat-runtime-capture.erased",
+      "sha256": "34b3e43b865af279e4730533d710623a1337f15b70adefd96f16d674e691fed4"
+    },
+    {
+      "path": "fixtures/nat-runtime-edges.kan",
+      "sha256": "44e8b5f6063e444aa62913e37fb1a642b876cf5ace4599270df8201beb7b6005"
+    },
+    {
+      "path": "golden/nat-runtime-edges.erased",
+      "sha256": "31dfd04714bedb768dbb20175ac737d43992e2b3be97976ad39d94ff46a73340"
+    },
+    {
+      "path": "fixtures/nat-runtime-export.kan",
+      "sha256": "4a74d11a5bbe0ca274b54446c24397f7e83083032435ebe5f5c9e6120bd94722"
+    },
+    {
+      "path": "golden/nat-runtime-export.erased",
+      "sha256": "9d4a2a8a3ad90dd92eb9f63aab3c3d9036a4be3c4fa586c08664fc74bd523084"
+    },
+    {
+      "path": "fixtures/nat-runtime-mu.kan",
+      "sha256": "a077cd74559e0c9c4d7cea59616a0ec19dc6d5c21c4ae73688265b7425d0c64d"
+    },
+    {
+      "path": "golden/nat-runtime-mu.erased",
+      "sha256": "e54ad30627c96de5be5bc3bb87e00d4b8888d1f3858aa5132e529979c8f2db71"
+    },
+    {
+      "path": "fixtures/one-branches.kan",
+      "sha256": "8524068188105d78af3f2107923d44f401f77df29a8d0ff32dc72c77be568eaa"
+    },
+    {
+      "path": "golden/one-branches.erased",
+      "sha256": "608d1a19742cbbc8cacb4cd79df9d09493071e88317042c41824a4cc119523ad"
+    },
+    {
+      "path": "fixtures/one-fields.kan",
+      "sha256": "fedccb178ea78ca3d3e1ff693d24868b43ff223fb376e65143f57c155c8ea62e"
+    },
+    {
+      "path": "golden/one-fields.erased",
+      "sha256": "4e71782f76acb18e14781335228600ef72af82d3b8415462f5dab99683a0d60c"
+    },
+    {
+      "path": "fixtures/one-identity.kan",
+      "sha256": "c2b73897c46f43dd015fb95379812123b8de1cbe6441f94d303481815a80700e"
+    },
+    {
+      "path": "golden/one-identity.erased",
+      "sha256": "85dddbf7e8807ca34c73f45082e8192de3dde0f31f753b42326270b1f8725d97"
+    },
+    {
+      "path": "fixtures/one-recursive.kan",
+      "sha256": "e7a94436d8e734081786bbc69eb5e650d2701fd4d0f579d2e5609f4b677ca3e6"
+    },
+    {
+      "path": "golden/one-recursive.erased",
+      "sha256": "fa35098a3b961eb7acbcc970528f245b87e0042ed603769bb1ff17d9fa7325a1"
+    },
+    {
+      "path": "fixtures/one-runtime-capture.kan",
+      "sha256": "5ad62ef4042c1ea2ce822967e8460f74f59c3cf8a0bdf06366fc72a52eba5bd4"
+    },
+    {
+      "path": "golden/one-runtime-capture.erased",
+      "sha256": "a66c1893c539ae2dc1ead8c1be18576a9509a9a5c832d730f7850c0fda7e250b"
+    },
+    {
+      "path": "fixtures/one-shadowing.kan",
+      "sha256": "db863980c7a4cbd14713960daf8f2f71e30129d43ee3b17efb47b3842f48a91b"
+    },
+    {
+      "path": "golden/one-shadowing.erased",
+      "sha256": "66b380cfaa59ea34310c82b7a9aab9c826981f3f9296a8617cf93df8f50cc1b5"
+    },
+    {
+      "path": "fixtures/one-unreachable-capture.kan",
+      "sha256": "1a1aa2206723c1f3fa3ce4f781ebb799f9f73f7278135d86f8e370dcc36b9bd1"
+    },
+    {
+      "path": "golden/one-unreachable-capture.erased",
+      "sha256": "330a0255497901d69c031be67ed3624c50902f24f168da3950998d1a7f06f9a3"
+    },
+    {
+      "path": "fixtures/sl-match-indexed.kan",
+      "sha256": "838ec22b3a69449e4d2ae02629ae98fbb3ebe3eab36e4b31bfd8263b38d5b46e"
+    },
+    {
+      "path": "golden/sl-match-indexed.erased",
+      "sha256": "5ebca3bfd7a1cdb55f3bd141575c12c7da754538cfcf8c5b020098b29969170c"
+    },
+    {
+      "path": "fixtures/sl-mutual-three.kan",
+      "sha256": "6ee042f2f0ef65805fe7086a641d278deb78461732fa4e3ce3316130d04c48e8"
+    },
+    {
+      "path": "golden/sl-mutual-three.erased",
+      "sha256": "9d26cea7cec07131ca21bdfa0b30d53d88227c5bf7be7bf69eddc2e00c054e65"
+    }
+  ],
+  "cases": [
+    {
+      "fixture": "a01-fun-app",
+      "source": "-- a01: fun and application.  Application by juxtaposition is SA-D1.\n\naxiom Nat : Type 0\n\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\n\ndef twice : (0 A : Type 0) -> (f : (y : A) -> A) -> (x : A) -> A :=\n  fun (0 A : Type 0) (f : (y : A) -> A) (x : A) => f (f x)\n\ndef idNat : (x : Nat) -> Nat := id Nat\n",
+      "code": 0,
+      "stdout": "erased Nat\nrec [any]\nfun id (union any) : union any := KVar 0\nrec [fn<1>; any]\nfun twice (func fn<1>, union any) : union any := KTail (KVar 1) [KApp (KVar 1) [KVar 0]]\nrec [nat]\nfun idNat (union nat) : union nat := KTail (KGlobal id) [KVar 0]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a02-arrow-star",
+      "source": "-- a02: the arrow and the star, in the named form and in the plain\n-- form.  Both are right associative.\n\naxiom Nat : Type 0\n\ndef arrowNamed : Type 0 := (x : Nat) -> Nat\ndef arrowPlain : Type 0 := Nat -> Nat\ndef arrowCurried : Type 0 := Nat -> Nat -> Nat\ndef starNamed : Type 0 := (a : Nat) * Nat\ndef starPlain : Type 0 := Nat * Nat\ndef starOfArrow : Type 0 := (f : Nat -> Nat) * Nat\ndef erasedDomain : Type 1 := (0 A : Type 0) -> Nat\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased arrowNamed\nerased arrowPlain\nerased arrowCurried\nerased starNamed\nerased starPlain\nerased starOfArrow\nerased erasedDomain\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a03-pair-proj",
+      "source": "-- a03: a pair and its two projections.\n\naxiom Nat : Type 0\n\ndef p : (a : Nat) * Nat := (1, 2)\ndef firstOfP : Nat := p.1\ndef secondOfP : Nat := p.2\ndef swapped : (a : Nat) * Nat := (p.2, p.1)\ndef nestedPair : (a : Nat) * ((b : Nat) * Nat) := (1, (2, 3))\n",
+      "code": 0,
+      "stdout": "erased Nat\nrec [pair<union nat,union nat>]\nfun p () : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KLit 1; KLit 2]\nrec [nat; pair<union nat,union nat>]\nfun firstOfP () : union nat := KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1)))\nrec [nat; pair<union nat,union nat>]\nfun secondOfP () : union nat := KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))\nrec [pair<union nat,union nat>]\nfun swapped () : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0))); KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1)))]\nrec [pair<union nat,struct pair<union nat,union nat>>; pair<union nat,union nat>]\nfun nestedPair () : struct pair<union nat,struct pair<union nat,union nat>> := KStruct pair<union nat,struct pair<union nat,union nat>> [KLit 1; KStruct pair<union nat,union nat> [KLit 2; KLit 3]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a04-inj-case",
+      "source": "-- a04: inj, and case with a motive and without one.\n-- SB-D1 gives the two-leg type a production, so the sum that Stage A\n-- had to postulate is now written out.\n\naxiom Nat : Type 0\n\ndef Two : Type 0 := sum (Nat, Nat)\n\ndef left : Two := inj 0 of 2 1\ndef right : Two := inj 1 of 2 2\n\ndef plain : (x : Two) -> Nat :=\n  fun (x : Two) => case x with | 0 (a : Nat) => a | 1 (b : Nat) => b\n\ndef withMotive : (x : Two) -> Nat :=\n  fun (x : Two) => case x as y return Nat with | 0 (a : Nat) => a | 1 (b : Nat) => b\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Two\nrec [sum<union nat|union nat>]\nfun left () : union sum<union nat|union nat> := KTag sum<union nat|union nat> 0 [KLit 1]\nrec [sum<union nat|union nat>]\nfun right () : union sum<union nat|union nat> := KTag sum<union nat|union nat> 1 [KLit 2]\nrec [sum<union nat|union nat>; nat]\nfun plain (union sum<union nat|union nat>) : union nat := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KVar 0)}]\nrec [sum<union nat|union nat>; nat]\nfun withMotive (union sum<union nat|union nat>) : union nat := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KVar 0)}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a05-tuple-proj",
+      "source": "-- a05: tuple and the leg projection.  \".0\" and \".2\" are the same\n-- projection form as \".1\", so a leg number above two reads the same\n-- way (SA-D16).\n-- SB-D1 writes the three-leg type out, which Stage A postulated.\n\naxiom Nat : Type 0\n\ndef Triple : Type 0 := prod (Nat, Nat, Nat)\n\ndef t : Triple := tuple (1, 2, 3)\ndef leg0 : Nat := t.0\ndef leg1 : Nat := t.1\ndef leg2 : Nat := t.2\ndef rebuilt : Triple := tuple (t.0, t.1, t.2)\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Triple\nrec [tuple<union nat,union nat,union nat>]\nfun t () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KLit 1; KLit 2; KLit 3]\nrec [nat; tuple<union nat,union nat,union nat>]\nfun leg0 () : union nat := KProj tuple<union nat,union nat,union nat> 0 (KGlobal t)\nrec [nat; tuple<union nat,union nat,union nat>]\nfun leg1 () : union nat := KProj tuple<union nat,union nat,union nat> 1 (KGlobal t)\nrec [nat; tuple<union nat,union nat,union nat>]\nfun leg2 () : union nat := KProj tuple<union nat,union nat,union nat> 2 (KGlobal t)\nrec [tuple<union nat,union nat,union nat>]\nfun rebuilt () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KProj tuple<union nat,union nat,union nat> 0 (KGlobal t); KProj tuple<union nat,union nat,union nat> 1 (KGlobal t); KProj tuple<union nat,union nat,union nat> 2 (KGlobal t)]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a06-unit-absurd",
+      "source": "-- a06: the empty collection at both formers.  \"()\" is the section and\n-- \"absurd\" is the elimination with no branch.\n-- SB-D1 writes both types out, which Stage A postulated.\n\ndef Unit : Type 0 := prod ()\ndef Empty : Prop := sum ()\n\ndef u : Unit := ()\ndef uTuple : Unit := tuple ()\ndef fromEmpty : (0 A : Type 0) -> (x : Empty) -> A :=\n  fun (0 A : Type 0) (x : Empty) => absurd x\n",
+      "code": 0,
+      "stdout": "erased Unit\nerased Empty\nerased u\nerased uTuple\nrec [any]\nfun fromEmpty () : union any := KCase any (KErased) []\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a07-universes",
+      "source": "-- a07: Prop and the Type levels.  Prop is the universe at level zero\n-- and \"Type n\" is the universe at level n plus one (SB-D2), so Prop\n-- lives at Type 0 and Type 0 lives at Type 1.\n\ndef propAtZero : Type 0 := Prop\ndef typeZeroAtOne : Type 1 := Type 0\ndef typeOneAtTwo : Type 2 := Type 1\ndef propArrow : Type 0 := (0 P : Prop) -> Prop\ndef bareType : Type 1 := Type\n",
+      "code": 0,
+      "stdout": "erased propAtZero\nerased typeZeroAtOne\nerased typeOneAtTwo\nerased propArrow\nerased bareType\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a08-nat-prims",
+      "source": "-- a08: the nat literals and the five prims.  Every prim applies by\n-- juxtaposition (SA-D1).  \"sum\" and \"prod\" are reserved from Stage B\n-- (SB-D1), so the two definitions that carried those names in Stage A\n-- read \"total\" and \"product\" here.\n\naxiom Nat : Type 0\n\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\n\ndef total : Nat := natAdd 2 3\ndef diff : Nat := natSub 5 1\ndef product : Nat := natMul 6 7\ndef same : Bool := natEq 4 4\ndef less : Bool := natLt 1 2\ndef mixed : Nat := natAdd (natMul 2 3) 4\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Bool\nrec [nat]\nfun total () : union nat := KTail (KGlobal natAdd) [KLit 2; KLit 3]\nrec [nat]\nfun diff () : union nat := KTail (KGlobal natSub) [KLit 5; KLit 1]\nrec [nat]\nfun product () : union nat := KTail (KGlobal natMul) [KLit 6; KLit 7]\nrec [sum<unit|unit>]\nfun same () : union sum<unit|unit> := KTail (KGlobal natEq) [KLit 4; KLit 4]\nrec [sum<unit|unit>]\nfun less () : union sum<unit|unit> := KTail (KGlobal natLt) [KLit 1; KLit 2]\nrec [nat]\nfun mixed () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natMul) [KLit 2; KLit 3]; KLit 4]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a09-let-ann",
+      "source": "-- a09: let and the annotation form.\n\naxiom Nat : Type 0\n\ndef five : Nat := let x : Nat := 2 in natAdd x 3\ndef annotated : Nat := (5 : Nat)\ndef nested : Nat := let x : Nat := 1 in let y : Nat := 2 in natAdd x y\ndef letOfAnn : Nat := let x : Nat := (7 : Nat) in x\n",
+      "code": 0,
+      "stdout": "erased Nat\nrec [nat]\nfun five () : union nat := KLet x (KLit 2) (KTail (KGlobal natAdd) [KVar 0; KLit 3])\nrec [nat]\nfun annotated () : union nat := KLit 5\nrec [nat]\nfun nested () : union nat := KLet x (KLit 1) (KLet y (KLit 2) (KTail (KGlobal natAdd) [KVar 1; KVar 0]))\nrec [nat]\nfun letOfAnn () : union nat := KLet x (KLit 7) (KVar 0)\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "a10-def-axiom",
+      "source": "-- a10: def and axiom together.  The auto atom of SA-D3 has no checked\n-- form at M0, so it sits in the negatives (SB-D34).\n\naxiom Nat : Type 0\naxiom zero : Nat\naxiom Eq : (0 A : Type 0) -> (x : A) -> (y : A) -> Prop\n\ndef start : Nat := zero\ndef eqOfStart : Prop := Eq Nat start start\n",
+      "code": 0,
+      "stdout": "erased Nat\naxiom zero : union nat\naxiom Eq : func fn<2>\nrec [nat]\nfun start () : union nat := KGlobal zero\nerased eqOfStart\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b01-function-eta",
+      "source": "-- b01: eta at the right former of the point shape.  \"f\" and\n-- \"fun (x : A) => f x\" are the same section, so the argument of a\n-- predicate converts in both directions and neither definition below\n-- needs a cast.\n\naxiom A : Type 0\naxiom f : A -> A\naxiom F : (0 g : A -> A) -> Prop\naxiom w : F f\naxiom H : (0 g : A -> A) -> Prop\naxiom v : H (fun (x : A) => f x)\n\ndef etaExpanded : F (fun (x : A) => f x) := w\ndef etaContracted : H f := v\n",
+      "code": 0,
+      "stdout": "erased A\naxiom f : func fn<1>\naxiom F : func fn<0>\nerased w\naxiom H : func fn<0>\nerased v\nerased etaExpanded\nerased etaContracted\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b02-pair-eta",
+      "source": "-- b02: eta at the left former of the point shape.  A pair and the\n-- pair of its own two projections are one section, so a predicate\n-- over the pair type takes either spelling of the same witness and\n-- neither definition below needs a cast.\n\naxiom A : Type 0\naxiom p : (a : A) * A\naxiom F : (0 q : (a : A) * A) -> Prop\naxiom v : F p\naxiom G : (0 q : (a : A) * A) -> Prop\naxiom w : G (p.1, p.2)\n\ndef pairExpanded : F (p.1, p.2) := v\ndef pairContracted : G p := w\n",
+      "code": 0,
+      "stdout": "erased A\naxiom p : struct pair<union any,union any>\naxiom F : func fn<0>\nerased v\naxiom G : func fn<0>\nerased w\nerased pairExpanded\nerased pairContracted\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b03-tuple-eta",
+      "source": "-- b03: eta at the right former of the collection shape.  A tuple of\n-- the legs of a section is that section, so a predicate over the\n-- product type takes either spelling of the same witness.\n\naxiom A : Type 0\naxiom t : prod (A, A)\naxiom F : (0 s : prod (A, A)) -> Prop\naxiom v : F t\naxiom G : (0 s : prod (A, A)) -> Prop\naxiom w : G (tuple (t.0, t.1))\n\ndef tupleExpanded : F (tuple (t.0, t.1)) := v\ndef tupleContracted : G t := w\n",
+      "code": 0,
+      "stdout": "erased A\naxiom t : struct tuple<union any,union any>\naxiom F : func fn<0>\nerased v\naxiom G : func fn<0>\nerased w\nerased tupleExpanded\nerased tupleContracted\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b04-unit-eta",
+      "source": "-- b04: eta at the empty collection.  A section of the unit type has\n-- no leg, so any two sections agree at every leg and they convert\n-- without a comparison.  The unit here sits at \"Type 0\" through the\n-- annotation of D-M0-6, so proof irrelevance does not do the work.\n\naxiom u : (prod () : Type 0)\naxiom F : (0 s : (prod () : Type 0)) -> Prop\naxiom v : F u\naxiom G : (0 s : (prod () : Type 0)) -> Prop\naxiom w : G ()\n\ndef unitExpanded : F () := v\ndef unitContracted : G u := w\n",
+      "code": 0,
+      "stdout": "erased u\naxiom F : func fn<0>\nerased v\naxiom G : func fn<0>\nerased w\nerased unitExpanded\nerased unitContracted\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b05-proof-irrelevance",
+      "source": "-- b05: proof irrelevance, the first step of conversion.  Two terms of\n-- one proposition convert, so \"G p1\" and \"G p2\" are the same type and\n-- the witness of the first is a witness of the second.\n\naxiom P : Prop\naxiom p1 : P\naxiom p2 : P\naxiom G : (0 z : P) -> Prop\naxiom w : G p1\n\ndef irrelevant : G p2 := w\n",
+      "code": 0,
+      "stdout": "erased P\nerased p1\nerased p2\naxiom G : func fn<0>\nerased w\nerased irrelevant\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b06-impredicativity",
+      "source": "-- b06: the universe of an arrow is imax, not max.  A codomain at\n-- level zero puts the whole arrow at level zero however high the\n-- domain sits, which is what keeps Prop closed under the arrow.\n\naxiom A : Type 0\naxiom B : Type 1\n\ndef impFromType : Prop := (0 x : A) -> sum ()\ndef impFromHigher : Prop := (0 x : B) -> sum ()\ndef impFromProp : Prop := (0 x : sum ()) -> sum ()\n",
+      "code": 0,
+      "stdout": "erased A\nerased B\nerased impFromType\nerased impFromHigher\nerased impFromProp\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b07-nat-fast-path",
+      "source": "-- b07: the literal fast path of SB-D4.  \"natMul 2 3\" reduces to the\n-- literal 6 during conversion, so a predicate over Nat takes the\n-- computed spelling and the written one as one argument.  \"natEq\" and\n-- \"natLt\" answer at the two leg sum of SB-D8.\n\naxiom F : (0 n : Nat) -> Prop\naxiom v : F 6\n\ndef w : F (natMul 2 3) := v\n\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\n\ndef same : Bool := natEq 4 4\ndef below : Bool := natLt 1 2\ndef sum6 : Nat := natAdd 4 2\n",
+      "code": 0,
+      "stdout": "axiom F : func fn<0>\nerased v\nerased w\nerased Bool\nrec [sum<unit|unit>]\nfun same () : union sum<unit|unit> := KTail (KGlobal natEq) [KLit 4; KLit 4]\nrec [sum<unit|unit>]\nfun below () : union sum<unit|unit> := KTail (KGlobal natLt) [KLit 1; KLit 2]\nrec [nat]\nfun sum6 () : union nat := KTail (KGlobal natAdd) [KLit 4; KLit 2]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b08-axiom-disclosure",
+      "source": "-- b08: what a file postulates is what \"kanon axioms\" prints.  One\n-- postulate, three definitions and the nat prims of the initial\n-- globals, so the disclosure of this file is the single line \"Bit\".\n\naxiom Bit : Type 0\n\ndef Pair : Type 0 := prod (Bit, Bit)\ndef diagonal : (x : Bit) -> Pair := fun (x : Bit) => tuple (x, x)\ndef firstOfDiagonal : (x : Bit) -> Bit := fun (x : Bit) => (diagonal x).0\n",
+      "code": 0,
+      "stdout": "erased Bit\nerased Pair\nrec [any; tuple<union any,union any>]\nfun diagonal (union any) : struct tuple<union any,union any> := KStruct tuple<union any,union any> [KVar 0; KVar 0]\nrec [any; tuple<union any,union any>]\nfun firstOfDiagonal (union any) : union any := KProj tuple<union any,union any> 0 (KApp (KGlobal diagonal) [KVar 0])\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b09-sum-prod",
+      "source": "-- b09: the two collection type words of SB-D1.  \"sum\" is the left\n-- former and \"prod\" is the right former at the collection shape over\n-- the diagram of the items, and neither is a former of the kernel:\n-- both are sugar rows of SPEC.md section 7.\n\naxiom Nat : Type 0\n\ndef Two : Type 0 := sum (Nat, Nat)\ndef Pair : Type 0 := prod (Nat, Nat)\ndef Triple : Type 0 := prod (Nat, Nat, Nat)\ndef Void : Prop := sum ()\ndef Unit : Type 0 := prod ()\n\ndef leftOfTwo : Two := inj 0 of 2 1\ndef rightOfTwo : Two := inj 1 of 2 2\ndef onePair : Pair := tuple (1, 2)\ndef oneTriple : Triple := tuple (1, 2, 3)\ndef star : Unit := tuple ()\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Two\nerased Pair\nerased Triple\nerased Void\nerased Unit\nrec [sum<union nat|union nat>]\nfun leftOfTwo () : union sum<union nat|union nat> := KTag sum<union nat|union nat> 0 [KLit 1]\nrec [sum<union nat|union nat>]\nfun rightOfTwo () : union sum<union nat|union nat> := KTag sum<union nat|union nat> 1 [KLit 2]\nrec [tuple<union nat,union nat>]\nfun onePair () : struct tuple<union nat,union nat> := KStruct tuple<union nat,union nat> [KLit 1; KLit 2]\nrec [tuple<union nat,union nat,union nat>]\nfun oneTriple () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KLit 1; KLit 2; KLit 3]\nerased star\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b10-case-motive",
+      "source": "-- b10: case over a sum, with the motive and without it.  The branch\n-- binder takes its type from the leg of the diagram, never from the\n-- annotation the branch writes (SB-D32).\n\naxiom Nat : Type 0\n\ndef Two : Type 0 := sum (Nat, Nat)\n\ndef plain : (x : Two) -> Nat :=\n  fun (x : Two) => case x with | 0 (a : Nat) => a | 1 (b : Nat) => natAdd b 1\n\ndef withMotive : (x : Two) -> Nat :=\n  fun (x : Two) => case x as y return Nat with | 0 (a : Nat) => a | 1 (b : Nat) => b\n\ndef fromVoid : (0 A : Type 0) -> (x : sum ()) -> A :=\n  fun (0 A : Type 0) (x : sum ()) => absurd x\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Two\nrec [sum<union nat|union nat>; nat]\nfun plain (union sum<union nat|union nat>) : union nat := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KTail (KGlobal natAdd) [KVar 0; KLit 1])}]\nrec [sum<union nat|union nat>; nat]\nfun withMotive (union sum<union nat|union nat>) : union nat := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KVar 0)}]\nrec [any]\nfun fromVoid () : union any := KCase any (KErased) []\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b11-leg-proj",
+      "source": "-- b11: the leg projection \".k\" on a right former, zero based, and the\n-- two pair projections \".1\" and \".2\" on a point shape.  The two rows\n-- of the sugar table differ by the type of the scrutinee (SA-D16).\n\naxiom Nat : Type 0\n\ndef Triple : Type 0 := prod (Nat, Nat, Nat)\n\ndef t : Triple := tuple (1, 2, 3)\ndef legZero : Nat := t.0\ndef legOne : Nat := t.1\ndef legTwo : Nat := t.2\n\ndef p : (a : Nat) * Nat := (4, 5)\ndef firstOfP : Nat := p.1\ndef secondOfP : Nat := p.2\ndef rebuilt : (a : Nat) * Nat := (p.1, p.2)\n",
+      "code": 0,
+      "stdout": "erased Nat\nerased Triple\nrec [tuple<union nat,union nat,union nat>]\nfun t () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KLit 1; KLit 2; KLit 3]\nrec [nat; tuple<union nat,union nat,union nat>]\nfun legZero () : union nat := KProj tuple<union nat,union nat,union nat> 0 (KGlobal t)\nrec [nat; tuple<union nat,union nat,union nat>]\nfun legOne () : union nat := KProj tuple<union nat,union nat,union nat> 1 (KGlobal t)\nrec [nat; tuple<union nat,union nat,union nat>]\nfun legTwo () : union nat := KProj tuple<union nat,union nat,union nat> 2 (KGlobal t)\nrec [pair<union nat,union nat>]\nfun p () : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KLit 4; KLit 5]\nrec [nat; pair<union nat,union nat>]\nfun firstOfP () : union nat := KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1)))\nrec [nat; pair<union nat,union nat>]\nfun secondOfP () : union nat := KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))\nrec [pair<union nat,union nat>]\nfun rebuilt () : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1))); KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "b12-bool-prims",
+      "source": "-- b12: the booleans of the prims.  \"natEq\" and \"natLt\" answer at the\n-- two leg sum of the unit type, which SB-D1 now writes out, so the\n-- answer of a prim is a term of a type the surface can spell.\n\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\n\ndef yes : Bool := natEq 4 4\ndef no : Bool := natEq 4 5\ndef below : Bool := natLt 1 2\ndef true : Bool := inj 0 of 2 ()\ndef false : Bool := inj 1 of 2 ()\n\ndef toNat : (b : Bool) -> Nat -> Nat :=\n  fun (b : Bool) (n : Nat) => case b with | 0 (x : prod ()) => n | 1 (y : prod ()) => natAdd n 1\n",
+      "code": 0,
+      "stdout": "erased Bool\nrec [sum<unit|unit>]\nfun yes () : union sum<unit|unit> := KTail (KGlobal natEq) [KLit 4; KLit 4]\nrec [sum<unit|unit>]\nfun no () : union sum<unit|unit> := KTail (KGlobal natEq) [KLit 4; KLit 5]\nrec [sum<unit|unit>]\nfun below () : union sum<unit|unit> := KTail (KGlobal natLt) [KLit 1; KLit 2]\nrec [sum<unit|unit>]\nfun true () : union sum<unit|unit> := KTag sum<unit|unit> 0 []\nrec [sum<unit|unit>]\nfun false () : union sum<unit|unit> := KTag sum<unit|unit> 1 []\nrec [sum<unit|unit>; nat]\nfun toNat (union sum<unit|unit>, union nat) : union nat := KCase sum<unit|unit> (KVar 1) [{0 0 (KVar 0)}; {1 0 (KTail (KGlobal natAdd) [KVar 0; KLit 1])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c01-prop-argument",
+      "source": "-- c01: a proof at a runtime binder and at a pair field.  \"P\" is a\n-- proposition, so \"a\" is a proof:  the binder \"p\" is dropped and the\n-- second field of the pair is dropped, and the pair of one runtime\n-- field stays a struct of that one field.\n\naxiom P : Prop\naxiom a : P\n\ndef n : Nat := ((fun (p : P) => 5) : (p : P) -> Nat) a\ndef q : Nat * P := (3, a)\n",
+      "code": 0,
+      "stdout": "erased P\nerased a\nrec [nat]\nfun n$0 () : union nat := KLit 5\nfun n () : union nat := KTail (KClos n$0 0 []) []\nrec [pair<union nat>]\nfun q () : struct pair<union nat> := KStruct pair<union nat> [KLit 3]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c02-zero-binder",
+      "source": "-- c02: a Zero binder beside a runtime binder.  The type parameter \"A\"\n-- is stamped Zero, so it is dropped from the parameter list and from\n-- the argument list, and the runtime parameter \"x\" stays.\n\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\n\ndef five : Nat := id Nat 5\n",
+      "code": 0,
+      "stdout": "rec [any]\nfun id (union any) : union any := KVar 0\nrec [nat]\nfun five () : union nat := KTail (KGlobal id) [KLit 5]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c03-tail-call",
+      "source": "-- c03: the tail position of SC-D14.  The body of \"h\" is a call in\n-- tail position, so it prints as KTail, and its argument is a call in\n-- a non tail position, so that one prints as KApp.\n\ndef g : Nat -> Nat := fun (n : Nat) => natAdd n 1\n\ndef h : Nat -> Nat := fun (n : Nat) => g (g n)\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun g (union nat) : union nat := KTail (KGlobal natAdd) [KVar 0; KLit 1]\nrec [nat]\nfun h (union nat) : union nat := KTail (KGlobal g) [KApp (KGlobal g) [KVar 0]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c04-case-tags",
+      "source": "-- c04: the tags of a sum with a payload free leg and a payload leg.\n-- The unit leg has no runtime field, so its tag carries no payload and\n-- its branch has arity zero.\n\ndef Opt : Type 0 := sum ((prod () : Type 0), Nat)\n\ndef none : Opt := inj 0 of 2 (tuple ())\ndef some : Opt := inj 1 of 2 7\n\ndef unwrap : (x : Opt) -> Nat :=\n  fun (x : Opt) => case x with | 0 (u : prod ()) => 0 | 1 (v : Nat) => v\n",
+      "code": 0,
+      "stdout": "erased Opt\nrec [sum<unit|union nat>]\nfun none () : union sum<unit|union nat> := KTag sum<unit|union nat> 0 []\nrec [sum<unit|union nat>]\nfun some () : union sum<unit|union nat> := KTag sum<unit|union nat> 1 [KLit 7]\nrec [sum<unit|union nat>; nat]\nfun unwrap (union sum<unit|union nat>) : union nat := KCase sum<unit|union nat> (KVar 0) [{0 0 (KLit 0)}; {1 1 (KVar 0)}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c05-let-erased",
+      "source": "-- c05: a let of a type and a let of a runtime value.  The first let\n-- binds a type, so it is dropped and every use of it is erased;  the\n-- second one binds a number, so it stays.\n\ndef k : Nat := let A : Type 0 := Nat in let m : A := 4 in m\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun k () : union nat := KLet m (KLit 4) (KVar 0)\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c06-dependent-pair",
+      "source": "-- A dependent fibre needs its instantiated type to erase a lambda.\ndef packed : (0 A : Type 0) * A := ((x : Nat) -> Nat, fun (x : Nat) => x)\n",
+      "code": 0,
+      "stdout": "rec [nat; pair<union any>]\nfun packed$0 (union nat) : union nat := KVar 0\nfun packed () : struct pair<union any> := KStruct pair<union any> [KClos packed$0 1 []]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c07-dependent-case",
+      "source": "-- Dependent branches instantiate the motive at their own constructors.\ndef Two : Type 0 := sum (Nat, Nat)\ndef F : (x : Two) -> Type 0 := fun (x : Two) => case x as z return Type 0 with | 0 (a : Nat) => Nat | 1 (b : Nat) => prod (Nat, Nat)\ndef choose : (x : Two) -> F x := fun (x : Two) => case x as y return F y with | 0 (a : Nat) => a | 1 (b : Nat) => tuple (b, b)\n\ndef G : (x : Two) -> Type 0 := fun (x : Two) => case x as z return Type 0 with | 0 (a : Nat) => Nat | 1 (b : Nat) => (n : Nat) -> Nat\ndef chooseFun : (x : Two) -> G x := fun (x : Two) => case x as y return G y with | 0 (a : Nat) => a | 1 (b : Nat) => fun (n : Nat) => natAdd b n\n",
+      "code": 0,
+      "stdout": "erased Two\nrec [sum<union nat|union nat>; any]\nfun F (union sum<union nat|union nat>) : union any := KErased\nrec [sum<union nat|union nat>; any; tuple<union nat,union nat>]\nfun choose (union sum<union nat|union nat>) : union any := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KStruct tuple<union nat,union nat> [KVar 0; KVar 0])}]\nrec [sum<union nat|union nat>; any]\nfun G (union sum<union nat|union nat>) : union any := KErased\nrec [nat; sum<union nat|union nat>; any]\nfun chooseFun$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun chooseFun (union sum<union nat|union nat>) : union any := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KClos chooseFun$0 1 [KVar 0])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c08-dependent-let",
+      "source": "-- A runtime let definition resolves a later dependent tuple type.\ndef Two : Type 0 := sum (Nat, Nat)\ndef F : (x : Two) -> Type 0 := fun (x : Two) => case x as z return Type 0 with | 0 (a : Nat) => Nat | 1 (b : Nat) => prod (Nat, Nat)\ndef n : Nat := let tag : Two := inj 1 of 2 5 in let v : F tag := tuple (5, 6) in v.0\n",
+      "code": 0,
+      "stdout": "erased Two\nrec [sum<union nat|union nat>; any]\nfun F (union sum<union nat|union nat>) : union any := KErased\nrec [nat; sum<union nat|union nat>; tuple<union nat,union nat>]\nfun n () : union nat := KLet tag (KTag sum<union nat|union nat> 1 [KLit 5]) (KLet v (KStruct tuple<union nat,union nat> [KLit 5; KLit 6]) (KProj tuple<union nat,union nat> 0 (KVar 0)))\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c09-partial-erased",
+      "source": "-- Preserve partial erased functions and invoke fully applied nullary ones.\ndef f : (0 A : Type 0) -> (0 B : Type 0) -> Nat := fun (0 A : Type 0) (0 B : Type 0) => 5\ndef g : (0 B : Type 0) -> Nat := f Nat\ndef n : Nat := g Nat\n\ndef local : Nat := let h : (0 B : Type 0) -> Nat := f Nat in h Nat\ndef both : Nat := f Nat Nat\ndef runtimeAlias : (x : Nat) -> Nat := natAdd 1\ndef appliedAlias : Nat := runtimeAlias 2\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun f () : union nat := KLit 5\nrec [nat]\nfun g () : union nat := KTail (KGlobal f) []\nrec [nat]\nfun n () : union nat := KTail (KGlobal g) []\nrec [nat]\nfun local () : union nat := KLet h (KGlobal f) (KTail (KVar 0) [])\nrec [nat]\nfun both () : union nat := KTail (KGlobal f) []\nrec [nat]\nfun runtimeAlias (union nat) : union nat := KTail (KApp (KGlobal natAdd) [KLit 1]) [KVar 0]\nrec [nat]\nfun appliedAlias () : union nat := KTail (KGlobal runtimeAlias) [KLit 2]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "c10-eta-captures",
+      "source": "-- Complete function-valued bodies under existing runtime binders.\ndef later : (f : Nat -> Nat -> Nat) -> (x : Nat) -> Nat -> Nat :=\n  fun (f : Nat -> Nat -> Nat) (x : Nat) => f x\n\ndef letHead : (x : Nat) -> Nat -> Nat :=\n  fun (x : Nat) => let z : Nat := x in natAdd z\n\ndef lifted : (x : Nat) -> prod (Nat -> Nat -> Nat) :=\n  fun (x : Nat) => tuple (fun (y : Nat) => natAdd (natAdd x y))\n\ndef Two : Type 0 := sum (Nat, Nat)\ndef caseHead : (bias : Nat) -> (s : Two) -> Nat -> Nat :=\n  fun (bias : Nat) (s : Two) =>\n    case s with\n    | 0 (a : Nat) => natAdd (natAdd bias a)\n    | 1 (b : Nat) => fun (n : Nat) => natAdd b n\n",
+      "code": 0,
+      "stdout": "rec [fn<2>; nat]\nfun later (func fn<2>, union nat, union nat) : union nat := KTail (KApp (KVar 2) [KVar 1]) [KVar 0]\nrec [nat]\nfun letHead (union nat, union nat) : union nat := KTail (KLet z (KVar 1) (KApp (KGlobal natAdd) [KVar 0])) [KVar 0]\nrec [nat; tuple<func fn<2>>]\nfun lifted$0 (union nat, union nat, union nat) : union nat := KTail (KApp (KGlobal natAdd) [KApp (KGlobal natAdd) [KVar 2; KVar 1]]) [KVar 0]\nfun lifted (union nat) : struct tuple<func fn<2>> := KStruct tuple<func fn<2>> [KClos lifted$0 2 [KVar 0]]\nerased Two\nrec [nat; sum<union nat|union nat>]\nfun caseHead$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun caseHead (union nat, union sum<union nat|union nat>, union nat) : union nat := KTail (KCase sum<union nat|union nat> (KVar 1) [{0 1 (KApp (KGlobal natAdd) [KApp (KGlobal natAdd) [KVar 3; KVar 0]])}; {1 1 (KClos caseHead$0 1 [KVar 0])}]) [KVar 0]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "circuit-fhc",
+      "source": "-- A named leaf match contributes its two primitive layers to eval.\nmu FhcLeaf : Type 0 :=\n| fhcLeaf : FhcLeaf\n\ndef namedLeaf : FhcLeaf := fhcLeaf\ndef leafAlias : FhcLeaf := namedLeaf\n\ndef leafCircuit (n : Nat) : Nat :=\n  match leafAlias as x in FhcLeaf return Nat with\n  | fhcLeaf => natMul (natAdd n 1) 2\n\ndef lift (c : fhc 0 Nat) : fhc 2 Nat := eval leafCircuit c\n",
+      "code": 0,
+      "stdout": "rec [mu<FhcLeaf>; leg<mu<FhcLeaf>,0>]\nfun namedLeaf () : union mu<FhcLeaf> := KTag mu<FhcLeaf> 0 []\nrec [mu<FhcLeaf>]\nfun leafAlias () : union mu<FhcLeaf> := KGlobal namedLeaf\nrec [nat; mu<FhcLeaf>; leg<mu<FhcLeaf>,0>]\nfun leafCircuit (union nat) : union nat := KCase mu<FhcLeaf> (KGlobal leafAlias) [{0 0 (KTail (KGlobal natMul) [KApp (KGlobal natAdd) [KVar 0; KLit 1]; KLit 2])}]\nrec [any]\nfun lift (union any) : union any := KApp (KGlobal fhcEval) [KLit 2; KGlobal leafCircuit; KVar 0]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "circuit-named-tree",
+      "source": "-- Named finite constructors feed a circuit through a closed match.\nmu CircuitTree : Type 0 :=\n| circuitLeaf (n : Nat) : CircuitTree\n| circuitFork (left right : CircuitTree) : CircuitTree\n\ndef tree : CircuitTree := circuitFork (circuitLeaf 3) (circuitLeaf 4)\ndef treeAlias : CircuitTree := tree\ndef leaf : CircuitTree := circuitLeaf 7\n\ndef bump (n : Nat) : Nat :=\n  match leaf as x in CircuitTree return Nat with\n  | circuitLeaf value => natAdd value n\n  | circuitFork left right => 0\n\ndef branch : Nat :=\n  match treeAlias as x in CircuitTree return Nat with\n  | circuitLeaf n => n\n  | circuitFork left right => 34\n\ndef main : Nat := natAdd (bump 1) branch\n",
+      "code": 0,
+      "stdout": "rec [mu<CircuitTree>; leg<mu<CircuitTree>,0,union nat>; leg<mu<CircuitTree>,1,union mu<CircuitTree>,union mu<CircuitTree>>]\nfun tree () : union mu<CircuitTree> := KTag mu<CircuitTree> 1 [KTag mu<CircuitTree> 0 [KLit 3]; KTag mu<CircuitTree> 0 [KLit 4]]\nrec [mu<CircuitTree>]\nfun treeAlias () : union mu<CircuitTree> := KGlobal tree\nrec [mu<CircuitTree>; leg<mu<CircuitTree>,0,union nat>; leg<mu<CircuitTree>,1,union mu<CircuitTree>,union mu<CircuitTree>>]\nfun leaf () : union mu<CircuitTree> := KTag mu<CircuitTree> 0 [KLit 7]\nrec [nat; mu<CircuitTree>; leg<mu<CircuitTree>,0,union nat>; leg<mu<CircuitTree>,1,union mu<CircuitTree>,union mu<CircuitTree>>]\nfun bump (union nat) : union nat := KCase mu<CircuitTree> (KGlobal leaf) [{0 1 (KTail (KGlobal natAdd) [KVar 0; KVar 1])}; {1 2 (KLit 0)}]\nrec [nat; mu<CircuitTree>; leg<mu<CircuitTree>,0,union nat>; leg<mu<CircuitTree>,1,union mu<CircuitTree>,union mu<CircuitTree>>]\nfun branch () : union nat := KCase mu<CircuitTree> (KGlobal treeAlias) [{0 1 (KVar 0)}; {1 2 (KLit 34)}]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal bump) [KLit 1]; KGlobal branch]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d01-lit-prims",
+      "source": "-- d01: the literals and all five prims.  natEq and natLt answer at the\n-- two leg sum of SB-D1, and one case reads that answer back into a Nat,\n-- so every prim of M0 reaches the emitter from one file.\n-- main is 17.\n\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\n\ndef toNat : (b : Bool) -> Nat :=\n  fun (b : Bool) => case b with | 0 (x : prod ()) => 0 | 1 (y : prod ()) => 1\n\ndef scaled : Nat := natMul (natAdd 2 3) (natSub 7 4)\ndef flags : Nat := natAdd (toNat (natEq 4 4)) (toNat (natLt 1 2))\n\ndef main : Nat := natAdd scaled flags\n",
+      "code": 0,
+      "stdout": "erased Bool\nrec [sum<unit|unit>; nat]\nfun toNat (union sum<unit|unit>) : union nat := KCase sum<unit|unit> (KVar 0) [{0 0 (KLit 0)}; {1 0 (KLit 1)}]\nrec [nat]\nfun scaled () : union nat := KTail (KGlobal natMul) [KApp (KGlobal natAdd) [KLit 2; KLit 3]; KApp (KGlobal natSub) [KLit 7; KLit 4]]\nrec [nat]\nfun flags () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal toNat) [KApp (KGlobal natEq) [KLit 4; KLit 4]]; KApp (KGlobal toNat) [KApp (KGlobal natLt) [KLit 1; KLit 2]]]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KGlobal scaled; KGlobal flags]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d02-tail-call",
+      "source": "-- d02: a chain of tail calls through a helper of arity two.  The value\n-- of main does not depend on the calls being tail calls, so the .wat\n-- golden is the only reader of the tail form (SD-M2).\n-- main is 10.\n\ndef step : (a : Nat) -> (b : Nat) -> Nat :=\n  fun (a : Nat) (b : Nat) => natAdd a b\n\ndef chain : (a : Nat) -> (b : Nat) -> Nat :=\n  fun (a : Nat) (b : Nat) => step (natAdd a 1) b\n\ndef outer : (a : Nat) -> (b : Nat) -> Nat :=\n  fun (a : Nat) (b : Nat) => chain (natAdd a 2) b\n\ndef main : Nat := outer 3 4\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun step (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nrec [nat]\nfun chain (union nat, union nat) : union nat := KTail (KGlobal step) [KApp (KGlobal natAdd) [KVar 1; KLit 1]; KVar 0]\nrec [nat]\nfun outer (union nat, union nat) : union nat := KTail (KGlobal chain) [KApp (KGlobal natAdd) [KVar 1; KLit 2]; KVar 0]\nrec [nat]\nfun main () : union nat := KTail (KGlobal outer) [KLit 3; KLit 4]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d03-pair",
+      "source": "-- d03: a pair built and projected twice, once from a definition and\n-- once from the answer of a function.\n-- main is 26.\n\ndef p : (a : Nat) * Nat := (11, 6)\n\ndef mk : (x : Nat) -> (a : Nat) * Nat :=\n  fun (x : Nat) => (x, natAdd x 1)\n\ndef q : (a : Nat) * Nat := mk 4\n\ndef main : Nat := natAdd (natAdd p.1 p.2) (natAdd q.1 q.2)\n",
+      "code": 0,
+      "stdout": "rec [pair<union nat,union nat>]\nfun p () : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KLit 11; KLit 6]\nrec [nat; pair<union nat,union nat>]\nfun mk (union nat) : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KVar 0; KApp (KGlobal natAdd) [KVar 0; KLit 1]]\nrec [pair<union nat,union nat>]\nfun q () : struct pair<union nat,union nat> := KTail (KGlobal mk) [KLit 4]\nrec [nat; pair<union nat,union nat>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1))); KLet scrut (KGlobal p) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))]; KApp (KGlobal natAdd) [KLet scrut (KGlobal q) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1))); KLet scrut (KGlobal q) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d04-tuple",
+      "source": "-- d04: a three leg tuple built and projected.  One struct holds the\n-- three legs, so a pair of pairs is a different golden (SD-M3).\n-- main is 10.\n\ndef Triple : Type 0 := prod (Nat, Nat, Nat)\n\ndef t : Triple := tuple (2, 3, 4)\n\ndef main : Nat := natAdd (natMul t.0 t.1) t.2\n",
+      "code": 0,
+      "stdout": "erased Triple\nrec [tuple<union nat,union nat,union nat>]\nfun t () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KLit 2; KLit 3; KLit 4]\nrec [nat; tuple<union nat,union nat,union nat>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natMul) [KProj tuple<union nat,union nat,union nat> 0 (KGlobal t); KProj tuple<union nat,union nat,union nat> 1 (KGlobal t)]; KProj tuple<union nat,union nat,union nat> 2 (KGlobal t)]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d05-sum-legs",
+      "source": "-- d05: a sum with two payload free legs and two payload legs of the\n-- same field shape, cased on every leg.  The two payload legs share one\n-- struct type, so the tag tells them apart (SD-D5).\n-- main is 78.\n\ndef Four : Type 0 := sum ((prod () : Type 0), (prod () : Type 0), Nat, Nat)\n\ndef z0 : Four := inj 0 of 4 (tuple ())\ndef z1 : Four := inj 1 of 4 (tuple ())\ndef p2 : Four := inj 2 of 4 5\ndef p3 : Four := inj 3 of 4 6\n\ndef read : (x : Four) -> Nat :=\n  fun (x : Four) =>\n    case x with\n    | 0 (u : prod ()) => 1\n    | 1 (v : prod ()) => 2\n    | 2 (a : Nat) => natAdd a 10\n    | 3 (b : Nat) => natMul b 10\n\ndef main : Nat := natAdd (natAdd (read z0) (read z1)) (natAdd (read p2) (read p3))\n",
+      "code": 0,
+      "stdout": "erased Four\nrec [sum<unit|unit|union nat|union nat>]\nfun z0 () : union sum<unit|unit|union nat|union nat> := KTag sum<unit|unit|union nat|union nat> 0 []\nrec [sum<unit|unit|union nat|union nat>]\nfun z1 () : union sum<unit|unit|union nat|union nat> := KTag sum<unit|unit|union nat|union nat> 1 []\nrec [sum<unit|unit|union nat|union nat>]\nfun p2 () : union sum<unit|unit|union nat|union nat> := KTag sum<unit|unit|union nat|union nat> 2 [KLit 5]\nrec [sum<unit|unit|union nat|union nat>]\nfun p3 () : union sum<unit|unit|union nat|union nat> := KTag sum<unit|unit|union nat|union nat> 3 [KLit 6]\nrec [sum<unit|unit|union nat|union nat>; nat]\nfun read (union sum<unit|unit|union nat|union nat>) : union nat := KCase sum<unit|unit|union nat|union nat> (KVar 0) [{0 0 (KLit 1)}; {1 0 (KLit 2)}; {2 1 (KTail (KGlobal natAdd) [KVar 0; KLit 10])}; {3 1 (KTail (KGlobal natMul) [KVar 0; KLit 10])}]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KApp (KGlobal read) [KGlobal z0]; KApp (KGlobal read) [KGlobal z1]]; KApp (KGlobal natAdd) [KApp (KGlobal read) [KGlobal p2]; KApp (KGlobal read) [KGlobal p3]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d06-closure-capture",
+      "source": "-- d06: a lambda that captures a local, stored in a pair and applied\n-- later.  One capture is a parameter and the other is a let bound\n-- local, so both capture paths of SD-D2 run.\n-- main is 31.\n\ndef mk : (x : Nat) -> (f : Nat -> Nat) * Nat :=\n  fun (x : Nat) => ((fun (y : Nat) => natAdd x y), natMul x 2)\n\ndef mkLet : (x : Nat) -> (f : Nat -> Nat) * Nat :=\n  fun (x : Nat) => let z : Nat := natAdd x 1 in ((fun (y : Nat) => natAdd z y), z)\n\ndef main : Nat :=\n  natAdd (natAdd ((mk 5).1 6) (mk 5).2) (natAdd ((mkLet 2).1 4) (mkLet 2).2)\n",
+      "code": 0,
+      "stdout": "rec [nat; pair<func fn<1>,union nat>]\nfun mk$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun mk (union nat) : struct pair<func fn<1>,union nat> := KStruct pair<func fn<1>,union nat> [KClos mk$0 1 [KVar 0]; KApp (KGlobal natMul) [KVar 0; KLit 2]]\nrec [nat; pair<func fn<1>,union nat>]\nfun mkLet$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun mkLet (union nat) : struct pair<func fn<1>,union nat> := KLet z (KApp (KGlobal natAdd) [KVar 0; KLit 1]) (KStruct pair<func fn<1>,union nat> [KClos mkLet$0 1 [KVar 0]; KVar 0])\nrec [nat; pair<func fn<1>,union nat>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KApp (KLet scrut (KApp (KGlobal mk) [KLit 5]) (KLet f (KProj pair<func fn<1>,union nat> 0 (KVar 0)) (KLet y (KProj pair<func fn<1>,union nat> 1 (KVar 1)) (KVar 1)))) [KLit 6]; KLet scrut (KApp (KGlobal mk) [KLit 5]) (KLet f (KProj pair<func fn<1>,union nat> 0 (KVar 0)) (KLet y (KProj pair<func fn<1>,union nat> 1 (KVar 1)) (KVar 0)))]; KApp (KGlobal natAdd) [KApp (KLet scrut (KApp (KGlobal mkLet) [KLit 2]) (KLet f (KProj pair<func fn<1>,union nat> 0 (KVar 0)) (KLet y (KProj pair<func fn<1>,union nat> 1 (KVar 1)) (KVar 1)))) [KLit 4]; KLet scrut (KApp (KGlobal mkLet) [KLit 2]) (KLet f (KProj pair<func fn<1>,union nat> 0 (KVar 0)) (KLet y (KProj pair<func fn<1>,union nat> 1 (KVar 1)) (KVar 0)))]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d07-partial-over",
+      "source": "-- d07: partial application of a two argument definition and of natAdd,\n-- then application of the answers, beside an over application through\n-- the generic apply (the c09 and c10 shapes with a main).\n-- main is 25.\n\ndef add3 : (a : Nat) -> (b : Nat) -> Nat :=\n  fun (a : Nat) (b : Nat) => natAdd (natAdd a b) 3\n\ndef later : (f : Nat -> Nat -> Nat) -> (x : Nat) -> Nat -> Nat :=\n  fun (f : Nat -> Nat -> Nat) (x : Nat) => f x\n\ndef half : Nat -> Nat := add3 4\ndef alias : Nat -> Nat := natAdd 1\n\ndef main : Nat := natAdd (natAdd (half 5) (alias 2)) (later natAdd 4 6)\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun add3 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KVar 1; KVar 0]; KLit 3]\nrec [fn<2>; nat]\nfun later (func fn<2>, union nat, union nat) : union nat := KTail (KApp (KVar 2) [KVar 1]) [KVar 0]\nrec [nat]\nfun half (union nat) : union nat := KTail (KApp (KGlobal add3) [KLit 4]) [KVar 0]\nrec [nat]\nfun alias (union nat) : union nat := KTail (KApp (KGlobal natAdd) [KLit 1]) [KVar 0]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KApp (KGlobal half) [KLit 5]; KApp (KGlobal alias) [KLit 2]]; KApp (KGlobal later) [KGlobal natAdd; KLit 4; KLit 6]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d08-erased-poly",
+      "source": "-- d08: the identity at an erased Type argument, used at Nat.  The\n-- answer repr is any, so the caller casts an eq reference back to i31.\n-- main is 7.\n\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\n\ndef idNat : (x : Nat) -> Nat := id Nat\n\ndef main : Nat := natAdd (id Nat 3) (idNat 4)\n",
+      "code": 0,
+      "stdout": "rec [any]\nfun id (union any) : union any := KVar 0\nrec [nat]\nfun idNat (union nat) : union nat := KTail (KGlobal id) [KVar 0]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal id) [KLit 3]; KApp (KGlobal idNat) [KLit 4]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d09-let-chain",
+      "source": "-- d09: nested lets, with a case inside a let.  Every let is a typed\n-- local and the branch binders follow the lets (SD-D12).\n-- main is 232.\n\ndef Two : Type 0 := sum (Nat, Nat)\n\ndef pick : (s : Two) -> Nat :=\n  fun (s : Two) =>\n    let base : Nat := 10 in\n    let bump : Nat := (case s with | 0 (a : Nat) => natAdd a 1 | 1 (b : Nat) => natMul b 2) in\n    let total : Nat := natAdd base bump in\n    natAdd total 100\n\ndef main : Nat := natAdd (pick (inj 0 of 2 3)) (pick (inj 1 of 2 4))\n",
+      "code": 0,
+      "stdout": "erased Two\nrec [sum<union nat|union nat>; nat]\nfun pick (union sum<union nat|union nat>) : union nat := KLet base (KLit 10) (KLet bump (KCase sum<union nat|union nat> (KVar 1) [{0 1 (KApp (KGlobal natAdd) [KVar 0; KLit 1])}; {1 1 (KApp (KGlobal natMul) [KVar 0; KLit 2])}]) (KLet total (KApp (KGlobal natAdd) [KVar 1; KVar 0]) (KTail (KGlobal natAdd) [KVar 0; KLit 100])))\nrec [nat; sum<union nat|union nat>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal pick) [KTag sum<union nat|union nat> 0 [KLit 3]]; KApp (KGlobal pick) [KTag sum<union nat|union nat> 1 [KLit 4]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d10-i31-boundary",
+      "source": "-- d10: the i31 boundary of SD-D7.  The kernel value of main is\n-- 1073741824, one above the range an i31 holds, so the module traps at\n-- run time and the runner exits 1.\n-- main is 1073741824, which traps.\n\ndef main : Nat := natAdd 1073741823 1\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KLit 1073741823; KLit 1]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d11-poly-pair",
+      "source": "-- A polymorphic pair keeps the same layout when instantiated at Nat.\n-- The kernel and wasm must both return 5, without an illegal cast.\ndef box : (0 A : Type 0) -> (x : A) -> (a : A) * A :=\n  fun (0 A : Type 0) (x : A) => (x, x)\ndef main : Nat := (box Nat 5).1\n",
+      "code": 0,
+      "stdout": "rec [any; pair<union any,union any>]\nfun box (union any) : struct pair<union any,union any> := KStruct pair<union any,union any> [KVar 0; KVar 0]\nrec [nat; pair<union nat,union nat>]\nfun main () : union nat := KLet scrut (KApp (KGlobal box) [KLit 5]) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1)))\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d12-poly-case",
+      "source": "-- A case retains its sum tid after polymorphic identity returns any.\n-- main is 1.\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\ndef main : Nat :=\n  case (id Bool (natEq 1 1)) with\n  | 0 (x : prod ()) => 0\n  | 1 (y : prod ()) => 1\n",
+      "code": 0,
+      "stdout": "erased Bool\nrec [any]\nfun id (union any) : union any := KVar 0\nrec [nat; sum<unit|unit>]\nfun main () : union nat := KCase sum<unit|unit> (KApp (KGlobal id) [KApp (KGlobal natEq) [KLit 1; KLit 1]]) [{0 0 (KLit 0)}; {1 0 (KLit 1)}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d13-function-case",
+      "source": "-- A generic closure call preserves enough information for a case.\n-- main is 1.\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\ndef read : (f : Nat -> Bool) -> Nat :=\n  fun (f : Nat -> Bool) =>\n    case (f 1) with | 0 (x : prod ()) => 0 | 1 (y : prod ()) => 1\ndef eqOne : Nat -> Bool := fun (x : Nat) => natEq x 1\ndef main : Nat := read eqOne\n",
+      "code": 0,
+      "stdout": "erased Bool\nrec [fn<1>; nat; sum<unit|unit>]\nfun read (func fn<1>) : union nat := KCase sum<unit|unit> (KApp (KVar 0) [KLit 1]) [{0 0 (KLit 0)}; {1 0 (KLit 1)}]\nrec [nat; sum<unit|unit>]\nfun eqOne (union nat) : union sum<unit|unit> := KTail (KGlobal natEq) [KVar 0; KLit 1]\nrec [nat]\nfun main () : union nat := KTail (KGlobal read) [KGlobal eqOne]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d14-generic-capture",
+      "source": "-- The capture expression is any, but the lifted parameter is Nat.\n-- Registration, construction and the wrapper must agree.  main is 11.\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\ndef mk : (x : Nat) -> (f : Nat -> Nat) * Nat :=\n  fun (x : Nat) => let z : Nat := id Nat x in\n    ((fun (y : Nat) => natAdd z y), z)\ndef main : Nat := (mk 5).1 6\n",
+      "code": 0,
+      "stdout": "rec [any]\nfun id (union any) : union any := KVar 0\nrec [nat; pair<func fn<1>,union nat>]\nfun mk$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun mk (union nat) : struct pair<func fn<1>,union nat> := KLet z (KApp (KGlobal id) [KVar 0]) (KStruct pair<func fn<1>,union nat> [KClos mk$0 1 [KVar 0]; KVar 0])\nrec [nat; pair<func fn<1>,union nat>]\nfun main () : union nat := KTail (KLet scrut (KApp (KGlobal mk) [KLit 5]) (KLet f (KProj pair<func fn<1>,union nat> 0 (KVar 0)) (KLet y (KProj pair<func fn<1>,union nat> 1 (KVar 1)) (KVar 1)))) [KLit 6]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "d15-generic-aggregates",
+      "source": "-- Exercise aggregate layout crossings in both directions, nested fields,\n-- sum payloads, and a generic tuple containing a closure.\n-- main is 36.\ndef id : (0 A : Type 0) -> (x : A) -> A :=\n  fun (0 A : Type 0) (x : A) => x\ndef box : (0 A : Type 0) -> (x : A) -> (a : A) * A :=\n  fun (0 A : Type 0) (x : A) => (x, x)\ndef first : (0 A : Type 0) -> (p : (a : A) * A) -> A :=\n  fun (0 A : Type 0) (p : (a : A) * A) => p.1\ndef pack : (0 A : Type 0) -> (x : A) -> prod (A, A) :=\n  fun (0 A : Type 0) (x : A) => tuple (x, x)\ndef choose : (0 A : Type 0) -> (x : A) -> sum (A, A) :=\n  fun (0 A : Type 0) (x : A) => inj 1 of 2 x\ndef unchoose : (0 A : Type 0) -> (s : sum (A, A)) -> A :=\n  fun (0 A : Type 0) (s : sum (A, A)) =>\n    case s with | 0 (x : A) => x | 1 (y : A) => y\ndef fromEmpty : (x : sum ()) -> Nat := fun (x : sum ()) => absurd x\ndef sumNat : Nat :=\n  case (id (sum (Nat, Nat)) (choose Nat 7)) with\n  | 0 (x : Nat) => x\n  | 1 (y : Nat) => natAdd y 1\ndef nested : Nat := (box ((a : Nat) * Nat) (box Nat 5)).1.2\ndef inc : Nat -> Nat := fun (x : Nat) => natAdd x 1\ndef fromClosure : Nat := (pack (Nat -> Nat) inc).0 8\ndef main : Nat :=\n  natAdd (natAdd (first Nat (3, 4)) (pack Nat 9).1)\n    (natAdd (unchoose Nat (inj 0 of 2 2)) (natAdd sumNat (natAdd nested fromClosure)))\n",
+      "code": 0,
+      "stdout": "rec [any]\nfun id (union any) : union any := KVar 0\nrec [any; pair<union any,union any>]\nfun box (union any) : struct pair<union any,union any> := KStruct pair<union any,union any> [KVar 0; KVar 0]\nrec [pair<union any,union any>; any]\nfun first (struct pair<union any,union any>) : union any := KLet scrut (KVar 0) (KLet a (KProj pair<union any,union any> 0 (KVar 0)) (KLet y (KProj pair<union any,union any> 1 (KVar 1)) (KVar 1)))\nrec [any; tuple<union any,union any>]\nfun pack (union any) : struct tuple<union any,union any> := KStruct tuple<union any,union any> [KVar 0; KVar 0]\nrec [any; sum<union any|union any>]\nfun choose (union any) : union sum<union any|union any> := KTag sum<union any|union any> 1 [KVar 0]\nrec [sum<union any|union any>; any]\nfun unchoose (union sum<union any|union any>) : union any := KCase sum<union any|union any> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KVar 0)}]\nrec [nat; any]\nfun fromEmpty () : union nat := KCase any (KErased) []\nrec [nat; sum<union nat|union nat>]\nfun sumNat () : union nat := KCase sum<union nat|union nat> (KApp (KGlobal id) [KApp (KGlobal choose) [KLit 7]]) [{0 1 (KVar 0)}; {1 1 (KTail (KGlobal natAdd) [KVar 0; KLit 1])}]\nrec [nat; pair<struct pair<union nat,union nat>,struct pair<union nat,union nat>>; pair<union nat,union nat>]\nfun nested () : union nat := KLet scrut (KLet scrut (KApp (KGlobal box) [KApp (KGlobal box) [KLit 5]]) (KLet a (KProj pair<struct pair<union nat,union nat>,struct pair<union nat,union nat>> 0 (KVar 0)) (KLet y (KProj pair<struct pair<union nat,union nat>,struct pair<union nat,union nat>> 1 (KVar 1)) (KVar 1)))) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 0)))\nrec [nat]\nfun inc (union nat) : union nat := KTail (KGlobal natAdd) [KVar 0; KLit 1]\nrec [nat; tuple<func fn<1>,func fn<1>>]\nfun fromClosure () : union nat := KTail (KProj tuple<func fn<1>,func fn<1>> 0 (KApp (KGlobal pack) [KGlobal inc])) [KLit 8]\nrec [nat; pair<union nat,union nat>; tuple<union nat,union nat>; sum<union nat|union nat>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KApp (KGlobal first) [KStruct pair<union nat,union nat> [KLit 3; KLit 4]]; KProj tuple<union nat,union nat> 1 (KApp (KGlobal pack) [KLit 9])]; KApp (KGlobal natAdd) [KApp (KGlobal unchoose) [KTag sum<union nat|union nat> 0 [KLit 2]]; KApp (KGlobal natAdd) [KGlobal sumNat; KApp (KGlobal natAdd) [KGlobal nested; KGlobal fromClosure]]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "def-params",
+      "source": "def sq (x : Nat) : Nat := natMul x x\ndef sqz (0 t : Type 0) (x : Nat) : Nat := x\ndef app (f : (n : Nat) -> Nat) (x : Nat) : Nat := f x\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun sq (union nat) : union nat := KTail (KGlobal natMul) [KVar 0; KVar 0]\nrec [nat]\nfun sqz (union nat) : union nat := KVar 0\nrec [fn<1>; nat]\nfun app (func fn<1>, union nat) : union nat := KTail (KVar 1) [KVar 0]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "grouped-binders",
+      "source": "-- Shared annotations expand in source order, including erased and linear marks.\ndef subtract (x y : Nat) : Nat := natSub x y\ndef discardFirst (1 x y : Nat) : Nat := let used : Nat := x in y\ndef keep (0 A B : Type 0) (x y : A) (z : B) : A := x\ndef groupedLambda : (x y : Nat) -> Nat := fun (x y : Nat) => natSub x y\ndef groupedPair : (x y : Nat) * Nat := (7, (3, 1))\nmu Grouped : Type 0 :=\n| grouped (x y : Nat) : Grouped\ndef readGrouped (p : Grouped) : Nat :=\n  match p as q in Grouped return Nat with\n  | grouped (x y : Nat) => natSub x y\ndef groupResult : Nat :=\n  natAdd (subtract 50 12) (readGrouped (grouped 7 3))\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun subtract (union nat, union nat) : union nat := KTail (KGlobal natSub) [KVar 1; KVar 0]\nrec [nat]\nfun discardFirst (union nat, union nat) : union nat := KLet used (KVar 1) (KVar 1)\nrec [any]\nfun keep (union any, union any, union any) : union any := KVar 2\nrec [nat]\nfun groupedLambda (union nat, union nat) : union nat := KTail (KGlobal natSub) [KVar 1; KVar 0]\nrec [pair<union nat,struct pair<union nat,union nat>>; pair<union nat,union nat>]\nfun groupedPair () : struct pair<union nat,struct pair<union nat,union nat>> := KStruct pair<union nat,struct pair<union nat,union nat>> [KLit 7; KStruct pair<union nat,union nat> [KLit 3; KLit 1]]\nrec [mu<Grouped>; nat; leg<mu<Grouped>,0,union nat,union nat>]\nfun readGrouped (union mu<Grouped>) : union nat := KCase mu<Grouped> (KVar 0) [{0 2 (KTail (KGlobal natSub) [KVar 1; KVar 0])}]\nrec [nat; mu<Grouped>; leg<mu<Grouped>,0,union nat,union nat>]\nfun groupResult () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal subtract) [KLit 50; KLit 12]; KApp (KGlobal readGrouped) [KTag mu<Grouped> 0 [KLit 7; KLit 3]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-cata-depth",
+      "source": "mu N : Type 0 with\n| zero : N\n| succ : N -> N\n\ndef rec dbl : N -> N := fun (n : N) => case n as x in N return N with | zero => zero | succ m => succ (succ (dbl m))\n\ndef n0 : N := succ zero\ndef n1 : N := succ (dbl n0)\ndef n2 : N := succ (dbl n1)\ndef n3 : N := succ (dbl n2)\ndef n4 : N := succ (dbl n3)\ndef n5 : N := succ (dbl n4)\ndef n6 : N := succ (dbl n5)\ndef n7 : N := succ (dbl n6)\ndef n8 : N := succ (dbl n7)\ndef n9 : N := succ (dbl n8)\ndef n10 : N := succ (dbl n9)\ndef n11 : N := succ (dbl n10)\n\ndef rec toNat : N -> Nat := fun (n : N) => case n as x in N return Nat with | zero => 0 | succ m => natAdd 1 (toNat m)\n\ndef main : Nat := natAdd 0 (toNat n11)\n",
+      "code": 0,
+      "stdout": "rec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun dbl (union mu<N>) : union mu<N> := KCase mu<N> (KVar 0) [{0 0 (KTag mu<N> 0 [])}; {1 1 (KTag mu<N> 1 [KTag mu<N> 1 [KApp (KGlobal dbl) [KVar 0]]])}]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n0 () : union mu<N> := KTag mu<N> 1 [KTag mu<N> 0 []]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n1 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n0]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n2 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n1]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n3 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n2]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n4 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n3]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n5 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n4]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n6 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n5]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n7 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n6]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n8 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n7]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n9 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n8]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n10 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n9]]\nrec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun n11 () : union mu<N> := KTag mu<N> 1 [KApp (KGlobal dbl) [KGlobal n10]]\nrec [mu<N>; nat; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun toNat (union mu<N>) : union nat := KCase mu<N> (KVar 0) [{0 0 (KLit 0)}; {1 1 (KTail (KGlobal natAdd) [KLit 1; KApp (KGlobal toNat) [KVar 0]])}]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KLit 0; KApp (KGlobal toNat) [KGlobal n11]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-constructor-scopes",
+      "source": "-- Parameter variables are checked beneath both constructor fields.\nmu Pair (0 A : Type 0) (0 B : Type 0) : Type 0 with\n| pair : A -> B -> Pair A B\n\n-- The result index is scoped under a parameter and a field.\nmu Ix (0 A : Type 0) : (0 x : A) -> Type 0 with\n| ix : (0 x : A) -> Ix A x\n\n-- The second index type depends on the first result index.\nmu Dep : (0 A : Type 0) -> (0 x : A) -> Type 1 with\n| dep : (0 A : Type 0) -> (0 x : A) -> Dep A x\n\n-- A field at exactly the declared universe bound is valid.\nmu Large : Type 1 with\n| packLarge : Type 0 -> Large\n",
+      "code": 0,
+      "stdout": "\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-dependent-copy",
+      "source": "-- Copy preserves the vector's erased length index and runtime payloads.\n-- The motive depends on each constructor's result index.  Main is 42.\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\nmu V : (0 i : N) -> Type 0 with\n| vz : V zero\n| vs : (0 i : N) -> Nat -> V i -> V (succ i)\n\ndef rec copy : (0 i : N) -> V i -> V i := fun (0 i : N) (v : V i) => case v as x in V j return V j with | vz => vz | vs 0 j a w => vs j a (copy j w)\n\ndef rec total : (0 i : N) -> V i -> Nat := fun (0 i : N) (v : V i) => case v as x in V j return Nat with | vz => 0 | vs 0 j a w => natAdd a (total j w)\n\ndef empty : V zero := copy zero vz\ndef values : V (succ (succ zero)) := vs (succ zero) 17 (vs zero 25 empty)\ndef copied : V (succ (succ zero)) := copy (succ (succ zero)) values\ndef main : Nat := total (succ (succ zero)) copied\n",
+      "code": 0,
+      "stdout": "rec [mu<V>; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun copy (union mu<V>) : union mu<V> := KCase mu<V> (KVar 0) [{0 0 (KTag mu<V> 0 [])}; {1 2 (KTag mu<V> 1 [KVar 1; KApp (KGlobal copy) [KVar 0]])}]\nrec [mu<V>; nat; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun total (union mu<V>) : union nat := KCase mu<V> (KVar 0) [{0 0 (KLit 0)}; {1 2 (KTail (KGlobal natAdd) [KVar 1; KApp (KGlobal total) [KVar 0]])}]\nrec [mu<V>; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun empty () : union mu<V> := KTail (KGlobal copy) [KTag mu<V> 0 []]\nrec [mu<V>; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun values () : union mu<V> := KTag mu<V> 1 [KLit 17; KTag mu<V> 1 [KLit 25; KGlobal empty]]\nrec [mu<V>]\nfun copied () : union mu<V> := KTail (KGlobal copy) [KGlobal values]\nrec [nat]\nfun main () : union nat := KTail (KGlobal total) [KGlobal copied]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-dependent-layout",
+      "source": "-- A generic field keeps its slot when instantiated at an erased type.\n-- The following Nat field must retain its position.  Main is 27.\nmu Pack : Type 1 with\n| pack : (0 A : Type 0) -> A -> Nat -> Pack\n\ndef pn : Pack := pack Nat 7 8\ndef pu : Pack := pack (prod ()) (tuple ()) 9\ndef pf : Pack := pack (Nat -> Nat) (fun (n : Nat) => natAdd n 1) 10\ndef last : Pack -> Nat := fun (p : Pack) => case p as x in Pack return Nat with | pack 0 A v n => n\ndef main : Nat := natAdd (last pn) (natAdd (last pu) (last pf))\n",
+      "code": 0,
+      "stdout": "rec [mu<Pack>; leg<mu<Pack>,0,union any,union nat>]\nfun pn () : union mu<Pack> := KTag mu<Pack> 0 [KLit 7; KLit 8]\nrec [mu<Pack>; leg<mu<Pack>,0,union any,union nat>]\nfun pu () : union mu<Pack> := KTag mu<Pack> 0 [KErased; KLit 9]\nrec [nat; mu<Pack>; leg<mu<Pack>,0,union any,union nat>]\nfun pf$0 (union nat) : union nat := KTail (KGlobal natAdd) [KVar 0; KLit 1]\nfun pf () : union mu<Pack> := KTag mu<Pack> 0 [KClos pf$0 1 []; KLit 10]\nrec [mu<Pack>; nat; leg<mu<Pack>,0,union any,union nat>]\nfun last (union mu<Pack>) : union nat := KCase mu<Pack> (KVar 0) [{0 2 (KVar 0)}]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal last) [KGlobal pn]; KApp (KGlobal natAdd) [KApp (KGlobal last) [KGlobal pu]; KApp (KGlobal last) [KGlobal pf]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-direct",
+      "source": "-- mu-direct: the direct recursive family of brief 3.9.  The field of\n-- succ is the family itself, which is the strictly positive occurrence\n-- lib/positivity.ml admits, and the file declares no entry, so its\n-- checked form and its erased form are both empty.\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n",
+      "code": 0,
+      "stdout": "\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-empty-large-elim",
+      "source": "-- mu-empty-large-elim: a large elimination out of the empty family,\n-- which is ex falso (M1 Stage H, brief 3.9, SH-D3).  The family has no\n-- constructor, so it passes part one of tot's criterion at\n-- kan-lang-tot-pin/lib/check.ml:227 and the elimination needs no\n-- branch.  The scrutinee is a postulate, because the empty family has\n-- no closed term.\n\nmu Void : Prop with\n\naxiom stuck : Void\n\ndef anything : Type 0 := case stuck as x in Void return Type 0 with\n",
+      "code": 0,
+      "stdout": "erased stuck\nerased anything\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-erase",
+      "source": "-- mu-erase: the erasure of an introduction at a mu family (M1 Stage J,\n-- brief 3.1 and M1-PLAN.md:103).  The erased form is a KTag of the\n-- family tid, the constructor index in declaration order and the erased\n-- fields, and \"zero\", which takes no field, is a tag with no payload,\n-- which is the tagged integer the sum already uses (SD-D5, SJ-D5).  The\n-- file stood under erase-neg until Stage J landed the rows, where it\n-- read the interim word of SG-D7 (brief 3.3).\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\ndef one : N := succ zero\n",
+      "code": 0,
+      "stdout": "rec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun one () : union mu<N> := KTag mu<N> 1 [KTag mu<N> 0 []]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-indexed",
+      "source": "-- mu-indexed: a family with an index telescope (A2, A14).  Every index\n-- binder carries the mark 0, so the index erases before run time, and\n-- every constructor gives the result index the declaration asks for.\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\nmu V : (0 i : N) -> Type 0 with\n| vz : V zero\n| vs : (0 i : N) -> V i -> V (succ i)\n\n-- The fibered elimination reads the motive at the index arguments of\n-- each constructor result, so a motive body that names an index is\n-- checked at a different type in every branch (M1 Stage H, SH-D7,\n-- M1-PLAN.md:80).  The elimination sits under a let of a definition at\n-- a universe, because a definition at a type is dropped before erasure\n-- reads its body, and the interim erasure word of a mu shape stays at\n-- test/erase-neg/mu-erase.kan (A6, SG-D7).  SH-M3 drops the index\n-- arguments from that read and this definition stops checking.\n\ndef read_index : Type 0 := let d : V zero := case (vz : V zero) as x in V i return V i with | vz => vz | vs 0 j w => vs j w in Nat\n",
+      "code": 0,
+      "stdout": "erased read_index\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-mutual-emit",
+      "source": "mu N : Type 0 with\n| zero : N\n| succ : N -> N\n\nmu A : Type 0 with\n| leaf : A\n| node : B -> A\nand B : Type 0 with\n| cons : A -> B\n\ndef rec sizeA : A -> N := fun (a : A) => case a as x in A return N with | leaf => zero | node b => succ (sizeB b)\nand sizeB : B -> N := fun (b : B) => case b as x in B return N with | cons a => succ (sizeA a)\n\ndef rec toNat : N -> Nat := fun (n : N) => case n as x in N return Nat with | zero => 0 | succ m => natAdd 1 (toNat m)\n\ndef main : Nat := toNat (sizeA (node (cons (node (cons leaf)))))\n",
+      "code": 0,
+      "stdout": "rec [mu<A>; mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>; leg<mu<A>,0>; leg<mu<A>,1,union mu<B>>]\nfun sizeA (union mu<A>) : union mu<N> := KCase mu<A> (KVar 0) [{0 0 (KTag mu<N> 0 [])}; {1 1 (KTag mu<N> 1 [KApp (KGlobal sizeB) [KVar 0]])}]\nrec [mu<B>; mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>; leg<mu<B>,0,union mu<A>>]\nfun sizeB (union mu<B>) : union mu<N> := KCase mu<B> (KVar 0) [{0 1 (KTag mu<N> 1 [KApp (KGlobal sizeA) [KVar 0]])}]\nrec [mu<N>; nat; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun toNat (union mu<N>) : union nat := KCase mu<N> (KVar 0) [{0 0 (KLit 0)}; {1 1 (KTail (KGlobal natAdd) [KLit 1; KApp (KGlobal toNat) [KVar 0]])}]\nrec [nat; mu<A>; mu<B>; leg<mu<A>,0>; leg<mu<A>,1,union mu<B>>; leg<mu<B>,0,union mu<A>>]\nfun main () : union nat := KTail (KGlobal toNat) [KApp (KGlobal sizeA) [KTag mu<A> 1 [KTag mu<B> 0 [KTag mu<A> 1 [KTag mu<B> 0 [KTag mu<A> 0 []]]]]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-mutual",
+      "source": "-- mu-mutual: a mutual group.  Every member is declared before the\n-- first constructor of the group is installed (A4), so the field of\n-- node names B while B is still provisional.\n\nmu A : Type 0 with\n| leaf : A\n| node : B -> A\nand B : Type 0 with\n| cons : A -> B\n",
+      "code": 0,
+      "stdout": "\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-parameter-layout",
+      "source": "-- Every instantiation must use the same nominal constructor layout.\n-- Emission checks these bodies even though main needs no Box value.\nmu Box (0 A : Type 0) : Type 0 with\n| box : A -> Box A\n\ndef unboxN : Box Nat -> Nat := fun (b : Box Nat) => case b as x in Box return Nat with | box n => n\ndef unboxF : Box (Nat -> Nat) -> Nat := fun (b : Box (Nat -> Nat)) => case b as x in Box return Nat with | box f => f 8\ndef unboxP : Box (prod (Nat, Nat)) -> Nat := fun (b : Box (prod (Nat, Nat))) => case b as x in Box return Nat with | box p => p.1\ndef unboxU : Box (prod ()) -> Nat := fun (b : Box (prod ())) => case b as x in Box return Nat with | box u => 9\ndef main : Nat := 9\n",
+      "code": 0,
+      "stdout": "rec [mu<Box>; nat; leg<mu<Box>,0,union any>]\nfun unboxN (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KVar 0)}]\nrec [mu<Box>; nat; leg<mu<Box>,0,union any>]\nfun unboxF (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KTail (KVar 0) [KLit 8])}]\nrec [mu<Box>; nat; tuple<union nat,union nat>; leg<mu<Box>,0,union any>]\nfun unboxP (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KProj tuple<union nat,union nat> 1 (KVar 0))}]\nrec [mu<Box>; nat; leg<mu<Box>,0,union any>]\nfun unboxU (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KLit 9)}]\nrec [nat]\nfun main () : union nat := KLit 9\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-prop-large-elim",
+      "source": "-- mu-prop-large-elim: a large elimination out of a Prop family with\n-- one constructor and no field (M1 Stage H, brief 3.9).  The family\n-- passes the three parts of tot's criterion at\n-- kan-lang-tot-pin/lib/check.ml:227-232:  it has exactly one\n-- constructor, every field of that constructor is at the mark 0, which\n-- holds of a constructor with no field, and the constructor is not self\n-- recursive.  The motive lands in Type 0, which is above the universe\n-- of the scrutinee, so the elimination is the large one the criterion\n-- admits.\n\nmu Truth : Prop with\n| triv : Truth\n\ndef choose : Type 0 := case (triv : Truth) as x in Truth return Type 0 with | triv => Nat\n",
+      "code": 0,
+      "stdout": "erased choose\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-rec-direct",
+      "source": "-- mu-rec-direct: a structural recursion over the direct family (M1\n-- Stage I, brief 3.8, M1-PLAN.md:171).  The definition eliminates its\n-- only argument at the head of its body, and the one call of double\n-- stands at the field of succ, which is a leg binder of a branch whose\n-- scrutinee is that argument, so the call is guarded at position 0 and\n-- the certificate of lib/order.ml admits it (M1-PLAN.md:110).\n--\n-- The erased form is the KCase of M1 Stage J, one branch for each\n-- constructor in declaration order, and the call at the field of succ\n-- is not in tail position, so it stays a KApp (brief 3.1,\n-- M1-PLAN.md:104 and :106).  The checked form of the file is the SI-G7\n-- reading, and the file stood under erase-neg until Stage J landed the\n-- rows (brief 3.3).\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\ndef rec double : N -> N := fun (n : N) => case n as x in N return N with | zero => zero | succ m => succ (succ (double m))\n",
+      "code": 0,
+      "stdout": "rec [mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>]\nfun double (union mu<N>) : union mu<N> := KCase mu<N> (KVar 0) [{0 0 (KTag mu<N> 0 [])}; {1 1 (KTag mu<N> 1 [KTag mu<N> 1 [KApp (KGlobal double) [KVar 0]]])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-rec-indexed",
+      "source": "-- mu-rec-indexed: a structural recursion over the indexed family (M1\n-- Stage I, brief 3.8, M1-PLAN.md:171).  \"length\" eliminates its second\n-- argument, and the one call of length stands at the vector field of\n-- \"vs\", which is a leg binder of a branch whose scrutinee is that\n-- argument, so the certificate of lib/order.ml guards the call at\n-- position 1 and the index argument at position 0 is not the guarded\n-- one (M1-PLAN.md:110 and :113).  The index binder carries the mark 0,\n-- so the fibered motive reads the index of each constructor result (M1\n-- Stage H).\n--\n-- The erased form is the KCase of M1 Stage J.  The index argument\n-- erases, because every index binder carries the mark 0, so \"vz\" and\n-- \"vs\" stand at the one tid mu<V> and \"length\" takes the vector alone\n-- (A2, SJ-D4, M1-PLAN.md:105).  The checked form of the file is the\n-- SI-G7 reading, and the file stood under erase-neg until Stage J\n-- landed the rows (brief 3.3).\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\nmu V : (0 i : N) -> Type 0 with\n| vz : V zero\n| vs : (0 i : N) -> V i -> V (succ i)\n\ndef rec length : (0 i : N) -> V i -> N := fun (0 i : N) (v : V i) => case v as x in V j return N with | vz => zero | vs 0 j w => succ (length j w)\n",
+      "code": 0,
+      "stdout": "rec [mu<V>; mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>; leg<mu<V>,0>; leg<mu<V>,1,union mu<V>>]\nfun length (union mu<V>) : union mu<N> := KCase mu<V> (KVar 0) [{0 0 (KTag mu<N> 0 [])}; {1 1 (KTag mu<N> 1 [KApp (KGlobal length) [KVar 0]])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "mu-rec-mutual",
+      "source": "-- mu-rec-mutual: a structural recursion over the mutual family (M1\n-- Stage I, brief 3.8, M1-PLAN.md:171).  \"sizeA\" and \"sizeB\" are one\n-- recursive group, joined by the word \"and\" of SI-D8, and each member\n-- calls its sibling at a leg binder of a branch whose scrutinee is the\n-- argument at position 0.  One order answers for the whole group, so\n-- both members decrease at the same position (SI-D7, M1-PLAN.md:113).\n--\n-- The erased form is one KCase for each member.  Each member names the\n-- legs of the family it eliminates in its own rec group, and the\n-- sibling family shows up as the repr of a field, so the boundary of\n-- the group reads off the text alone (SJ-D5, D-M1-5).  The checked form\n-- of the file is the SI-G7 reading, and the file stood under erase-neg\n-- until Stage J landed the rows (brief 3.3).\n\nmu N : Type 0 with\n| zero : N\n| succ : N -> N\n\nmu A : Type 0 with\n| leaf : A\n| node : B -> A\nand B : Type 0 with\n| cons : A -> B\n\ndef rec sizeA : A -> N := fun (a : A) => case a as x in A return N with | leaf => zero | node b => succ (sizeB b)\nand sizeB : B -> N := fun (b : B) => case b as x in B return N with | cons a => succ (sizeA a)\n",
+      "code": 0,
+      "stdout": "rec [mu<A>; mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>; leg<mu<A>,0>; leg<mu<A>,1,union mu<B>>]\nfun sizeA (union mu<A>) : union mu<N> := KCase mu<A> (KVar 0) [{0 0 (KTag mu<N> 0 [])}; {1 1 (KTag mu<N> 1 [KApp (KGlobal sizeB) [KVar 0]])}]\nrec [mu<B>; mu<N>; leg<mu<N>,0>; leg<mu<N>,1,union mu<N>>; leg<mu<B>,0,union mu<A>>]\nfun sizeB (union mu<B>) : union mu<N> := KCase mu<B> (KVar 0) [{0 1 (KTag mu<N> 1 [KApp (KGlobal sizeA) [KVar 0]])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "nat-big",
+      "source": "-- Exact multiplication runs in the emitted module and the observation is 7.\n-- Removing the slow multiplication arm must turn this successful run into a trap.\ndef mul : Nat -> Nat -> Nat := fun (a : Nat) (b : Nat) => natMul a b\ndef main : Nat :=\n  natSub (mul 35184372088833 35184372088837) 1237940039285591381131657214\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun mul (union nat, union nat) : union nat := KTail (KGlobal natMul) [KVar 1; KVar 0]\nrec [nat]\nfun main () : union nat := KTail (KGlobal natSub) [KApp (KGlobal mul) [KLit 35184372088833; KLit 35184372088837]; KLit 1237940039285591381131657214]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "nat-runtime-capture",
+      "source": "-- A big Nat survives a closure environment and a polymorphic aggregate.\ndef box : (0 A : Type 0) -> (x : A) -> (a : A) * A :=\n  fun (0 A : Type 0) (x : A) => (x, x)\ndef mk : (x : Nat) -> Nat -> Nat :=\n  fun (x : Nat) => fun (y : Nat) => natSub (natAdd x y) x\ndef main : Nat :=\n  (mk ((box Nat 12345678901234567890123456789).1)) 19\n",
+      "code": 0,
+      "stdout": "rec [any; pair<union any,union any>]\nfun box (union any) : struct pair<union any,union any> := KStruct pair<union any,union any> [KVar 0; KVar 0]\nrec [nat]\nfun mk (union nat, union nat) : union nat := KTail (KGlobal natSub) [KApp (KGlobal natAdd) [KVar 1; KVar 0]; KVar 1]\nrec [nat; pair<union nat,union nat>]\nfun main () : union nat := KTail (KGlobal mk) [KLet scrut (KApp (KGlobal box) [KLit 12345678901234567890123456789]) (KLet a (KProj pair<union nat,union nat> 0 (KVar 0)) (KLet y (KProj pair<union nat,union nat> 1 (KVar 1)) (KVar 1))); KLit 19]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "nat-runtime-edges",
+      "source": "-- Focused exact runtime arithmetic, expected main result 32.\n\ndef Bool : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))\n\ndef boolNat : Bool -> Nat := fun (b : Bool) => case b with | 0 (u : prod ()) => 0 | 1 (u : prod ()) => 1\n\ndef checkNat : Nat -> Nat -> Nat := fun (a : Nat) (b : Nat) => boolNat (natEq a b)\n\ndef smallAdd : Nat := checkNat (natAdd 1073741823 1) 1073741824\n\ndef smallMul : Nat := checkNat (natMul 32768 32768) 1073741824\n\ndef bigAdd : Nat := checkNat (natAdd 12345678901234567890123456789 9876543210123456789) 12345678911111111100246913578\n\ndef mixedAdd : Nat := checkNat (natAdd 12345678901234567890123456789 17) 12345678901234567890123456806\n\ndef reverseAdd : Nat := checkNat (natAdd 17 12345678901234567890123456789) 12345678901234567890123456806\n\ndef bigSub : Nat := checkNat (natSub 12345678901234567890123456789 9876543210123456789) 12345678891358024680000000000\n\ndef mixedSub : Nat := checkNat (natSub 12345678901234567890123456789 17) 12345678901234567890123456772\n\ndef truncated : Nat := checkNat (natSub 17 12345678901234567890123456789) 0\n\ndef zeroSub : Nat := checkNat (natSub 12345678901234567890123456789 12345678901234567890123456789) 0\n\ndef borrow : Nat := checkNat (natSub 1237940039285380274899124224 1237940039285380274899124223) 1\n\ndef carry : Nat := checkNat (natAdd 1237940039285380274899124223 1) 1237940039285380274899124224\n\ndef bigMul : Nat := checkNat (natMul 12345678901234567890123456789 9876543210123456789) 121932631126352689987654321098643499478750190521\n\ndef mixedMul : Nat := checkNat (natMul 12345678901234567890123456789 32767) 404530860556753086055675308605163\n\ndef reverseMul : Nat := checkNat (natMul 32767 12345678901234567890123456789) 404530860556753086055675308605163\n\ndef zeroMul : Nat := checkNat (natMul 12345678901234567890123456789 0) 0\n\ndef reverseZero : Nat := checkNat (natMul 0 12345678901234567890123456789) 0\n\ndef oneMul : Nat := checkNat (natMul 12345678901234567890123456789 1) 12345678901234567890123456789\n\ndef reverseOne : Nat := checkNat (natMul 1 12345678901234567890123456789) 12345678901234567890123456789\n\ndef demote : Nat := checkNat (natSub 12345678901234567890123456789 12345678901234567889049714966) 1073741823\n\ndef heterogeneous : Nat := checkNat (natSub 1073807363 1073807358) 5\n\ndef eqSame : Nat := checkNat (boolNat (natEq 12345678901234567890123456789 12345678901234567890123456789)) 1\n\ndef eqDifferent : Nat := checkNat (boolNat (natEq 12345678901234567890123456789 12345678901234567890123456790)) 0\n\ndef eqMixed : Nat := checkNat (boolNat (natEq 12345678901234567890123456789 3)) 0\n\ndef eqReverse : Nat := checkNat (boolNat (natEq 3 12345678901234567890123456789)) 0\n\ndef ltSame : Nat := checkNat (boolNat (natLt 12345678901234567890123456789 12345678901234567890123456789)) 0\n\ndef ltNext : Nat := checkNat (boolNat (natLt 12345678901234567890123456789 12345678901234567890123456790)) 1\n\ndef ltPrevious : Nat := checkNat (boolNat (natLt 12345678901234567890123456790 12345678901234567890123456789)) 0\n\ndef ltMixed : Nat := checkNat (boolNat (natLt 3 12345678901234567890123456789)) 1\n\ndef ltReverse : Nat := checkNat (boolNat (natLt 12345678901234567890123456789 3)) 0\n\ndef alias : Nat := let a : Nat := 12345678901234567890123456789 in let twice : Nat := natAdd a a in natAdd (checkNat a 12345678901234567890123456789) (checkNat twice 24691357802469135780246913578)\n\ndef partial : Nat := let mul : Nat -> Nat := natMul 12345678901234567890123456789 in checkNat (natSub (mul 3) 37037036703703703670370370365) 2\n\ndef main : Nat := natAdd smallAdd (natAdd smallMul (natAdd bigAdd (natAdd mixedAdd (natAdd reverseAdd (natAdd bigSub (natAdd mixedSub (natAdd truncated (natAdd zeroSub (natAdd borrow (natAdd carry (natAdd bigMul (natAdd mixedMul (natAdd reverseMul (natAdd zeroMul (natAdd reverseZero (natAdd oneMul (natAdd reverseOne (natAdd demote (natAdd heterogeneous (natAdd eqSame (natAdd eqDifferent (natAdd eqMixed (natAdd eqReverse (natAdd ltSame (natAdd ltNext (natAdd ltPrevious (natAdd ltMixed (natAdd ltReverse (natAdd alias (natAdd partial (0)))))))))))))))))))))))))))))))\n",
+      "code": 0,
+      "stdout": "erased Bool\nrec [sum<unit|unit>; nat]\nfun boolNat (union sum<unit|unit>) : union nat := KCase sum<unit|unit> (KVar 0) [{0 0 (KLit 0)}; {1 0 (KLit 1)}]\nrec [nat]\nfun checkNat (union nat, union nat) : union nat := KTail (KGlobal boolNat) [KApp (KGlobal natEq) [KVar 1; KVar 0]]\nrec [nat]\nfun smallAdd () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natAdd) [KLit 1073741823; KLit 1]; KLit 1073741824]\nrec [nat]\nfun smallMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 32768; KLit 32768]; KLit 1073741824]\nrec [nat]\nfun bigAdd () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natAdd) [KLit 12345678901234567890123456789; KLit 9876543210123456789]; KLit 12345678911111111100246913578]\nrec [nat]\nfun mixedAdd () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natAdd) [KLit 12345678901234567890123456789; KLit 17]; KLit 12345678901234567890123456806]\nrec [nat]\nfun reverseAdd () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natAdd) [KLit 17; KLit 12345678901234567890123456789]; KLit 12345678901234567890123456806]\nrec [nat]\nfun bigSub () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 12345678901234567890123456789; KLit 9876543210123456789]; KLit 12345678891358024680000000000]\nrec [nat]\nfun mixedSub () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 12345678901234567890123456789; KLit 17]; KLit 12345678901234567890123456772]\nrec [nat]\nfun truncated () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 17; KLit 12345678901234567890123456789]; KLit 0]\nrec [nat]\nfun zeroSub () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 12345678901234567890123456789; KLit 12345678901234567890123456789]; KLit 0]\nrec [nat]\nfun borrow () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 1237940039285380274899124224; KLit 1237940039285380274899124223]; KLit 1]\nrec [nat]\nfun carry () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natAdd) [KLit 1237940039285380274899124223; KLit 1]; KLit 1237940039285380274899124224]\nrec [nat]\nfun bigMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 12345678901234567890123456789; KLit 9876543210123456789]; KLit 121932631126352689987654321098643499478750190521]\nrec [nat]\nfun mixedMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 12345678901234567890123456789; KLit 32767]; KLit 404530860556753086055675308605163]\nrec [nat]\nfun reverseMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 32767; KLit 12345678901234567890123456789]; KLit 404530860556753086055675308605163]\nrec [nat]\nfun zeroMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 12345678901234567890123456789; KLit 0]; KLit 0]\nrec [nat]\nfun reverseZero () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 0; KLit 12345678901234567890123456789]; KLit 0]\nrec [nat]\nfun oneMul () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 12345678901234567890123456789; KLit 1]; KLit 12345678901234567890123456789]\nrec [nat]\nfun reverseOne () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natMul) [KLit 1; KLit 12345678901234567890123456789]; KLit 12345678901234567890123456789]\nrec [nat]\nfun demote () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 12345678901234567890123456789; KLit 12345678901234567889049714966]; KLit 1073741823]\nrec [nat]\nfun heterogeneous () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KLit 1073807363; KLit 1073807358]; KLit 5]\nrec [nat]\nfun eqSame () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natEq) [KLit 12345678901234567890123456789; KLit 12345678901234567890123456789]]; KLit 1]\nrec [nat]\nfun eqDifferent () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natEq) [KLit 12345678901234567890123456789; KLit 12345678901234567890123456790]]; KLit 0]\nrec [nat]\nfun eqMixed () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natEq) [KLit 12345678901234567890123456789; KLit 3]]; KLit 0]\nrec [nat]\nfun eqReverse () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natEq) [KLit 3; KLit 12345678901234567890123456789]]; KLit 0]\nrec [nat]\nfun ltSame () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natLt) [KLit 12345678901234567890123456789; KLit 12345678901234567890123456789]]; KLit 0]\nrec [nat]\nfun ltNext () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natLt) [KLit 12345678901234567890123456789; KLit 12345678901234567890123456790]]; KLit 1]\nrec [nat]\nfun ltPrevious () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natLt) [KLit 12345678901234567890123456790; KLit 12345678901234567890123456789]]; KLit 0]\nrec [nat]\nfun ltMixed () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natLt) [KLit 3; KLit 12345678901234567890123456789]]; KLit 1]\nrec [nat]\nfun ltReverse () : union nat := KTail (KGlobal checkNat) [KApp (KGlobal boolNat) [KApp (KGlobal natLt) [KLit 12345678901234567890123456789; KLit 3]]; KLit 0]\nrec [nat]\nfun alias () : union nat := KLet a (KLit 12345678901234567890123456789) (KLet twice (KApp (KGlobal natAdd) [KVar 0; KVar 0]) (KTail (KGlobal natAdd) [KApp (KGlobal checkNat) [KVar 1; KLit 12345678901234567890123456789]; KApp (KGlobal checkNat) [KVar 0; KLit 24691357802469135780246913578]]))\nrec [nat]\nfun partial () : union nat := KLet mul (KApp (KGlobal natMul) [KLit 12345678901234567890123456789]) (KTail (KGlobal checkNat) [KApp (KGlobal natSub) [KApp (KVar 0) [KLit 3]; KLit 37037036703703703670370370365]; KLit 2])\nrec [nat]\nfun main () : union nat := KTail (KGlobal natAdd) [KGlobal smallAdd; KApp (KGlobal natAdd) [KGlobal smallMul; KApp (KGlobal natAdd) [KGlobal bigAdd; KApp (KGlobal natAdd) [KGlobal mixedAdd; KApp (KGlobal natAdd) [KGlobal reverseAdd; KApp (KGlobal natAdd) [KGlobal bigSub; KApp (KGlobal natAdd) [KGlobal mixedSub; KApp (KGlobal natAdd) [KGlobal truncated; KApp (KGlobal natAdd) [KGlobal zeroSub; KApp (KGlobal natAdd) [KGlobal borrow; KApp (KGlobal natAdd) [KGlobal carry; KApp (KGlobal natAdd) [KGlobal bigMul; KApp (KGlobal natAdd) [KGlobal mixedMul; KApp (KGlobal natAdd) [KGlobal reverseMul; KApp (KGlobal natAdd) [KGlobal zeroMul; KApp (KGlobal natAdd) [KGlobal reverseZero; KApp (KGlobal natAdd) [KGlobal oneMul; KApp (KGlobal natAdd) [KGlobal reverseOne; KApp (KGlobal natAdd) [KGlobal demote; KApp (KGlobal natAdd) [KGlobal heterogeneous; KApp (KGlobal natAdd) [KGlobal eqSame; KApp (KGlobal natAdd) [KGlobal eqDifferent; KApp (KGlobal natAdd) [KGlobal eqMixed; KApp (KGlobal natAdd) [KGlobal eqReverse; KApp (KGlobal natAdd) [KGlobal ltSame; KApp (KGlobal natAdd) [KGlobal ltNext; KApp (KGlobal natAdd) [KGlobal ltPrevious; KApp (KGlobal natAdd) [KGlobal ltMixed; KApp (KGlobal natAdd) [KGlobal ltReverse; KApp (KGlobal natAdd) [KGlobal alias; KApp (KGlobal natAdd) [KGlobal partial; KLit 0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "nat-runtime-export",
+      "source": "-- Internal big values are valid. Exporting one crosses the i32 ABI and traps.\ndef main : Nat := 12345678901234567890123456789\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun main () : union nat := KLit 12345678901234567890123456789\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "nat-runtime-mu",
+      "source": "-- A nominal Stage J constructor retains a big Nat field and its layout.\nmu Box : Type 0 with\n| wrap : Nat -> Box\ndef read : Box -> Nat := fun (box : Box) =>\n  case box as x in Box return Nat with | wrap n => n\ndef main : Nat :=\n  natSub (read (wrap 12345678901234567890123456789)) 12345678901234567890123456766\n",
+      "code": 0,
+      "stdout": "rec [mu<Box>; nat; leg<mu<Box>,0,union nat>]\nfun read (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KVar 0)}]\nrec [nat; mu<Box>; leg<mu<Box>,0,union nat>]\nfun main () : union nat := KTail (KGlobal natSub) [KApp (KGlobal read) [KTag mu<Box> 0 [KLit 12345678901234567890123456789]]; KLit 12345678901234567890123456766]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-branches",
+      "source": "def Unit : Type 0 := (prod () : Type 0)\ndef Both : Type 0 := sum (Unit, Unit)\ndef choose : (1 x : Nat) -> (tag : Both) -> Nat :=\n  fun (1 x : Nat) (tag : Both) => case tag with | 0 (z : Unit) => x | 1 (z : Unit) => x\ndef nested : (1 x : Nat) -> (tag : Both) -> Nat :=\n  fun (1 x : Nat) (tag : Both) => case tag with\n  | 0 (z : Unit) => (case tag with | 0 (w : Unit) => x | 1 (w : Unit) => x)\n  | 1 (z : Unit) => x\ndef payload : (value : sum (Nat, Nat)) -> Nat :=\n  fun (value : sum (Nat, Nat)) => case value with | 0 (1 x : Nat) => x | 1 (1 x : Nat) => x\ndef main : Nat := choose 7 (inj 0 of 2 (tuple ()))\n",
+      "code": 0,
+      "stdout": "erased Unit\nerased Both\nrec [nat; sum<unit|unit>]\nfun choose (union nat, union sum<unit|unit>) : union nat := KCase sum<unit|unit> (KVar 0) [{0 0 (KVar 1)}; {1 0 (KVar 1)}]\nrec [nat; sum<unit|unit>]\nfun nested (union nat, union sum<unit|unit>) : union nat := KCase sum<unit|unit> (KVar 0) [{0 0 (KCase sum<unit|unit> (KVar 0) [{0 0 (KVar 1)}; {1 0 (KVar 1)}])}; {1 0 (KVar 1)}]\nrec [sum<union nat|union nat>; nat]\nfun payload (union sum<union nat|union nat>) : union nat := KCase sum<union nat|union nat> (KVar 0) [{0 1 (KVar 0)}; {1 1 (KVar 0)}]\nrec [nat; sum<unit|unit>]\nfun main () : union nat := KTail (KGlobal choose) [KLit 7; KTag sum<unit|unit> 0 []]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-fields",
+      "source": "mu Box : Type 0 with\n| box : (1 field : Nat) -> Box\ndef pack : (1 x : Nat) -> Box := fun (1 x : Nat) => box x\ndef unpack : (1 b : Box) -> Nat := fun (1 b : Box) => case b as self in Box return Nat with | box 1 x => x\ndef pair : (1 x : Nat) -> (1 field : Nat) * Nat := fun (1 x : Nat) => (x, 0)\ndef main : Nat := unpack (pack 7)\n",
+      "code": 0,
+      "stdout": "rec [nat; mu<Box>; leg<mu<Box>,0,union nat>]\nfun pack (union nat) : union mu<Box> := KTag mu<Box> 0 [KVar 0]\nrec [mu<Box>; nat; leg<mu<Box>,0,union nat>]\nfun unpack (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KVar 0)}]\nrec [nat; pair<union nat,union nat>]\nfun pair (union nat) : struct pair<union nat,union nat> := KStruct pair<union nat,union nat> [KVar 0; KLit 0]\nrec [nat]\nfun main () : union nat := KTail (KGlobal unpack) [KApp (KGlobal pack) [KLit 7]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-identity",
+      "source": "def identity : (1 x : Nat) -> Nat := fun (1 x : Nat) => x\ndef through : (1 x : Nat) -> Nat := fun (1 x : Nat) => identity x\ndef alias : (1 x : Nat) -> Nat := fun (1 x : Nat) => let y : Nat := x in y\ndef discardAlias : (1 x : Nat) -> Nat := fun (1 x : Nat) => let y : Nat := x in 0\ndef ghost : (0 x : Nat) -> Nat := fun (0 x : Nat) => 0\ndef erasedThenOnce : (1 x : Nat) -> Nat := fun (1 x : Nat) => let y : Nat := ghost x in x\ndef main : Nat := through 7\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun identity (union nat) : union nat := KVar 0\nrec [nat]\nfun through (union nat) : union nat := KTail (KGlobal identity) [KVar 0]\nrec [nat]\nfun alias (union nat) : union nat := KLet y (KVar 0) (KVar 0)\nrec [nat]\nfun discardAlias (union nat) : union nat := KLet y (KVar 0) (KLit 0)\nrec [nat]\nfun ghost () : union nat := KLit 0\nrec [nat]\nfun erasedThenOnce (union nat) : union nat := KLet y (KApp (KGlobal ghost) []) (KVar 1)\nrec [nat]\nfun main () : union nat := KTail (KGlobal through) [KLit 7]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-recursive",
+      "source": "mu Chain : Type 0 with\n| stop : Chain\n| step : (1 tail : Chain) -> Chain\ndef rec copy : (1 n : Chain) -> Chain := fun (1 n : Chain) => case n as self in Chain return Chain with | stop => stop | step 1 tail => step (copy tail)\n",
+      "code": 0,
+      "stdout": "rec [mu<Chain>; leg<mu<Chain>,0>; leg<mu<Chain>,1,union mu<Chain>>]\nfun copy (union mu<Chain>) : union mu<Chain> := KCase mu<Chain> (KVar 0) [{0 0 (KTag mu<Chain> 0 [])}; {1 1 (KTag mu<Chain> 1 [KApp (KGlobal copy) [KVar 0]])}]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-runtime-capture",
+      "source": "-- Type syntax must not introduce a second runtime use of a One binder.\n-- The lifted constant has no capture, and the lifted adder captures y alone.\nmu At : (0 n : Nat) -> Type 0 with\n| at : (0 n : Nat) -> At n\n\ndef duplicate : (1 x : Nat) -> prod (Nat, ((0 proof : At x) -> Nat)) :=\n  fun (1 x : Nat) => tuple (x, (fun (0 proof : At x) => 0))\n\ndef split : (1 x : Nat) -> (y : Nat) ->\n  prod (Nat, ((0 proof : At x) -> Nat -> Nat)) :=\n  fun (1 x : Nat) (y : Nat) =>\n    tuple (x, (fun (0 proof : At x) (z : Nat) => natAdd y z))\n\ndef constructorCapture : (1 x : Nat) -> prod (Nat, (Nat -> At x)) :=\n  fun (1 x : Nat) => tuple (x, (fun (dummy : Nat) => at x))\n\ndef ignore : (0 n : Nat) -> Nat := fun (0 n : Nat) => 0\ndef callCapture : (1 x : Nat) -> prod (Nat, (Nat -> Nat)) :=\n  fun (1 x : Nat) => tuple (x, (fun (dummy : Nat) => ignore x))\n\nmu P : Prop with\n| attest : P\ndef getProof : (0 n : Nat) -> P := fun (0 n : Nat) => attest\ndef proofCapture : (1 x : Nat) -> prod (Nat, (Nat -> Nat)) :=\n  fun (1 x : Nat) => tuple (x,\n    (fun (dummy : Nat) => let proof : P := getProof x in 0))\n\ndef main : Nat :=\n  natAdd (natAdd (duplicate 7).0 (((split 11 13).1) (at 11) 17))\n    (natAdd (constructorCapture 7).0 (natAdd (callCapture 7).0 (proofCapture 7).0))\n",
+      "code": 0,
+      "stdout": "rec [nat; tuple<union nat,func fn<0>>]\nfun duplicate$0 () : union nat := KLit 0\nfun duplicate (union nat) : struct tuple<union nat,func fn<0>> := KStruct tuple<union nat,func fn<0>> [KVar 0; KClos duplicate$0 0 []]\nrec [nat; tuple<union nat,func fn<1>>]\nfun split$0 (union nat, union nat) : union nat := KTail (KGlobal natAdd) [KVar 1; KVar 0]\nfun split (union nat, union nat) : struct tuple<union nat,func fn<1>> := KStruct tuple<union nat,func fn<1>> [KVar 1; KClos split$0 1 [KVar 0]]\nrec [nat; mu<At>; tuple<union nat,func fn<1>>; leg<mu<At>,0>]\nfun constructorCapture$0 (union nat) : union mu<At> := KTag mu<At> 0 []\nfun constructorCapture (union nat) : struct tuple<union nat,func fn<1>> := KStruct tuple<union nat,func fn<1>> [KVar 0; KClos constructorCapture$0 1 []]\nrec [nat]\nfun ignore () : union nat := KLit 0\nrec [nat; tuple<union nat,func fn<1>>]\nfun callCapture$0 (union nat) : union nat := KTail (KGlobal ignore) []\nfun callCapture (union nat) : struct tuple<union nat,func fn<1>> := KStruct tuple<union nat,func fn<1>> [KVar 0; KClos callCapture$0 1 []]\nerased getProof\nrec [nat; tuple<union nat,func fn<1>>]\nfun proofCapture$0 (union nat) : union nat := KLit 0\nfun proofCapture (union nat) : struct tuple<union nat,func fn<1>> := KStruct tuple<union nat,func fn<1>> [KVar 0; KClos proofCapture$0 1 []]\nrec [nat; tuple<union nat,func fn<0>>; tuple<union nat,func fn<1>>]\nfun main () : union nat := KTail (KGlobal natAdd) [KApp (KGlobal natAdd) [KProj tuple<union nat,func fn<0>> 0 (KApp (KGlobal duplicate) [KLit 7]); KApp (KProj tuple<union nat,func fn<1>> 1 (KApp (KGlobal split) [KLit 11; KLit 13])) [KLit 17]]; KApp (KGlobal natAdd) [KProj tuple<union nat,func fn<1>> 0 (KApp (KGlobal constructorCapture) [KLit 7]); KApp (KGlobal natAdd) [KProj tuple<union nat,func fn<1>> 0 (KApp (KGlobal callCapture) [KLit 7]); KProj tuple<union nat,func fn<1>> 0 (KApp (KGlobal proofCapture) [KLit 7])]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-shadowing",
+      "source": "def identity : (1 x : Nat) -> Nat := fun (1 x : Nat) => x\ndef shadow : (1 x : Nat) -> Nat := fun (1 x : Nat) => let y : Nat := x in let x : Nat := 0 in y\ndef closure : (1 x : Nat) -> Nat := fun (1 x : Nat) => let f : (y : Nat) -> Nat := (fun (y : Nat) => x) in f 0\ndef main : Nat := shadow 7\n",
+      "code": 0,
+      "stdout": "rec [nat]\nfun identity (union nat) : union nat := KVar 0\nrec [nat]\nfun shadow (union nat) : union nat := KLet y (KVar 0) (KLet x (KLit 0) (KVar 1))\nrec [nat]\nfun closure$0 (union nat, union nat) : union nat := KVar 1\nfun closure (union nat) : union nat := KLet f (KClos closure$0 1 [KVar 0]) (KTail (KVar 0) [KLit 0])\nrec [nat]\nfun main () : union nat := KTail (KGlobal shadow) [KLit 7]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "one-unreachable-capture",
+      "source": "mu Empty : Type 0 with\ndef capture : (1 x : Nat) -> Empty -> Nat := fun (1 x : Nat) =>\n  fun (e : Empty) => let y : Nat := x in case e as self in Empty return Nat with\n",
+      "code": 0,
+      "stdout": "rec [nat; mu<Empty>]\nfun capture (union nat, union mu<Empty>) : union nat := KLet y (KVar 1) (KCase mu<Empty> (KVar 1) [])\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "sl-match-indexed",
+      "source": "-- SL-D4: typed branch fields check against dependent constructor types.\nmu N : Type 0 :=\n| zero : N\n| succ (n : N) : N\n\nmu V : (0 i : N) -> Type 0 :=\n| nil : V zero\n| cons (0 i : N) (x : Nat) (xs : V i) : V (succ i)\n\ndef rec total : (0 i : N) -> V i -> Nat :=\n  fun (0 i : N) (v : V i) =>\n    match v as self in V j return Nat with\n    | nil => 0\n    | cons (0 j : N) (x : Nat) (xs : V j) => natAdd x (total j xs)\n\nmu Box (0 A : Type 0) : Type 0 :=\n| box (x : A) : Box A\n\ndef unbox : Box Nat -> Nat := fun (b : Box Nat) =>\n  match b as self in Box return Nat with | box (x : Nat) => x\n\ndef main : Nat := total (succ (succ zero)) (cons (succ zero) 17 (cons zero 25 nil))\n",
+      "code": 0,
+      "stdout": "rec [mu<V>; nat; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun total (union mu<V>) : union nat := KCase mu<V> (KVar 0) [{0 0 (KLit 0)}; {1 2 (KTail (KGlobal natAdd) [KVar 1; KApp (KGlobal total) [KVar 0]])}]\nrec [mu<Box>; nat; leg<mu<Box>,0,union any>]\nfun unbox (union mu<Box>) : union nat := KCase mu<Box> (KVar 0) [{0 1 (KVar 0)}]\nrec [nat; mu<V>; leg<mu<V>,0>; leg<mu<V>,1,union nat,union mu<V>>]\nfun main () : union nat := KTail (KGlobal total) [KTag mu<V> 1 [KLit 17; KTag mu<V> 1 [KLit 25; KTag mu<V> 0 []]]]\n\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "sl-mutual-three",
+      "source": "-- SL-D2: three declarations share one mutual family and recursive group.\nmutual\nmu A : Type 0 :=\n| leaf : A\n| node (b : B) : A\nmu B : Type 0 :=\n| bridge (c : C) : B\nmu C : Type 0 :=\n| again (a : A) : C\nend\n\ndef rec sizeA : A -> Nat := fun (a : A) =>\n  match a as self in A return Nat with\n  | leaf => 0\n  | node b => natAdd 1 (sizeB b)\nand sizeB : B -> Nat := fun (b : B) =>\n  match b as self in B return Nat with\n  | bridge (c : C) => natAdd 1 (sizeC c)\nand sizeC : C -> Nat := fun (c : C) =>\n  match c as self in C return Nat with\n  | again a => natAdd 1 (sizeA a)\n\ndef main : Nat := sizeA (node (bridge (again leaf)))\n",
+      "code": 0,
+      "stdout": "rec [mu<A>; nat; leg<mu<A>,0>; leg<mu<A>,1,union mu<B>>]\nfun sizeA (union mu<A>) : union nat := KCase mu<A> (KVar 0) [{0 0 (KLit 0)}; {1 1 (KTail (KGlobal natAdd) [KLit 1; KApp (KGlobal sizeB) [KVar 0]])}]\nrec [mu<B>; nat; leg<mu<B>,0,union mu<C>>]\nfun sizeB (union mu<B>) : union nat := KCase mu<B> (KVar 0) [{0 1 (KTail (KGlobal natAdd) [KLit 1; KApp (KGlobal sizeC) [KVar 0]])}]\nrec [mu<C>; nat; leg<mu<C>,0,union mu<A>>]\nfun sizeC (union mu<C>) : union nat := KCase mu<C> (KVar 0) [{0 1 (KTail (KGlobal natAdd) [KLit 1; KApp (KGlobal sizeA) [KVar 0]])}]\nrec [nat; mu<A>; mu<B>; mu<C>; leg<mu<A>,0>; leg<mu<A>,1,union mu<B>>; leg<mu<C>,0,union mu<A>>; leg<mu<B>,0,union mu<C>>]\nfun main () : union nat := KTail (KGlobal sizeA) [KTag mu<A> 1 [KTag mu<B> 0 [KTag mu<C> 0 [KTag mu<A> 0 []]]]]\n\n",
+      "stderr": ""
+    }
+  ]
+}

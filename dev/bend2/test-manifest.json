@@ -1,0 +1,1163 @@
+{
+  "version": 1,
+  "units": [
+    {
+      "mode": "kernel-numbers",
+      "source": "bend2/tests/kernel_numbers.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-eval",
+      "source": "bend2/tests/kernel_eval.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-quantity",
+      "source": "bend2/tests/kernel_quantity.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-check",
+      "source": "bend2/tests/kernel_check.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-declarations",
+      "source": "bend2/tests/kernel_declarations.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-conversion",
+      "source": "bend2/tests/kernel_conversion.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-recursive",
+      "source": "bend2/tests/kernel_recursive.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-budget-dag",
+      "source": "bend2/tests/kernel_budget_dag.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-spec-count",
+      "source": "bend2/tests/kernel_spec_count.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "levels-exact",
+      "source": "bend2/tests/levels_exact.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "levels-budget",
+      "source": "bend2/tests/levels_budget.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "levels-checker",
+      "source": "bend2/tests/levels_checker.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "levels-regression",
+      "source": "bend2/tests/levels_regression.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-lexer",
+      "source": "bend2/tests/surface_lexer.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "surface-parser",
+      "source": "bend2/tests/surface_parser.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "surface-transform",
+      "source": "bend2/tests/surface_transform.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "surface-poly",
+      "source": "bend2/tests/surface_poly.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "surface-family",
+      "source": "bend2/tests/surface_family.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "surface-elab",
+      "source": "bend2/tests/surface_elab.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-catalog",
+      "source": "bend2/tests/surface_catalog.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-program",
+      "source": "bend2/tests/surface_program.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-prelude",
+      "source": "bend2/tests/surface_prelude.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-crypto",
+      "source": "bend2/tests/surface_crypto.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-trust",
+      "source": "bend2/tests/surface_trust.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-boundary",
+      "source": "bend2/tests/surface_boundary.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-universes",
+      "source": "bend2/tests/surface_universes.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "wasm-circuit",
+      "source": "bend2/tests/wasm_circuit.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "wasm-order",
+      "source": "bend2/tests/wasm_order.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "wasm-link",
+      "source": "bend2/tests/wasm_link.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "wasm-host",
+      "source": "bend2/tests/wasm_host.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-budget-callbacks",
+      "source": "bend2/tests/kernel_budget_callbacks.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-budget-callback-check",
+      "source": "bend2/tests/kernel_budget_callback_check.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "surface-diagnostics",
+      "source": "bend2/tests/surface_diagnostics.bend",
+      "kind": "bool"
+    },
+    {
+      "mode": "kernel-global-lookup",
+      "source": "bend2/tests/kernel_global_lookup.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-projection-motive",
+      "source": "bend2/tests/kernel_projection_motive.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-conversion-budget",
+      "source": "bend2/tests/kernel_conversion_budget.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-large-addresses",
+      "source": "bend2/tests/kernel_large_addresses.bend",
+      "kind": "io"
+    },
+    {
+      "mode": "kernel-head-ty-invalid-level",
+      "source": "bend2/tests/kernel_head_ty_invalid_level.bend",
+      "kind": "io"
+    }
+  ],
+  "fixtures": [
+    {
+      "mode": "encode",
+      "source": "bend2/tests/wasm_encode.bend"
+    },
+    {
+      "mode": "emit",
+      "source": "bend2/tests/wasm_emit.bend"
+    },
+    {
+      "mode": "nat",
+      "source": "bend2/tests/wasm_nat_runtime.bend"
+    },
+    {
+      "mode": "reactor",
+      "source": "bend2/tests/wasm_reactor.bend"
+    },
+    {
+      "mode": "layout",
+      "source": "bend2/tests/wasm_layout.bend"
+    },
+    {
+      "mode": "oracle",
+      "source": "bend2/tests/wasm_oracle.bend"
+    }
+  ],
+  "drivers": [
+    {
+      "mode": "import-json",
+      "source": "bend2/tests/import_json.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "import-export",
+      "source": "bend2/tests/import_export.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "import-translate",
+      "source": "bend2/tests/import_translate.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "import-pipeline",
+      "source": "bend2/tests/import_pipeline.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "surface-parser",
+      "source": "bend2/tests/surface_driver.bend",
+      "entry": "run"
+    },
+    {
+      "mode": "surface-check",
+      "source": "bend2/tests/surface_check_driver.bend",
+      "entry": "run"
+    },
+    {
+      "mode": "erase",
+      "source": "bend2/tests/kernel_erase_driver.bend",
+      "entry": "run"
+    },
+    {
+      "mode": "io",
+      "source": "bend2/tests/io_driver.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "prelude-runtime",
+      "source": "bend2/tests/prelude_runtime.bend",
+      "entry": "arguments",
+      "shard": "prelude-runtime",
+      "aliases": [
+        "prelude_runtime"
+      ]
+    },
+    {
+      "mode": "wasm-protocol",
+      "source": "bend2/tests/wasm_protocol.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "prelude-protocol",
+      "source": "bend2/tests/prelude_protocol.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "mapping-protocol",
+      "source": "bend2/tests/mapping_protocol.bend",
+      "entry": "arguments"
+    },
+    {
+      "mode": "prelude-category",
+      "source": "bend2/tests/prelude_category.bend",
+      "entry": "arguments",
+      "shard": "prelude-category",
+      "aliases": [
+        "prelude_category"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-CATEGORY-OK entries=181 computations=7 negatives=9 quotation=3",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "template-cost",
+      "source": "bend2/tests/template_cost.bend",
+      "entry": "arguments",
+      "shard": "template-cost",
+      "aliases": [
+        "template_cost"
+      ]
+    },
+    {
+      "mode": "surface-shape-metadata",
+      "source": "bend2/tests/surface_shape_metadata.bend",
+      "entry": "arguments",
+      "shard": "surface",
+      "aliases": [
+        "veil_templates"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "VEIL-TEMPLATES OK shapes=4",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-equality",
+      "source": "bend2/tests/surface_equality.bend",
+      "entry": "main",
+      "forward_args": false,
+      "shard": "surface",
+      "aliases": [
+        "equality"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "EQUALITY-OK cases=15",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prelude-poly",
+      "source": "bend2/tests/surface_prelude_poly.bend",
+      "entry": "arguments",
+      "shard": "surface-prelude-poly",
+      "aliases": [
+        "prelude_poly"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-POLY-OK templates=2 instances=5 negatives=2",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "circuit-bounds",
+      "source": "bend2/tests/wasm_circuit_bounds.bend",
+      "entry": "arguments",
+      "shard": "wasm",
+      "aliases": [
+        "circuit_bounds"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "CIRCUIT-BOUNDS 18/18",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prelude-dependent",
+      "source": "bend2/tests/surface_prelude_dependent.bend",
+      "entry": "arguments",
+      "shard": "surface-prelude-dependent",
+      "aliases": [
+        "prelude_dependent"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-DEPENDENT-OK templates=6 instances=29 computations=12 negatives=6",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prelude-congruence",
+      "source": "bend2/tests/surface_prelude_congruence.bend",
+      "entry": "arguments",
+      "shard": "surface-prelude-congruence",
+      "aliases": [
+        "prelude_congruence"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-CONGRUENCE-OK instances=8 computations=4 negatives=5",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-sl",
+      "source": "bend2/tests/surface_sl.bend",
+      "entry": "arguments",
+      "shard": "surface-sl",
+      "aliases": [
+        "sl_surface"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "SL-SURFACE-OK 36/36",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "prelude-composable-functors",
+      "source": "bend2/tests/prelude_composable_functors.bend",
+      "entry": "arguments",
+      "shard": "prelude-composable-functors",
+      "aliases": [
+        "prelude_composable_functors"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-COMPOSABLE-FUNCTORS-OK entries=158 instances=3 computations=4 negatives=12",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-functor",
+      "source": "bend2/tests/prelude_functor.bend",
+      "entry": "arguments",
+      "shard": "prelude-functor",
+      "aliases": [
+        "prelude_functor"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-FUNCTOR-OK entries=177 instances=4 computations=7 negatives=8",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-heterogeneous-functor",
+      "source": "bend2/tests/prelude_heterogeneous_functor.bend",
+      "entry": "arguments",
+      "shard": "prelude-heterogeneous-functor",
+      "aliases": [
+        "prelude_heterogeneous_functor"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-heterogeneous-left-kan",
+      "source": "bend2/tests/prelude_heterogeneous_left_kan.bend",
+      "entry": "arguments",
+      "shard": "prelude-heterogeneous-left-kan",
+      "aliases": [
+        "prelude_heterogeneous_left_kan"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-heterogeneous-nattrans",
+      "source": "bend2/tests/prelude_heterogeneous_nattrans.bend",
+      "entry": "arguments",
+      "shard": "prelude-heterogeneous-nattrans",
+      "aliases": [
+        "prelude_heterogeneous_nattrans"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=150 instances=4 computations=5 negatives=13",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-heterogeneous-whiskering",
+      "source": "bend2/tests/prelude_heterogeneous_whiskering.bend",
+      "entry": "arguments",
+      "shard": "prelude-heterogeneous-whiskering",
+      "aliases": [
+        "prelude_heterogeneous_whiskering"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-horizontal-associativity",
+      "source": "bend2/tests/prelude_horizontal_associativity.bend",
+      "entry": "arguments",
+      "shard": "prelude-horizontal-associativity",
+      "aliases": [
+        "prelude_horizontal_associativity"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK entries=2328 families=15 computations=6 negatives=7",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-horizontal-laws",
+      "source": "bend2/tests/prelude_horizontal_laws.bend",
+      "entry": "arguments",
+      "shard": "prelude-horizontal-laws",
+      "aliases": [
+        "prelude_horizontal_laws"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-iterated-whiskering",
+      "source": "bend2/tests/prelude_iterated_whiskering.bend",
+      "entry": "arguments",
+      "shard": "prelude-iterated-whiskering",
+      "aliases": [
+        "prelude_iterated_whiskering"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-ITERATED-WHISKERING-OK entries=902 families=14 computations=18 negatives=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-left-kan",
+      "source": "bend2/tests/prelude_left_kan.bend",
+      "entry": "arguments",
+      "shard": "prelude-left-kan",
+      "aliases": [
+        "prelude_left_kan"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-LEFT-KAN-OK entries=203 instances=4 computations=6 negatives=7",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-left-kan-laws",
+      "source": "bend2/tests/prelude_left_kan_laws.bend",
+      "entry": "arguments",
+      "shard": "prelude-left-kan-laws",
+      "aliases": [
+        "prelude_left_kan_laws"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-nattrans",
+      "source": "bend2/tests/prelude_nattrans.bend",
+      "entry": "arguments",
+      "shard": "prelude-nattrans",
+      "aliases": [
+        "prelude_nattrans"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-NATTRANS-OK entries=183 instances=4 computations=8 negatives=7",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-nattrans-laws",
+      "source": "bend2/tests/prelude_nattrans_laws.bend",
+      "entry": "arguments",
+      "shard": "prelude-nattrans-laws",
+      "aliases": [
+        "prelude_nattrans_laws"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-nattrans-units",
+      "source": "bend2/tests/prelude_nattrans_units.bend",
+      "entry": "arguments",
+      "shard": "prelude-nattrans-units",
+      "aliases": [
+        "prelude_nattrans_units"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-NATTRANS-UNITS-OK entries=1281 families=9 computations=15 negatives=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-shared-left-kan",
+      "source": "bend2/tests/prelude_shared_left_kan.bend",
+      "entry": "arguments",
+      "shard": "prelude-shared-left-kan",
+      "aliases": [
+        "prelude_shared_left_kan"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-shared-nattrans",
+      "source": "bend2/tests/prelude_shared_nattrans.bend",
+      "entry": "arguments",
+      "shard": "prelude-shared-nattrans",
+      "aliases": [
+        "prelude_shared_nattrans"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "prelude-whiskering-laws",
+      "source": "bend2/tests/prelude_whiskering_laws.bend",
+      "entry": "arguments",
+      "shard": "prelude-whiskering-laws",
+      "aliases": [
+        "prelude_whiskering_laws"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24 negatives=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "kernel-protocol",
+      "source": "bend2/tests/kernel_protocol.bend",
+      "entry": "arguments",
+      "shard": "kernel-protocol",
+      "aliases": [
+        "main"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}/test/veil/test"
+          ],
+          "marker": "SUITE-KERNEL OK",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-prelude-transport",
+      "source": "bend2/tests/surface_prelude_transport.bend",
+      "entry": "arguments",
+      "shard": "surface-prelude-transport",
+      "aliases": [
+        "prelude_transport"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-family-groups",
+      "source": "bend2/tests/surface_family_groups.bend",
+      "entry": "arguments",
+      "shard": "surface-family-groups",
+      "aliases": [
+        "family_groups"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "FAMILY-GROUPS-OK cases=31",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prelude-equality-ops",
+      "source": "bend2/tests/surface_prelude_equality_ops.bend",
+      "entry": "arguments",
+      "shard": "surface-prelude-equality-ops",
+      "aliases": [
+        "prelude_equality_ops"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-EQUALITY-OPS-OK instances=10 computations=11 negatives=8",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-family-members",
+      "source": "bend2/tests/surface_family_members.bend",
+      "entry": "arguments",
+      "shard": "surface-family-members",
+      "aliases": [
+        "family_members"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "FAMILY-MEMBERS-OK cases=35",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prenex-families",
+      "source": "bend2/tests/surface_prenex_families.bend",
+      "entry": "arguments",
+      "shard": "surface-prenex-families",
+      "aliases": [
+        "prenex_families"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRENEX-FAMILIES-OK families=13 entries=18 computations=5 negatives=30",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "levels-protocol",
+      "source": "bend2/tests/levels_protocol.bend",
+      "entry": "arguments",
+      "shard": "levels-protocol",
+      "aliases": [
+        "levels"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "LEVELS-RUNTIME-OK algebra=19 checker=23 poly=12 boundary_cases=1",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-prenex-groups",
+      "source": "bend2/tests/surface_prenex_groups.bend",
+      "entry": "arguments",
+      "shard": "surface-prenex-groups",
+      "aliases": [
+        "prenex_groups"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRENEX-GROUPS-OK families=13 entries=23 computations=7 negatives=39",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-prenex-exports",
+      "source": "bend2/tests/surface_prenex_exports.bend",
+      "entry": "arguments",
+      "shard": "surface-prenex-exports",
+      "aliases": [
+        "prenex_exports"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRENEX-EXPORTS-OK entries=12 positives=8 negatives=21 parser=10 budget=3",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-prenex-dependency-exports",
+      "source": "bend2/tests/surface_prenex_dependency_exports.bend",
+      "entry": "arguments",
+      "shard": "surface-prenex-dependency-exports",
+      "aliases": [
+        "prenex_dependency_exports"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRENEX-DEPENDENCY-EXPORTS-OK positives=7 negatives=23 parser=6 budget=2",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-template-reuse",
+      "source": "bend2/tests/surface_template_reuse.bend",
+      "entry": "arguments",
+      "shard": "surface-template-reuse",
+      "aliases": [
+        "template_reuse"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-template-symbolic-reuse",
+      "source": "bend2/tests/surface_template_symbolic_reuse.bend",
+      "entry": "arguments",
+      "shard": "surface-template-symbolic-reuse",
+      "aliases": [
+        "template_symbolic_reuse"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-template-composition",
+      "source": "bend2/tests/surface_template_composition.bend",
+      "entry": "arguments",
+      "shard": "surface-template-composition",
+      "aliases": [
+        "template_composition"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=9 type-excluded=negative-arity",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "import-protocol",
+      "source": "bend2/tests/import_protocol.bend",
+      "entry": "arguments",
+      "shard": "import",
+      "aliases": [
+        "import"
+      ],
+      "suites": [
+        "all",
+        "import"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "IMPORT-OK",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "import-types-protocol",
+      "source": "bend2/tests/import_types_protocol.bend",
+      "entry": "arguments",
+      "shard": "import",
+      "aliases": [
+        "import_types"
+      ],
+      "suites": [
+        "all",
+        "import"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "IMPORT-TYPES-OK",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-prenex",
+      "source": "bend2/tests/surface_prenex.bend",
+      "entry": "arguments",
+      "shard": "surface-prenex",
+      "aliases": [
+        "prenex"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRENEX-OK entries=16 computations=4 negatives=25",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-family-poly",
+      "source": "bend2/tests/surface_family_poly.bend",
+      "entry": "arguments",
+      "shard": "surface-family-poly",
+      "aliases": [
+        "family_poly"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "FAMILY-POLY-OK cases=33 type-excluded=negative-arity",
+          "timeout": 1800
+        }
+      ]
+    },
+    {
+      "mode": "surface-numbers",
+      "source": "bend2/tests/surface_numbers.bend",
+      "entry": "arguments",
+      "shard": "surface",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "SURFACE-NUMBERS-OK oracle=16 huge-width-roundtrip=1",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "wasm-wide-metadata",
+      "source": "bend2/tests/wasm_wide_metadata.bend",
+      "entry": "arguments",
+      "shard": "wasm",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "WIDE-BACKEND 19/19",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "surface-expectations",
+      "source": "bend2/tests/surface_expectations.bend",
+      "entry": "arguments",
+      "shard": "surface",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [],
+          "marker": "SURFACE-EXPECTATIONS-OK cases=14 zero-poll=14",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "kernel-usage-native",
+      "source": "bend2/tests/kernel_usage_native.bend",
+      "entry": "arguments",
+      "shard": "kernel",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [
+            "0"
+          ],
+          "marker": "KERNEL-USAGE-NATIVE-OK cases=216",
+          "timeout": 600
+        },
+        {
+          "args": [
+            "7"
+          ],
+          "marker": "KERNEL-USAGE-NATIVE-OK cases=216",
+          "timeout": 600
+        }
+      ]
+    },
+    {
+      "mode": "relational-oracle",
+      "source": "bend2/tests/relational_oracle.bend",
+      "entry": "arguments",
+      "shard": "kernel",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [
+            "alpha"
+          ],
+          "marker": "RELATIONAL-ORACLE-OK cases=18"
+        },
+        {
+          "args": [
+            "\u03bb\ud83d\ude42"
+          ],
+          "marker": "RELATIONAL-ORACLE-OK cases=18"
+        }
+      ]
+    },
+    {
+      "mode": "kernel-global-index",
+      "source": "bend2/tests/kernel_global_index.bend",
+      "entry": "arguments",
+      "shard": "kernel",
+      "suites": [
+        "all",
+        "extras"
+      ],
+      "checks": [
+        {
+          "args": [
+            "case/A\u00e9\ud83d\ude00",
+            "case/Ae\u0301\ud83d\ude00",
+            "case/a\u00e9\ud83d\ude00"
+          ],
+          "marker": "GLOBAL-INDEX-OK boundaries=13 unicode=13 stress=1000 namespaces=2 runtime-keys=9 per-key=30",
+          "timeout": 600
+        }
+      ]
+    }
+  ]
+}
