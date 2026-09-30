@@ -1,0 +1,548 @@
+{
+  "version": 1,
+  "candidate": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete",
+  "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/.kanon-exec/run-Kz6dmD",
+  "exit_code": 1,
+  "legs": [
+    {
+      "name": "BUILD",
+      "tier": "SLOW",
+      "elapsed_ms": 58922.534,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN",
+      "tier": "FAST",
+      "elapsed_ms": 228.407,
+      "exit_code": 0
+    },
+    {
+      "name": "PIN-DELTA",
+      "tier": "MED",
+      "elapsed_ms": 55.495,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-COUNT",
+      "tier": "FAST",
+      "elapsed_ms": 328.63,
+      "exit_code": 0
+    },
+    {
+      "name": "R0-AUDIT",
+      "tier": "FAST",
+      "elapsed_ms": 49.669,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-KERNEL",
+      "tier": "SUITE",
+      "elapsed_ms": 3377.03,
+      "exit_code": 0
+    },
+    {
+      "name": "LEVELS",
+      "tier": "FAST",
+      "elapsed_ms": 6824.992,
+      "exit_code": 0
+    },
+    {
+      "name": "VEIL-TEMPLATES",
+      "tier": "FAST",
+      "elapsed_ms": 602.426,
+      "exit_code": 0
+    },
+    {
+      "name": "VEIL-CIRCUIT",
+      "tier": "FAST",
+      "elapsed_ms": 411.89,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX",
+      "tier": "FAST",
+      "elapsed_ms": 595.679,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES",
+      "tier": "FAST",
+      "elapsed_ms": 642.032,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 779.548,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-EXPORTS",
+      "tier": "FAST",
+      "elapsed_ms": 927.636,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-DEPENDENCY-EXPORTS",
+      "tier": "FAST",
+      "elapsed_ms": 722.494,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COMPOSITION",
+      "tier": "MED",
+      "elapsed_ms": 14553.431,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-REUSE",
+      "tier": "SLOW",
+      "elapsed_ms": 21677.158,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-SYMBOLIC-REUSE",
+      "tier": "SLOW",
+      "elapsed_ms": 29731.542,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-SURFACE",
+      "tier": "FAST",
+      "elapsed_ms": 410.081,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE",
+      "tier": "FAST",
+      "elapsed_ms": 881.215,
+      "exit_code": 0
+    },
+    {
+      "name": "EQUALITY",
+      "tier": "FAST",
+      "elapsed_ms": 362.049,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 450.229,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-POLY",
+      "tier": "FAST",
+      "elapsed_ms": 627.683,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-MEMBERS",
+      "tier": "FAST",
+      "elapsed_ms": 625.401,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-TRANSPORT",
+      "tier": "FAST",
+      "elapsed_ms": 1333.775,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-EQUALITY-OPS",
+      "tier": "FAST",
+      "elapsed_ms": 1566.349,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-DEPENDENT",
+      "tier": "FAST",
+      "elapsed_ms": 982.341,
+      "exit_code": 0
+    },
+    {
+      "name": "FAMILY-GROUPS",
+      "tier": "FAST",
+      "elapsed_ms": 538.873,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CONGRUENCE",
+      "tier": "FAST",
+      "elapsed_ms": 783.039,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COST",
+      "tier": "MED",
+      "elapsed_ms": 1158.8,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-CATEGORY",
+      "tier": "CATEGORY",
+      "elapsed_ms": 274760.789,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR",
+      "tier": "CATEGORY",
+      "elapsed_ms": 232652.918,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR",
+      "tier": "SLOW",
+      "elapsed_ms": 9294.45,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-NATTRANS",
+      "tier": "SLOW",
+      "elapsed_ms": 27542.562,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-WHISKERING",
+      "tier": "SLOW",
+      "elapsed_ms": 49478.543,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-SHARED-NATTRANS",
+      "tier": "SUITE",
+      "elapsed_ms": 69932.281,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS-LAWS",
+      "tier": "SUITE",
+      "elapsed_ms": 45365.996,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-WHISKERING-LAWS",
+      "tier": "SUITE",
+      "elapsed_ms": 191761.439,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HORIZONTAL-LAWS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 350123.336,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-ITERATED-WHISKERING",
+      "tier": "CATEGORY",
+      "elapsed_ms": 102974.178,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HORIZONTAL-ASSOCIATIVITY",
+      "tier": "CATEGORY",
+      "elapsed_ms": 280311.852,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS-UNITS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 179044.799,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-SHARED-LEFT-KAN",
+      "tier": "CATEGORY",
+      "elapsed_ms": 304035.234,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-LAWS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 900329.091,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-LEFT-KAN",
+      "tier": "SUITE",
+      "elapsed_ms": 300276.113,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-COMPOSABLE-FUNCTORS",
+      "tier": "SLOW",
+      "elapsed_ms": 120036.217,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-NATTRANS",
+      "tier": "SUITE",
+      "elapsed_ms": 300052.844,
+      "exit_code": 124
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN",
+      "tier": "SUITE",
+      "elapsed_ms": 300090.282,
+      "exit_code": 124
+    },
+    {
+      "name": "BEND2-EXTRAS",
+      "tier": "BEND_EXTRA",
+      "elapsed_ms": 1424548.602,
+      "exit_code": 0
+    },
+    {
+      "name": "VEIL-KERNEL",
+      "tier": "SLOW",
+      "elapsed_ms": 2339.827,
+      "exit_code": 0
+    },
+    {
+      "name": "SUITE-WASM",
+      "tier": "SUITE",
+      "elapsed_ms": 12392.029,
+      "exit_code": 0
+    },
+    {
+      "name": "IMPORT-GRAMMAR",
+      "tier": "MED",
+      "elapsed_ms": 30049.747,
+      "exit_code": 124
+    },
+    {
+      "name": "IMPORT-CLI",
+      "tier": "FAST",
+      "elapsed_ms": 778.195,
+      "exit_code": 0
+    },
+    {
+      "name": "CORPUS-UAT",
+      "tier": "MED",
+      "elapsed_ms": 2555.601,
+      "exit_code": 0
+    },
+    {
+      "name": "PARITY-COUNTS",
+      "tier": "MED",
+      "elapsed_ms": 8399.356,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-SHARED-NATTRANS-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 240233.037,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-NATTRANS-LAWS-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 75234.829,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-WHISKERING-LAWS-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 240303.839,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-HORIZONTAL-LAWS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 480273.977,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-ITERATED-WHISKERING-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 240298.55,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 364717.892,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-NATTRANS-UNITS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 218487.134,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-SHARED-LEFT-KAN-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 431758.718,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-LAWS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 480721.805,
+      "exit_code": 1
+    },
+    {
+      "name": "EQUALITY-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 2927.608,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1906.706,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-FAMILIES-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 1137.443,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-GROUPS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 868.046,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-EXPORTS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 784.271,
+      "exit_code": 0
+    },
+    {
+      "name": "PRENEX-DEPENDENCY-EXPORTS-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 2140.797,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-COMPOSITION-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 1018.945,
+      "exit_code": 0
+    },
+    {
+      "name": "TEMPLATE-REUSE-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 50121.046,
+      "exit_code": 2
+    },
+    {
+      "name": "TEMPLATE-SYMBOLIC-REUSE-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 50340.205,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-FUNCTOR-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 28535.782,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-NATTRANS-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 62386.058,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-WHISKERING-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 110316.789,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-HETEROGENEOUS-LEFT-KAN-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 110712.615,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-COMPOSABLE-FUNCTORS-RUNTIME",
+      "tier": "SLOW",
+      "elapsed_ms": 30225.522,
+      "exit_code": 1
+    },
+    {
+      "name": "PRELUDE-CATEGORY-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210311.94,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-CATEGORY-ACCESSORS",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210190.801,
+      "exit_code": 2
+    },
+    {
+      "name": "DEPENDENT-CLOSURE-RUNTIME",
+      "tier": "MED",
+      "elapsed_ms": 4865.896,
+      "exit_code": 0
+    },
+    {
+      "name": "PRELUDE-FUNCTOR-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210149.094,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-NATTRANS-RUNTIME",
+      "tier": "CATEGORY",
+      "elapsed_ms": 210185.118,
+      "exit_code": 2
+    },
+    {
+      "name": "PRELUDE-LEFT-KAN-RUNTIME",
+      "tier": "SUITE",
+      "elapsed_ms": 210230.072,
+      "exit_code": 2
+    },
+    {
+      "name": "AXIOMS",
+      "tier": "FAST",
+      "elapsed_ms": 1449.729,
+      "exit_code": 0
+    },
+    {
+      "name": "MAP-INVENTORY",
+      "tier": "MED",
+      "elapsed_ms": 16102.589,
+      "exit_code": 0
+    },
+    {
+      "name": "TRUSTED-LINES",
+      "tier": "FAST",
+      "elapsed_ms": 85.861,
+      "exit_code": 0
+    },
+    {
+      "name": "DENOMINATORS",
+      "tier": "MED",
+      "elapsed_ms": 123.56,
+      "exit_code": 0
+    }
+  ],
+  "zero_exit_legs": 67,
+  "nonzero_exit_legs": 20,
+  "evidence": [
+    {
+      "path": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/.gatework/gates/measure.txt",
+      "sha256": "95cb1a128bd630f1aac255b612a68c1f1c68afd879879e2d7abebb7cd99c774b"
+    },
+    {
+      "path": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/.kanon-exec/run-Kz6dmD/manifest.json",
+      "sha256": "ce255243e62c9cd415742499b2496d972b5400b8932cc46d084d6ef87c589733"
+    }
+  ],
+  "superseded_native_receipt": {
+    "path": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-native-tests.json",
+    "sha256": "bcb03d6de774b661451b0227e048098876ea32a2751b564cf76afd17860e3544",
+    "note": "Historical digest from the full run; native routing preparation later replaced this generated receipt."
+  },
+  "source_state": "Before native surface/import routing and setup deduplication"
+}

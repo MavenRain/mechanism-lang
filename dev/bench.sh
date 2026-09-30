@@ -3,7 +3,7 @@
 # Runs CMD once untimed as a warm-up, then RUNS timed runs (RUNS defaults to 5).
 # CMD is one string, run as zsh -c CMD, with stdout and stderr sent to /dev/null.
 # The timer is perf_counter_ns around subprocess.run, so interpreter start-up is
-# outside every measurement.
+# outside every measurement. Child shell and Bend/Node startup are included.
 # Success prints exactly one line:
 #   BENCH NAME median_ms=12.345 min_ms=11.000 max_ms=14.200 runs=5
 # A non-zero child exit prints BENCH-ERROR NAME exit=N and exits 1.
@@ -19,7 +19,7 @@ BENCH_NAME=$1
 BENCH_CMD=$2
 BENCH_RUNS=${RUNS:-5}
 
-exec /opt/homebrew/bin/python3 -P - "$BENCH_NAME" "$BENCH_CMD" "$BENCH_RUNS" <<'BENCH_TIMER_EOF'
+exec python3 -P - "$BENCH_NAME" "$BENCH_CMD" "$BENCH_RUNS" <<'BENCH_TIMER_EOF'
 import os
 import statistics
 import subprocess
@@ -28,7 +28,13 @@ import time
 
 name = sys.argv[1]
 cmd = sys.argv[2]
-runs = int(sys.argv[3])
+try:
+    runs = int(sys.argv[3])
+    if runs < 1:
+        raise ValueError("RUNS must be positive")
+except ValueError as error:
+    print(f"BENCH-ERROR {name} invalid-runs={sys.argv[3]}", file=sys.stderr)
+    sys.exit(2)
 
 
 def timed(devnull):

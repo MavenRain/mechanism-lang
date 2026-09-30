@@ -76,7 +76,7 @@ def main():
         fixture = work / "source.mech"
         fixture.write_text(source)
         expected = "".join(f"{actual}\t{value}\n" for _, actual, value in cases)
-        emitted = run([ROOT / "_build/default/test/prelude_runtime.exe", fixture,
+        emitted = run([ROOT / "_bend2/test/prelude_runtime.exe", fixture,
                        work, *(actual for _, actual, _ in cases)], EMIT_BUDGET)
         if emitted.returncode or emitted.stderr or emitted.stdout != expected:
             print(f"{GATE} FAIL kernel-emit exit={emitted.returncode} "

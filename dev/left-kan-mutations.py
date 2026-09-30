@@ -1,6 +1,7 @@
 """Replay left Kan extension controls against the built checker."""
 import hashlib
 import json
+import runpy
 import os
 from pathlib import Path
 import re
@@ -10,6 +11,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 REPLAY = 600
 
 
@@ -19,7 +21,8 @@ def main():
     work = Path(sys.argv[1]).resolve()
     if work.exists() or work == ROOT or ROOT in work.parents:
         raise SystemExit("the output directory must be new and outside the repository")
-    executable = ROOT / "_build/default/test/prelude_left_kan.exe"
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'left-kan')
+    executable = ROOT / "_bend2/test/prelude_left_kan.exe"
     if not executable.is_file():
         raise SystemExit("build the left Kan extension checker before replay")
     copy = work / "source"
@@ -41,7 +44,7 @@ def main():
     def suite(label):
         print(f"LEFT-KAN-MUTATIONS running {label}", flush=True)
         started = time.monotonic()
-        result = subprocess.run([str(executable), str(copy)], cwd=ROOT, env=env,
+        result = bounded_run([str(executable), str(copy)], cwd=ROOT, env=env,
                                 capture_output=True, timeout=REPLAY)
         (work / f"{label}.stdout").write_bytes(result.stdout)
         (work / f"{label}.stderr").write_bytes(result.stderr)
@@ -115,7 +118,7 @@ def main():
         captures[label] = {
             stream: hashlib.sha256((work / f"{label}.{stream}").read_bytes()).hexdigest()
             for stream in ["stdout", "stderr"]}
-    report = {"passed": success, "baseline": True, "restored": restored,
+    report = {"bend_build": build_evidence, "passed": success, "baseline": True, "restored": restored,
               "sources": sources, "capture_sha256": captures,
               "checker_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
               "controls": reports}

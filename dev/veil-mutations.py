@@ -2,21 +2,21 @@
 
 Usage: python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY
 
-Each control edits one line of lib/rules.ml in a copy outside this
-repository, builds that copy, and runs the suite of the leg that must
-kill the mutant: VEIL-TEMPLATES (test/veil_templates.exe) or
-VEIL-CIRCUIT (test/circuit_bounds.exe). A control is killed when its
-suite exits non-zero. The primary source is never mutated.
+Each control edits the native Bend shape traversal in an isolated copy.
+The complete hidden-shape metadata suite tests scope and specialization
+for zk, fhc, mpc parties and access. Build failures never count as kills.
 """
 
 import json
 import os
 from pathlib import Path
+import runpy
 import shutil
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 if len(sys.argv) != 2:
     raise SystemExit("usage: python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY")
 WORK = Path(sys.argv[1]).resolve()
@@ -25,32 +25,42 @@ if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
 WORK.mkdir(parents=True)
 COPY = WORK / "copy"
 shutil.copytree(ROOT, COPY, ignore=shutil.ignore_patterns(
-    ".git", "_build", ".gatework", ".kanon-exec", ".kanon-wait", "__pycache__"))
+    ".git", "_build", "_bend2", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
 ENV = dict(os.environ)
-ENV.pop("OPAM_SWITCH_PREFIX", None)
-ENV.pop("CAML_LD_LIBRARY_PATH", None)
+BACKEND = ENV.get("BEND_MUTATION_BACKEND", ENV.get("BEND_TEST_BACKEND", "javascript"))
 
+SOURCE = "bend2/surface/poly.bend"
 CONTROLS = [
-    ("C-VEIL-M1", "lib/rules.ml",
-     "      let* p' = f p in\n      let* a' = f a in\n      Ok (Shape.SMpc (p', a'))",
-     "      let* p' = f p in\n      Ok (Shape.SMpc (p', a))",
-     "veil_templates.exe",
+    ("C-VEIL-M1", SOURCE,
+     "        access : Term.T <- map_term(action, access)\n",
+     "",
      "drop the traversal of the second SMpc argument"),
-    ("C-VEIL-M2", "lib/rules.ml",
-     "  | Shape.SZk (q, w, ty) -> Result.map (fun v -> Shape.SZk (q, w, v)) (f ty)",
-     "  | Shape.SZk (q, w, ty) -> Result.map (fun _ -> Shape.SZk (q, w, ty)) (f ty)",
-     "veil_templates.exe",
+    ("C-VEIL-M2", SOURCE,
+     """    case Shape.SZk{q, name, domain}:
+      do Budget.Comp<Shape.T<Term.T>>:
+        domain : Term.T <- map_term(action, domain)
+        return Shape.SZk{q, name, domain}""",
+     """    case Shape.SZk{q, name, +domain}:
+      do Budget.Comp<Shape.T<Term.T>>:
+        mapped_domain : Term.T <- map_term(action, domain)
+        return Shape.SZk{q, name, domain}""",
      "keep the old SZk payload, so the level substitution is lost"),
-    ("C-VEIL-M3", "lib/rules.ml",
-     "  | Shape.SFhc l -> Result.map (fun v -> Shape.SFhc v) (f l)",
-     "  | Shape.SFhc l -> Result.map (fun _ -> Shape.SFhc l) (f l)",
-     "circuit_bounds.exe",
+    ("C-VEIL-M3", SOURCE,
+     """    case Shape.SFhc{level}:
+      do Budget.Comp<Shape.T<Term.T>>:
+        level : Term.T <- map_term(action, level)
+        return Shape.SFhc{level}""",
+     """    case Shape.SFhc{+level}:
+      do Budget.Comp<Shape.T<Term.T>>:
+        mapped_level : Term.T <- map_term(action, level)
+        return Shape.SFhc{level}""",
      "keep the old SFhc payload, so a free universe stays inside the shape"),
 ]
 
 
+
 def capture(name, command):
-    result = subprocess.run(command, cwd=COPY, env=ENV, capture_output=True,
+    result = bounded_run(command, cwd=COPY, env=ENV, capture_output=True,
                             timeout=900, check=False)
     (WORK / f"{name}.stdout").write_bytes(result.stdout)
     (WORK / f"{name}.stderr").write_bytes(result.stderr)
@@ -58,8 +68,8 @@ def capture(name, command):
 
 
 def build(name):
-    result = capture(f"{name}-build", ["zsh", str(COPY / "dev/dunecho.sh"), "build"])
-    if result.returncode != 0 or b"0 errors, 0 warnings" not in result.stdout:
+    result = capture(f"{name}-build", [sys.executable, "-P", "dev/bend2-mutation-build.py", "shape"])
+    if result.returncode != 0 or b"BEND2 MUTATION BUILD PASS shape" not in result.stdout:
         raise SystemExit(f"{name}: build failed; this is not a killed mutation")
 
 
@@ -71,33 +81,50 @@ def edit(path, old, new):
     target.write_text(text.replace(old, new))
 
 
-def control(name, path, old, new, suite, note):
+def suite(name):
+    if BACKEND == "native":
+        return capture(name, [str(COPY / "_bend2/mutation/shape-native"), "--"])
+    return capture(name, [os.environ.get("NODE", "node"), "--stack-size=16384",
+                         str(COPY / "_bend2/mutation/shape.js"), "--"])
+
+
+def control(name, path, old, new, note):
+    original = (COPY / path).read_text()
     edit(path, old, new)
-    build(name)
-    result = capture(name, [str(COPY / "_build/default/test" / suite)])
-    edit(path, new, old)
-    return {"control": name, "file": path, "suite": suite, "change": note,
-            "exit_code": result.returncode,
-            "stdout": result.stdout.decode(errors="replace").strip(),
-            "killed": result.returncode != 0}
+    try:
+        build(name)
+        result = suite(name)
+        return {"control": name, "file": path, "suite": "surface_shape_metadata",
+                "change": note, "exit_code": result.returncode,
+                "stdout": result.stdout.decode(errors="replace").strip(),
+                "killed": result.returncode == 1 and any(message in result.stderr for message in (
+                    b"crypto shape payload",
+                    b"universe: universe level is outside the global parameter scope"))}
+    finally:
+        (COPY / path).write_text(original)
 
 
 def main():
-    build("C-VEIL-BASE")
-    rows = [control(*row) for row in CONTROLS]
-    build("C-VEIL-RESTORED")
-    restored = [capture("restored-templates",
-                        [str(COPY / "_build/default/test/veil_templates.exe")]),
-                capture("restored-circuit",
-                        [str(COPY / "_build/default/test/circuit_bounds.exe")])]
-    report = {"passed": all(row["killed"] for row in rows),
-              "killed": sum(1 for row in rows if row["killed"]),
-              "controls": len(rows), "rows": rows,
-              "restored": [item.stdout.decode(errors="replace").strip().splitlines()[-1]
-                           for item in restored if item.stdout]}
-    (WORK / "report.json").write_text(json.dumps(report, indent=2))
-    print(json.dumps({key: report[key] for key in ("passed", "killed", "controls")}))
-    return 0 if report["passed"] else 1
+    report = {"passed": False, "rows": [],
+              "backend": BACKEND}
+    try:
+        build("C-VEIL-BASE")
+        baseline = suite("baseline")
+        if baseline.returncode != 0:
+            return 1
+        for row in CONTROLS:
+            report["rows"].append(control(*row))
+        build("C-VEIL-RESTORED")
+        restored = suite("restored")
+        report.update({"killed": sum(row["killed"] for row in report["rows"]),
+                       "controls": len(report["rows"]),
+                       "restored": restored.returncode == 0,
+                       "passed": restored.returncode == 0 and
+                       all(row["killed"] for row in report["rows"])})
+        print(json.dumps({key: report[key] for key in ("passed", "killed", "controls")}))
+        return 0 if report["passed"] else 1
+    finally:
+        (WORK / "report.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
 sys.exit(main())

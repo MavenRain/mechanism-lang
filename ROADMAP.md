@@ -26,15 +26,22 @@ of names that mechanism-lang refuses to map (R-V5).
   fail the gate.  D3 prenex levels land here.
 - M1 PARITY-UAT-90 with R3 gate (a).  The translator re-checks at
   least 90 percent of the 3,202 declarations of the UAT closure, by
-  kind.  The warm check time per kloc is at most 1.000 of the ocamlopt
-  denominator re-measured on a quiet window.
+  kind. The warm compilation time per kloc is at most 1.000 of the matched
+  Bend 2 denominator, measured on a quiet window. The ratio is UNMEASURED.
 - M2 PARITY-UAT-100 with PORT-DAO.  The translator re-checks 3,202
   minus the ratified NEVER declarations and prints the residue by
   kind.  The DAO verdict runs on the Z2 witness on both hosts.
 - M3 PORT-AUCTION with R3 gate (b).  FIXTURES-OK 5 of 5 against the
   frozen `ports/auction-cat/fixtures.json`, with no wasm_decide on the
-  oracle path.  The ported corpus checks in at most 1,641.6 ms per its
-  own kloc on a quiet window.
+  oracle path. The complete corpus compilation time is at most 1.000 of
+  matched Bend 2 compilation, using equivalent workloads and cache conditions
+  on a quiet window. The ratio is UNMEASURED.
+
+The user ruling of 2026-09-21 replaces both OCaml compilation targets with
+Bend 2. Compilation includes parsing, elaboration, kernel checking, erasure,
+Wasm emission and validation. The design and preparation log are recorded in
+`dev/BEND2-GATES.md`. Historical OCaml denominators remain frozen in
+`dev/denominators.json`; they do not establish either current R3 gate.
 
 Out of M0, each with its milestone: Auto and instance resolution,
 decide, omega, rewrite, wasm_decide with trustedWasm, Rat, Fin and
@@ -99,9 +106,9 @@ gate compares twelve exports on three hosts at two payloads.
 PRELUDE-HORIZONTAL-LAWS checks horizontal identity, congruence,
 naturality exchange and vertical interchange with seven refusals. Its
 runtime gate compares fourteen exports on three hosts at two payloads.
-After the Veil kernel migration, TRUSTED-LINES stays red at
-kernel=5475/3000 and encoder=246/900 until
-the user rules D-A-1.
+After the Veil kernel migration, TRUSTED-LINES recorded
+kernel=5475/3000 and encoder=246/900. On 2026-09-26 the user
+approved a 9000-line Bend kernel limit; the encoder limit remains 900.
 
 ## Port tracks
 

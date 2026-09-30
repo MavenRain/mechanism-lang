@@ -1,16 +1,21 @@
 # PIN delta
 
-Every mechanism-lang OCaml implementation or interface file of lib/,
-wasm/, surface/ and bin/ that overlays a file of the vendored Veil
-tree at PIN has one row here.  Those are the files dev/pin-delta.sh
-reads (dev/pin-delta.sh:50-53).  The build files bin/dune, lib/dune,
-surface/dune and wasm/dune also replace their counterparts at the pin,
-each one wholesale, so none of them carries a delta row.
-dev/pin-delta.sh diffs each file
-against `git -C vendor/veil show a7534cedeac82d396de8e23058ee6bc990560f65:PATH`
-and compares the changed line count with the expected column.  The count
-is the line count of the `diff` output.  The overlay scope is lib/,
-wasm/, surface/ and bin/ (S0-D6).
+The PIN-DELTA leg of dev/gates.sh runs dev/pin-delta.sh.  The script
+reads dev/BEND2-BASELINE.json.  It compares origin_pin with the
+contents of PIN.  It finds each production source under bend2/ with
+the suffix .bend, .c or .js, outside a tests directory.  For each
+source, it compares the sha256 and the physical line count with the
+values that the baseline records.  A missing, unrecorded or changed
+source makes the leg fail.  The leg also fails when review_status is
+not "reviewed", or when the baseline or PIN cannot be read.  The
+script does not read this file.
+
+## Retired OCaml overlay record
+
+The OCaml sources and the vendor/veil submodule were removed in the
+Bend 2 cutover, and the table below records the overlay deltas that the
+OCaml dev/pin-delta.sh checked against vendor/veil at
+a7534cedeac82d396de8e23058ee6bc990560f65.
 
 Stage A overlays the level representation and interface, the universe
 rule, the checker's prenex scope boundary, budgeted conversion, and

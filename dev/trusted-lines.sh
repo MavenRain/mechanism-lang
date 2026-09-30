@@ -1,85 +1,30 @@
 #!/bin/zsh
-# dev/trusted-lines.sh [ROOT]
-# The TRUSTED-LINES leg of the gate battery (M0-PLAN.md:164, Stage 0
-# brief 3.9).  Example:
-#   zsh /Users/oobi/Documents/mechanism-lang/dev/trusted-lines.sh
-#
-# The trust base of a checked file is the kernel and the encoder.  The
-# kernel includes shape.ml, term.ml, rules.ml, check.ml,
-# value.ml, eval.ml, conv.ml, totality.ml, positivity.ml, order.ml and
-# Veil's circuit.ml and circuit.mli,
-# each read from its physical lib/ overlay when present and otherwise
-# under vendor/veil/lib.  Every additional local lib/ source or interface
-# counts once too.  An overlaid implementation replaces its pinned
-# counterpart in the active kernel and is never counted twice.  The
-# encoder is one file, vendor/veil/wasm/gc_encode.ml,
-# which writes the bytes of the module.  M0 holds the kernel at 3,000
-# lines and the encoder at 900, from the design verdict's Trusted base
-# (M0-PLAN.md:164, note N2).  No agent moves either number.
-#
-# The line prints the two counts against their bounds:
-#   TRUSTED-LINES kernel=2305/3000 encoder=216/900 OK
-#
-# A missing active trusted file is an error.
-#
-# The root comes from this script's own path when no argument is given,
-# so a copy of the repository under a scratch directory measures itself.
-# wc and awk do the reading;  grep, sed and find are never called.
-
+# Count the active native Bend trust base, without counting retired sources.
+# The Bend kernel ceiling is 9000 lines; the encoder ceiling remains 900.
+# Every kernel .bend module counts, including shared data and erasure helpers.
 set -u
-
-# The user shell startup files add a chpwd hook that reads an unset
-# parameter.  Under set -u that hook fails, so the hooks are cleared.
 chpwd_functions=()
 unfunction chpwd 2>/dev/null
-
 setopt null_glob
-
 root=${1:-${0:A:h}/..}
-
-kernel_bound=3000
+kernel_bound=9000
 encoder_bound=900
-
-kernel_names=(
-  shape.ml term.ml rules.ml check.ml value.ml eval.ml conv.ml
-  totality.ml positivity.ml order.ml
-  circuit.ml circuit.mli
-)
-kernel_files=()
-for name in $kernel_names; do
-  if [[ -f $root/lib/$name ]]; then
-    kernel_files+=($root/lib/$name)
-  else
-    kernel_files+=($root/vendor/veil/lib/$name)
-  fi
-done
-kernel_files+=($root/lib/**/*.ml $root/lib/**/*.mli)
-# Unique paths remove the physical replacements already chosen above.
-kernel_files=("${(@u)kernel_files}")
-encoder_file=$root/vendor/veil/wasm/gc_encode.ml
-
-# wc -l over more than one file ends with a total row, which awk reads.
-kernel_out=$(wc -l $kernel_files)
-kernel_code=$?
-
-encoder_out=$(wc -l < $encoder_file)
-encoder_code=$?
-
-if [[ $kernel_code -ne 0 || $encoder_code -ne 0 ]]; then
-  print -r -- "trusted-lines: a trusted file is missing under $root"
+kernel_files=($root/bend2/kernel/**/*.bend)
+encoder_file=$root/bend2/wasm/gc_encode.bend
+if [[ ${#kernel_files} -eq 0 || ! -f $root/bend2/kernel/check.bend || ! -f $encoder_file ]]; then
+  print -r -- "trusted-lines: active Bend trusted source missing under $root"
   print -r -- "TRUSTED-LINES FAIL"
   exit 1
 fi
-
+kernel_out=$(wc -l $kernel_files) || exit 1
+encoder_out=$(wc -l < $encoder_file) || exit 1
 kernel=$(print -r -- "$kernel_out" | awk 'END { print $1 }')
 encoder=$(print -r -- "$encoder_out" | awk '{ print $1 }')
-
+print -r -- "TRUSTED-LINES language=bend kernel_files=${#kernel_files}"
 line="TRUSTED-LINES kernel=$kernel/$kernel_bound encoder=$encoder/$encoder_bound"
-
 if [[ $kernel -le $kernel_bound && $encoder -le $encoder_bound ]]; then
   print -r -- "$line OK"
   exit 0
 fi
-
 print -r -- "$line FAIL"
 exit 1

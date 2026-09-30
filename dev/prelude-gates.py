@@ -8,8 +8,8 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
-MECH = ROOT / "_build/default/bin/mech.exe"
-AUDIT = ROOT / "_build/default/test/prelude.exe"
+MECH = ROOT / "_bend2/bin/mech.exe"
+AUDIT = ROOT / "_bend2/test/prelude.exe"
 CORPUS = Path(os.environ.get("MECHANISM_UAT_CORPUS", "/Users/oobi/Documents/kanon-m2-corpus"))
 EXPORT = CORPUS / "corpus/lean-parity/uat/uat.export"
 
@@ -59,7 +59,7 @@ def axioms():
 
 
 def mapping():
-    result = run(ROOT / "_build/default/test/mapping.exe")
+    result = run(ROOT / "_bend2/test/mapping.exe")
     require(result.returncode == 0 and "MAPPING-OK\n" in result.stdout,
             f"mapping tests: {result.stdout}{result.stderr}")
     for name, flags in [("prelude.map.tsv", []), ("NEVER.tsv", ["--never"])]:

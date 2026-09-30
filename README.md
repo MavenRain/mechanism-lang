@@ -1,13 +1,11 @@
 # mechanism-lang
 
-mechanism-lang is a dependently typed language for mechanism design.  It
-is a sibling of kanon, with Veil as its kernel dependency.
-vendor/veil is a git submodule pinned at
-a7534cedeac82d396de8e23058ee6bc990560f65, the sha in the PIN file.  The
-submodule is never forked and never rebased.  mechanism-lang adds a
-level overlay in lib/, an importer for the lean4export format in
-import/, and a prelude in prelude/ that states its mapping targets in
-map/prelude.map.tsv.
+mechanism-lang is a dependently typed language for mechanism design, and a
+sibling of kanon. Its Bend 2 kernel derives from Veil at
+`a7534cedeac82d396de8e23058ee6bc990560f65`, the source revision in `PIN`.
+The compiler lives in `bend2/`; `test/veil/` preserves the pinned fixtures and
+their active overlays. The importer reads lean4export, and the prelude states
+its mapping targets in `map/prelude.map.tsv`.
 
 The driver is `mech` and the source extension is `.mech`.
 
@@ -25,9 +23,9 @@ OCaml timings in `dev/denominators.json` are historical evidence and do not
 establish this target. The M1 warm per-kloc and M3 full-corpus gates retain
 their milestones, with Bend 2 as the comparator.
 
-ROADMAP.md rows 27 to 37 and the binding row of `dev/denominators.json` still
-name the ocamlopt denominator; the Bend 2 comparator enters ROADMAP.md under
-its change control when the user commits that change.
+`ROADMAP.md` records the Bend 2 comparator at both milestones. The migration
+design and preparation log are in `dev/BEND2-GATES.md`; the historical
+denominator file remains unchanged.
 
 The [combinatorial GPU auction](GPU-AUCTION.md) is a complete reservation-auction
 CLI with tenant-defined XOR bundles, exact VCG payments, cuOpt LP export,
@@ -62,8 +60,8 @@ The prelude mapping gate remains due in a later M0 stage.
 Heterogeneous left Kan extensions add kernel and runtime gates
 with nine mutation controls. Their validation record lists the
 results and every failed gate from the full battery.
-The active kernel still exceeds the unchanged 3,000-line bound, so
-TRUSTED-LINES also awaits the existing kernel-limit ruling.
+The user approved a 9,000-line Bend kernel limit on 2026-09-26.
+The encoder limit remains 900; every active kernel module is counted.
 See `dev/M0-BUILD-LOG.md` for the validation record.
 Horizontal composition now has a checked associativity law over four shared
 categories with eight independent universe levels. It compares components
@@ -110,7 +108,7 @@ Veil supplies the SZk, SFhc and SMpc shapes, circuit checking and their
 surface syntax and Wasm erasure. See `dev/VEIL-KERNEL.md` for migration
 scope and validation.
 Prenex definitions and individual recursive families use textual binders
-or the OCaml Poly and Family_poly APIs.  Ordered family groups and their
+or the Bend Poly and FamilyPoly APIs.  Ordered family groups and their
 members also have source syntax.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
@@ -126,8 +124,8 @@ forms.  See `dev/M0-STAGE-C-DEPENDENT.md` for signatures and validation.
 Build the driver, then run:
 
 ```sh
-_build/default/bin/mech.exe import path/to/uat.export --out imported-types
-_build/default/bin/mech.exe diff-parity --export path/to/uat.export
+_bend2/bin/mech.exe import path/to/uat.export --out imported-types
+_bend2/bin/mech.exe diff-parity --export path/to/uat.export
 ```
 
 The reader accepts lean4export format 3.1.0 and checks every record and
@@ -158,8 +156,8 @@ constructors use their expected family type to determine parameters.
 The external-name inventory is reproducible:
 
 ```sh
-_build/default/bin/mech.exe map-inventory --export path/to/uat.export
-_build/default/bin/mech.exe map-inventory --export path/to/uat.export --never
+_bend2/bin/mech.exe map-inventory --export path/to/uat.export
+_bend2/bin/mech.exe map-inventory --export path/to/uat.export --never
 ```
 
 These commands print `map/prelude.map.tsv` and `map/NEVER.tsv` respectively
@@ -173,13 +171,13 @@ The checker permits erased data indices in Prop families while preserving
 its constructor-field and large-elimination restrictions.  The runtime
 gate compares transport on the kernel, Node and Wasmtime hosts.
 
-The programmatic prelude catalog in `prelude/families.ml` supplies
+The programmatic prelude catalog in `bend2/prelude/families.bend` supplies
 universe-polymorphic Eq and Sum families.  Each template checks universally,
 and each closed instance checks again before source clients can use it.
 PRELUDE-POLY checks casts and sums at multiple universes without postulates.
 See `dev/M0-STAGE-C-FAMILIES.md` for the API and validation scope.
 
-The catalog in `prelude/equality.ml` adds universally checked transport
+The catalog in `bend2/prelude/equality.bend` adds universally checked transport
 and type cast.  Family templates can carry ordered definitions, which
 specialize to fresh names and check again before entering ordinary globals.
 FAMILY-MEMBERS and PRELUDE-TRANSPORT test this path, including independent
@@ -347,10 +345,34 @@ The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
 
-`zsh dev/dunecho.sh build` is the only way a dune verb runs in this
-repository. The runner uses dunecho when available and dune otherwise. It
-honors `MECH_OPAM_SWITCH`, an active opam environment, or the existing local
-zxcaml-p1 switch, and takes the root from its own path.
+The replacement compiler uses [Bend 2.0.27](https://github.com/bendlang/bend/releases/tag/v2.0.27)
+and Python 3.11 or newer. CI pins Node 23.10.0, Binaryen 130 and Wasmtime
+48.0.1 for JavaScript execution and Wasm validation. Set `BEND` if the compiler
+is outside `PATH`. For a local Make configuration, add `export BEND ?= /path/to/bend`
+to the ignored `.bend2-local.mk` file.
+
+```sh
+make build
+make test
+make test-import
+```
+
+The default build uses JavaScript test shards and a native production CLI,
+compiled with `CC` (Clang by default) at `-O1`. The test runner uses this mixed
+build by default. Its explicit `--backend javascript` and `--backend native`
+options select uniform builds; `make build-native` also builds everything
+natively. The build records source, toolchain and artifact fingerprints and
+caches separate test executables. For a native production-only build, use
+`python3 dev/bend2-build.py --target production --backend native`.
+
+`make acceptance-build` prepares the ordinary tools and 21 native protocol
+drivers used by `dev/gates.sh`. It also prepares the guarded native mutation
+artifacts before timed checks. `make test-native` runs the test suite with these
+drivers; `make native-tests` refreshes just this native test setup. These targets
+require Clang, honor `CC`, and retain the original gate time limits.
+
+The migration is still in progress. [MIGRATION-BEND2.md](MIGRATION-BEND2.md)
+records completed checks and remaining runtime, mutation and integration work.
 
 ## Roadmap
 

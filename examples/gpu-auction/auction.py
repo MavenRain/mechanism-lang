@@ -93,8 +93,8 @@ def check_values(values: dict[str, int]) -> CheckedAuction:
 
 
 def checked_source(source: Path, wasm_directory: Path, hosts: bool = False) -> CheckedAuction:
-    helper = ROOT / "_build/default/test/prelude_runtime.exe"
-    require(helper.is_file(), "build first: zsh dev/dunecho.sh build")
+    helper = ROOT / "_bend2/test/prelude_runtime.exe"
+    require(helper.is_file(), "build first: make build")
     wasm_directory.mkdir(parents=True, exist_ok=True)
     # This existing helper checks once, rejects source axioms, then evaluates
     # and emits every named export. The native Nat boundary is inherited.
@@ -154,7 +154,7 @@ def export(program: Path, directory: Path, hosts: bool = False) -> CheckedAuctio
             "objective_coefficients": model.coefficients,
             "source_sha256": digest(path.read_bytes()),
             "lp_sha256": digest(lp.encode()),
-            "compiler_sha256": digest((ROOT / "_build/default/test/prelude_runtime.exe").read_bytes()),
+            "compiler_sha256": digest((ROOT / "_bend2/test/prelude_runtime.exe").read_bytes()),
             "source_parts": {str(part.relative_to(ROOT)) if part.is_relative_to(ROOT) else str(part):
                              digest(part.read_bytes()) for part in source_parts(program)},
             "node_checked": hosts,

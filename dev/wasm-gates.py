@@ -28,16 +28,16 @@ def main():
         golden = test / "golden"
         golden.mkdir(parents=True)
         (repo / "dev").symlink_to(ROOT / "dev", target_is_directory=True)
-        (test / "fixtures").symlink_to(ROOT / "vendor/veil/test/fixtures",
+        (test / "fixtures").symlink_to(ROOT / "test/veil/pinned/test/fixtures",
                                        target_is_directory=True)
-        pinned = ROOT / "vendor/veil/test/golden"
+        pinned = ROOT / "test/veil/pinned/test/golden"
         if not OVERLAYS <= {path.name for path in pinned.iterdir()}:
             print("SUITE-WASM FAIL golden overlay has no pinned original")
             return 1
         for path in pinned.iterdir():
             source = overlay / path.name if path.name in OVERLAYS else path
             (golden / path.name).symlink_to(source)
-        result = subprocess.run([ROOT / "_build/default/test/wasm.exe", test,
+        result = subprocess.run([ROOT / "_bend2/test/wasm.exe", test,
                                  work / "wasm-suite"], cwd=ROOT,
                                 capture_output=True, text=True)
         print(result.stdout, end="")

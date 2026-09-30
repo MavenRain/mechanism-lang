@@ -1,0 +1,105 @@
+{
+  "version": 2,
+  "scope": "Original mutation build and execution limits, with observed native and JavaScript process calls",
+  "passed": true,
+  "helper_sha256": "4cc25d4d3e248bc3b85cd84e013910bd899c8d56dfa1a2f1126adf3fd6273320",
+  "runtime_controls_sha256": "6aa646ee16d58660743d86fdcf0aad4c207ab15062c95a980a41313f9c840423",
+  "rows": [
+    {
+      "path": "dev/equality-ops-mutations.py",
+      "original_seconds": 300,
+      "candidate_seconds": 300,
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "e0d8431ee670bdc404a13e301c3bb88617e8d55dd79683f0ff66ea6b151361d0",
+      "candidate_sha256": "2540cb6822cfa4f81cf6854938d69063291f1d980903de25cfb10a609e22370a",
+      "passed": true
+    },
+    {
+      "path": "dev/reuse-mutations.py",
+      "original_seconds": 900,
+      "candidate_seconds": 900,
+      "original_build_seconds": 1800,
+      "candidate_build_seconds": 1800,
+      "original_sha256": "bddd1bc525ea1832800ae00ccf8d47b3661bd8a719260a033208cce4bde1a3ed",
+      "candidate_sha256": "b3ed55c1c758e91fb69edecfae26bb64d4c64db777eb11e297d0b42daf136787",
+      "passed": true
+    },
+    {
+      "path": "dev/prenex-mutations.py",
+      "original_seconds": 300,
+      "candidate_seconds": 300,
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "d84503897ff0dbb29e29aab3ef8a0aa9b10163e501627cae8d3ff89fafd5a3fe",
+      "candidate_sha256": "804603ccd5926c48972436fe26c90a83da11d45c0fe78770db3b3603979ba445",
+      "passed": true
+    },
+    {
+      "path": "dev/dependent-mutations.py",
+      "original_seconds": 300,
+      "candidate_seconds": 300,
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "a2a85ead4eeb7689b6c4a98ed4e4989ed742bbbcc70d578b86e655e4457911f1",
+      "candidate_sha256": "0a468d889d885f4e3c34b59fb1df9bbe4c91927d798daa56aaa39382a625f36d",
+      "passed": true
+    },
+    {
+      "path": "dev/transport-mutations.py",
+      "original_seconds": 300,
+      "candidate_seconds": 300,
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "6c59d860ee7d1b039614ba67857895878c75b8daa794e0d889c1fde08947ad21",
+      "candidate_sha256": "ba43d7a9e2ef6822cb094212dc03d79f0cae57d0fc6706845a4c8ac803779f6a",
+      "passed": true
+    },
+    {
+      "path": "dev/composition-mutations.py",
+      "original_seconds": 180,
+      "candidate_seconds": 180,
+      "original_build_seconds": 180,
+      "candidate_build_seconds": 180,
+      "original_sha256": "c53e04a34ed6c88867efe1c7621af17f45e91977c66a5962fb9b54e99f1a9eaf",
+      "candidate_sha256": "ee9ff4da9a6401fb098c6e49020a426b0d969c8a5e9281d5576b8b86d0d9fc87",
+      "passed": true
+    },
+    {
+      "path": "dev/congruence-mutations.py",
+      "original_seconds": 300,
+      "candidate_seconds": 300,
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "80b7f026ab82f2f317d84e5d82ff8d1d700cf9b9418804230f667b1af52ed714",
+      "candidate_sha256": "1c0ad159725d9328d53aa6beb7fc785ff46639fc6694de10bee7fbf38f3f848b",
+      "passed": true
+    },
+    {
+      "path": "dev/validation/prenex-dependency-exports/mutations.py",
+      "original_seconds": 120,
+      "candidate_seconds": 120,
+      "original_build_seconds": 120,
+      "candidate_build_seconds": 120,
+      "original_sha256": "c07073ad5f250569c01b5c1ca4dee33a55e3b83a12f596109835dc46e98ea469",
+      "candidate_sha256": "5e2fec46d7a139cafcb80b0096836d377dbbb543b068a7221321e40dd117a015",
+      "passed": true
+    },
+    {
+      "path": "dev/closure-mutations.py",
+      "original_build_seconds": 300,
+      "candidate_build_seconds": 300,
+      "original_sha256": "ea5d91e25ce0e62056076ca532c3a6e1a9138f992205fb0c7263d52e899bc791",
+      "candidate_sha256": "e652bf839fb3927af177da330f81bd9252c4e2095214f2f2f7ec504bd6b0bc66",
+      "passed": true
+    },
+    {
+      "path": "dev/veil-mutations.py",
+      "original_build_seconds": 900,
+      "candidate_build_seconds": 900,
+      "original_sha256": "398b0637fd706e5729c4a7ca2d7c0416acd6c73ba33c1690c6e7cf2ae12bb953",
+      "candidate_sha256": "7f09e923eeef30b9fab49a33bbf18feb181ddaeb6cb2adc1d930de245b31dc86",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "checks": [
+    {
+      "name": "combinatorial",
+      "exit_code": 0,
+      "seconds": 1.695
+    },
+    {
+      "name": "kernel-certificates",
+      "exit_code": 0,
+      "seconds": 24.76
+    },
+    {
+      "name": "second-price",
+      "exit_code": 0,
+      "seconds": 177.765
+    },
+    {
+      "name": "schemas",
+      "exit_code": 0,
+      "seconds": 0.683
+    }
+  ],
+  "live_gpu_requested": false,
+  "passed": true
+}

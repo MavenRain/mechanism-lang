@@ -83,8 +83,9 @@ therefore exercise the overlay, not a separately compiled vendor kernel.
 TRUSTED-LINES counts each of the ten trusted logical implementations once:
 the active overlay replaces the corresponding pinned implementation.
 Additional local kernel implementations and interfaces count once each.
-This corrects Stage 0's double-counting of replaced files.  The complete
-overlay sources and their differences remain visible in PIN-DELTA.md.
+This corrects Stage 0's double-counting of replaced files.
+dev/PIN-DELTA.md keeps the retired OCaml overlay record, and
+dev/BEND2-BASELINE.json records the current Bend sources.
 The template catalog is outside the kernel: every specialization is
 rechecked, just as inherited surface elaboration is rechecked.
 

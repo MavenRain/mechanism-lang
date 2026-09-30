@@ -51,7 +51,7 @@ def main():
             print(f"{GATE} FAIL kernel-emit out of time")
             return 1
         emitted = subprocess.run(
-            [str(ROOT / "_build/default/test/prelude_runtime.exe"), str(fixture),
+            [str(ROOT / "_bend2/test/prelude_runtime.exe"), str(fixture),
              str(work), *(name for name, _ in cases)], cwd=ROOT,
             capture_output=True, text=True, timeout=budget(BATCH))
         if emitted.returncode or emitted.stderr or emitted.stdout != expected:

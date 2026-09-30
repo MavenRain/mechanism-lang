@@ -1,0 +1,962 @@
+[
+  {
+    "name": "template-arity-boundary",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "dev/bend2-template-arity-check.py"
+    ],
+    "stdout": "build/bend2-tests/template-arity-boundary.stdout",
+    "stderr": "build/bend2-tests/template-arity-boundary.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.992
+  },
+  {
+    "name": "relational-process",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "bend2/tests/relational_process.py"
+    ],
+    "stdout": "build/bend2-tests/relational-process.stdout",
+    "stderr": "build/bend2-tests/relational-process.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 2.811
+  },
+  {
+    "name": "relational-process-nested",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "bend2/tests/relational_process_nested.py"
+    ],
+    "stdout": "build/bend2-tests/relational-process-nested.stdout",
+    "stderr": "build/bend2-tests/relational-process-nested.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 1.414
+  },
+  {
+    "name": "relational-build-process",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "bend2/tests/relational_build_process.py"
+    ],
+    "stdout": "build/bend2-tests/relational-build-process.stdout",
+    "stderr": "build/bend2-tests/relational-build-process.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 1.649
+  },
+  {
+    "name": "levels-boundaries",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "bend2/tests/levels_protocol_boundaries.py"
+    ],
+    "stdout": "build/bend2-tests/levels-boundaries.stdout",
+    "stderr": "build/bend2-tests/levels-boundaries.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 1.422
+  },
+  {
+    "name": "surface-boundaries",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-I",
+      "bend2/tests/surface_protocol_boundaries.py"
+    ],
+    "stdout": "build/bend2-tests/surface-boundaries.stdout",
+    "stderr": "build/bend2-tests/surface-boundaries.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 1.138
+  },
+  {
+    "name": "kernel-numbers",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-numbers"
+    ],
+    "stdout": "build/bend2-tests/kernel-numbers.stdout",
+    "stderr": "build/bend2-tests/kernel-numbers.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.775
+  },
+  {
+    "name": "kernel-eval",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-eval"
+    ],
+    "stdout": "build/bend2-tests/kernel-eval.stdout",
+    "stderr": "build/bend2-tests/kernel-eval.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.403
+  },
+  {
+    "name": "kernel-quantity",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-quantity"
+    ],
+    "stdout": "build/bend2-tests/kernel-quantity.stdout",
+    "stderr": "build/bend2-tests/kernel-quantity.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.403
+  },
+  {
+    "name": "kernel-check",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-check"
+    ],
+    "stdout": "build/bend2-tests/kernel-check.stdout",
+    "stderr": "build/bend2-tests/kernel-check.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.397
+  },
+  {
+    "name": "kernel-declarations",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-declarations"
+    ],
+    "stdout": "build/bend2-tests/kernel-declarations.stdout",
+    "stderr": "build/bend2-tests/kernel-declarations.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.502
+  },
+  {
+    "name": "kernel-conversion",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-conversion"
+    ],
+    "stdout": "build/bend2-tests/kernel-conversion.stdout",
+    "stderr": "build/bend2-tests/kernel-conversion.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.396
+  },
+  {
+    "name": "kernel-recursive",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-recursive"
+    ],
+    "stdout": "build/bend2-tests/kernel-recursive.stdout",
+    "stderr": "build/bend2-tests/kernel-recursive.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.503
+  },
+  {
+    "name": "kernel-budget-dag",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-budget-dag"
+    ],
+    "stdout": "build/bend2-tests/kernel-budget-dag.stdout",
+    "stderr": "build/bend2-tests/kernel-budget-dag.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.392
+  },
+  {
+    "name": "kernel-spec-count",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-spec-count"
+    ],
+    "stdout": "build/bend2-tests/kernel-spec-count.stdout",
+    "stderr": "build/bend2-tests/kernel-spec-count.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.404
+  },
+  {
+    "name": "levels-exact",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "levels-exact"
+    ],
+    "stdout": "build/bend2-tests/levels-exact.stdout",
+    "stderr": "build/bend2-tests/levels-exact.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.343
+  },
+  {
+    "name": "levels-budget",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "levels-budget"
+    ],
+    "stdout": "build/bend2-tests/levels-budget.stdout",
+    "stderr": "build/bend2-tests/levels-budget.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.341
+  },
+  {
+    "name": "levels-checker",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "levels-checker"
+    ],
+    "stdout": "build/bend2-tests/levels-checker.stdout",
+    "stderr": "build/bend2-tests/levels-checker.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.39
+  },
+  {
+    "name": "levels-regression",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "levels-regression"
+    ],
+    "stdout": "build/bend2-tests/levels-regression.stdout",
+    "stderr": "build/bend2-tests/levels-regression.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.397
+  },
+  {
+    "name": "surface-lexer",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-lexer"
+    ],
+    "stdout": "build/bend2-tests/surface-lexer.stdout",
+    "stderr": "build/bend2-tests/surface-lexer.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.499
+  },
+  {
+    "name": "surface-parser",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-parser"
+    ],
+    "stdout": "build/bend2-tests/surface-parser.stdout",
+    "stderr": "build/bend2-tests/surface-parser.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.402
+  },
+  {
+    "name": "surface-transform",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-transform"
+    ],
+    "stdout": "build/bend2-tests/surface-transform.stdout",
+    "stderr": "build/bend2-tests/surface-transform.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.397
+  },
+  {
+    "name": "surface-poly",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-poly"
+    ],
+    "stdout": "build/bend2-tests/surface-poly.stdout",
+    "stderr": "build/bend2-tests/surface-poly.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.394
+  },
+  {
+    "name": "surface-family",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-family"
+    ],
+    "stdout": "build/bend2-tests/surface-family.stdout",
+    "stderr": "build/bend2-tests/surface-family.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.392
+  },
+  {
+    "name": "surface-elab",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-elab"
+    ],
+    "stdout": "build/bend2-tests/surface-elab.stdout",
+    "stderr": "build/bend2-tests/surface-elab.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.4
+  },
+  {
+    "name": "surface-catalog",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-catalog"
+    ],
+    "stdout": "build/bend2-tests/surface-catalog.stdout",
+    "stderr": "build/bend2-tests/surface-catalog.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.456
+  },
+  {
+    "name": "surface-program",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-program"
+    ],
+    "stdout": "build/bend2-tests/surface-program.stdout",
+    "stderr": "build/bend2-tests/surface-program.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.61
+  },
+  {
+    "name": "surface-prelude",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-prelude"
+    ],
+    "stdout": "build/bend2-tests/surface-prelude.stdout",
+    "stderr": "build/bend2-tests/surface-prelude.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.62
+  },
+  {
+    "name": "surface-crypto",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-crypto"
+    ],
+    "stdout": "build/bend2-tests/surface-crypto.stdout",
+    "stderr": "build/bend2-tests/surface-crypto.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.613
+  },
+  {
+    "name": "surface-trust",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-trust"
+    ],
+    "stdout": "build/bend2-tests/surface-trust.stdout",
+    "stderr": "build/bend2-tests/surface-trust.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.445
+  },
+  {
+    "name": "surface-boundary",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-boundary"
+    ],
+    "stdout": "build/bend2-tests/surface-boundary.stdout",
+    "stderr": "build/bend2-tests/surface-boundary.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.397
+  },
+  {
+    "name": "surface-universes",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-universes"
+    ],
+    "stdout": "build/bend2-tests/surface-universes.stdout",
+    "stderr": "build/bend2-tests/surface-universes.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.401
+  },
+  {
+    "name": "wasm-circuit",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "wasm-circuit"
+    ],
+    "stdout": "build/bend2-tests/wasm-circuit.stdout",
+    "stderr": "build/bend2-tests/wasm-circuit.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.4
+  },
+  {
+    "name": "wasm-order",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "wasm-order"
+    ],
+    "stdout": "build/bend2-tests/wasm-order.stdout",
+    "stderr": "build/bend2-tests/wasm-order.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.35
+  },
+  {
+    "name": "wasm-link",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "wasm-link"
+    ],
+    "stdout": "build/bend2-tests/wasm-link.stdout",
+    "stderr": "build/bend2-tests/wasm-link.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.567
+  },
+  {
+    "name": "wasm-host",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "wasm-host"
+    ],
+    "stdout": "build/bend2-tests/wasm-host.stdout",
+    "stderr": "build/bend2-tests/wasm-host.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.829
+  },
+  {
+    "name": "kernel-budget-callbacks",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-budget-callbacks"
+    ],
+    "stdout": "build/bend2-tests/kernel-budget-callbacks.stdout",
+    "stderr": "build/bend2-tests/kernel-budget-callbacks.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.403
+  },
+  {
+    "name": "kernel-budget-callback-check",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-budget-callback-check"
+    ],
+    "stdout": "build/bend2-tests/kernel-budget-callback-check.stdout",
+    "stderr": "build/bend2-tests/kernel-budget-callback-check.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.398
+  },
+  {
+    "name": "surface-diagnostics",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "surface-diagnostics"
+    ],
+    "stdout": "build/bend2-tests/surface-diagnostics.stdout",
+    "stderr": "build/bend2-tests/surface-diagnostics.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.341
+  },
+  {
+    "name": "kernel-global-lookup",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-global-lookup"
+    ],
+    "stdout": "build/bend2-tests/kernel-global-lookup.stdout",
+    "stderr": "build/bend2-tests/kernel-global-lookup.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.344
+  },
+  {
+    "name": "kernel-projection-motive",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-projection-motive"
+    ],
+    "stdout": "build/bend2-tests/kernel-projection-motive.stdout",
+    "stderr": "build/bend2-tests/kernel-projection-motive.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.344
+  },
+  {
+    "name": "kernel-conversion-budget",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-conversion-budget"
+    ],
+    "stdout": "build/bend2-tests/kernel-conversion-budget.stdout",
+    "stderr": "build/bend2-tests/kernel-conversion-budget.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.396
+  },
+  {
+    "name": "kernel-large-addresses",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-large-addresses"
+    ],
+    "stdout": "build/bend2-tests/kernel-large-addresses.stdout",
+    "stderr": "build/bend2-tests/kernel-large-addresses.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.449
+  },
+  {
+    "name": "kernel-head-ty-invalid-level",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/unit.exe",
+      "kernel-head-ty-invalid-level"
+    ],
+    "stdout": "build/bend2-tests/kernel-head-ty-invalid-level.stdout",
+    "stderr": "build/bend2-tests/kernel-head-ty-invalid-level.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.346
+  },
+  {
+    "name": "fixture-encode",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "encode"
+    ],
+    "stdout": "build/bend2-tests/fixture-encode.jsonl",
+    "stderr": "build/bend2-tests/fixture-encode.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.611
+  },
+  {
+    "name": "wasm-encode",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "encode",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-encode.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-encode.stdout",
+    "stderr": "build/bend2-tests/wasm-encode.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.076
+  },
+  {
+    "name": "fixture-emit",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "emit"
+    ],
+    "stdout": "build/bend2-tests/fixture-emit.jsonl",
+    "stderr": "build/bend2-tests/fixture-emit.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.45
+  },
+  {
+    "name": "wasm-emit",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "emit",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-emit.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-emit.stdout",
+    "stderr": "build/bend2-tests/wasm-emit.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.071
+  },
+  {
+    "name": "fixture-nat",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "nat"
+    ],
+    "stdout": "build/bend2-tests/fixture-nat.jsonl",
+    "stderr": "build/bend2-tests/fixture-nat.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.509
+  },
+  {
+    "name": "wasm-nat",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "nat",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-nat.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-nat.stdout",
+    "stderr": "build/bend2-tests/wasm-nat.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.076
+  },
+  {
+    "name": "fixture-reactor",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "reactor"
+    ],
+    "stdout": "build/bend2-tests/fixture-reactor.jsonl",
+    "stderr": "build/bend2-tests/fixture-reactor.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.448
+  },
+  {
+    "name": "wasm-reactor",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "reactor",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-reactor.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-reactor.stdout",
+    "stderr": "build/bend2-tests/wasm-reactor.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.078
+  },
+  {
+    "name": "fixture-layout",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "layout"
+    ],
+    "stdout": "build/bend2-tests/fixture-layout.jsonl",
+    "stderr": "build/bend2-tests/fixture-layout.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.397
+  },
+  {
+    "name": "wasm-layout",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "layout",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-layout.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-layout.stdout",
+    "stderr": "build/bend2-tests/wasm-layout.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.073
+  },
+  {
+    "name": "fixture-oracle",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/fixture.exe",
+      "oracle"
+    ],
+    "stdout": "build/bend2-tests/fixture-oracle.jsonl",
+    "stderr": "build/bend2-tests/fixture-oracle.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 4.048
+  },
+  {
+    "name": "wasm-oracle",
+    "command": [
+      "node",
+      "bend2/wasm/check_fixtures.mjs",
+      "oracle",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/build/bend2-tests/fixture-oracle.jsonl"
+    ],
+    "stdout": "build/bend2-tests/wasm-oracle.stdout",
+    "stderr": "build/bend2-tests/wasm-oracle.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.131
+  },
+  {
+    "name": "import-json",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-json-check.py",
+      "--native",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/import_json.exe"
+    ],
+    "stdout": "build/bend2-tests/import-json.stdout",
+    "stderr": "build/bend2-tests/import-json.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 12.345
+  },
+  {
+    "name": "import-export",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-export-check.py",
+      "--native",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/import_export.exe"
+    ],
+    "stdout": "build/bend2-tests/import-export.stdout",
+    "stderr": "build/bend2-tests/import-export.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 44.704
+  },
+  {
+    "name": "import-translate",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-translate-check.py",
+      "--native",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/import_translate.exe"
+    ],
+    "stdout": "build/bend2-tests/import-translate.stdout",
+    "stderr": "build/bend2-tests/import-translate.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 71.724
+  },
+  {
+    "name": "import-pipeline",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-pipeline-check.py",
+      "--native",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/import_pipeline.exe"
+    ],
+    "stdout": "build/bend2-tests/import-pipeline.stdout",
+    "stderr": "build/bend2-tests/import-pipeline.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 119.277
+  },
+  {
+    "name": "filesystem",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-io-check.py",
+      "--driver",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/io_driver.exe"
+    ],
+    "stdout": "build/bend2-tests/filesystem.stdout",
+    "stderr": "build/bend2-tests/filesystem.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 2.517
+  },
+  {
+    "name": "import-certificate-cli",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-cli-check.py",
+      "--mech",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/bin/mech.exe",
+      "--cert",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/bin/mech_cert.exe"
+    ],
+    "stdout": "build/bend2-tests/import-certificate-cli.stdout",
+    "stderr": "build/bend2-tests/import-certificate-cli.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 2.074
+  },
+  {
+    "name": "mapping-protocol",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/mapping.exe"
+    ],
+    "stdout": "build/bend2-tests/mapping-protocol.stdout",
+    "stderr": "build/bend2-tests/mapping-protocol.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.742
+  },
+  {
+    "name": "parser-goldens",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-parser-check.py",
+      "--native",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/surface_driver.exe"
+    ],
+    "stdout": "build/bend2-tests/parser-goldens.stdout",
+    "stderr": "build/bend2-tests/parser-goldens.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 44.475
+  },
+  {
+    "name": "surface-goldens",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-surface-check.py",
+      "--driver",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/surface_check_driver.exe"
+    ],
+    "stdout": "build/bend2-tests/surface-goldens.stdout",
+    "stderr": "build/bend2-tests/surface-goldens.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 595.133
+  },
+  {
+    "name": "erasure-goldens",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "dev/bend2-erase-check.py",
+      "--driver",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/kernel_erase_driver.exe"
+    ],
+    "stdout": "build/bend2-tests/erasure-goldens.stdout",
+    "stderr": "build/bend2-tests/erasure-goldens.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 19.44
+  },
+  {
+    "name": "core-cli",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-P",
+      "bend2/tests/cli_core_check.py",
+      "--driver",
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/bin/kanon.exe"
+    ],
+    "stdout": "build/bend2-tests/core-cli.stdout",
+    "stderr": "build/bend2-tests/core-cli.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 2.103
+  },
+  {
+    "name": "runtime-slicing",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/prelude_runtime.exe",
+      "--slice-self-test"
+    ],
+    "stdout": "build/bend2-tests/runtime-slicing.stdout",
+    "stderr": "build/bend2-tests/runtime-slicing.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.934
+  },
+  {
+    "name": "surface-numbers-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_surface-numbers.exe"
+    ],
+    "stdout": "build/bend2-tests/surface-numbers-1.stdout",
+    "stderr": "build/bend2-tests/surface-numbers-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.507
+  },
+  {
+    "name": "wasm-wide-metadata-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_wasm-wide-metadata.exe"
+    ],
+    "stdout": "build/bend2-tests/wasm-wide-metadata-1.stdout",
+    "stderr": "build/bend2-tests/wasm-wide-metadata-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.556
+  },
+  {
+    "name": "surface-expectations-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_surface-expectations.exe"
+    ],
+    "stdout": "build/bend2-tests/surface-expectations-1.stdout",
+    "stderr": "build/bend2-tests/surface-expectations-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.574
+  },
+  {
+    "name": "kernel-usage-native-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_kernel-usage-native.exe",
+      "0"
+    ],
+    "stdout": "build/bend2-tests/kernel-usage-native-1.stdout",
+    "stderr": "build/bend2-tests/kernel-usage-native-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.52
+  },
+  {
+    "name": "kernel-usage-native-2",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_kernel-usage-native.exe",
+      "7"
+    ],
+    "stdout": "build/bend2-tests/kernel-usage-native-2.stdout",
+    "stderr": "build/bend2-tests/kernel-usage-native-2.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.19
+  },
+  {
+    "name": "relational-oracle-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_relational-oracle.exe",
+      "alpha"
+    ],
+    "stdout": "build/bend2-tests/relational-oracle-1.stdout",
+    "stderr": "build/bend2-tests/relational-oracle-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.444
+  },
+  {
+    "name": "relational-oracle-2",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_relational-oracle.exe",
+      "\u03bb\ud83d\ude42"
+    ],
+    "stdout": "build/bend2-tests/relational-oracle-2.stdout",
+    "stderr": "build/bend2-tests/relational-oracle-2.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.184
+  },
+  {
+    "name": "kernel-global-index-1",
+    "command": [
+      "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/driver_kernel-global-index.exe",
+      "case/A\u00e9\ud83d\ude00",
+      "case/Ae\u0301\ud83d\ude00",
+      "case/a\u00e9\ud83d\ude00"
+    ],
+    "stdout": "build/bend2-tests/kernel-global-index-1.stdout",
+    "stderr": "build/bend2-tests/kernel-global-index-1.stderr",
+    "code": 0,
+    "passed": true,
+    "seconds": 0.551
+  }
+]

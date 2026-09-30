@@ -75,7 +75,7 @@ def main():
 
     completed = 0
     hosts = set()
-    selected = run([ROOT / "_build/default/test/prelude_runtime.exe", "--slice-self-test"], HOST_BUDGET)
+    selected = run([ROOT / "_bend2/test/prelude_runtime.exe", "--slice-self-test"], HOST_BUDGET)
     if selected.returncode or selected.stderr or selected.stdout != "RUNTIME-SLICE-OK\n":
         print(f"{GATE} FAIL runtime selection check stdout={selected.stdout!r} stderr={selected.stderr!r}")
         return 1
@@ -84,7 +84,7 @@ def main():
         fixture = work / "source.mech"
         fixture.write_text(source)
         expected = "".join(f"{actual}\t{value}\n" for _, actual, value in cases)
-        emitted = run([ROOT / "_build/default/test/prelude_runtime.exe", "--reachable", fixture,
+        emitted = run([ROOT / "_bend2/test/prelude_runtime.exe", "--reachable", fixture,
                        work, *(actual for _, actual, _ in cases)], EMIT_BUDGET)
         if emitted.returncode or emitted.stderr or emitted.stdout != expected:
             print(f"{GATE} FAIL kernel-emit exit={emitted.returncode} "

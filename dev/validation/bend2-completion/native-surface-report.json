@@ -1,0 +1,21 @@
+{
+  "cases": 926,
+  "represented_observations": 949,
+  "failures": [],
+  "baseline_unresolved": 18,
+  "baseline_evidence": "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/dev/bend2/surface-baseline-unresolved.json",
+  "baseline_status": "unresolved, not passing",
+  "driver_sha256": "dec4c7eae1b8011784e6429e2bee3613c326e63aae7116caaf712f67af05dca9",
+  "artifact_sha256": {
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/surface_check_driver.exe": "dec4c7eae1b8011784e6429e2bee3613c326e63aae7116caaf712f67af05dca9",
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/bend_surface-check-native": "7a6c0b4495f7d21787f614e95eb4162ee0b88228b1ef450988649e9c87042659",
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/bend_surface-check-native.build.json": "69127a5055b21f806112c3395ec42ec06fff36ab4a0335f2f30c664c9977e03c"
+  },
+  "corpus_sha256": "0b9363d99eee254240340524562ec674265e628cc4cbf9e55b2041fc85a7c793",
+  "command": [
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/_bend2/test/surface_check_driver.exe"
+  ],
+  "timeout_seconds": 900,
+  "jobs": 1,
+  "elapsed_seconds": 336.985445
+}

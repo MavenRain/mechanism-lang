@@ -1,0 +1,1122 @@
+{
+  "version": 1,
+  "historical_sources": {
+    "test/template_composition.ml": {
+      "source_sha256": "0aaaeb1300cb71049b9f71e80b96698ddd56aa5a78b3516055159b909063915c",
+      "evaluated_prefix_sha256": "15ab34c4800304866a871ce98b0833953fa38cdbdf91c80d8c85e715a1e03ad3",
+      "case_count": 33
+    },
+    "test/template_reuse.ml": {
+      "source_sha256": "cbc71822e968be10f81c18836d446e9adb3c68cdb93c016e0197e549cc10a8a1",
+      "evaluated_prefix_sha256": "16554e6d90a3e9dade4c6587dd1bde91bbbb124f7d42933c67995314e69a1d5c",
+      "case_count": 23
+    },
+    "test/template_symbolic_reuse.ml": {
+      "source_sha256": "44e42c555f4341ad6d5e0ab876017d43ba52e81a38d8e8f46519b83ff024becc",
+      "evaluated_prefix_sha256": "2dce73d08dc27e06fe57e7fd253cd274612377134e38a7661c4df4f9c2773416",
+      "case_count": 18
+    },
+    "test/prenex_groups.ml": {
+      "source_sha256": "9f03a939418d37f637bc2b81aaf7cc7164e26ce778be61155b9d3d96387a1118",
+      "evaluated_prefix_sha256": "d1fc8a31fb4f74bb14a2b38d713ef652f6c2e574bbc8700818103c870f822eea",
+      "case_count": 30
+    },
+    "test/prenex_families.ml": {
+      "source_sha256": "95f87bf00e05355849e25412141617d0b78be0f2cb1f704efec7f23c3df56691",
+      "evaluated_prefix_sha256": "c75041c66e8e5b43580123b41c2e0785ec67768bb6fd2a3bea81eac00b5e96be",
+      "case_count": 52
+    },
+    "test/prenex_exports.ml": {
+      "source_sha256": "9b2a9a1e38d25819c676a1bf1033f504ccd77648dcf36d5192aa193f89ca7649",
+      "evaluated_prefix_sha256": "90abc32a48a4500d8c36916325fed74c7141ac81527d300a51fd1366926d24df",
+      "case_count": 31
+    },
+    "test/prenex_dependency_exports.ml": {
+      "source_sha256": "5883fb6b091b317a727447e1bee68b1ba9481e46f54b7d6f9c6ed431fe6545b4",
+      "evaluated_prefix_sha256": "23fb645457dd2ee918f1bc8c07870834234a36edd3327ff2521d741784e55ad5",
+      "case_count": 29
+    }
+  },
+  "cases": [
+    {
+      "label": "template_composition/unknown-dependency",
+      "source": "poly (u) group Group where specialize Missing (u) as Local end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/forward-dependency",
+      "source": "poly (u) group Group where specialize Later (u) as Local end poly (u) group Later where specialize Box (u) as Item end",
+      "empty": false
+    },
+    {
+      "label": "template_composition/dependency-arity",
+      "source": "poly (u) group Group where specialize Box (u, u) as Local end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/duplicate-prefix",
+      "source": "poly (u) group Group where specialize Box (u) as Local specialize Box (u) as Local  end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/template-name-prefix",
+      "source": "poly (u) group Group where specialize Box (u) as Group end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/template-name-member",
+      "source": "poly (u) group Group where specialize Box (u) as Local def Group : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/imported-family-collision",
+      "source": "poly (u) group Group where specialize Box (u) as Local def Local : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/duplicate-member",
+      "source": "poly (u) group Group where specialize Box (u) as Local def member : Local := box def member : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/imported-label-member",
+      "source": "poly (u) group Group where specialize Box (u) as Local def box : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/imported-label-prefix",
+      "source": "poly (u) group Group where specialize Box (u) as box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/body-unbound",
+      "source": "poly (u) group Group where specialize Box (u) as Local def member : Local := missing end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/member-forward",
+      "source": "poly (u) group Group where specialize Box (u) as Local def member : Local := later def later : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/bare-import",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end def bad : Type := Local",
+      "empty": false
+    },
+    {
+      "label": "template_composition/bare-group",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end def bad : Type := Group",
+      "empty": false
+    },
+    {
+      "label": "template_composition/global-group-collision",
+      "source": "def Group : Type := Prop poly (u) group Group where specialize Box (u) as Local  end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/definition-template-dependency",
+      "source": "poly (u) def Identity : Sort (succ u) := Sort u poly (u) group Group where specialize Identity (u) as Local end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/prefix-definition-template",
+      "source": "poly (u) def Local : Sort (succ u) := Sort u poly (u) group Group where specialize Box (u) as Local  end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/label-late-template",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end poly (u) def box : Sort (succ u) := Sort u specialize Group (0) as G",
+      "empty": false
+    },
+    {
+      "label": "template_composition/output-family-collision",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end mu G_Local : Type with specialize Group (0) as G",
+      "empty": false
+    },
+    {
+      "label": "template_composition/output-template-collision",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end poly (u) def G_Local : Sort (succ u) := Sort u specialize Group (0) as G",
+      "empty": false
+    },
+    {
+      "label": "template_composition/nominal-imports",
+      "source": "poly (u) group Group where specialize Box (u) as Local def witness : Local := box end specialize Group (0) as First specialize Group (0) as Second def mixed : First_Local := Second_witness",
+      "empty": false
+    },
+    {
+      "label": "template_composition/duplicate-disjoint-prefix",
+      "source": "poly (u) group A where specialize Box (u) as One end poly (u) group B where specialize Box (u) as Two end poly (u) group Group where specialize A (u) as Shared specialize B (u) as Shared end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/prefix-generated-family",
+      "source": "poly (u) group A where specialize Box (u) as One end poly (u) group B where specialize Box (u) as Two end poly (u) group Group where specialize A (u) as X specialize B (u) as X_One end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/prefix-generated-member",
+      "source": "poly (u) group A where specialize Box (u) as One def item : One := box end poly (u) group B where specialize Box (u) as Two end poly (u) group Group where specialize A (u) as X specialize B (u) as X_item end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/empty",
+      "source": "poly (u) group Group where  end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/no-dependencies",
+      "source": "poly (u) group Group where def item : Type := Prop end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/missing-name",
+      "source": "poly (u) group where end",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/open-level",
+      "source": "poly (u) group Group where specialize Box (v) as Local end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/scope-leak",
+      "source": "poly (u) group Group where specialize Box (u) as Local  end specialize Group (u) as Closed",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/postulate",
+      "source": "poly (u) group Group where specialize Box (u) as Local axiom item : Local end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/recursive",
+      "source": "poly (u) group Group where specialize Box (u) as Local def rec item : Local := box end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/late-dependency",
+      "source": "poly (u) group Group where specialize Box (u) as Local def item : Local := box specialize Box (u) as Local  end ",
+      "empty": false
+    },
+    {
+      "label": "template_composition/parser/missing-end",
+      "source": "poly (u) group Group where specialize Box (u) as Local ",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/unknown-local",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Missing := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/member-is-not-family",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Left_unbox := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/unknown-existing",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Left := Missing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/forward-existing",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Left := Later) specialize Box (0) as Later",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/duplicate-local",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Left := Existing, Left := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/wrong-level",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (1, 0) as P with (Left := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/wrong-constructor",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing mu Other (0 A : Type) : Type with | other : A -> Other A specialize Pair (0, 0) as P with (Left := Other)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/wrong-telescope",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing mu Other : Type with | other : Other specialize Pair (0, 0) as P with (Left := Other)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/root-reuse",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Box (0) as Existing with (Box := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/fresh-name-collision",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Box (0) as P_Right specialize Pair (0, 0) as P with (Left := P_Right)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/member-collision",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing def P_Left_unbox : Nat := 0 specialize Pair (0, 0) as P with (Left := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/mutual-group-member",
+      "source": "poly (u) mu P : Sort (succ u) with | pp : P and Q : Sort (succ u) with | qq : P -> Q where def mkp : P := pp end mu A : Sort (succ 0) with | pp : A and B : Sort (succ 0) with | qq : A -> B specialize P (0) as X with (P := A, Q := B)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/partial-reverse",
+      "source": "poly (u) mu Marker : Sort (succ u) with | mark : Marker and Wrapper (0 x : Marker) : Sort (succ u) with | wrap : Wrapper x where def value : Wrapper mark := wrap end specialize Marker (0) as Old specialize Marker (0) as Other specialize Marker (0) as Sh with (Wrapper := Old_Wrapper)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/unknown-template-name",
+      "source": "poly (u) mu Marker : Sort (succ u) with | mark : Marker and Wrapper (0 x : Marker) : Sort (succ u) with | wrap : Wrapper x where def value : Wrapper mark := wrap end specialize Marker (0) as Old specialize Marker (0) as Other specialize Typo (0) as Sh with (Marker := Old)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/definition-template",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing poly (u) def ident : (0 A : Sort (succ u)) -> A -> A := fun (0 A : Sort (succ u)) (x : A) => x specialize ident (0) as I with (Box := Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/no-implicit-sharing",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end specialize Box (0) as Existing specialize Pair (0, 0) as P with (Left := Existing) def wrong : P_Right Nat := (box 0 : Existing Nat)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/dependent-family",
+      "source": "poly (u) mu Marker : Sort (succ u) with | mark : Marker and Wrapper (0 x : Marker) : Sort (succ u) with | wrap : Wrapper x where def value : Wrapper mark := wrap end specialize Marker (0) as Old specialize Marker (0) as Other specialize Marker (0) as Shared with (Marker := Other, Wrapper := Old_Wrapper)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/0",
+      "source": "specialize Box (0) as P with ()",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/1",
+      "source": "specialize Box (0) as P with ( )",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/2",
+      "source": "specialize Box (0) as P with (Box Existing)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/3",
+      "source": "specialize Box (0) as P with (Box := Existing,)",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/4",
+      "source": "specialize Box (0) as P with (Box := Existing",
+      "empty": false
+    },
+    {
+      "label": "template_reuse/parser/5",
+      "source": "poly (u) group P where specialize Box (u) as B with (Box := Existing,) end",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/unknown-local",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Missing := Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/unknown-existing",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Missing) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/forward-binding",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Later) specialize Box (u) as Later end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/same-dependency",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Pair where specialize Box (u) as Left specialize Box (v) as Right end poly (u, v) group Shared where specialize Box (u) as Base specialize Pair (u, u) as Copy with (Left := Copy_Right) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/duplicate-binding",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Base, Box := Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/independent-universes",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (v) as Copy with (Box := Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/member-as-local",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (unbox := Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/member-as-existing",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Base_unbox) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/prefix-collision",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Base with (Box := Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/member-collision",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Base) def Copy_unbox : Nat := 0 end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/wrong-dependent-identity",
+      "source": "poly (u) mu Marker : Sort (succ u) with | mark : Marker and Wrapper (0 x : Marker) : Sort (succ u) with | wrap : Wrapper x where def value : Wrapper mark := wrap end poly (u, v) group Shared where specialize Marker (u) as Original specialize Marker (u) as Copy with (Wrapper := Original_Wrapper) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/no-fresh-family",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end specialize Box (0) as Existing poly (u, v) group Shared where specialize Box (0) as Copy with (Box := Existing) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/0",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with () end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/1",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with ( ) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/2",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box Base) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/3",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Base,) end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/4",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with (Box := Base end ",
+      "empty": false
+    },
+    {
+      "label": "template_symbolic_reuse/parser/5",
+      "source": "poly (u) mu Box (0 A : Sort (succ u)) : Sort (succ u) with | box : A -> Box A where def unbox : (0 A : Sort (succ u)) -> Box A -> A := fun (0 A : Sort (succ u)) (b : Box A) => case b as self in Box return A with | box (a : A) => a end poly (u, v) group Shared where specialize Box (u) as Base specialize Box (u) as Copy with Box := Base end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/forward-family",
+      "source": "poly (u) mu First : Sort (succ u) with | first : Second -> First and Second : Sort (succ u) with | second : First -> Second ",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/forward-member",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def witness : First := later def later : First := first end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/recursive-member",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def witness : First := witness end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/duplicate-family",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and First : Sort (succ u) with",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/duplicate-member",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def witness : First := first def witness : First := first end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-family-name",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def First : First := first end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-label-name",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def first : First := first end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-definition-template",
+      "source": "poly (u) def Second : Sort (succ u) := Sort u poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-definition-template",
+      "source": "poly (u) def witness : Sort (succ u) := Sort u poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-family-template",
+      "source": "poly (u) mu witness : Prop with poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/unstable-companion",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort u with",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/bad-member-type",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First where def bad : Sort 0 := Sort 0 end",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/symbolic-family-escape",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end def escape : Type 0 := Second",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/symbolic-member-escape",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end def escape : Type 0 := witness",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/wrong-arity",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end specialize First (0, 1) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-template-specialization",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end specialize Second (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-template-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end poly (u) def One_Second : Sort (succ u) := Sort u specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-template-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end poly (u) def One_witness : Sort (succ u) := Sort u specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-family-template-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end poly (u) mu One_witness : Prop with specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-global-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end def One_Second : Type 0 := Prop specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-global-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end def One_witness : Type 0 := Prop specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-constructor-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end mu Other : Type 0 with | One_Second : Other specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/member-constructor-target",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end mu Other : Type 0 with | One_witness : Other specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-label-definition-template",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end poly (u) def second : Sort (succ u) := Sort u specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-label-family-template",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end poly (u) mu second : Prop with specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/generated-companion-label",
+      "source": "poly (u) mu First : Sort (succ u) with | One_Second : First and Second : Sort (succ u) with | second : First -> Second specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/generated-member-label",
+      "source": "poly (u) mu First : Sort (succ u) with | One_witness : First where def witness : First := One_witness end specialize First (0) as One",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/late-label-instance-name",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end specialize First (0) as One poly (u) mu Holder : Sort (succ u) with | One : Holder specialize Holder (0) as Two",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/late-label-generated-member",
+      "source": "poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end specialize First (0) as One poly (u) mu Holder : Sort (succ u) with | One_witness : Holder specialize Holder (0) as Two",
+      "empty": false
+    },
+    {
+      "label": "prenex_groups/companion-constructor-name",
+      "source": "mu Other : Type 0 with | Second : Other poly (u) mu First : Sort (succ u) with | first : First and Second : Sort (succ u) with | second : First -> Second where def witness : Second := second first def alias : Second := witness end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/scope",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/scope",
+      "source": "poly (u) mu Box (0 A : Sort v) : Sort (succ u) with | box : A -> Box A",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/scope-leak",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/scope-leak",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (u) as DataBox",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/arity",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/arity",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1, 2) as DataBox",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/unstable-universe",
+      "source": "poly (u) mu Empty : Sort (succ u) with",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/unstable-universe",
+      "source": "poly (u) mu Empty : Sort u with",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/constructor-result",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/constructor-result",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> A",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/duplicate-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/duplicate-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A | box : (0 A : Sort u) -> Box A",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/bare-family",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox def T : Type 1 := DataBox (prod () : Type 0)",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/bare-family",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A def T : Type 1 := Box (prod () : Type 0)",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/bare-constructor",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox def x : DataBox Tiny := box zero",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/bare-constructor",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A def x : Tiny := box zero",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/duplicate-template",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/duplicate-template",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/definition-template-collision",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/definition-template-collision",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu identity : Prop with",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/family-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) def identity : Sort (succ u) := Sort u ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/family-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) def Box : Sort (succ u) := Sort u",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/ordinary-definition-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A def X : Type 0 := Prop",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/ordinary-definition-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A def Box : Type 0 := Prop",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/ordinary-family-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A mu Tiny : Type 0 with | zero : Tiny ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/ordinary-family-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A mu Box : Type 0 with",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/ordinary-constructor-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A mu Tiny : Type 0 with | zero : Tiny ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/ordinary-constructor-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A mu Tiny : Type 0 with | Box : Tiny",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/late-constructor-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox poly (u) def identity : Sort (succ u) := Sort u ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/late-constructor-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) def box : Sort (succ u) := Sort u specialize Box (1) as DataBox",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/template-constructor-collision",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/template-constructor-collision",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu Box : Type 0 with | identity : Box specialize Box (1) as DataBox",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/instance-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/instance-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as Box",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/instance-definition-template",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/instance-definition-template",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as identity",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/definition-instance-family-template",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) def identity : Sort (succ u) := Sort u specialize identity (1) as X",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/definition-instance-family-template",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) def identity : Sort (succ u) := Sort u specialize identity (1) as Box",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/instance-family-collision",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/instance-family-collision",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as Tiny",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/instance-constructor-collision",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/instance-constructor-collision",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as zero",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/existing-constructor-template",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/existing-constructor-template",
+      "source": "mu Tiny : Type 0 with | zero : Tiny poly (u) mu zero : Type 0 with",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/groups",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/groups",
+      "source": "poly (u) mutual mu P : Prop with mu Q : Prop with end",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/late-family-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox poly (u) def identity : Sort (succ u) := Sort u ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/late-family-template-collision",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A poly (u) mu box (0 A : Sort u) : Sort (succ u) with | mk : A -> box A specialize Box (1) as DataBox",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/instance-own-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as DataBox ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/instance-own-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A specialize Box (1) as box",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/control/self-named-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | box : A -> Box A ",
+      "empty": false
+    },
+    {
+      "label": "prenex_families/self-named-constructor",
+      "source": "poly (u) mu Box (0 A : Sort u) : Sort (succ u) with | Box : A -> Box A",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/missing",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := chosenWitness)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/composed-own-members-only",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local def pick : Local := Local_witness end specialize Pair (0) as Inst export (pick := chosenPick)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/empty",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export ()",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/empty-spaced",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export ( )",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/duplicate-source",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := first, witness := second)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/unknown-source",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (absent := first, alias := second)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/duplicate-target",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := same, alias := same)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/instance-name",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := One, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/companion-name",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := One_Other, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/constructor",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := box, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/companion-constructor",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (witness := other, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/ambient-global",
+      "source": "def chosenWitness : Type 0 := Prop poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) ",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/ambient-family",
+      "source": "mu chosenWitness : Type 0 with poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) ",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/ambient-constructor",
+      "source": "mu Ambient : Type 0 with | chosenWitness : Ambient poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) ",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/definition-catalog",
+      "source": "poly (v) def chosenWitness : Sort (succ v) := Sort v poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) ",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/family-catalog",
+      "source": "poly (v) mu chosenWitness : Sort (succ v) with poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) ",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/reused-family",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as Shared specialize Box (0) as One with (Box := Shared, Other := Shared_Other) export (witness := Shared, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/reused-instance-name",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as Shared specialize Box (0) as One with (Box := Shared, Other := Shared_Other) export (witness := One, alias := chosenAlias)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/definition-template",
+      "source": "poly (u) def identity : Sort (succ u) := Sort u specialize identity (0) as concrete export ()",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/unknown-template",
+      "source": "specialize Missing (0) as concrete export ()",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/default-name-absent",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as One export (alias := chosenAlias, witness := chosenWitness) def value : One := One_witness",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/missing-list",
+      "source": "specialize Box (0) as One export",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/missing-source",
+      "source": "specialize Box (0) as One export (:= target)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/missing-assignment",
+      "source": "specialize Box (0) as One export (witness target)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/missing-target",
+      "source": "specialize Box (0) as One export (witness :=)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/keyword-target",
+      "source": "specialize Box (0) as One export (witness := def, alias := a)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/trailing-comma",
+      "source": "specialize Box (0) as One export (witness := target,)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/missing-close",
+      "source": "specialize Box (0) as One export (witness := target",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/with-after-export",
+      "source": "specialize Box (0) as One export (witness := w, alias := a) with (Box := Shared)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/second-export",
+      "source": "specialize Box (0) as One export (witness := w) export (alias := a)",
+      "empty": false
+    },
+    {
+      "label": "prenex_exports/parser/dependency-second-export",
+      "source": "specialize Box (0) as One poly (v) group Pair where specialize Box (v) as Inner export () export () end",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/missing",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := w) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/empty",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export () end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/duplicate-source",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := w, witness := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/unknown-source",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (absent := w, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/duplicate-target",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := same, alias := same) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/alias",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := Local, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/family",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := Local_Other, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/constructor",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := box, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/companion-constructor",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := other, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/group",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := Pair, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/own-member",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (alias := a, witness := w) def w : Local := a end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/poly-name",
+      "source": "poly (u) def w : Sort (succ u) := Sort u poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (alias := a, witness := w)  end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/existing-global",
+      "source": "def w : Type := Nat poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (alias := a, witness := w)  end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/earlier-alias",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as First specialize Box (v) as Local export (witness := First, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/earlier-composed-alias",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (u) group Wrapper where specialize Box (u) as Wrapped end poly (v) group Pair where specialize Wrapper (v) as First specialize Box (v) as Local export (witness := First, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/later-alias",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := Later, alias := a) specialize Box (v) as Later end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/earlier-member",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as First specialize Box (v) as Local export (witness := First_witness, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/reused-family",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as First specialize Box (v) as Second with (Box := First, Other := First_Other) export (witness := First, alias := First) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/own-composed-alias",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (u) group Wrapper where specialize Box (u) as Wrapped end poly (v) group Pair where specialize Wrapper (v) as First export (Wrapped_witness := First, Wrapped_alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/template-name",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := Box, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/installed-family",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Box (0) as Shared poly (v) group Pair where specialize Box (v) as Local export (witness := Shared, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/installed-constructor",
+      "source": "poly (u) mu Empty : Sort (succ u) with | empty : Empty poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end specialize Empty (0) as E poly (v) group Pair where specialize Box (v) as Local export (witness := empty, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/unbound-reuse-with-export",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local with (Box := Nope) export (witness := Nope, alias := a) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/missing-open",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export w end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/missing-target",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness :=) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/trailing-comma",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export (witness := w,) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/second-export",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export () export () end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/with-after-export",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local export () with (Box := First) end ",
+      "empty": false
+    },
+    {
+      "label": "prenex_dependency_exports/parser/second-with",
+      "source": "poly (u) mu Box : Sort (succ u) with | box : Box and Other : Sort (succ u) with | other : Other where def witness : Box := box def alias : Box := witness end poly (v) group Pair where specialize Box (v) as Local with (Box := First) with (Other := Second) end ",
+      "empty": false
+    }
+  ]
+}

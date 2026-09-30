@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import runpy
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 CONTROLS = [('right-naturality',
   'prelude/cat/heterogeneous-whiskering.mech',
   [('Second_naturality D E d e F G alpha (K.1 x) (K.1 y)\n'
@@ -77,8 +79,9 @@ def main():
     if destination.exists():
         print("refusing to overwrite mutation evidence", file=sys.stderr)
         return 64
-    executable = ROOT / "_build/default/test/prelude_heterogeneous_whiskering.exe"
-    report = {"version": 1, "passed": False, "controls": [],
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'heterogeneous-whiskering')
+    executable = ROOT / "_bend2/test/prelude_heterogeneous_whiskering.exe"
+    report = {"bend_build": build_evidence, "version": 1, "passed": False, "controls": [],
               "executable_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     with tempfile.TemporaryDirectory(prefix="mechanism-whiskering-controls-") as directory:
         work = Path(directory)
@@ -86,7 +89,7 @@ def main():
                    "prelude/cat/heterogeneous-nattrans.mech", "prelude/cat/heterogeneous-whiskering.mech",
                    "test/fixtures/prelude/heterogeneous-whiskering.mech",
                    "test/fixtures/prelude/heterogeneous-whiskering-runtime.mech",
-                   "test/prelude_heterogeneous_whiskering.ml",
+                   "bend2/tests/prelude_heterogeneous_whiskering.bend",
                    "dev/heterogeneous-whiskering-mutations.py"]
         sources += [str(path.relative_to(ROOT)) for path in
                     sorted((ROOT / "test/neg/heterogeneous-whiskering").iterdir()) if path.is_file()]
@@ -100,7 +103,7 @@ def main():
         def run():
             started = time.monotonic()
             try:
-                result = subprocess.run([str(executable), str(work)], cwd=ROOT,
+                result = bounded_run([str(executable), str(work)], cwd=ROOT,
                                         capture_output=True, text=True, timeout=120)
             except subprocess.TimeoutExpired as error:
                 return {"exit_code": None, "timed_out": True,
@@ -109,6 +112,15 @@ def main():
                         "elapsed_ms": round((time.monotonic() - started) * 1000)}
             return {"exit_code": result.returncode, "stdout": result.stdout,
                     "stderr": result.stderr, "elapsed_ms": round((time.monotonic() - started) * 1000)}
+
+        report["baseline"] = run()
+        baseline = report["baseline"]
+        if not (baseline["exit_code"] == 0 and not baseline["stderr"] and
+                baseline["stdout"] == 'PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16\n'):
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(json.dumps(report, indent=2) + "\n")
+            print("baseline failed; no mutation classified", file=sys.stderr)
+            return 1
 
         for name, relative, edits, expected in CONTROLS:
             target = work / relative

@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import runpy
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 PRELUDE = "prelude/cat/heterogeneous-functor.mech"
 FIXTURE = "test/fixtures/prelude/heterogeneous-functor-runtime.mech"
 GENERIC = "test/fixtures/prelude/heterogeneous-functor.mech"
@@ -44,8 +46,9 @@ def main():
     if destination.exists():
         print("refusing to overwrite mutation evidence", file=sys.stderr)
         return 64
-    executable = ROOT / "_build/default/test/prelude_heterogeneous_functor.exe"
-    report = {"version": 1, "passed": False, "controls": [],
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'heterogeneous-functor')
+    executable = ROOT / "_bend2/test/prelude_heterogeneous_functor.exe"
+    report = {"bend_build": build_evidence, "version": 1, "passed": False, "controls": [],
               "executable_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     with tempfile.TemporaryDirectory(prefix="mechanism-heterogeneous-controls-") as directory:
         work = Path(directory)
@@ -62,10 +65,19 @@ def main():
 
         def run():
             started = time.monotonic()
-            result = subprocess.run([str(executable), str(work)], cwd=ROOT,
+            result = bounded_run([str(executable), str(work)], cwd=ROOT,
                                     capture_output=True, text=True, timeout=120)
             return {"exit_code": result.returncode, "stdout": result.stdout,
                     "stderr": result.stderr, "elapsed_ms": round((time.monotonic() - started) * 1000)}
+
+        report["baseline"] = run()
+        baseline = report["baseline"]
+        if not (baseline["exit_code"] == 0 and not baseline["stderr"] and
+                baseline["stdout"] == 'PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=90 instances=3 computations=3 negatives=12\n'):
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(json.dumps(report, indent=2) + "\n")
+            print("baseline failed; no mutation classified", file=sys.stderr)
+            return 1
 
         for name, relative, before, after, expected in CONTROLS:
             target = work / relative

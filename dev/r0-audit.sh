@@ -1,68 +1,51 @@
 #!/bin/zsh
-# Audit the effective source compiled into mechanism's kernel and WASM
-# libraries.  Run dev/dunecho.sh build first.  The source files under
-# _build/default combine the physical overlays and explicit Dune copies;
-# scanning vendor alone would miss an overlay that leaks a shape name.
-# Generated wrapper files and binaries are not source audit inputs.
-#
-# Shape names belong only to lib/shape.ml, lib/rules.ml, lib/pp.ml,
-# lib/erase.ml, lib/circuit.ml and wasm/emit.ml, retaining Veil's audit scope.
-# A stale build copy is an error, so rebuilding is part of mutation
-# verification too.
-
-set -u
-chpwd_functions=()
-unfunction chpwd 2>/dev/null
-setopt null_glob
-
+# Audit active Bend shape scope and the exact sources used by make build.
+set -eu
 root=${1:-${0:A:h}/..}
-root=${root:A}
-build=$root/_build/default
-pattern='SColl|SMu|SNu|SPar|SPi|SZk|SFhc|SMpc'
-
-if [[ ! -x $build/bin/mech.exe || ! -f $build/lib/shape.ml \
-      || ! -f $build/wasm/gc_encode.ml ]]; then
-  print -r -- "R0-AUDIT FAIL: build mechanism with dev/dunecho.sh build first"
-  exit 1
-fi
-
-files=($build/lib/*.ml $build/lib/*.mli $build/wasm/*.ml $build/wasm/*.mli)
-inputs=()
-fail=0
-for file in $files; do
-  rel=${file#$build/}
-  source=$root/$rel
-  if [[ ! -f $source ]]; then
-    source=$root/vendor/veil/$rel
-  fi
-  if [[ ! -f $source ]] || ! cmp -s $source $file; then
-    print -r -- "R0-AUDIT STALE $rel: rebuild the effective sources"
-    fail=1
-  fi
-  case $rel in
-    lib/shape.ml|lib/rules.ml|lib/pp.ml|lib/erase.ml|lib/circuit.ml|wasm/emit.ml) ;;
-    *) inputs+=($file) ;;
-  esac
-done
-
-if [[ ${#inputs} -eq 0 ]]; then
-  print -r -- "R0-AUDIT FAIL: no effective source files to audit"
-  exit 1
-fi
-
-hits=$(rg -n -e $pattern -- $inputs)
-code=$?
-if [[ $code -eq 0 ]]; then
-  print -r -- "$hits"
-  fail=1
-elif [[ $code -ne 1 ]]; then
-  print -r -- "R0-AUDIT cannot read the effective source files"
-  fail=1
-fi
-
-if [[ $fail -eq 0 ]]; then
-  print -r -- "R0-AUDIT OK"
-  exit 0
-fi
-print -r -- "R0-AUDIT FAIL"
-exit 1
+exec python3 -P - "$root" <<'PY'
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+root = Path(sys.argv[1]).resolve()
+failed = False
+def fail(message):
+    global failed
+    print('R0-AUDIT FAIL: ' + message)
+    failed = True
+try:
+    baseline = json.loads((root / 'dev/BEND2-BASELINE.json').read_text())
+    for required in ('_bend2/bin/mech.exe', 'bend2/kernel/shape.bend',
+                     'bend2/kernel/check.bend', 'bend2/wasm/gc_encode.bend'):
+        if not (root / required).is_file():
+            fail('missing build/source file: ' + required)
+    manifest = root / '_bend2/bend2-sources.sha256'
+    recorded = {}
+    for line in manifest.read_text().splitlines():
+        digest, name = line.split(None, 1)
+        name = name.lstrip(' *')
+        if name in recorded:
+            fail('duplicate build source record: ' + name)
+        recorded[name] = digest
+    actual = {str(p.relative_to(root)): p for p in (root / 'bend2').rglob('*')
+              if p.is_file() and p.suffix in ('.bend', '.c', '.js')
+              and 'tests' not in p.relative_to(root).parts}
+    if set(recorded) != set(actual):
+        fail('build source inventory is stale; run make build')
+    for name, source in actual.items():
+        if hashlib.sha256(source.read_bytes()).hexdigest() != recorded.get(name):
+            fail('stale build source: ' + name)
+    pattern = re.compile(r'SColl|SMu|SNu|SPar|SPi|SZk|SFhc|SMpc')
+    for name, source in actual.items():
+        if source.suffix == '.bend' and name.startswith(('bend2/kernel/', 'bend2/wasm/')):
+            if pattern.search(source.read_text()) and name not in baseline['shape_modules']:
+                fail('shape name escaped reviewed scope: ' + name)
+    if baseline['review_status'] != 'reviewed':
+        fail('Bend shape-scope migration baseline is unreviewed')
+except (OSError, ValueError, KeyError) as error:
+    fail(str(error))
+if not failed:
+    print('R0-AUDIT OK')
+sys.exit(1 if failed else 0)
+PY

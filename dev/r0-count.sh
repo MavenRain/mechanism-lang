@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Compare mechanism's built spec-count output with its own SPEC.md.
-# Run dev/dunecho.sh build first.  The vendored driver's output is never
+# Run make build first.  The vendored driver's output is never
 # used as evidence that the D3 overlay preserves the R0 counts.
 
 set -u
@@ -10,7 +10,7 @@ unfunction chpwd 2>/dev/null
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
 SPEC=$ROOT/SPEC.md
-DRIVER=$ROOT/_build/default/bin/mech.exe
+DRIVER=$ROOT/_bend2/bin/mech.exe
 WORK=$ROOT/.gatework/r0
 rm -rf $WORK
 mkdir -p $WORK

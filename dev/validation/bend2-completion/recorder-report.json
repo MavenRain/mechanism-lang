@@ -1,0 +1,563 @@
+{
+  "scope": "Synthetic native tools validate recorder and cache behavior, not Bend semantics",
+  "source_sha256": "4cc25d4d3e248bc3b85cd84e013910bd899c8d56dfa1a2f1126adf3fd6273320",
+  "source_unchanged": true,
+  "checks": [
+    {
+      "case": "stable",
+      "passed": true,
+      "exit": 0,
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9989692909876,
+        299.9388554999605,
+        299.88390391599387
+      ],
+      "cache_reused": [
+        true,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/stable/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "fixture-only",
+      "passed": true,
+      "exit": 0,
+      "emissions": 1,
+      "requested_timeout": 120,
+      "observed_timeouts": [
+        120,
+        120,
+        120
+      ],
+      "requested_build_timeout": 120,
+      "observed_build_timeouts": [],
+      "cache_reused": [
+        true,
+        true,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/fixture-only/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "source-before",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.99854029202834,
+        299.9204669169849,
+        299.85394862503745,
+        299.998522750102,
+        299.93898112501483,
+        299.85876033303794
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/source-before/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "compiler-before",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9990163750481,
+        299.9366245419951,
+        299.88003574998584,
+        299.99767066701315,
+        299.9222111250274,
+        299.8465112079866
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/compiler-before/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "header-before",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.997680917033,
+        299.9334244580241,
+        299.8721520000836,
+        299.99891970900353,
+        299.9435997499386,
+        299.8658788750181
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/header-before/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "artifact-before",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.99665399990045,
+        299.9409729579929,
+        299.8965161249507,
+        299.9990089579951,
+        299.95033183298074,
+        299.8962370000081
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/artifact-before/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "link-failure",
+      "passed": true,
+      "exit": "link: build failed; this is not a killed mutation",
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9990757079795,
+        299.9396558330627,
+        299.883385125082
+      ],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/link-failure/work",
+      "stdout": ""
+    },
+    {
+      "case": "header-during-link",
+      "passed": true,
+      "exit": "source, compiler or headers changed during native compilation",
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.99871908291243,
+        299.9437122079544,
+        299.89034629100934
+      ],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/header-during-link/work",
+      "stdout": ""
+    },
+    {
+      "case": "header-during-run",
+      "passed": true,
+      "exit": "baseline-probe: frozen inputs or artifact changed",
+      "emissions": 1,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/header-during-run/work",
+      "stdout": ""
+    },
+    {
+      "case": "artifact-during-run",
+      "passed": true,
+      "exit": "baseline-probe: frozen inputs or artifact changed",
+      "emissions": 1,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/artifact-during-run/work",
+      "stdout": ""
+    },
+    {
+      "case": "compiler-during-emit",
+      "passed": true,
+      "exit": "source or compiler changed during native emission",
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9992097080685
+      ],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/compiler-during-emit/work",
+      "stdout": ""
+    },
+    {
+      "case": "mutation-stderr",
+      "passed": true,
+      "exit": 1,
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9982107079122,
+        299.94889720797073,
+        299.8990732500097
+      ],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/mutation-stderr/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": false}\n{\"passed\": false, \"killed\": 0, \"controls\": 1}\n"
+    },
+    {
+      "case": "invalid-backend",
+      "passed": true,
+      "exit": "BEND_MUTATION_BACKEND must be javascript or native",
+      "emissions": 1,
+      "requested_timeout": 300,
+      "observed_timeouts": [],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/invalid-backend/work",
+      "stdout": ""
+    },
+    {
+      "case": "inherited-native",
+      "passed": true,
+      "exit": 0,
+      "emissions": 2,
+      "requested_timeout": 180,
+      "observed_timeouts": [
+        180,
+        180,
+        180
+      ],
+      "requested_build_timeout": 180,
+      "observed_build_timeouts": [
+        179.99864579096902,
+        179.94349174993113,
+        179.88053291593678
+      ],
+      "cache_reused": [
+        true,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/inherited-native/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "explicit-native-over-js",
+      "passed": true,
+      "exit": 0,
+      "emissions": 2,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9969694169704,
+        299.92519204190467,
+        299.8485052919714
+      ],
+      "cache_reused": [
+        true,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/explicit-native-over-js/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "explicit-js-over-native",
+      "passed": true,
+      "exit": 0,
+      "emissions": 4,
+      "requested_timeout": 900,
+      "observed_timeouts": [
+        900,
+        900,
+        900
+      ],
+      "requested_build_timeout": 1800,
+      "observed_build_timeouts": [
+        1800,
+        1800,
+        1800
+      ],
+      "cache_reused": [
+        false,
+        false,
+        false
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/explicit-js-over-native/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "default-javascript",
+      "passed": true,
+      "exit": 0,
+      "emissions": 4,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "cache_reused": [
+        false,
+        false,
+        false
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/default-javascript/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "inherited-javascript",
+      "passed": true,
+      "exit": 0,
+      "emissions": 4,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "cache_reused": [
+        false,
+        false,
+        false
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/inherited-javascript/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "invalid-inherited-backend",
+      "passed": true,
+      "exit": "BEND_MUTATION_BACKEND must be javascript or native",
+      "emissions": 1,
+      "requested_timeout": 300,
+      "observed_timeouts": [],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [],
+      "cache_reused": [],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/invalid-inherited-backend/work",
+      "stdout": ""
+    },
+    {
+      "case": "header-map-omitted",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.99903620791156,
+        299.9204471659614,
+        299.8344100828981,
+        299.9984327919083,
+        299.920512459008,
+        299.8581664590165
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/header-map-omitted/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "header-entry-omitted",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9962137079565,
+        299.90640316694044,
+        299.85037733300123,
+        299.99912974995095,
+        299.8685938749695,
+        299.8004465419799
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/header-entry-omitted/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "dependency-metadata-omitted",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9989962920081,
+        299.9564447499579,
+        299.9022950839717,
+        299.9985779999988,
+        299.9016112079844,
+        299.8396033330355
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/dependency-metadata-omitted/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "dependency-capture-corrupt",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.9992461659713,
+        299.957144707907,
+        299.9060949999839,
+        299.99927675002255,
+        299.94838712504134,
+        299.8801557919942
+      ],
+      "cache_reused": [
+        false,
+        false,
+        true
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/dependency-capture-corrupt/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "local-header-mutation",
+      "passed": true,
+      "exit": 0,
+      "emissions": 3,
+      "requested_timeout": 300,
+      "observed_timeouts": [
+        300,
+        300,
+        300
+      ],
+      "requested_build_timeout": 300,
+      "observed_build_timeouts": [
+        299.99617204105016,
+        299.9381020410219,
+        299.88178004103247,
+        299.99753616703674,
+        299.9499162080465,
+        299.8937353750225
+      ],
+      "cache_reused": [
+        true,
+        false,
+        false
+      ],
+      "work": "/Users/oobi/Documents/gpt6/mechanism-bend2-recorder-controls-03/local-header-mutation/work",
+      "stdout": "{\"control\": \"guarded mutation\", \"killed\": true}\n{\"passed\": true, \"killed\": 1, \"controls\": 1}\n"
+    },
+    {
+      "case": "lock-wait-in-build-budget",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

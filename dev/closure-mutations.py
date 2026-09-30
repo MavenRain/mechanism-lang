@@ -4,43 +4,60 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import runpy
 import shutil
 import subprocess
 import sys
 
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCES = ["wasm/link.ml", "wasm/emit.ml", "wasm/dune",
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+SOURCES = ["bend2/wasm/link.bend", "bend2/wasm/emit.bend",
+           "bend2/tests/cli_core.bend", "dev/bend2-mutation-build.py",
            "test/prenex_runtime.py",
            "test/fixtures/prelude/dependent-closure-runtime.mech"]
-CONTROLS = [
-    ("C-CLOS-M1", "wasm/link.ml",
-     """        let* _m = arity_of_fn t in
-        (* A dependent result can expose more runtime parameters after
-           specialization.  Dispatch on the closure's stored arity. *)
-        Ok [ SApply k ]""",
-     """        let* m = arity_of_fn t in
-        if m > 0 && m <= k then Ok [ SCallRef m ]
-        else Ok [ SApply k ]""", "partialPayload"),
-    ("C-CLOS-M2", "wasm/link.ml",
-     "| E.RFunc (E.Tid t) -> String.equal t (fn_key 0)",
-     "| E.RFunc (E.Tid _t) -> false", "nullaryPayload"),
-    ("C-CLOS-M3", "wasm/link.ml",
-     "if Int.equal k 0 then Ok (if nullary_closure r then any_repr else r)",
-     "if Int.equal k 0 then Ok r", "nonTailPayload"),
-    ("C-CLOS-M4", "wasm/emit.ml",
-     "steps c s1 env tail ih hr args\n\nand direct",
-     """if List.is_empty args then Ok (ih, s1)
-      else steps c s1 env tail ih hr args
 
-and direct""", "nullaryPayload"),
+# This control reinstates static call_ref dispatch from the former backend.
+# The production path dispatches using the closure's stored runtime arity.
+STATIC_HELPER = """@unsafe def mutation_static(+c:Ctx,+env:List<&2,Binding>,+tail:Bool,head:List<&2,G.Instr>,r:E.Repr,+args:List<&2,E.Ktm>,+m:Nat) -> S.Comp(List<&2,G.Instr>):
+  do S.Comp<List<&2,G.Instr>>:
+    cast : List<&2,G.Instr> <- S.lift(List<&2,G.Instr>,coerce(layout(c),r,E.RFunc{E.Tid{L.fn_key(m)}}))
+    +ci : U32 <- S.lift(U32,L.type_index(layout(c),"clos"))
+    +fti : U32 <- S.lift(U32,L.type_index(layout(c),L.fn_key(m)))
+    +idx : U32 <- S.alloc(G.Ref{G.HType{ci}})
+    ia : List<&2,G.Instr> <- each(c,env,List.take(&2,E.Ktm,args,m))
+    steps(c,env,tail,cats([head,cast,[G.Local_set{idx},G.Local_get{idx},G.Struct_get{ci,2}],ia,[G.Local_get{idx},G.Struct_get{ci,1},G.Ref_cast{G.HType{fti}},G.Call_ref{fti}]]),L.any_repr(),List.drop(&2,E.Ktm,args,m))
+
+@unsafe def mutation_dispatch(use_static:Bool,c:Ctx,env:List<&2,Binding>,tail:Bool,head:List<&2,G.Instr>,r:E.Repr,args:List<&2,E.Ktm>,m:Nat) -> S.Comp(List<&2,G.Instr>):
+  match use_static:
+    case True{}: mutation_static(c,env,tail,head,r,args,m)
+    case False{}: steps_apply(c,env,tail,head,r,args)
+
+"""
+EMPTY_HELPER = """@unsafe def mutation_empty(c:Ctx,env:List<&2,Binding>,tail:Bool,head:List<&2,G.Instr>,r:E.Repr,args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):
+  match args:
+    case Nil{}: S.pure(List<&2,G.Instr>,head)
+    case Con{x,xs}: steps(c,env,tail,head,r,x <> xs)
+
+"""
+CONTROLS = [
+    ("C-CLOS-M1", "bend2/wasm/emit.bend",
+     """        m : Nat <- S.lift(Nat,L.arity_of_fn(t))
+        steps_apply(c,env,tail,head,r,args)""",
+     """        +m : Nat <- S.lift(Nat,L.arity_of_fn(t))
+        mutation_dispatch(Nat.is_lt(0n,m) && Nat.is_le(m,List.length(&2,E.Ktm,args)),c,env,tail,head,r,args,m)""",
+     "partialPayload"),
+    ("C-CLOS-M2", "bend2/wasm/link.bend",
+     "case E.RFunc{E.Tid{t}}: String.eq(t,fn_key(0n))",
+     "case E.RFunc{E.Tid{t}}: False{}", "nullaryPayload"),
+    ("C-CLOS-M3", "bend2/wasm/link.bend",
+     "case E.RFunc{E.Tid{+t}} 0n: Done{choose(E.Repr,String.eq(t,fn_key(0n)),any_repr(),E.RFunc{E.Tid{t}})}",
+     "case E.RFunc{E.Tid{+t}} 0n: Done{E.RFunc{E.Tid{t}}}", "nonTailPayload"),
+    ("C-CLOS-M4", "bend2/wasm/emit.bend",
+     "        steps(c,env,tail,ih,hr,args)\n",
+     "        mutation_empty(c,env,tail,ih,hr,args)\n", "nullaryPayload"),
 ]
 
-
-# A copy of the tree carries no _build, so every build of a control is a
-# cold build.  A measured cold build of this tree took 261 s under load,
-# so the build limit is the 300 s the sibling replay uses.  The suite
-# keeps the shorter limit.
 BUILD_TIMEOUT = 300
 SUITE_TIMEOUT = 120
 
@@ -62,12 +79,14 @@ def main():
     work.mkdir(parents=True, exist_ok=False)
     copy = work / "copy"
     shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns(
-        ".git", "_build", ".gatework", ".kanon-exec", ".kanon-wait"))
+        ".git", "_build", "_bend2", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
     environment = dict(os.environ)
-    environment.pop("OPAM_SWITCH_PREFIX", None)
-    environment.pop("CAML_LD_LIBRARY_PATH", None)
+    backend = environment.get("BEND_MUTATION_BACKEND",
+                              "javascript" if environment.get("BEND_MUTATION_PACKAGED_CLI")
+                              else environment.get("BEND_TEST_BACKEND", "javascript"))
     originals = {path: (copy / path).read_text() for path in SOURCES}
     report = {
+        "backend": backend,
         "sources": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
                     for path in SOURCES},
         "controls": [],
@@ -80,7 +99,7 @@ def main():
 
     def run(label, command, limit=SUITE_TIMEOUT):
         try:
-            result = subprocess.run(command, cwd=copy, env=environment,
+            result = bounded_run(command, cwd=copy, env=environment,
                                     capture_output=True, text=True,
                                     timeout=limit)
         except subprocess.TimeoutExpired as expiry:
@@ -90,9 +109,9 @@ def main():
         return result
 
     def build(label):
-        result = run(label, ["zsh", "dev/dunecho.sh", "build"], BUILD_TIMEOUT)
-        return (result.returncode == 0 and result.stderr == ""
-                and result.stdout == "OK build: 0 errors, 0 warnings\n")
+        result = run(label, [sys.executable, "-P", "dev/bend2-mutation-build.py", "cli"], BUILD_TIMEOUT)
+        return (result.returncode == 0
+                and "BEND2 MUTATION BUILD PASS cli\n" in result.stdout)
 
     def suite(label):
         return run(label, [sys.executable, "-P", "test/prenex_runtime.py",
@@ -114,7 +133,14 @@ def main():
                 print(f"CLOSURE-MUTATIONS FAIL {name} anchor count")
                 return 1
             target = copy / path
-            target.write_text(originals[path].replace(before, after))
+            mutant = originals[path].replace(before, after)
+            if name == "C-CLOS-M1":
+                mutant = mutant.replace("@unsafe def steps_type(", STATIC_HELPER + "@unsafe def steps_type(", 1)
+                mutant = mutant.replace("+r:E.Repr,args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):\n  match r:",
+                                        "+r:E.Repr,+args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):\n  match r:", 1)
+            if name == "C-CLOS-M4":
+                mutant = mutant.replace("@unsafe def apply_kind(", EMPTY_HELPER + "@unsafe def apply_kind(", 1)
+            target.write_text(mutant)
             try:
                 built = build(f"{name}-build")
                 result = suite(name) if built else None

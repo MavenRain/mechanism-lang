@@ -1,12 +1,14 @@
 # Bend 2 live reference checks
 
-The live reference checks compare the frozen cases with the OCaml implementation
-in this repository. The sixth port slice adds concrete and symbolic family reuse
-across the kernel, multi-file builds, Wasm emission and runtime hosts. Run the full comparison with:
+The live reference checks compare the frozen cases with an external OCaml
+checkout. The sixth port slice adds concrete and symbolic family reuse across
+the kernel, multi-file builds, Wasm emission and runtime hosts. Run the full
+comparison with:
 
 ```sh
-make bend2-diff
-make bend2-reference-test
+export REFERENCE=/path/to/ocaml-checkout
+make bend2-diff REFERENCE="$REFERENCE"
+make bend2-reference-test REFERENCE="$REFERENCE"
 ```
 
 `bend2-diff` builds fresh OCaml libraries and seven observation adapters,
@@ -50,7 +52,7 @@ original scripts and the copies are pinned by hash.
 Run this case set alone with:
 
 ```sh
-python3 -P dev/bend2-reference-check.py --suite core-cli
+python3 -P dev/bend2-reference-check.py --reference "$REFERENCE" --suite core-cli
 python3 -P bend2/tests/cli_core_check.py
 ```
 
@@ -72,9 +74,9 @@ after the last case.
 Run this family alone with:
 
 ```sh
-python3 -P dev/bend2-reference-check.py --suite equality-runtime
+python3 -P dev/bend2-reference-check.py --reference "$REFERENCE" --suite equality-runtime
 python3 -P dev/bend2-equality-runtime-check.py
-python3 -P dev/bend2-equality-runtime-test.py --reference "$PWD"
+python3 -P dev/bend2-equality-runtime-test.py --reference "$REFERENCE"
 ```
 
 The frozen equality observations are in `dev/bend2/equality-runtime-cases.json`.
@@ -101,9 +103,9 @@ are pinned before replay and checked for drift afterward.
 Run this family alone with:
 
 ```sh
-python3 -P dev/bend2-reference-check.py --suite composition-runtime
+python3 -P dev/bend2-reference-check.py --reference "$REFERENCE" --suite composition-runtime
 python3 -P dev/bend2-composition-runtime-check.py
-python3 -P dev/bend2-composition-runtime-test.py --reference "$PWD"
+python3 -P dev/bend2-composition-runtime-test.py --reference "$REFERENCE"
 ```
 
 The frozen composition observations are in
@@ -132,9 +134,9 @@ source files are pinned before replay and checked for drift afterward.
 Run this family alone with:
 
 ```sh
-python3 -P dev/bend2-reference-check.py --suite reuse-runtime
+python3 -P dev/bend2-reference-check.py --reference "$REFERENCE" --suite reuse-runtime
 python3 -P dev/bend2-reuse-runtime-check.py
-python3 -P dev/bend2-reuse-runtime-test.py --reference "$PWD"
+python3 -P dev/bend2-reuse-runtime-test.py --reference "$REFERENCE"
 ```
 
 The frozen observations are in `dev/bend2/reuse-runtime-cases.json`.
@@ -158,7 +160,8 @@ The surface corpus also references 18 unresolved historical attempts in
 `dev/bend2/surface-baseline-unresolved.json`. Those attempts retain their
 unresolved status and are outside the passing case inventory.
 
-Run only the OCaml comparison with `make bend2-reference-check`. Each run
+Run only the OCaml comparison with
+`make bend2-reference-check REFERENCE="$REFERENCE"`. Each run
 creates a fresh directory under `_bend2/reference/recording-*` containing the
 isolated build, adapters, per-case observations, and `report.json`. The report
 pins the reference revision, source files, dune build files, case files, helper
@@ -258,3 +261,11 @@ focused fixtures retain the 20-second observation limit.
 ```sh
 shasum -a 256 -c dev/validation/bend2-reuse-runtime-live/sources.sha256
 ```
+
+The completion batch reran all twelve suites against the live OCaml checkout
+at slice 6 (`7a2f9f2`). All 3,877 cases passed with zero differences and zero
+input drift. The receipt is
+`dev/validation/bend2-completion/reference-report.json`. The comparator's four
+refusal suites also passed. This comparison covers the case sets above; the
+larger category and functor fixtures described above still require their
+separate runtime validation.

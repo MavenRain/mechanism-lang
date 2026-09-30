@@ -12,16 +12,15 @@ No CLI command provisions hardware or transfers money.
 
 ## Quick start
 
-Initialize the pinned dependency with `git submodule update --init --recursive`.
-Install OCaml 5.3 or newer, dune 3.24 or newer, zarith 1.14, zsh, and Python 3.11
-or newer. For an opam-managed compiler, run
-`opam install dune.3.24.0 zarith.1.14` and prefix the build command with
-`opam exec --`. The build runner uses the installed dunecho where available.
+Install Bend 2.0.25, Node 23.10, and Python 3.11 or newer. The full Wasm checks
+also use Binaryen 130 and Wasmtime 48.0.1. Set `BEND` if the compiler is outside
+`PATH`. See [the build guide](README.md) and
+[migration status](MIGRATION-BEND2.md) for the current validation state.
 
 From this repository:
 
 ```sh
-zsh dev/dunecho.sh build
+make build
 python3 -m venv .venv
 . .venv/bin/activate
 python3 -m pip install '.[test]'
@@ -37,7 +36,7 @@ no third-party runtime dependencies. Python 3.11 or newer is required.
 You can also use `python3 -P dev/mech-cuopt.py` in place of `mech-cuopt` without
 installing the package. The Python wheel can run the GPU worker alone; the
 exporter and verifier additionally need this source checkout and its built
-`_build/default/bin/mech_cert.exe`.
+`_bend2/bin/mech_cert.exe`.
 
 In the example, A offers 12 for all eight slices, B offers 9 for the first four,
 and C offers 7 for the last four. B and C jointly win with welfare 16. B pays 5,

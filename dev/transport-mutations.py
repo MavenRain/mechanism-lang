@@ -1,131 +1,233 @@
-"""Run isolated, build-checked controls for polymorphic family members."""
-
-import hashlib
-import json
-import os
+"""Preserve ten original transport and family-member mutation controls in Bend."""
+import importlib.util
 from pathlib import Path
-import shutil
-import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 if len(sys.argv) != 2:
     raise SystemExit("usage: python3 -I dev/transport-mutations.py NEW_WORK_DIRECTORY")
-WORK = Path(sys.argv[1]).resolve()
-if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
-    raise SystemExit("the work directory must be new and outside the source repository")
-WORK.mkdir(parents=True)
-COPY = WORK / "copy"
-shutil.copytree(ROOT, COPY, ignore=shutil.ignore_patterns(
-    ".git", "_build", ".gatework", ".kanon-exec", ".kanon-wait", "__pycache__"))
-ENV = dict(os.environ)
-ENV.pop("OPAM_SWITCH_PREFIX", None)
-ENV.pop("CAML_LD_LIBRARY_PATH", None)
-
-
-def run(name, command):
-    result = subprocess.run(command, cwd=COPY, env=ENV, capture_output=True, timeout=300)
-    (WORK / f"{name}.stdout").write_bytes(result.stdout)
-    (WORK / f"{name}.stderr").write_bytes(result.stderr)
-    return result
-
-
-def build(name):
-    result = run(name, ["zsh", str(COPY / "dev/dunecho.sh"), "build"])
-    if result.returncode != 0 or b"0 errors, 0 warnings" not in result.stdout:
-        raise SystemExit(f"{name}: build failed; this is not a killed mutation")
-
-
-def suite(name, case=None):
-    if case is None:
-        command = [str(COPY / "_build/default/test/prelude_transport.exe"), str(COPY)]
-    else:
-        command = [str(COPY / "_build/default/test/family_members.exe"), case]
-    return run(name, command)
-
-
-build("baseline-build")
-baseline = [suite("baseline-prelude"), run("baseline-members",
-    [str(COPY / "_build/default/test/family_members.exe")])]
-if any(result.returncode != 0 for result in baseline):
-    raise SystemExit("baseline failed")
-
-check = "let* entry = Check.check_decl_at ~arity globals budget decl in"
-unchecked = "Ok (Global.Def { Global.ty = decl.d_ty; " \
-    "def = Option.value ~default:Term.Auto decl.d_body; " \
-    "reducible = true; rec_arg = None; partial = false })"
-surface = "surface/family_poly.ml"
-transport = "test/prelude_transport.ml"
-member_poll = "let map_member budget level name (decl : Check.decl) =\n  let* () = poll budget in\n"
-members_poll = "    let* globals = acc in\n    let* () = poll budget in\n"
-name_guard = "    let* () = List.find_opt (fun (d : Check.decl) -> " \
-    "List.mem_assoc d.d_name catalog) members\n      |> Option.fold ~none:(Ok ()) " \
-    "~some:(fun (d : Check.decl) -> Error (collision d.d_name)) in\n"
-controls = [
-    ("C-TRANSPORT-M1", surface, check,
-     "let* entry = if arity > 0 then " + unchecked +
-     " else Check.check_decl_at ~arity globals budget decl in",
-     "definition-must-check", "expected refusal: unbound: de Bruijn index 0"),
-    ("C-TRANSPORT-M2", surface, 'then as_name ^ "_" ^ n else n', 'then n else n',
-     "ordered-members-and-renaming", "the name witness is already declared"),
-    ("C-TRANSPORT-M3", surface, check,
-     "let* entry = if Int.equal arity 0 then " + unchecked +
-     " else Check.check_decl_at ~arity globals budget decl in",
-     "closed-rechecking", "expected refusal: mismatch: the term has type"),
-    ("C-TRANSPORT-M4", surface,
-     "map_list (map_member budget level rename) scheme.members",
-     "map_list (map_member budget (fun l -> Ok l) rename) scheme.members",
-     "hidden-level-specialization",
-     "hidden-level-specialization: universe: universe level is outside the global parameter scope"),
-    ("C-TRANSPORT-M5", "test/fixtures/prelude/transport.mech",
-     "(CastData_refl MechNat) (mechSucc mechZero)",
-     "(CastData_refl MechNat) mechZero", None,
-     "the constructor transportIsOne of TransportIsOne gives the index"),
-    ("C-TR-M1", surface, member_poll,
-     "let map_member budget level name (decl : Check.decl) =\n",
-     "declaration-member-budget", "declaration-member-budget: member declaration polls"),
-    ("C-TR-M2", surface, members_poll, "    let* globals = acc in\n",
-     "specialization-member-budget",
-     "specialization-member-budget: member specialization polls"),
-    ("C-TR-M3", surface, name_guard, "", "member-template-collision",
-     "member-template-collision: wrong refusal: not yet: "
-     "references between family schemas are not supported"),
-    ("C-TR-M4", transport, "(TransportHigher_refl MechNat mechZero)",
-     "(TransportData_refl MechNat mechZero)", None,
-     "expected refusal: mismatch: the term has type (Lan SMu TransportHigher"),
-    ("C-TR-M5", transport, '(globals, "unbound: CastData_cast",',
-     '(installed, "unbound: CastData_cast",', None,
-     "expected refusal: unbound: CastData_cast"),
-]
-
-reports = []
-for name, relative, old, new, case, diagnostic in controls:
-    path = COPY / relative
-    original = path.read_bytes()
-    text = original.decode()
-    if text.count(old) != 1:
-        raise SystemExit(f"{name}: mutation anchor is not unique")
-    try:
-        path.write_text(text.replace(old, new))
-        mutated = hashlib.sha256(path.read_bytes()).hexdigest()
-        build(name + "-build")
-        result = suite(name, case)
-        killed = result.returncode == 1 and diagnostic.encode() in result.stdout
-        report = {"name": name, "path": relative, "case": case, "old": old, "new": new,
-                  "source_sha256": hashlib.sha256(original).hexdigest(),
-                  "mutant_sha256": mutated, "exit_code": result.returncode,
-                  "diagnostic": diagnostic, "killed": killed}
-        reports.append(report)
-        print(json.dumps({"control": name, "killed": killed}), flush=True)
-    finally:
-        path.write_bytes(original)
-
-build("restored-build")
-restored = [suite("restored-prelude"), run("restored-members",
-    [str(COPY / "_build/default/test/family_members.exe")])]
-passed = all(report["killed"] for report in reports) and all(
-    result.returncode == 0 for result in restored)
-(WORK / "results.json").write_text(json.dumps({"passed": passed, "controls": reports}, indent=2) + "\n")
-print(json.dumps({"passed": passed, "killed": sum(report["killed"] for report in reports),
-                  "controls": len(reports)}))
-raise SystemExit(0 if passed else 1)
+spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/bend2-mutation.py")
+runner = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(runner)
+protocols = {
+    "prelude_transport": ("bend2/tests/surface_prelude_transport.bend", "PRELUDE-TRANSPORT-OK templates=2 instances=7 negatives=5"),
+    "family_members": ("bend2/tests/surface_family_members.bend", "FAMILY-MEMBERS-OK cases=35", []),
+}
+controls = [('C-TRANSPORT-M1',
+  'bend2/surface/family_poly.bend',
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- Check.check_decl_comp(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'def unchecked_member(decl: Check.Decl) -> Budget.Comp(Global.Entry):\n'
+  '  match decl:\n'
+  '    case Check.Decl{name, kind, ty, None{}}:\n'
+  '      Budget.pure(Global.Entry, Global.Def{Global.DefEntry{ty, Term.Auto{}, True{}, None{}, False{}}})\n'
+  '    case Check.Decl{name, kind, ty, Some{body}}:\n'
+  '      Budget.pure(Global.Entry, Global.Def{Global.DefEntry{ty, body, True{}, None{}, False{}}})\n'
+  '\n'
+  'def member_entry(globals: Global.T, arity: Nat, decl: Check.Decl) -> Budget.Comp(Global.Entry):\n'
+  '  match arity:\n'
+  '    case 0n: Check.check_decl_comp(globals, 0n, decl)\n'
+  '    case 1n+rest: unchecked_member(decl)\n'
+  '\n'
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- member_entry(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'family_members',
+  'expected refusal: unbound: de Bruijn index 0',
+  {'contains': True, 'arguments': ['definition-must-check']}),
+ ('C-TRANSPORT-M2',
+  'bend2/surface/family_poly.bend',
+  ' || Poly.member(member_names(members), value)',
+  '',
+  'family_members',
+  'the name witness is already declared',
+  {'contains': True, 'arguments': ['ordered-members-and-renaming']}),
+ ('C-TRANSPORT-M3',
+  'bend2/surface/family_poly.bend',
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- Check.check_decl_comp(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'def unchecked_member(decl: Check.Decl) -> Budget.Comp(Global.Entry):\n'
+  '  match decl:\n'
+  '    case Check.Decl{name, kind, ty, None{}}:\n'
+  '      Budget.pure(Global.Entry, Global.Def{Global.DefEntry{ty, Term.Auto{}, True{}, None{}, False{}}})\n'
+  '    case Check.Decl{name, kind, ty, Some{body}}:\n'
+  '      Budget.pure(Global.Entry, Global.Def{Global.DefEntry{ty, body, True{}, None{}, False{}}})\n'
+  '\n'
+  'def member_entry(globals: Global.T, arity: Nat, decl: Check.Decl) -> Budget.Comp(Global.Entry):\n'
+  '  match arity:\n'
+  '    case 0n: unchecked_member(decl)\n'
+  '    case 1n+rest: Check.check_decl_comp(globals, 1n+rest, decl)\n'
+  '\n'
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- member_entry(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'family_members',
+  'expected refusal: mismatch: the term has type',
+  {'contains': True, 'arguments': ['closed-rechecking']}),
+ ('C-TRANSPORT-M4',
+  'bend2/surface/family_poly.bend',
+  'def instantiate_comp(+globals: Global.T, +catalog: T, +name: String, +levels: List<&2, Level.T>, '
+  '+as_name: String, +reuse: Bindings, exports: Maybe<&2, Bindings>) -> Budget.Comp(Global.T):\n'
+  '  do Budget.Comp<Global.T>:\n'
+  '    +scheme : Scheme <- require_schema(lookup(catalog, name), name)\n'
+  '    checked : Unit <- require_fresh(occupied(globals, catalog, as_name), as_name)\n'
+  '    checked : Unit <- check_levels(levels, schema_arity(scheme), name, 0n, True{})\n'
+  '    tick : Unit <- Budget.tick()\n'
+  '    checked : Unit <- check_bindings(reuse, companion_names(raw_families(scheme)), [], globals, [])\n'
+  '    exports : Bindings <- check_exports(scheme, name, as_name, reuse, exports)\n'
+  '    +action : Poly.Action = instance_action(scheme, name, as_name, normal_levels(levels), reuse, '
+  'exports)\n'
+  '    families : List<&2, Imported> <- map_imports(raw_families(scheme), action, reuse)\n'
+  '    members : List<&2, Check.Decl> <- map_members(schema_members(scheme), action)\n'
+  '    installed : Global.T <- install_imports(families, globals, catalog)\n'
+  '    check_members(members, catalog, 0n, installed)',
+  'def preserve_member_levels(action: Poly.Action) -> Poly.Action:\n'
+  '  match action:\n'
+  '    case Poly.Action{levels, names, forbidden}: Poly.Action{Poly.PreserveLevels{}, names, forbidden}\n'
+  '\n'
+  'def instantiate_comp(+globals: Global.T, +catalog: T, +name: String, +levels: List<&2, Level.T>, '
+  '+as_name: String, +reuse: Bindings, exports: Maybe<&2, Bindings>) -> Budget.Comp(Global.T):\n'
+  '  do Budget.Comp<Global.T>:\n'
+  '    +scheme : Scheme <- require_schema(lookup(catalog, name), name)\n'
+  '    checked : Unit <- require_fresh(occupied(globals, catalog, as_name), as_name)\n'
+  '    checked : Unit <- check_levels(levels, schema_arity(scheme), name, 0n, True{})\n'
+  '    tick : Unit <- Budget.tick()\n'
+  '    checked : Unit <- check_bindings(reuse, companion_names(raw_families(scheme)), [], globals, [])\n'
+  '    exports : Bindings <- check_exports(scheme, name, as_name, reuse, exports)\n'
+  '    +action : Poly.Action = instance_action(scheme, name, as_name, normal_levels(levels), reuse, '
+  'exports)\n'
+  '    families : List<&2, Imported> <- map_imports(raw_families(scheme), action, reuse)\n'
+  '    members : List<&2, Check.Decl> <- map_members(schema_members(scheme), '
+  'preserve_member_levels(action))\n'
+  '    installed : Global.T <- install_imports(families, globals, catalog)\n'
+  '    check_members(members, catalog, 0n, installed)',
+  'family_members',
+  'hidden-level-specialization: universe: universe level is outside the global parameter scope',
+  {'contains': True, 'arguments': ['hidden-level-specialization']}),
+ ('C-TRANSPORT-M5',
+  'test/fixtures/prelude/transport.mech',
+  '(CastData_refl MechNat) (mechSucc mechZero)',
+  '(CastData_refl MechNat) mechZero',
+  'prelude_transport',
+  'the constructor transportIsOne of TransportIsOne gives the index',
+  {'contains': True}),
+ ('C-TR-M1',
+  'bend2/surface/family_poly.bend',
+  'def map_member(decl: Check.Decl, +action: Poly.Action) -> Budget.Comp(Check.Decl):\n'
+  '  match decl:\n'
+  '    case Check.Decl{+name, +kind, ty, body}:\n'
+  '      do Budget.Comp<Check.Decl>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        checked : Unit <- Budget.lift(Unit, member_kind(kind))\n'
+  '        mapped_name : String <- Budget.lift(String, Poly.map_name(action, name))\n'
+  '        ty : Term.T <- Poly.map_term(action, ty)\n'
+  '        body : Term.T <- Budget.lift(Term.T, member_body(body, name))\n'
+  '        body : Term.T <- Poly.map_term(action, body)\n'
+  '        return Check.Decl{mapped_name, kind, ty, Some{body}}',
+  'def map_member(decl: Check.Decl, +action: Poly.Action) -> Budget.Comp(Check.Decl):\n'
+  '  match decl:\n'
+  '    case Check.Decl{+name, +kind, ty, body}:\n'
+  '      do Budget.Comp<Check.Decl>:\n'
+  '        checked : Unit <- Budget.lift(Unit, member_kind(kind))\n'
+  '        mapped_name : String <- Budget.lift(String, Poly.map_name(action, name))\n'
+  '        ty : Term.T <- Poly.map_term(action, ty)\n'
+  '        body : Term.T <- Budget.lift(Term.T, member_body(body, name))\n'
+  '        body : Term.T <- Poly.map_term(action, body)\n'
+  '        return Check.Decl{mapped_name, kind, ty, Some{body}}',
+  'family_members',
+  'declaration-member-budget: member declaration polls',
+  {'contains': True, 'arguments': ['declaration-member-budget']}),
+ ('C-TR-M2',
+  'bend2/surface/family_poly.bend',
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        tick : Unit <- Budget.tick()\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- Check.check_decl_comp(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +globals: Global.T) -> '
+  'Budget.Comp(Global.T):\n'
+  '  match members:\n'
+  '    case Nil{}:\n'
+  '      Budget.pure(Global.T, globals)\n'
+  '    case Con{+decl, tail}:\n'
+  '      do Budget.Comp<Global.T>:\n'
+  '        +name : String = Poly.decl_name(decl)\n'
+  '        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)\n'
+  '        entry : Global.Entry <- Check.check_decl_comp(globals, arity, decl)\n'
+  '        check_members(tail, catalog, arity, Global.add(name, entry, globals))\n'
+  '\n',
+  'family_members',
+  'specialization-member-budget: member specialization polls',
+  {'contains': True, 'arguments': ['specialization-member-budget']}),
+ ('C-TR-M3',
+  'bend2/surface/family_poly.bend',
+  '        reserved : Unit <- reserve_members(members, catalog)\n',
+  '',
+  'family_members',
+  'member-template-collision: wrong refusal: not yet: references between family schemas are not supported',
+  {'contains': True, 'arguments': ['member-template-collision']}),
+ ('C-TR-M4',
+  'bend2/tests/surface_prelude_transport.bend',
+  '(TransportHigher_refl MechNat mechZero)',
+  '(TransportData_refl MechNat mechZero)',
+  'prelude_transport',
+  'expected refusal: mismatch: the term has type (Lan SMu TransportHigher',
+  {'contains': True}),
+ ('C-TR-M5',
+  'bend2/tests/surface_prelude_transport.bend',
+  '    refusal(initial,\n      "def unavailable',
+  '    refusal(installed,\n      "def unavailable',
+  'prelude_transport',
+  'expected refusal: unbound: CastData_cast',
+  {'contains': True})]
+runner.execute(ROOT, sys.argv[1], protocols, controls)

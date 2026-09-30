@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "groups": 7,
+  "refusals": 56,
+  "controls": [
+    {
+      "group": "relational-shard-0-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-0-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-1-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-2-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-3-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-4-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "relational-shard-5-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "missing-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "extra-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "duplicate-member",
+      "refused": true,
+      "diagnostic": "native bundle mode inventory changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "entry",
+      "refused": true,
+      "diagnostic": "unexpected bundle entry point"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "compiler",
+      "refused": true,
+      "diagnostic": "bundle compiler identity changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "native-compiler",
+      "refused": true,
+      "diagnostic": "bundle native compiler identity changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "artifact",
+      "refused": true,
+      "diagnostic": "bundle artifact identity changed"
+    },
+    {
+      "group": "cli-isolated-native",
+      "control": "source",
+      "refused": true,
+      "diagnostic": "bundle generation source guard failed"
+    }
+  ],
+  "source_pins": {
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/dev/bend2-native-tests.py": "6fd5d926a1a590511b33c1b8405cb179c981fa42af642274a030738fd1c7f9ab",
+    "/Users/oobi/Documents/gpt6/mechanism-lang-bend2-complete/dev/bend2-mutation-build.py": "ee23bc3e746be045d338b37cc4ed8c7aa46034c2e046c2eaa8c370bf943e5256"
+  },
+  "compiler_sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8"
+}

@@ -24,7 +24,7 @@ The generated [LP snapshot](three-bidders.lp) and
 From the repository root, build the existing compiler and runtime helper:
 
 ```sh
-zsh dev/dunecho.sh build
+make build
 python3 -P examples/gpu-auction/auction.py export --out /tmp/gpu-auction --check-wasm
 python3 -P examples/gpu-auction/auction.py solve /tmp/gpu-auction --backend reference
 python3 -P examples/gpu-auction/auction.py verify /tmp/gpu-auction /tmp/gpu-auction/reference-solution.json

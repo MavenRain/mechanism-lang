@@ -38,7 +38,7 @@ def main():
                 print(f"{GATE} FAIL {payload}/kernel-emit out of time")
                 return 1
             result = subprocess.run(
-                [str(ROOT / "_build/default/test/prelude_runtime.exe"), str(fixture),
+                [str(ROOT / "_bend2/test/prelude_runtime.exe"), str(fixture),
                  str(variant), *exports], cwd=ROOT, capture_output=True, text=True, timeout=remaining)
             if result.returncode or result.stderr or result.stdout != expected:
                 print(f"{GATE} FAIL {payload}/kernel-emit exit={result.returncode} "

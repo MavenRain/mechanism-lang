@@ -35,6 +35,9 @@ zmodload zsh/datetime
 SELF=${0:A}
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
+export BEND_TEST_BACKEND=native
+export BEND_NATIVE_TEST_ROOT=$ROOT
+export BEND_MUTATION_CACHE=${BEND_MUTATION_CACHE:-$ROOT/build/bend2-native-mutations}
 WORK=$ROOT/.gatework/gates
 MEASURE_FILE=$WORK/measure.txt
 mkdir -p $WORK
@@ -67,6 +70,8 @@ MED=30
 SLOW=120
 SUITE=300
 CATEGORY=900
+# Extra Bend regressions include a separate 5400-second frozen corpus replay.
+BEND_EXTRA=7200
 
 # gate_timed TIER NAME CMD...
 # Runs one leg under the named tier, records the elapsed wall time in
@@ -94,21 +99,10 @@ gate_timed () {
 # carries a value.  The battery below runs them through the watchdog as
 # "zsh dev/gates.sh --leg NAME".
 
-# PIN.  The PIN file, the index gitlink for vendor/veil and the
-# submodule HEAD all read the pin (M0-PLAN.md:146, tally
-# dev/gates-tally-m1.sh:127-133).
+# PIN verifies the frozen tracked fixture snapshot after source retirement.
+# Change the provenance digest only with a reviewed fixture or overlay update.
 leg_pin () {
-  local pin gitlink head line
-  pin=$(cat $ROOT/PIN)
-  gitlink=$(git -C $ROOT ls-files -s vendor/veil | awk '{ print $2 }')
-  head=$(git -C $ROOT/vendor/veil rev-parse HEAD)
-  line="PIN pin=$pin gitlink=$gitlink head=$head want=$PIN_SHA"
-  if [[ $pin == $PIN_SHA && $gitlink == $PIN_SHA && $head == $PIN_SHA ]]; then
-    print -r -- "PASS $line"
-    return 0
-  fi
-  print -r -- "FAIL $line"
-  return 1
+  python3 -P "$ROOT/dev/veil-pin.py" "$ROOT" "$PIN_SHA" "0cbb1160ebd582a25eeed934596cd32bdf44096d784522196845597432178394"
 }
 
 # DENOMINATORS.  The digest of dev/denominators.json is the one the
@@ -178,7 +172,7 @@ leg () {
 
 # The legs, in the order of plan section 9.  BUILD ends the run when it
 # fails, because every later leg reads the build it makes.
-if ! leg SLOW BUILD '0 errors, 0 warnings' zsh $ROOT/dev/dunecho.sh build; then
+if ! leg SLOW BUILD '^BEND2 BUILD PASS$' zsh -c 'make -C "$1" acceptance-build && print -r -- "BEND2 BUILD PASS"' bend-build $ROOT; then
   print -r -- ""
   cat $MEASURE_FILE
   print -r -- ""
@@ -191,55 +185,45 @@ leg MED PIN-DELTA '^PIN-DELTA OK$' zsh $ROOT/dev/pin-delta.sh
 leg FAST R0-COUNT '^R0-COUNT OK$' zsh $ROOT/dev/r0-count.sh
 leg FAST R0-AUDIT '^R0-AUDIT OK$' zsh $ROOT/dev/r0-audit.sh $ROOT
 
-# Each executable below links mechanism's rebuilt kernel, surface and
-# backend.  The pinned fixture files remain the input corpus, while the
-# WASM suite writes its artifacts outside the vendor checkout.
 leg SUITE SUITE-KERNEL '^SUITE-KERNEL OK$' \
-  $ROOT/_build/default/test/main.exe $ROOT/vendor/veil/test
-leg FAST LEVELS '^LEVELS-OK$' $ROOT/_build/default/test/levels.exe
+  $ROOT/_bend2/test/main.exe $ROOT/test/veil/test
+leg FAST LEVELS '^LEVELS-RUNTIME-OK algebra=19 checker=23 poly=12 boundary_cases=1$' \
+  $ROOT/_bend2/test/levels.exe
 leg FAST VEIL-TEMPLATES '^VEIL-TEMPLATES OK shapes=4$' \
-  $ROOT/_build/default/test/veil_templates.exe
+  $ROOT/_bend2/test/veil_templates.exe
 leg FAST VEIL-CIRCUIT '^CIRCUIT-BOUNDS 18/18$' \
-  $ROOT/_build/default/test/circuit_bounds.exe
-leg SLOW VEIL-KERNEL '^VEIL-KERNEL OK shapes=3 hosts=2$' python3 -I $ROOT/dev/veil-gates.py
-leg FAST PRENEX '^PRENEX-OK entries=' $ROOT/_build/default/test/prenex.exe $ROOT
+  $ROOT/_bend2/test/circuit_bounds.exe
+leg FAST PRENEX '^PRENEX-OK entries=' $ROOT/_bend2/test/prenex.exe $ROOT
 leg FAST PRENEX-FAMILIES '^PRENEX-FAMILIES-OK families=' \
-  $ROOT/_build/default/test/prenex_families.exe $ROOT
+  $ROOT/_bend2/test/prenex_families.exe $ROOT
 leg FAST PRENEX-GROUPS '^PRENEX-GROUPS-OK families=' \
-  $ROOT/_build/default/test/prenex_groups.exe $ROOT
+  $ROOT/_bend2/test/prenex_groups.exe $ROOT
 leg FAST PRENEX-EXPORTS '^PRENEX-EXPORTS-OK entries=' \
-  $ROOT/_build/default/test/prenex_exports.exe $ROOT
+  $ROOT/_bend2/test/prenex_exports.exe $ROOT
 leg FAST PRENEX-DEPENDENCY-EXPORTS '^PRENEX-DEPENDENCY-EXPORTS-OK positives=' \
-  $ROOT/_build/default/test/prenex_dependency_exports.exe $ROOT
-leg MED TEMPLATE-COMPOSITION '^TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=10$' \
-  $ROOT/_build/default/test/template_composition.exe $ROOT
+  $ROOT/_bend2/test/prenex_dependency_exports.exe $ROOT
+leg MED TEMPLATE-COMPOSITION '^TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=9 type-excluded=negative-arity$' \
+  $ROOT/_bend2/test/template_composition.exe $ROOT
 leg SLOW TEMPLATE-REUSE '^TEMPLATE-REUSE-OK negatives=17 parser=6 raw=6$' \
-  $ROOT/_build/default/test/template_reuse.exe $ROOT
+  $ROOT/_bend2/test/template_reuse.exe $ROOT
 leg SLOW TEMPLATE-SYMBOLIC-REUSE '^TEMPLATE-SYMBOLIC-REUSE-OK negatives=12 parser=6 raw=5$' \
-  $ROOT/_build/default/test/template_symbolic_reuse.exe $ROOT
-leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_build/default/test/sl_surface.exe
-leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
-  python3 -P $ROOT/dev/wasm-gates.py
-leg MED IMPORT-GRAMMAR '^IMPORT-OK$' zsh $ROOT/dev/import-gates.sh grammar
-leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
-  python3 -P $ROOT/test/import_cli.py $ROOT/_build/default/bin/mech.exe
-leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
-leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
-leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_build/default/test/prelude.exe $ROOT
-leg FAST EQUALITY '^EQUALITY-OK cases=' $ROOT/_build/default/test/equality.exe
-leg FAST FAMILY-POLY '^FAMILY-POLY-OK cases=' $ROOT/_build/default/test/family_poly.exe
-leg FAST PRELUDE-POLY '^PRELUDE-POLY-OK templates=' $ROOT/_build/default/test/prelude_poly.exe $ROOT
-leg FAST FAMILY-MEMBERS '^FAMILY-MEMBERS-OK cases=' $ROOT/_build/default/test/family_members.exe
+  $ROOT/_bend2/test/template_symbolic_reuse.exe $ROOT
+leg FAST SUITE-SURFACE '^SL-SURFACE OK$' $ROOT/_bend2/test/sl_surface.exe
+leg FAST PRELUDE '^PRELUDE-OK families=' $ROOT/_bend2/test/prelude.exe $ROOT
+leg FAST EQUALITY '^EQUALITY-OK cases=' $ROOT/_bend2/test/equality.exe
+leg FAST FAMILY-POLY '^FAMILY-POLY-OK cases=' $ROOT/_bend2/test/family_poly.exe
+leg FAST PRELUDE-POLY '^PRELUDE-POLY-OK templates=' $ROOT/_bend2/test/prelude_poly.exe $ROOT
+leg FAST FAMILY-MEMBERS '^FAMILY-MEMBERS-OK cases=' $ROOT/_bend2/test/family_members.exe
 leg FAST PRELUDE-TRANSPORT '^PRELUDE-TRANSPORT-OK templates=' \
-  $ROOT/_build/default/test/prelude_transport.exe $ROOT
+  $ROOT/_bend2/test/prelude_transport.exe $ROOT
 leg FAST PRELUDE-EQUALITY-OPS '^PRELUDE-EQUALITY-OPS-OK instances=' \
-  $ROOT/_build/default/test/prelude_equality_ops.exe $ROOT
+  $ROOT/_bend2/test/prelude_equality_ops.exe $ROOT
 leg FAST PRELUDE-DEPENDENT '^PRELUDE-DEPENDENT-OK templates=' \
-  $ROOT/_build/default/test/prelude_dependent.exe $ROOT
+  $ROOT/_bend2/test/prelude_dependent.exe $ROOT
 leg FAST FAMILY-GROUPS '^FAMILY-GROUPS-OK cases=' \
-  $ROOT/_build/default/test/family_groups.exe
+  $ROOT/_bend2/test/family_groups.exe
 leg FAST PRELUDE-CONGRUENCE '^PRELUDE-CONGRUENCE-OK instances=' \
-  $ROOT/_build/default/test/prelude_congruence.exe $ROOT
+  $ROOT/_bend2/test/prelude_congruence.exe $ROOT
 leg MED TEMPLATE-COST '^TEMPLATE-COST OK members=[0-9]+ refusal=1$' \
   zsh -c 'exe=$1; source=$2;
     ok=$($exe $source --through Hom) || exit 1;
@@ -249,81 +233,93 @@ leg MED TEMPLATE-COST '^TEMPLATE-COST OK members=[0-9]+ refusal=1$' \
     [[ $code -eq 1 ]] || exit 1;
     print -r -- $bad | rg -q -- "^TEMPLATE-COST-FAIL unknown last member: noSuchMember$" || exit 1;
     print -r -- "TEMPLATE-COST OK members=$members refusal=1"' \
-  template-cost-leg $ROOT/_build/default/test/template_cost.exe $ROOT/prelude/cat/category.mech
+  template-cost-leg $ROOT/_bend2/test/template_cost.exe $ROOT/prelude/cat/category.mech
 leg CATEGORY PRELUDE-CATEGORY '^PRELUDE-CATEGORY-OK entries=' \
-  $ROOT/_build/default/test/prelude_category.exe $ROOT
+  $ROOT/_bend2/test/prelude_category.exe $ROOT
 leg CATEGORY PRELUDE-FUNCTOR '^PRELUDE-FUNCTOR-OK entries=' \
-  $ROOT/_build/default/test/prelude_functor.exe $ROOT
+  $ROOT/_bend2/test/prelude_functor.exe $ROOT
 leg SLOW PRELUDE-HETEROGENEOUS-FUNCTOR '^PRELUDE-HETEROGENEOUS-FUNCTOR-OK entries=' \
-  $ROOT/_build/default/test/prelude_heterogeneous_functor.exe $ROOT
+  $ROOT/_bend2/test/prelude_heterogeneous_functor.exe $ROOT
 leg SLOW PRELUDE-HETEROGENEOUS-NATTRANS '^PRELUDE-HETEROGENEOUS-NATTRANS-OK entries=' \
-  $ROOT/_build/default/test/prelude_heterogeneous_nattrans.exe $ROOT
+  $ROOT/_bend2/test/prelude_heterogeneous_nattrans.exe $ROOT
 leg SLOW PRELUDE-HETEROGENEOUS-WHISKERING \
   '^PRELUDE-HETEROGENEOUS-WHISKERING-OK entries=274 instances=4 computations=4 negatives=16$' \
-  $ROOT/_build/default/test/prelude_heterogeneous_whiskering.exe $ROOT
+  $ROOT/_bend2/test/prelude_heterogeneous_whiskering.exe $ROOT
 leg SUITE PRELUDE-SHARED-NATTRANS \
   '^PRELUDE-SHARED-NATTRANS-OK entries=591 families=11 computations=4 negatives=6$' \
-  $ROOT/_build/default/test/prelude_shared_nattrans.exe $ROOT
+  $ROOT/_bend2/test/prelude_shared_nattrans.exe $ROOT
+leg SUITE PRELUDE-NATTRANS-LAWS \
+  '^PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6$' \
+  $ROOT/_bend2/test/prelude_nattrans_laws.exe $ROOT
+leg SUITE PRELUDE-WHISKERING-LAWS \
+  '^PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24 negatives=6$' \
+  $ROOT/_bend2/test/prelude_whiskering_laws.exe $ROOT
+leg CATEGORY PRELUDE-HORIZONTAL-LAWS \
+  '^PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7$' \
+  $ROOT/_bend2/test/prelude_horizontal_laws.exe $ROOT
+leg CATEGORY PRELUDE-ITERATED-WHISKERING \
+  '^PRELUDE-ITERATED-WHISKERING-OK entries=902 families=14 computations=18 negatives=6$' \
+  $ROOT/_bend2/test/prelude_iterated_whiskering.exe $ROOT
+leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY \
+  '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK entries=2328 families=15 computations=6 negatives=7$' \
+  $ROOT/_bend2/test/prelude_horizontal_associativity.exe $ROOT
+leg CATEGORY PRELUDE-NATTRANS-UNITS \
+  '^PRELUDE-NATTRANS-UNITS-OK entries=1281 families=9 computations=15 negatives=6$' \
+  $ROOT/_bend2/test/prelude_nattrans_units.exe $ROOT
+leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
+  '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
+  $ROOT/_bend2/test/prelude_shared_left_kan.exe $ROOT
+leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
+  '^PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10$' \
+  $ROOT/_bend2/test/prelude_left_kan_laws.exe $ROOT
+leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
+  '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
+  $ROOT/_bend2/test/prelude_heterogeneous_left_kan.exe $ROOT
+leg SLOW PRELUDE-COMPOSABLE-FUNCTORS '^PRELUDE-COMPOSABLE-FUNCTORS-OK entries=' \
+  $ROOT/_bend2/test/prelude_composable_functors.exe $ROOT
+leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
+  $ROOT/_bend2/test/prelude_nattrans.exe $ROOT
+leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
+  $ROOT/_bend2/test/prelude_left_kan.exe $ROOT
+# Additional Bend checks include compiler refusals for signed arities that
+# the original protocol constructors could represent at runtime.
+leg BEND_EXTRA BEND2-EXTRAS '^BEND2 EXTRAS PASS$' \
+  python3 -I $ROOT/dev/bend2-test.py --suite extras --no-build
+leg SLOW VEIL-KERNEL '^VEIL-KERNEL OK shapes=3 hosts=2$' python3 -I $ROOT/dev/veil-gates.py
+leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
+  python3 -P $ROOT/dev/wasm-gates.py
+leg MED IMPORT-GRAMMAR '^IMPORT-OK$' zsh $ROOT/dev/import-gates.sh grammar
+leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
+  python3 -P $ROOT/test/import_cli.py $ROOT/_bend2/bin/mech.exe
+leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
+leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
 leg SUITE PRELUDE-SHARED-NATTRANS-RUNTIME \
   '^PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_nattrans_runtime.py
-leg SUITE PRELUDE-NATTRANS-LAWS \
-  '^PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6$' \
-  $ROOT/_build/default/test/prelude_nattrans_laws.exe $ROOT
 leg SUITE PRELUDE-NATTRANS-LAWS-RUNTIME \
   '^PRELUDE-NATTRANS-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2$' \
   python3 -I $ROOT/test/nattrans_laws_runtime.py
-leg SUITE PRELUDE-WHISKERING-LAWS \
-  '^PRELUDE-WHISKERING-LAWS-OK entries=1177 families=12 computations=24 negatives=6$' \
-  $ROOT/_build/default/test/prelude_whiskering_laws.exe $ROOT
 leg SUITE PRELUDE-WHISKERING-LAWS-RUNTIME \
   '^PRELUDE-WHISKERING-LAWS-RUNTIME OK cases=12 hosts=3 payloads=2 comparisons=48$' \
   python3 -I $ROOT/test/whiskering_laws_runtime.py
-leg CATEGORY PRELUDE-HORIZONTAL-LAWS \
-  '^PRELUDE-HORIZONTAL-LAWS-OK entries=1205 families=12 computations=28 negatives=7$' \
-  $ROOT/_build/default/test/prelude_horizontal_laws.exe $ROOT
 leg CATEGORY PRELUDE-HORIZONTAL-LAWS-RUNTIME \
   '^PRELUDE-HORIZONTAL-LAWS-RUNTIME OK cases=14 hosts=3 payloads=2 comparisons=56$' \
   python3 -I $ROOT/test/horizontal_laws_runtime.py
-leg CATEGORY PRELUDE-ITERATED-WHISKERING \
-  '^PRELUDE-ITERATED-WHISKERING-OK entries=902 families=14 computations=18 negatives=6$' \
-  $ROOT/_build/default/test/prelude_iterated_whiskering.exe $ROOT
 leg CATEGORY PRELUDE-ITERATED-WHISKERING-RUNTIME \
   '^PRELUDE-ITERATED-WHISKERING-RUNTIME OK cases=6 hosts=3 payloads=3 comparisons=36$' \
   python3 -I $ROOT/test/iterated_whiskering_runtime.py
-leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY \
-  '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK entries=2328 families=15 computations=6 negatives=7$' \
-  $ROOT/_build/default/test/prelude_horizontal_associativity.exe $ROOT
 leg CATEGORY PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME \
   '^PRELUDE-HORIZONTAL-ASSOCIATIVITY-RUNTIME OK cases=2 hosts=3 payloads=3 comparisons=12$' \
   python3 -I $ROOT/test/horizontal_associativity_runtime.py
-leg CATEGORY PRELUDE-NATTRANS-UNITS \
-  '^PRELUDE-NATTRANS-UNITS-OK entries=1281 families=9 computations=15 negatives=6$' \
-  $ROOT/_build/default/test/prelude_nattrans_units.exe $ROOT
 leg CATEGORY PRELUDE-NATTRANS-UNITS-RUNTIME \
   '^PRELUDE-NATTRANS-UNITS-RUNTIME OK cases=5 hosts=3 payloads=3 comparisons=30$' \
   python3 -I $ROOT/test/nattrans_units_runtime.py
-leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
-  '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
-  $ROOT/_build/default/test/prelude_shared_left_kan.exe $ROOT
 leg CATEGORY PRELUDE-SHARED-LEFT-KAN-RUNTIME \
   '^PRELUDE-SHARED-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_left_kan_runtime.py
-leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
-  '^PRELUDE-LEFT-KAN-LAWS-OK entries=963 families=9 computations=10 negatives=10$' \
-  $ROOT/_build/default/test/prelude_left_kan_laws.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS-RUNTIME \
   '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=10 hosts=3 payloads=2 comparisons=60$' \
   python3 -I $ROOT/test/left_kan_laws_runtime.py
-leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
-  '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
-  $ROOT/_build/default/test/prelude_heterogeneous_left_kan.exe $ROOT
-leg SLOW PRELUDE-COMPOSABLE-FUNCTORS '^PRELUDE-COMPOSABLE-FUNCTORS-OK entries=' \
-  $ROOT/_build/default/test/prelude_composable_functors.exe $ROOT
-leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
-  $ROOT/_build/default/test/prelude_nattrans.exe $ROOT
-leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
-  $ROOT/_build/default/test/prelude_left_kan.exe $ROOT
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py
 leg MED PRENEX-RUNTIME '^PRENEX-RUNTIME OK cases=' \

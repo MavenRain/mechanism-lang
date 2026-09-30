@@ -19,9 +19,12 @@ PROTOCOLS = ("category", "functor", "nattrans", "left-kan", "heterogeneous-funct
              "iterated-whiskering", "horizontal-associativity", "nattrans-units")
 ENTRIES.update({name: "prelude_" + name.replace("-", "_") for name in PROTOCOLS})
 ENTRIES["template-cost"] = "template_cost"
+PROTOCOL_GROUPS = tuple(PROTOCOLS[index * 4:index * 4 + 4] for index in range(4)) + (
+    ("horizontal-associativity",), ("nattrans-units",))
+PROTOCOL_BUNDLES = {mode: index for index, modes in enumerate(PROTOCOL_GROUPS) for mode in modes}
 BUNDLE_ENTRIES = {"bend2/tests/relational_protocols.bend": PROTOCOLS}
-BUNDLE_ENTRIES.update({f"bend2/tests/relational_native_{index}.bend": PROTOCOLS[index * 4:index * 4 + 4]
-                       for index in range(5)})
+BUNDLE_ENTRIES.update({f"bend2/tests/relational_native_{index}.bend": modes
+                       for index, modes in enumerate(PROTOCOL_GROUPS)})
 BUNDLE_ENTRIES["bend2/tests/cli_core.bend"] = ("cli",)
 
 
@@ -211,8 +214,8 @@ def install_bundle(manifest_path, mode, output, launcher, compiler_sha256):
 
 
 def build_bundle(index):
-    if index != "cli" and index not in range(5):
-        raise RuntimeError("bundle shard must be 0 through 4")
+    if index != "cli" and index not in range(len(PROTOCOL_GROUPS)):
+        raise RuntimeError("invalid relational bundle shard")
     entry = "bend2/tests/cli_core.bend" if index == "cli" else f"bend2/tests/relational_native_{index}.bend"
     bend, version, bend_hash = compiler_identity()
     cc = shutil.which(os.environ.get("CC", "clang"))
@@ -360,7 +363,7 @@ def main():
     bundle_path = os.environ.get("BEND_MUTATION_BUNDLE")
     if (not bundle_path and mode in PROTOCOLS and backend == "native"
             and os.environ.get("BEND_TEST_BACKEND") == "native"):
-        index = PROTOCOLS.index(mode) // 4
+        index = PROTOCOL_BUNDLES[mode]
         bundle_path = str(native_test_root / "_bend2/mutation"
                           / f"relational-shard-{index}-native.bundle.json")
     if bundle_path and mode in PROTOCOLS:

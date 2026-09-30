@@ -47,7 +47,7 @@ def main():
     pins = json.loads((ROOT / DIAGNOSTICS).read_text())
     if set(pins) != {label for label, _, _ in CONTROLS}:
         raise ValueError("mutation diagnostic inventory changed")
-    exe = ROOT / "_build/default/bin/mech.exe"
+    exe = ROOT / "_bend2/bin/mech.exe"
     fixture = work / "templates.mech"
     original = sources[TEMPLATE].decode()
     rows = []

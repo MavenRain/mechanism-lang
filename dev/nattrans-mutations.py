@@ -2,6 +2,7 @@
 import hashlib
 from itertools import islice
 import json
+import runpy
 import os
 import re
 from pathlib import Path
@@ -10,6 +11,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 # The replay is not a gate leg.  It runs the SLOW suite six times, and the
 # same suite has taken several minutes under load, so each run gets 600
 # seconds.  A shorter cap reports a failure that no control caused.
@@ -22,7 +24,8 @@ def main():
     work = Path(sys.argv[1]).resolve()
     if work.exists() or work == ROOT or ROOT in work.parents:
         raise SystemExit("the output directory must be new and outside the repository")
-    executable = ROOT / "_build/default/test/prelude_nattrans.exe"
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'nattrans')
+    executable = ROOT / "_bend2/test/prelude_nattrans.exe"
     if not executable.is_file():
         raise SystemExit("build the natural-transformation checker before replay")
     copy = work / "source"
@@ -40,7 +43,7 @@ def main():
     env.pop("CAML_LD_LIBRARY_PATH", None)
 
     def suite(label):
-        result = subprocess.run([str(executable), str(copy)], cwd=ROOT, env=env,
+        result = bounded_run([str(executable), str(copy)], cwd=ROOT, env=env,
                                 capture_output=True, timeout=REPLAY)
         (work / f"{label}.stdout").write_bytes(result.stdout)
         (work / f"{label}.stderr").write_bytes(result.stderr)
@@ -115,7 +118,7 @@ def main():
             path.write_bytes(original)
     restored = passed(suite("restored"))
     success = restored and all(row["killed"] for row in reports)
-    report = {"passed": success, "restored": restored, "sources": sources,
+    report = {"bend_build": build_evidence, "passed": success, "restored": restored, "sources": sources,
               "checker_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
               "controls": reports}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")

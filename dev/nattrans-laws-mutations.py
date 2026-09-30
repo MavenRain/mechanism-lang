@@ -2,12 +2,14 @@
 from pathlib import Path
 import hashlib
 import json
+import runpy
 import shutil
 import subprocess
 import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 OK = "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6\n"
 FAIL = "PRELUDE-NATTRANS-LAWS-FAIL "
 TEMPLATE = "prelude/cat/nattrans-laws.mech"
@@ -95,17 +97,18 @@ def main():
         destination = copy / name
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, destination)
-    exe = ROOT / "_build/default/test/prelude_nattrans_laws.exe"
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'nattrans-laws')
+    exe = ROOT / "_bend2/test/prelude_nattrans_laws.exe"
     hashes = {name: digest(copy / name) for name in files}
     rows = []
 
     def run(label):
         started = time.monotonic()
         command = [str(exe), str(copy)]
-        result = subprocess.run(command, cwd=work, capture_output=True, text=True, timeout=290)
+        result = bounded_run(command, cwd=work, capture_output=True, text=True, timeout=290)
         (work / f"{label}.stdout").write_text(result.stdout)
         (work / f"{label}.stderr").write_text(result.stderr)
-        row = {"id": label, "command": ["_build/default/test/prelude_nattrans_laws.exe", "COPY"],
+        row = {"id": label, "command": ["_bend2/test/prelude_nattrans_laws.exe", "COPY"],
                "exit": result.returncode, "seconds": round(time.monotonic() - started, 3),
                "stdout_sha256": digest(work / f"{label}.stdout"),
                "stderr_sha256": digest(work / f"{label}.stderr")}
@@ -138,9 +141,9 @@ def main():
                     for name, sha in hashes.items())
     killed = sum(row.get("killed", False) for row in rows)
     passed = baseline_row["passed"] and restored_row["passed"] and unchanged and killed == len(CONTROLS)
-    report = {"passed": passed, "killed": killed, "controls": len(CONTROLS),
+    report = {"bend_build": build_evidence, "passed": passed, "killed": killed, "controls": len(CONTROLS),
               "sources_unchanged": unchanged, "source_sha256": hashes,
-              "suite_source_sha256": digest(ROOT / "test/prelude_nattrans_laws.ml"),
+              "suite_source_sha256": digest(ROOT / "bend2/tests/prelude_nattrans_laws.bend"),
               "executable_sha256": digest(exe), "rows": rows}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"passed": passed, "killed": killed, "controls": len(CONTROLS)}))

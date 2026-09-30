@@ -1,16 +1,10 @@
 import Base
 import ./prelude_horizontal_associativity.bend as P0
-import ./prelude_nattrans_units.bend as P1
-
-def select_1(yes: Bool, +mode: String, args: List<String>) -> IO(Unit):
-  match yes:
-    case True{}: P1.arguments(args)
-    case False{}: IO.die(Unit,2,"unknown relational shard mode")
 
 def select_0(yes: Bool, +mode: String, args: List<String>) -> IO(Unit):
   match yes:
     case True{}: P0.arguments(args)
-    case False{}: select_1(String.eq(mode,"nattrans-units"),mode,args)
+    case False{}: IO.die(Unit,2,"unknown relational shard mode")
 
 def arguments(args: List<String>) -> IO(Unit):
   match args:

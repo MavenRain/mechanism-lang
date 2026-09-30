@@ -1,0 +1,133 @@
+{
+  "oracle_sha256": "c039843488a328d7abf7879b430bb0232dbe6c5d7e665c27229b240920eb53e5",
+  "cases": [
+    {
+      "source": "def p : Type 999999999999999999 := Prop",
+      "source_sha256": "e46f8456f4129922d9b1e39667e7c2edea4e35c9080f1b04dae7965fcf29d3fc",
+      "code": 1,
+      "stdout": "",
+      "stderr": "mismatch: the term has type Type 1 and the expected type is Type 1000000000000000000\n",
+      "seconds": 0.01793512498261407
+    },
+    {
+      "source": "def p : Sort (succ 999999999999999999) := Sort 999999999999999999",
+      "source_sha256": "32d32a31fac3b49d062a29f707e69e18e8428c39c7b24c89adc8add74a534940",
+      "code": 0,
+      "stdout": "def p : Type 1000000000000000000 := Type 999999999999999999\n\n",
+      "stderr": "",
+      "seconds": 0.008440665988018736
+    },
+    {
+      "source": "def p : Nat := (tuple (0)).999999999999999999",
+      "source_sha256": "a3850177d13764da69b36c7153aff222801a371f7427818838d8b38befd1361b",
+      "code": 1,
+      "stdout": "",
+      "stderr": "cannot infer: a section has no type of its own;  it needs an expected type\n",
+      "seconds": 0.011614249990088865
+    },
+    {
+      "source": "def p : Nat := (tuple (0) : prod (Nat)).999999999999999999",
+      "source_sha256": "21111007bbbe8095d11feb5b3d16d6b23574136b2a64479e8d57cb20ee57b487",
+      "code": 1,
+      "stdout": "",
+      "stderr": "wrong leg: the leg address is outside the collection\n",
+      "seconds": 0.008769833017140627
+    },
+    {
+      "source": "def p : Nat := (tuple (missing) : prod (Nat)).999999999999999999",
+      "source_sha256": "b33e6bb95c8ac4cd6ca6d76e46a9d85f6ca4b02964b8822cc380c1f34606b2e4",
+      "code": 1,
+      "stdout": "",
+      "stderr": "unbound: missing\n",
+      "seconds": 0.009349833009764552
+    },
+    {
+      "source": "def p : sum (Nat) := inj 999999999999999999 of 1 0",
+      "source_sha256": "48272d33304ccc7c30579b7e01c8d7272ac291af2ff88b77fd08e875207459e7",
+      "code": 1,
+      "stdout": "",
+      "stderr": "wrong leg: the leg address is outside the collection\n",
+      "seconds": 0.0074827499920502305
+    },
+    {
+      "source": "def p : sum (Nat) := inj 999999999999999999 of 1 missing",
+      "source_sha256": "92db6b177ea96c022ba4522e6caa6f4503ef2069c77959f66a0dddc07e70dd25",
+      "code": 1,
+      "stdout": "",
+      "stderr": "wrong leg: the leg address is outside the collection\n",
+      "seconds": 0.007963415991980582
+    },
+    {
+      "source": "def p : Nat := case (inj 0 of 1 0 : sum (Nat)) as s return Nat with | 999999999999999999 (x : Nat) => x",
+      "source_sha256": "69a5c0f133b6ed5276ebd4ea5402626518ec498b0623b41ffbbdbb16830c3a3e",
+      "code": 1,
+      "stdout": "",
+      "stderr": "wrong leg: the leg address is outside the collection\n",
+      "seconds": 0.00800649999291636
+    },
+    {
+      "source": "def p : Nat := case (inj 0 of 1 0 : sum (Nat)) as s return Nat with | 999999999999999999 => 0",
+      "source_sha256": "8e6733a205e0238380c86ccd7c4d7cbddd0a6e25e2e859825efed92f3d118f64",
+      "code": 1,
+      "stdout": "",
+      "stderr": "missing branch: each branch binds its payload once\n",
+      "seconds": 0.009372250002343208
+    },
+    {
+      "source": "def p : Nat := case (inj 0 of 1 0 : sum (Nat)) as s return Nat with | 999999999999999999 (x : Nat) (y : Nat) => 0",
+      "source_sha256": "1225e27132a407af55a2fb86d906b9e7c9d3e265e95052917a9e95770ea0d72c",
+      "code": 1,
+      "stdout": "",
+      "stderr": "missing branch: each branch binds its payload once\n",
+      "seconds": 0.010700209008064121
+    },
+    {
+      "source": "def p : Nat := (0).999999999999999999",
+      "source_sha256": "a10a0183cdc191270ae44ac3f576705f6047854cb0f2656bc7b64acc4d19fbb7",
+      "code": 1,
+      "stdout": "",
+      "stderr": "mismatch: a projection reads a pair or a tuple, and this scrutinee is neither\n",
+      "seconds": 0.008898416999727488
+    },
+    {
+      "source": "def p : Nat := (tuple (0) : prod (Nat)).0",
+      "source_sha256": "b60976bfa4429b563582c5a73df17ade2c31e1706edb67940dfb745c81d55bbd",
+      "code": 0,
+      "stdout": "def p : Nat := (Out SColl 1 (ALeg 0) ((Sec SColl 1 [ => 0]) : (Ran SColl 1 (Sec SColl 1 [ => Nat]))))\n\n",
+      "stderr": "",
+      "seconds": 0.007020834018476307
+    },
+    {
+      "source": "def p : sum (Nat) := inj 0 of 1 0",
+      "source_sha256": "e7681b4bfb5c5046d1a10c9b19b5721818f45881b9f8f0c3ae44eb6b5f9f315e",
+      "code": 0,
+      "stdout": "def p : (Lan SColl 1 (Sec SColl 1 [ => Nat])) := (In SColl 1 (ALeg 0) [0])\n\n",
+      "stderr": "",
+      "seconds": 0.007104958000127226
+    },
+    {
+      "source": "def p : Nat := case (inj 0 of 1 0 : sum (Nat)) as s return Nat with | 0 (x : Nat) => x",
+      "source_sha256": "a138bdd1b171ee43d66a904358af50bc6bfaa7e418c82f29fec641bda2c8b470",
+      "code": 0,
+      "stdout": "def p : Nat := (Elim SColl 1 ((In SColl 1 (ALeg 0) [0]) : (Lan SColl 1 (Sec SColl 1 [ => Nat]))) as s return Nat with | (ALeg 0) x => x)\n\n",
+      "stderr": "",
+      "seconds": 0.00904095801524818
+    },
+    {
+      "source": "def p : Type 1000000000000000000 := Prop",
+      "source_sha256": "d9ceefd1d94cd130b23a2d2b93e149f3a0ffa611efa9531145c2f82123505e56",
+      "code": 1,
+      "stdout": "",
+      "stderr": "line 1, column 14: numeric literal too long\n",
+      "seconds": 0.008587166987126693
+    },
+    {
+      "source": "def p : sum (Nat) := inj 1000000000000000000 of 1 0",
+      "source_sha256": "84788c931b3a6de156ced7451fa5c895a797a5eb159b77f9066486f30be24bdc",
+      "code": 1,
+      "stdout": "",
+      "stderr": "line 1, column 26: numeric literal too long\n",
+      "seconds": 0.0070440830022562295
+    }
+  ]
+}

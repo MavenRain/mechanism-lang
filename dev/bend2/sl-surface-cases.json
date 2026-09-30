@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "original_path": "vendor/veil/test/sl_surface.ml",
+  "original_sha256": "f0ab669a0ad100933e00d29dcfb1c78c89b3d80184b057d1fa3b85b258e1c18b",
+  "cases": [
+    {
+      "name": "constructor-sugar",
+      "kind": "SameTree",
+      "first": "mu N : Type 0 := | zero : N | succ (n : N) : N\n",
+      "second": "mu N : Type 0 with | zero : N | succ : (n : N) -> N\n"
+    },
+    {
+      "name": "mutual-sugar",
+      "kind": "SameTree",
+      "first": "mutual mu A : Type 0 := | a (b : B) : A mu B : Type 0 := | b : B end",
+      "second": "mu A : Type 0 with | a : (b : B) -> A and B : Type 0 with | b : B"
+    },
+    {
+      "name": "match-elaboration",
+      "kind": "SameChecked",
+      "first": "mu N : Type 0 := | zero : N | succ (n : N) : N\ndef pred : N -> N := fun (n : N) => match n as x in N return N with | zero => zero | succ (p : N) => p",
+      "second": "mu N : Type 0 with | zero : N | succ : (n : N) -> N\ndef pred : N -> N := fun (n : N) => case n as x in N return N with | zero => zero | succ p => p"
+    },
+    {
+      "name": "mu-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu N : Type 0 := | zero : N | succ (n : N) : N\n",
+      "second": ""
+    },
+    {
+      "name": "legacy-mu-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu N : Type 0 with | zero : N | succ : (n : N) -> N\n",
+      "second": ""
+    },
+    {
+      "name": "mutual-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mutual mu A : Type 0 := | a (b : B) : A mu B : Type 0 := | b : B end",
+      "second": ""
+    },
+    {
+      "name": "legacy-mutual-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu A : Type 0 with | a : (b : B) -> A and B : Type 0 with | b : B",
+      "second": ""
+    },
+    {
+      "name": "match-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu N : Type 0 := | zero : N | succ (n : N) : N\ndef pred : N -> N := fun (n : N) => match n as x in N return N with | zero => zero | succ (p : N) => p",
+      "second": ""
+    },
+    {
+      "name": "case-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu N : Type 0 with | zero : N | succ : (n : N) -> N\ndef pred : N -> N := fun (n : N) => case n as x in N return N with | zero => zero | succ p => p",
+      "second": ""
+    },
+    {
+      "name": "mixed-fields-roundtrip",
+      "kind": "RoundTrip",
+      "first": "def f : Nat := match n as x in N return Nat with | c (0 i : N) x (1 y : Nat) => y",
+      "second": ""
+    },
+    {
+      "name": "nested-match-roundtrip",
+      "kind": "RoundTrip",
+      "first": "def f : Nat := match n as x in N return Nat with | z => 0 | s p => (match p as y in N return Nat with | z => 1 | s q => 2)",
+      "second": ""
+    },
+    {
+      "name": "empty-match-roundtrip",
+      "kind": "RoundTrip",
+      "first": "mu Void : Prop := def exFalso : Void -> Type 0 := fun (v : Void) => match v as x in Void return Type 0 with",
+      "second": ""
+    },
+    {
+      "name": "case-numeric-roundtrip",
+      "kind": "RoundTrip",
+      "first": "def f : Nat := case b with | 0 (x : Nat) => x | 1 (x : Nat) => x",
+      "second": ""
+    },
+    {
+      "name": "match-numeric-refusal",
+      "kind": "ParseRefusal",
+      "first": "def f : Nat := match n with | 0 (x : Nat) => x",
+      "second": "a match branch keys a constructor, not a leg number"
+    },
+    {
+      "name": "mutual-empty-refusal",
+      "kind": "ParseRefusal",
+      "first": "mutual end",
+      "second": "a mutual group needs at least two mu declarations"
+    },
+    {
+      "name": "mutual-singleton-refusal",
+      "kind": "ParseRefusal",
+      "first": "mutual mu N : Type 0 := end",
+      "second": "a mutual group needs at least two mu declarations"
+    },
+    {
+      "name": "mutual-unclosed-refusal",
+      "kind": "ParseRefusal",
+      "first": "mutual mu A : Type 0 := mu B : Type 0 :=",
+      "second": "expected 'mu' or 'end' in a mutual group, found end of input"
+    },
+    {
+      "name": "mutual-and-refusal",
+      "kind": "ParseRefusal",
+      "first": "mutual mu A : Type 0 := and B : Type 0 := end",
+      "second": "expected 'mu' or 'end' in a mutual group, found 'and'"
+    },
+    {
+      "name": "grouped-def",
+      "kind": "SameTree",
+      "first": "def f (0 A B : Type 0) (x y : Nat) (1 z : Nat) : Nat := natAdd x (natAdd y z)",
+      "second": "def f (0 A : Type 0) (0 B : Type 0) (x : Nat) (y : Nat) (1 z : Nat) : Nat := natAdd x (natAdd y z)"
+    },
+    {
+      "name": "grouped-fun",
+      "kind": "SameTree",
+      "first": "def f : (1 x y : Nat) -> Nat := fun (1 x y : Nat) => natAdd x y",
+      "second": "def f : (1 x : Nat) -> (1 y : Nat) -> Nat := fun (1 x : Nat) (1 y : Nat) => natAdd x y"
+    },
+    {
+      "name": "grouped-star",
+      "kind": "SameTree",
+      "first": "axiom p : (x y : Nat) * Nat",
+      "second": "axiom p : (x : Nat) * (y : Nat) * Nat"
+    },
+    {
+      "name": "grouped-family",
+      "kind": "SameTree",
+      "first": "mu P (0 A B : Type 0) : Type 0 := | pair (x y : A) (z : B) : P A B",
+      "second": "mu P (0 A : Type 0) (0 B : Type 0) : Type 0 := | pair (x : A) (y : A) (z : B) : P A B"
+    },
+    {
+      "name": "grouped-branch",
+      "kind": "SameTree",
+      "first": "def f : Nat := match p with | pair (1 x y : Nat) z => natAdd x (natAdd y z)",
+      "second": "def f : Nat := match p with | pair (1 x : Nat) (1 y : Nat) z => natAdd x (natAdd y z)"
+    },
+    {
+      "name": "grouped-branch-annotation",
+      "kind": "CheckedRefusal",
+      "first": "mu Tag : Type 0 := | tag : Tag\nmu Box : Type 0 := | box (m : Nat) (t : Tag) : Box\ndef bad : Box -> Nat := fun (b : Box) => match b as self in Box return Nat with | box (m t : Nat) => 0",
+      "second": "the annotation of constructor field t differs from its declared type"
+    },
+    {
+      "name": "grouped-case",
+      "kind": "SameTree",
+      "first": "def f : Nat := case p with | 0 (x y : Nat) => natSub x y",
+      "second": "def f : Nat := case p with | 0 (x : Nat) (y : Nat) => natSub x y"
+    },
+    {
+      "name": "grouped-roundtrip",
+      "kind": "RoundTrip",
+      "first": "def f (0 A B : Type 0) (1 x y : Nat) : Nat := natAdd x y",
+      "second": ""
+    },
+    {
+      "name": "grouped-dependent-check",
+      "kind": "SameChecked",
+      "first": "def f (0 A : Type 0) (x y : A) : A := x",
+      "second": "def f (0 A : Type 0) (x : A) (y : A) : A := x"
+    },
+    {
+      "name": "grouped-linear-check",
+      "kind": "SameChecked",
+      "first": "def f (1 x y : Nat) : Nat := let used : Nat := x in y",
+      "second": "def f (1 x : Nat) (1 y : Nat) : Nat := let used : Nat := x in y"
+    },
+    {
+      "name": "grouped-annotation-fallback",
+      "kind": "SameTree",
+      "first": "axiom f : Nat -> Nat def n : Nat := (f 3 : Nat)",
+      "second": "axiom f : Nat -> Nat def n : Nat := ((f 3) : Nat)"
+    },
+    {
+      "name": "grouped-name-annotation-fallback",
+      "kind": "SameTree",
+      "first": "axiom f : Nat -> Nat axiom x : Nat def n : Nat := (f x : Nat)",
+      "second": "axiom f : Nat -> Nat axiom x : Nat def n : Nat := ((f x) : Nat)"
+    },
+    {
+      "name": "grouped-empty-refusal",
+      "kind": "ParseRefusal",
+      "first": "def f (0 : Nat) : Nat := 0",
+      "second": "expected a binder name and ':', found ':'"
+    },
+    {
+      "name": "grouped-missing-colon-refusal",
+      "kind": "ParseRefusal",
+      "first": "def f (x y) : Nat := 0",
+      "second": "expected ':', found ')'"
+    },
+    {
+      "name": "grouped-missing-close-refusal",
+      "kind": "ParseRefusal",
+      "first": "def f (x y : Nat := 0",
+      "second": "expected ')', found ':='"
+    },
+    {
+      "name": "grouped-zk-expansion",
+      "kind": "SameTree",
+      "first": "axiom P : zk (0 x y : Nat) * prod ()",
+      "second": "axiom P : zk (0 x : Nat) * (0 y : Nat) * prod ()"
+    },
+    {
+      "name": "nu-term-refusal",
+      "kind": "ParseRefusal",
+      "first": "def f : Type 0 := nu",
+      "second": "nu arrives at M2"
+    },
+    {
+      "name": "nu-declaration-refusal",
+      "kind": "ParseRefusal",
+      "first": "nu N : Type 0 :=",
+      "second": "nu arrives at M2"
+    }
+  ]
+}

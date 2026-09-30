@@ -14,7 +14,7 @@ def main():
         with tempfile.TemporaryDirectory(prefix="gpu-auction-category-") as temporary:
             source = Path(temporary) / "category.mech"
             source.write_text("\n".join((root / part).read_text() for part in parts))
-            result = subprocess.run([str(root / "_build/default/bin/mech.exe"), "check", str(source)],
+            result = subprocess.run([str(root / "_bend2/bin/mech.exe"), "check", str(source)],
                                     capture_output=True, text=True, timeout=240, check=False)
             if result.returncode:
                 print(result.stderr, file=sys.stderr)

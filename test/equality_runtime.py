@@ -12,7 +12,7 @@ def main():
         return 64
 
     root = Path(__file__).resolve().parent.parent
-    executable = root / "_build/default/bin/mech.exe"
+    executable = root / "_bend2/bin/mech.exe"
     prelude = (root / "prelude/init.mech").read_text()
     fixture = (root / "test/fixtures/prelude/equality-runtime.mech").read_text()
     original = "def equalityRuntimePayload : Nat := 37"

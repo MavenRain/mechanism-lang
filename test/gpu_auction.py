@@ -155,7 +155,7 @@ class KernelIntegration(unittest.TestCase):
     def check_source(self, text):
         path = self.directory / "control.mech"
         path.write_text(text)
-        return subprocess.run([str(ROOT / "_build/default/bin/mech.exe"), "check", str(path)],
+        return subprocess.run([str(ROOT / "_bend2/bin/mech.exe"), "check", str(path)],
                               capture_output=True, text=True, timeout=60, check=False)
 
     def test_kernel_node_and_reference_agree(self):

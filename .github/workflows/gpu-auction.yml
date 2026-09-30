@@ -24,35 +24,55 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          # Mechanism uses Veil's sources, without its local Tot development pin.
-          submodules: true
+          # Pinned fixtures are tracked under test/veil and verified by PIN.
           persist-credentials: false
-      - uses: ocaml/setup-ocaml@v3
+      - uses: actions/setup-node@v4
         with:
-          ocaml-compiler: '5.3.0'
+          node-version: '23.10.0'
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - name: Build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y zsh libgmp-dev
-          opam install dune.3.24.0 zarith.1.14
+          sudo apt-get install -y zsh ripgrep
+          curl --proto '=https' --tlsv1.2 -fsSL https://github.com/bendlang/bend/releases/download/v2.0.27/bend-2.0.27-linux-x64.tar.gz -o /tmp/bend.tar.gz
+          echo '58adc86af6605ed0c48f7d84e4c23028f78893ce4a867a20a4f004b11582687b  /tmp/bend.tar.gz' | sha256sum -c -
+          mkdir -p "$HOME/.bend"
+          tar -xzf /tmp/bend.tar.gz --strip-components=1 -C "$HOME/.bend"
+          echo "$HOME/.bend/bin" >> "$GITHUB_PATH"
+          curl --proto '=https' --tlsv1.2 -fsSL https://github.com/WebAssembly/binaryen/releases/download/version_130/binaryen-version_130-x86_64-linux.tar.gz -o /tmp/binaryen.tar.gz
+          echo '0a18362361ad05465118cd8eeb72edaeec89de6894bc283576ef4e07aa3babcc  /tmp/binaryen.tar.gz' | sha256sum -c -
+          mkdir -p "$HOME/.local/binaryen"
+          tar -xzf /tmp/binaryen.tar.gz --strip-components=1 -C "$HOME/.local/binaryen"
+          echo "$HOME/.local/binaryen/bin" >> "$GITHUB_PATH"
+          curl --proto '=https' --tlsv1.2 -fsSL https://github.com/bytecodealliance/wasmtime/releases/download/v48.0.1/wasmtime-v48.0.1-x86_64-linux.tar.xz -o /tmp/wasmtime.tar.xz
+          echo '4c2e31b68ad99e0a519f225a261fda099eb15f056d4a24fdb3c2a46517bde1df  /tmp/wasmtime.tar.xz' | sha256sum -c -
+          mkdir -p "$HOME/.local/wasmtime"
+          tar -xJf /tmp/wasmtime.tar.xz --strip-components=1 -C "$HOME/.local/wasmtime"
+          echo "$HOME/.local/wasmtime" >> "$GITHUB_PATH"
           python -m pip install '.[test]'
-      - name: Build the mechanism compiler and certificate checker
-        run: opam exec -- zsh dev/dunecho.sh build
-      # The pin leg holds PIN, .gitmodules and the gitlink together, and
-      # the two FAST Veil legs hold their counts.  The values repeat the
-      # oracles of dev/gates.sh, so a kept change of a count moves both.
-      - name: Pin and Veil regression legs
+      - name: Verify the Bend toolchain
         run: |
-          opam exec -- zsh dev/gates.sh --leg pin
-          templates=$(_build/default/test/veil_templates.exe)
+          test "$(bend version)" = 'bend 2.0.27'
+          test "$(wasm-opt --version)" = 'wasm-opt version 130'
+          wasmtime --version | rg '^wasmtime 48\.0\.1 '
+      - name: Build the mechanism compiler and certificate checker
+        run: make build
+      - name: Pin and Bend regression suites
+        run: |
+          zsh dev/gates.sh --leg pin
+          templates=$(_bend2/test/veil_templates.exe)
           printf '%s\n' "$templates"
           [ "$templates" = 'VEIL-TEMPLATES OK shapes=4' ]
-          bounds=$(_build/default/test/circuit_bounds.exe | tail -1)
+          bounds=$(_bend2/test/circuit_bounds.exe | tail -1)
           printf '%s\n' "$bounds"
           [ "$bounds" = 'CIRCUIT-BOUNDS 18/18' ]
+          _bend2/test/main.exe test/veil/test
+          levels=$(_bend2/test/levels.exe)
+          printf '%s\n' "$levels"
+          [ "$levels" = 'LEVELS-RUNTIME-OK algebra=19 checker=23 poly=12 boundary_cases=1' ]
+          python3 -I bend2/tests/levels_protocol_boundaries.py
       - name: Auction and certificate checks
         run: python -P dev/gpu-auction-check.py --category --schemas --record auction-validation.json
       - name: Installed CLI round trip
@@ -68,10 +88,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: true
           persist-credentials: false
-      # The runner supplies Python >=3.11, zsh, OCaml >=5.3, dune >=3.24,
-      # zarith 1.14, and cuOpt 26.08 configured for its NVIDIA driver/CUDA.
-      - run: zsh dev/dunecho.sh build
+      # The runner supplies Python >=3.11, zsh, Bend 2.0.27, Node 23.10,
+      # and cuOpt 26.08 configured for its NVIDIA driver/CUDA.
+      - run: test "$(bend version)" = 'bend 2.0.27'
+      - run: make build
       - run: python3 -m pip install --no-deps .
       - run: python3 -P dev/gpu-auction-check.py --gpu --record auction-gpu-validation.json

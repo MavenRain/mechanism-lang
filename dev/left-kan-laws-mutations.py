@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import runpy
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
 TEMPLATES = ["category-core", "heterogeneous-functor", "composable-functors",
              "heterogeneous-nattrans", "heterogeneous-whiskering", "shared-nattrans",
              "heterogeneous-left-kan", "shared-left-kan", "left-kan-laws"]
@@ -22,6 +24,8 @@ def main():
     if output == ROOT or output.is_relative_to(ROOT) or output.exists():
         raise ValueError("choose a fresh output directory outside the repository")
     output.mkdir(parents=True, exist_ok=False)
+    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'left-kan-laws')
+    cli_build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, "cli")
     paths = [ROOT / "prelude/cat" / f"{name}.mech" for name in TEMPLATES]
     original = "\n".join(path.read_text() for path in paths)
     attempts = []
@@ -32,7 +36,7 @@ def main():
         stderr = output / f"{name}.stderr"
         with stdout.open("w") as out, stderr.open("w") as err:
             try:
-                result = subprocess.run(list(map(str, command)), cwd=ROOT, stdout=out,
+                result = bounded_run(list(map(str, command)), cwd=ROOT, stdout=out,
                                         stderr=err, timeout=900)
                 code = result.returncode
             except subprocess.TimeoutExpired:
@@ -55,7 +59,7 @@ def main():
         work = Path(directory)
         source = work / "source.mech"
         source.write_text(original)
-        command = [ROOT / "_build/default/bin/mech.exe", "check", source]
+        command = [ROOT / cli_build_evidence.get("launcher", "_bend2/bin/mech.exe"), "check", source]
         control = run("control", command, True, "")
         identity_start = original.index("    Base_Base_Second_targetEqSymm", original.index("def descId :"))
         identity_end = original.index("\n\n-- Equal cocones", identity_start)
@@ -85,13 +89,13 @@ def main():
         fixture.write_text(replace_once(fixture.read_text(),
             "natAdd (natMul 101 (left.1 (natAdd n 7))) (left.2 (natAdd n 11))",
             "natAdd (natMul 101 (left.2 (natAdd n 7))) (left.1 (natAdd n 11))"))
-        run("swapped-closure-fields", [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
+        run("swapped-closure-fields", [ROOT / "_bend2/test/prelude_left_kan_laws.exe", scratch],
             False, "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanCongr\n")
         fixture.write_text((ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech").read_text())
         fixture.write_text(replace_once(fixture.read_text(),
             "def lanPostcomp : Nat := lanPostcompAt sharedLanInput",
             "def lanPostcomp : Nat := lanReversePostcompAt sharedLanInput"))
-        run("reversed-runtime-composition", [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
+        run("reversed-runtime-composition", [ROOT / "_bend2/test/prelude_left_kan_laws.exe", scratch],
             False, "PRELUDE-LEFT-KAN-LAWS-FAIL wrong computation: lanPostcomp\n")
         fixture.write_text((ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech").read_text())
 
@@ -117,13 +121,13 @@ def main():
         template = scratch / "prelude/cat/left-kan-laws.mech"
         for name, changed in statements:
             template.write_text(changed)
-            run(name, [ROOT / "_build/default/test/prelude_left_kan_laws.exe", scratch],
+            run(name, [ROOT / "_bend2/test/prelude_left_kan_laws.exe", scratch],
                 False, "PRELUDE-LEFT-KAN-LAWS-FAIL mismatch: the term has type")
     killed = sum(row["passed"] for row in attempts if row["name"] not in {"control", "restored"})
-    report = {"passed": control and restored and killed == 9, "killed": killed,
+    report = {"bend_build": build_evidence, "cli_build": cli_build_evidence, "passed": control and restored and killed == 9, "killed": killed,
               "attempts": attempts,
               "sources": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-                          for path in paths + [Path(__file__), ROOT / "test/prelude_left_kan_laws.ml",
+                          for path in paths + [Path(__file__), ROOT / "bend2/tests/prelude_left_kan_laws.bend",
                               ROOT / "test/fixtures/prelude/left-kan-laws.mech",
                               ROOT / "test/fixtures/prelude/left-kan-laws-runtime.mech",
                               ROOT / "test/fixtures/prelude/shared-left-kan-runtime.mech"]

@@ -7,8 +7,8 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
-VEIL = ROOT / "vendor/veil"
-MECH = ROOT / "_build/default/bin/mech.exe"
+VEIL = ROOT / "test/veil"
+MECH = ROOT / "_bend2/bin/mech.exe"
 
 # Veil's CIRCUIT leg diffs these fixtures as well as the three packs,
 # because the rule for a field of an introduction at SMu decides whether

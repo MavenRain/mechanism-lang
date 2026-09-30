@@ -44,7 +44,7 @@ def main():
             answers = [(payload + 2) * 2, payload + 3, (payload + 3) * 2, payload]
             expected = "".join(f"{name}\t{value}\n"
                                for name, value in zip(exports, answers, strict=True))
-            emitted = run([ROOT / "_build/default/test/prelude_runtime.exe", fixture,
+            emitted = run([ROOT / "_bend2/test/prelude_runtime.exe", fixture,
                            variant, *exports], 30)
             if emitted.returncode or emitted.stderr or emitted.stdout != expected:
                 print(f"{GATE} FAIL {payload}/kernel-emit exit={emitted.returncode} "

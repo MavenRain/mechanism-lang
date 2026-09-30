@@ -1,0 +1,115 @@
+-- Shared byte and argument lists for the generic reactor host.
+mu Bytes : Type 0 with
+| bytesNil : Bytes
+| bytesCons : Nat -> Bytes -> Bytes
+
+mu Words : Type 0 with
+| wordsNil : Words
+| wordsCons : Bytes -> Words -> Words
+
+def emptyBytes : Bytes := bytesNil
+def consBytes : Nat -> Bytes -> Bytes :=
+  fun (head : Nat) (tail : Bytes) => bytesCons head tail
+def bytesEmpty : Bytes -> Nat := fun (bytes : Bytes) =>
+  case bytes as value in Bytes return Nat with
+  | bytesNil => 1
+  | bytesCons head tail => 0
+def bytesHead : Bytes -> Nat := fun (bytes : Bytes) =>
+  case bytes as value in Bytes return Nat with
+  | bytesNil => 0
+  | bytesCons head tail => head
+def bytesTail : Bytes -> Bytes := fun (bytes : Bytes) =>
+  case bytes as value in Bytes return Bytes with
+  | bytesNil => bytesNil
+  | bytesCons head tail => tail
+
+def emptyWords : Words := wordsNil
+def consWords : Bytes -> Words -> Words :=
+  fun (head : Bytes) (tail : Words) => wordsCons head tail
+def wordsEmpty : Words -> Nat := fun (words : Words) =>
+  case words as value in Words return Nat with
+  | wordsNil => 1
+  | wordsCons head tail => 0
+def wordsHead : Words -> Bytes := fun (words : Words) =>
+  case words as value in Words return Bytes with
+  | wordsNil => bytesNil
+  | wordsCons head tail => head
+def wordsTail : Words -> Words := fun (words : Words) =>
+  case words as value in Words return Words with
+  | wordsNil => wordsNil
+  | wordsCons head tail => tail
+
+-- Consume the first list structurally, accumulating through tail calls.
+def rec bytesReverseOnto : Bytes -> Bytes -> Bytes :=
+  fun (bytes : Bytes) (suffix : Bytes) =>
+    case bytes as value in Bytes return Bytes with
+    | bytesNil => suffix
+    | bytesCons head tail => bytesReverseOnto tail (bytesCons head suffix)
+
+-- Reverse the left list twice to preserve its order without growing the
+-- Wasm call stack.  The right list is shared by the resulting list.
+def bytesAppend : Bytes -> Bytes -> Bytes :=
+  fun (left : Bytes) (right : Bytes) =>
+    bytesReverseOnto (bytesReverseOnto left bytesNil) right
+
+-- The eight veil host ops, REACTOR.md rows 10 to 17.  A blob is a slot
+-- that holds a flag and a plaintext.  The flag is the instance for the zk ops, the
+-- level for the fhc ops, and the party flag for the mpc ops.  The party
+-- flag is the constant 0 in v1, because the party of "input" does not
+-- survive erasure.  This twin has no security.  It gives the erased
+-- programs a definition of each op and it tests the ABI.
+mu Slot : Type 0 with
+| blob : Nat -> Nat -> Slot
+
+def slotFlag : Slot -> Nat := fun (c : Slot) =>
+  case c as value in Slot return Nat with
+  | blob flag plain => flag
+def slotPlain : Slot -> Nat := fun (c : Slot) =>
+  case c as value in Slot return Nat with
+  | blob flag plain => plain
+
+-- Op 10.  Write a slot that holds the instance and the witness (R-W4-8).
+def zkProve : (x : Nat) -> (w : Nat) -> Slot := fun (x : Nat) (w : Nat) => blob x w
+
+-- Op 11.  Match the stored instance, then apply the relation to the instance
+-- and to the slot's witness.
+-- The relation answers the two leg sum that the prims answer, and leg 1
+-- is true, so the verdict is 1 for leg 1 and 0 for leg 0.
+def Verdict : Type 0 := sum ((prod () : Type 0), (prod () : Type 0))
+
+def zkVerify : (c : Slot) -> (y : Nat) -> (r : (x : Nat) -> (w : Nat) -> Verdict) -> Nat :=
+  fun (c : Slot) (y : Nat) (r : (x : Nat) -> (w : Nat) -> Verdict) =>
+    case (natEq (slotFlag c) y) as same return Nat with
+    | 0 (x : prod ()) => 0
+    | 1 (t : prod ()) =>
+      case (r y (slotPlain c)) as z return Nat with
+      | 0 (x : prod ()) => 0
+      | 1 (t : prod ()) => 1
+
+-- Op 12.  Write a slot that holds the level and the plaintext.
+def fhcEnc : (level : Nat) -> (x : Nat) -> Slot :=
+  fun (level : Nat) (x : Nat) => blob level x
+
+-- Op 13.  Apply the function to the plaintext of the slot and write a
+-- new slot at the given level.
+def fhcEval : (level : Nat) -> (f : (x : Nat) -> Nat) -> (c : Slot) -> Slot :=
+  fun (level : Nat) (f : (x : Nat) -> Nat) (c : Slot) =>
+    blob level (f (slotPlain c))
+
+-- Op 14.  Answer the plaintext of the slot.
+def fhcDec : (c : Slot) -> Nat := fun (c : Slot) => slotPlain c
+
+-- Op 15.  Write a slot that holds the party flag and the plaintext.
+def mpcInput : (x : Nat) -> Slot := fun (x : Nat) => blob 0 x
+
+-- Op 16.  The joint computation over shares: apply the function to the
+-- plaintexts of the argument slots, in order, and write a new slot.
+-- Version one holds two shares, the count the fixtures use.
+def mpcShare : (ps : prod (Nat, Nat)) -> (f : (x : Nat) -> (y : Nat) -> Nat) ->
+    (c1 : Slot) -> (c2 : Slot) -> Slot :=
+  fun (ps : prod (Nat, Nat)) (f : (x : Nat) -> (y : Nat) -> Nat)
+      (c1 : Slot) (c2 : Slot) =>
+    blob 0 (f (slotPlain c1) (slotPlain c2))
+
+-- Op 17.  Answer the plaintext of the slot.
+def mpcOpen : (c : Slot) -> Nat := fun (c : Slot) => slotPlain c

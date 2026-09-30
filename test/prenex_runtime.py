@@ -26,7 +26,7 @@ def main():
         return 64
 
     root = Path(__file__).resolve().parent.parent
-    executable = root / "_build/default/bin/mech.exe"
+    executable = root / "_bend2/bin/mech.exe"
     families = sys.argv[1:] == ["--families"]
     gate = gate_name(sys.argv[1:])
     fixture_name = "prenex-families-runtime.mech" if families else "prenex-runtime.mech"
@@ -119,7 +119,7 @@ def main():
             if category:
                 expected = "".join(f"{name}\t{answer}\n" for name, answer in answers)
                 if not invoke(f"{variant}/kernel-emit",
-                              [root / "_build/default/test/prelude_runtime.exe", source,
+                              [root / "_bend2/test/prelude_runtime.exe", source,
                                work, *(name for name, _ in answers)], expected, timeout=210):
                     continue
                 hosts.add("kernel")

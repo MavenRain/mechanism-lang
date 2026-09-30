@@ -247,7 +247,11 @@
     {
       "mode": "surface-check",
       "source": "bend2/tests/surface_check_driver.bend",
-      "entry": "run"
+      "entry": "run",
+      "shard": "surface-check",
+      "aliases": [
+        "surface_check_driver"
+      ]
     },
     {
       "mode": "erase",
