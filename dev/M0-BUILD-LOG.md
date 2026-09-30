@@ -4613,3 +4613,28 @@ PRELUDE-SHARED-LEFT-KAN-RUNTIME also PASS. The last change is a wording
 change in this entry, and the legs did not run again after it. The
 mutation runner was not rerun in the review round; it runs again at the
 recapture.
+## Bend 2: focused acceptance builds (2026-09-30)
+
+Base: fc1fd5e. `dev/bend2-build.py --target tests --test-mode MODE` now
+generates and compiles a separate entry for one manifest mode. Units use
+`unit-MODE`, fixtures use `fixture-MODE`, and drivers use their manifest
+name. The selector preserves driver argument forwarding, unit result
+handling, source and artifact fingerprints, compatibility launchers and
+the normal shard inventory. It rejects ambiguous names and collisions
+with existing shards. `--test-mode` and `--test-shard` are exclusive and
+require the test target.
+
+Validation: 112 selector regressions pass across all 105 manifest modes,
+including full-shard preservation, invalid selectors and shard collisions.
+The four-catalog frontend assertions pass through isolated entries on
+Bend 2.0.27 native and JavaScript backends (0.772 and 0.610 seconds of
+execution). The native entry is reused on an unchanged rebuild. An isolated
+native `import-json` driver passes all 166 frozen JSON observations,
+exercising forwarded runtime arguments. Python syntax and diff whitespace
+checks pass. The selector regression runs in the normal extras and full
+test suites. Evidence is pinned in
+`dev/validation/bend2-focused-builds/checkpoint.json`.
+
+These checks cover the new build selector and the named focused suites.
+Canonical acceptance, the remaining relational mutation executions and
+the R3 comparison remain outstanding in `MIGRATION-BEND2.md`.

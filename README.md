@@ -357,6 +357,20 @@ make test
 make test-import
 ```
 
+To rebuild one test while investigating an acceptance failure, use `--test-mode`
+with its launcher mode. Unit names start with `unit-`, fixture names start with
+`fixture-`, and drivers use their manifest name. Each selected case gets a separate
+source entry and build artifact:
+
+```sh
+python3 -P dev/bend2-build.py --target tests --backend native --test-mode unit-surface-prelude
+_bend2/test/unit_surface-prelude.exe
+```
+
+Use `--test-shard` to rebuild an existing group of cases. Both selectors require
+`--target tests` and support `--check`. The default build and acceptance suite
+use the complete test manifest.
+
 The default build uses JavaScript test shards and a native production CLI,
 compiled with `CC` (Clang by default) at `-O1`. The test runner uses this mixed
 build by default. Its explicit `--backend javascript` and `--backend native`

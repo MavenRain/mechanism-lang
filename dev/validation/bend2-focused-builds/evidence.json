@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "selector_cases": 112,
+  "json_cases": 166,
+  "captures": [
+    {
+      "name": "whole_surface_build",
+      "status": "interrupted",
+      "exit_code": 143,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-NLPG5i/manifest.json",
+      "sha256": "344afad886c853577b9357c6dd78a58eac9fef80ed1364e891ce5406a4ee72d8"
+    },
+    {
+      "name": "native_build",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-PF9oVE/manifest.json",
+      "sha256": "c3e34aa04c0bd128642f11365c6f47a240808b38e5e26a6393f50d19d0893fd9"
+    },
+    {
+      "name": "native_frontend",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-JAwVgU/manifest.json",
+      "sha256": "0a74fc30ff02df796a5dccf805f983142419a7d1e8a26ec42fffd7589819346d"
+    },
+    {
+      "name": "javascript_build",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-HIhojW/manifest.json",
+      "sha256": "867fda31578d66ee8efaf3e1c8f380001927707d003c67758f4ef9338bc22529"
+    },
+    {
+      "name": "javascript_frontend",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-wcRLk2/manifest.json",
+      "sha256": "62739cb6a2f4e314ba3f8893731980e4fb2a0e2fd99838c7d05051ff823547cf"
+    },
+    {
+      "name": "native_cache",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-4NW45Y/manifest.json",
+      "sha256": "77433c108f85fc50a2b381a21b197d6ac0e529d335c88bd21c6e6cf937d56996"
+    },
+    {
+      "name": "native_driver_build",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-e1gFzC/manifest.json",
+      "sha256": "91ea41adfe31f02deb01b3ec02894779a4068699562449c3cd6ad2a7b37dcc78"
+    },
+    {
+      "name": "native_json_replay",
+      "status": "complete",
+      "exit_code": 0,
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/.kanon-exec/run-JpgE1o/manifest.json",
+      "sha256": "6e4e6e807c0dfe2192b2c00d0d1cda753e17bd8eae5cc85d9ffbc88391531304"
+    }
+  ],
+  "build_stamps": [
+    {
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/_bend2/test/bend_single-unit-surface-prelude-native.build.json",
+      "sha256": "0827822ca54f2f5814807decc49710ef882c551898c905b7ae5d7e51b77d6dfc"
+    },
+    {
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/_bend2/test/bend_single-unit-surface-prelude.js.build.json",
+      "sha256": "7e18fcce49a9eeb697f34963c8b6304854990d5d53d88f042570a1c8cc41507a"
+    },
+    {
+      "path": "/Users/oobi/Documents/gpt6/mechanism-next/_bend2/test/bend_single-import-json-native.build.json",
+      "sha256": "ec5a746eb6ebebc6a3ed36f3311a0ddba263813525382f3ff6d7a171f7255357"
+    }
+  ],
+  "json_report": {
+    "path": "/Users/oobi/Documents/gpt6/mechanism-next/build/bend2-json/report.json",
+    "sha256": "e99e7407d2c7a29e314179ec4782cd6bf19eb042b4410f5837ee81d8ed969db4"
+  }
+}

@@ -91,6 +91,8 @@ def main() -> int:
     manifest_path = ROOT / "dev/bend2/test-manifest.json"
     manifest = json.loads(manifest_path.read_text())
     if args.suite in {"all", "extras"}:
+        run("build-selectors", [sys.executable, "-I", "dev/bend2-build-selector-test.py"],
+            marker="BEND2 BUILD SELECTORS PASS")
         run("template-arity-boundary", [sys.executable, "-I", "dev/bend2-template-arity-check.py"],
             marker="TEMPLATE-ARITY-OK positive=1 signed-refusal=1", timeout=120)
         run("relational-process", [sys.executable, "-I", "bend2/tests/relational_process.py"],

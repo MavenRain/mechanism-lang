@@ -150,15 +150,32 @@ def test_shard(kind: str, row: dict) -> str:
     raise RuntimeError(f"no test shard for {kind}: {mode}")
 
 
-def test_entries() -> tuple[dict, dict[str, Path]]:
+def test_entries(selected_mode: str | None = None) -> tuple[dict, dict[str, Path]]:
     manifest = json.loads((ROOT / "dev/bend2/test-manifest.json").read_text())
     entries = {}
-    shards = list(SHARDS)
-    for kind in ("units", "fixtures", "drivers"):
-        for row in manifest[kind]:
-            shard = test_shard(kind, row)
-            if shard not in shards:
-                shards.append(shard)
+    if selected_mode is None:
+        shards = list(SHARDS)
+        for kind in ("units", "fixtures", "drivers"):
+            for row in manifest[kind]:
+                shard = test_shard(kind, row)
+                if shard not in shards:
+                    shards.append(shard)
+    else:
+        matches = [(kind, row) for kind, prefix in
+                   (("units", "unit-"), ("fixtures", "fixture-"), ("drivers", ""))
+                   for row in manifest[kind] if prefix + row["mode"] == selected_mode]
+        if len(matches) != 1:
+            raise RuntimeError(f"expected one test mode, found {len(matches)}: {selected_mode!r}")
+        kind, selected_row = matches[0]
+        if not re.fullmatch(r"[a-z0-9-]+", selected_mode):
+            raise RuntimeError(f"invalid test mode: {selected_mode!r}")
+        shard = "single-" + selected_mode
+        if any(test_shard(other_kind, row) == shard
+               for other_kind in ("units", "fixtures", "drivers")
+               for row in manifest[other_kind] if row is not selected_row):
+            raise RuntimeError(f"single test shard conflicts with manifest: {shard}")
+        selected_row["shard"] = shard
+        shards = [shard]
     for shard in shards:
         path = OUTPUT / "test/entries" / (shard + ".bend")
         imports, branches = ["import Base"], []
@@ -285,10 +302,12 @@ def main() -> int:
     parser.add_argument("--backend", choices=["javascript", "native"], default="javascript")
     parser.add_argument("--target", choices=["all", "production", "tests"], default="all")
     parser.add_argument("--check", action="store_true")
-    parser.add_argument("--test-shard", help="build one shard from the test manifest")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--test-shard", help="build one shard from the test manifest")
+    selection.add_argument("--test-mode", help="build one driver, unit-MODE, or fixture-MODE in its own shard")
     args = parser.parse_args()
-    if args.test_shard and args.target != "tests":
-        parser.error("--test-shard requires --target tests")
+    if (args.test_shard or args.test_mode) and args.target != "tests":
+        parser.error("--test-shard and --test-mode require --target tests")
     bend = executable("BEND", "bend", Path.home() / ".bend/bin/bend")
     version = subprocess.run([str(bend), "version"], check=True, capture_output=True, text=True).stdout.strip()
     if not re.search(r"(?<![\d.])" + re.escape(VERSION) + r"(?![\d.])", version):
@@ -302,7 +321,7 @@ def main() -> int:
             for name, mode in PRODUCTION.items():
                 launcher(OUTPUT / "bin" / (name + ".exe"), artifact, mode, args.backend)
     if args.target in {"all", "tests"}:
-        manifest, entries = test_entries()
+        manifest, entries = test_entries(args.test_mode)
         if args.test_shard and args.test_shard not in entries:
             parser.error(f"unknown test shard: {args.test_shard}")
         artifacts = {}
