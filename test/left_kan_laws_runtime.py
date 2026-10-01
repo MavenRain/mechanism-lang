@@ -35,7 +35,9 @@ def main():
     source = source.replace(anchor, anchor + f"\ndef {alternate_input} : Nat := 41")
     exports = ["lanIdentity", "lanIdentityReference", "lanCongr", "lanCongrReference",
                "lanOtherCongr", "lanOtherCongrReference", "lanPostcomp", "lanPostcompReference",
-               "lanReversePostcomp", "lanReversePostcompReference"]
+               "lanReversePostcomp", "lanReversePostcompReference",
+               "lanPostIdentity", "lanPostIdentityReference", "lanPostVcomp", "lanPostVcompReference",
+               "lanPostReverseVcomp", "lanPostReverseVcompReference"]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -68,8 +70,11 @@ def main():
         beta = 103 * payload + 1126
         post = 104 * payload + 1126
         reverse_post = 104 * payload + 15
+        post_vcomp = 105 * payload + 1126
+        reverse_vcomp = 105 * payload + 15
         answers = [identity, identity, alpha, alpha, beta, beta,
-                   post, post, reverse_post, reverse_post]
+                   post, post, reverse_post, reverse_post, alpha, alpha,
+                   post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

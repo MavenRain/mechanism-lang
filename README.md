@@ -388,6 +388,11 @@ require Clang, honor `CC`, and retain the original gate time limits.
 The migration is still in progress. [MIGRATION-BEND2.md](MIGRATION-BEND2.md)
 records completed checks and remaining runtime, mutation and integration work.
 
+Left Kan cocone postcomposition preserves identity and vertical composition
+pointwise through `postCoconeId` and `postCoconeVcomp`. The proofs use the
+target category's right identity and associativity laws. See
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` for the contracts and validation.
+
 ## Roadmap
 
 `ROADMAP.md` records the ratified milestones M0 to M3, the position of

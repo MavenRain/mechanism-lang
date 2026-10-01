@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/gpt6/mechanism-cocone-baseline.py", line 24, in <module>
+    raise SystemExit(module['main']())
+                     ~~~~~~~~~~~~~~^^
+  File "/Users/oobi/Documents/mechanism-lang/test/left_kan_laws_runtime.py", line 95, in main
+    emitted = run([ROOT / "_bend2/test/prelude_runtime.exe", "--reachable", fixture,
+                   work, *(actual for _, actual, _ in cases)], EMIT_BUDGET)
+  File "/Users/oobi/Documents/mechanism-lang/test/left_kan_laws_runtime.py", line 81, in run
+    return subprocess.run(list(map(str, command)), cwd=ROOT,
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          capture_output=True, text=True, timeout=remaining)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2154, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1268, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['/Users/oobi/Documents/gpt6/mechanism-cocone-baseline/_bend2/test/prelude_runtime.exe', '--reachable', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-laws-b8j0zip5/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-laws-b8j0zip5', 'lanIdentity', 'lanIdentityReference', 'lanCongr', 'lanCongrReference', 'lanOtherCongr', 'lanOtherCongrReference', 'lanPostcomp', 'lanPostcompReference', 'lanReversePostcomp', 'lanReversePostcompReference', 'lanIdentity_41', 'lanIdentityReference_41', 'lanCongr_41', 'lanCongrReference_41', 'lanOtherCongr_41', 'lanOtherCongrReference_41', 'lanPostcomp_41', 'lanPostcompReference_41', 'lanReversePostcomp_41', 'lanReversePostcompReference_41']' timed out after 480 seconds

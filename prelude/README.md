@@ -616,8 +616,18 @@ hom equality family and an erasable Prop.
 and `t` solves `postCocone alpha tau`, both against the same unit `eta`.
 Its proof uses associativity, factorization congruence and mediator uniqueness.
 
+`L_postCoconeId J C D j c d K F G alpha x` says that `alpha x`
+followed by the target identity at `G (K x)` is equal to `alpha x`.
+Its proof uses the right identity law of the target category.
+`L_postCoconeVcomp J C D j c d K F G I H alpha tau sigma x` says that
+`alpha x` followed by `tau (K x)` and then by `sigma (K x)` is equal to
+`alpha x` followed by the composite of `tau (K x)` and `sigma (K x)`.
+Its proof uses the associativity law of the target category.
+Both conclusions are component equalities, not `CoconeEq` values.
+
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
-ten computations and the ten refusals on the kernel. The
-PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the ten exports on the
+16 computations and the 13 refusals on the kernel. The
+PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 16 exports on the
 kernel, Node and Wasmtime at two payloads.
-See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` for the contract and checks.
+See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` for the contracts and checks.

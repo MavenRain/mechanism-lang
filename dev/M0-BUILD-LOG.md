@@ -4638,3 +4638,26 @@ test suites. Evidence is pinned in
 These checks cover the new build selector and the named focused suites.
 Canonical acceptance, the remaining relational mutation executions and
 the R3 comparison remain outstanding in `MIGRATION-BEND2.md`.
+
+## 2026-09-30: left Kan cocone postcomposition laws
+
+Added `postCoconeId` and `postCoconeVcomp` to `MechLeftKanLaws`.
+The proofs use the target category's right identity and associativity
+fields, with explicit component equations and six independent universes.
+The mixed-universe fixture pins the conclusions to the actual cocone
+operations. Certified runtime examples cover identity and both orders
+of noncommuting transformations.
+
+The standard native suite passes 989 checked entries, nine families,
+both symbolic contracts, 16 computations and all 13 refusal
+cases. Exact new refusal diagnostics are preserved in the new `.err` files.
+The kernel, axioms and vendor pins are unchanged. Python and shell syntax
+checks and diff whitespace checks pass.
+
+The expanded runtime command exceeds the existing 480-second deadline.
+The unchanged base's ten-export runtime command also exceeds that
+deadline with the identical native driver. The full JavaScript equation
+check exhausts its default heap. Native and focused kernel evidence is
+recorded alongside these failures in
+`dev/validation/port-uat-u1-left-kan-cocone-laws/`. No watchdog was raised.
+Full runtime acceptance and the existing Bend acceptance work remain open.

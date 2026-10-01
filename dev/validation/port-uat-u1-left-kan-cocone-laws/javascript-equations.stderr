@@ -1,0 +1,63 @@
+
+<--- Last few GCs --->
+
+[14071:0xad280c000]  4178493 ms: Mark-Compact 4063.6 (4105.7) -> 4055.7 (4105.9) MB, pooled: 2 MB, 7869.92 / 0.00 ms  (average mu = 0.066, current mu = 0.002) allocation failure; scavenge might not succeed
+[14071:0xad280c000]  4189725 ms: Mark-Compact 4063.7 (4106.4) -> 4055.8 (4105.9) MB, pooled: 2 MB, 11198.88 / 0.00 ms  (average mu = 0.041, current mu = 0.003) allocation failure; scavenge might not succeed
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x104c6f478 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 2: 0x104df56a4 v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 3: 0x104df565c v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 4: 0x104fb6cd8 v8::internal::Heap::stack() [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 5: 0x104fbc1b8 v8::internal::Heap::HasHighFragmentation() [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 6: 0x104fc87d8 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags)::$_1::operator()() const [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 7: 0x104fc8494 void heap::base::Stack::SetMarkerAndCallbackImpl<v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags)::$_1>(heap::base::Stack*, void*, void const*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 8: 0x105751904 PushAllRegistersAndIterateStack [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+ 9: 0x104fb53d0 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+10: 0x104fadb78 v8::internal::HeapAllocator::AllocateRawWithLightRetrySlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+11: 0x104fae568 v8::internal::HeapAllocator::AllocateRawWithRetryOrFailSlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+12: 0x104f967b4 v8::internal::Factory::NewFillerObject(int, v8::internal::AllocationAlignment, v8::internal::AllocationType, v8::internal::AllocationOrigin) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+13: 0x1052cc688 v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+14: 0x10580b9f4 Builtins_CEntry_Return1_ArgvOnStack_NoBuiltinExit [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+15: 0x112d73480
+16: 0x1129a90f8
+17: 0x1129c51fc
+18: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+19: 0x1129c5144
+20: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+21: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+22: 0x1129c51fc
+23: 0x11294e994
+24: 0x112953d38
+25: 0x1129b9888
+26: 0x11294e994
+27: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+28: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+29: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+30: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+31: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+32: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+33: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+34: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+35: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+36: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+37: 0x105774838 Builtins_InterpreterEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+38: 0x10577250c Builtins_JSEntryTrampoline [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+39: 0x1057721b0 Builtins_JSEntry [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+40: 0x104f172ec v8::internal::(anonymous namespace)::Invoke(v8::internal::Isolate*, v8::internal::(anonymous namespace)::InvokeParams const&) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+41: 0x104f16d0c v8::internal::Execution::Call(v8::internal::Isolate*, v8::internal::Handle<v8::internal::Object>, v8::internal::Handle<v8::internal::Object>, int, v8::internal::Handle<v8::internal::Object>*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+42: 0x104e06f7c v8::Function::Call(v8::Isolate*, v8::Local<v8::Context>, v8::Local<v8::Value>, int, v8::Local<v8::Value>*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+43: 0x104c5017c node::builtins::BuiltinLoader::CompileAndCall(v8::Local<v8::Context>, char const*, node::Realm*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+44: 0x104ce5088 node::Realm::ExecuteBootstrapper(char const*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+45: 0x104c32f84 node::StartExecution(node::Environment*, char const*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+46: 0x104c32f00 node::StartExecution(node::Environment*, std::__1::function<v8::MaybeLocal<v8::Value> (node::StartExecutionCallbackInfo const&)>) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+47: 0x104ba5858 node::LoadEnvironment(node::Environment*, std::__1::function<v8::MaybeLocal<v8::Value> (node::StartExecutionCallbackInfo const&)>, std::__1::function<void (node::Environment*, v8::Local<v8::Value>, v8::Local<v8::Value>)>) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+48: 0x104cae260 node::NodeMainInstance::Run(node::ExitCode*, node::Environment*) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+49: 0x104cae038 node::NodeMainInstance::Run() [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+50: 0x104c35de0 node::Start(int, char**) [/opt/homebrew/Cellar/node/23.10.0_1/bin/node]
+51: 0x18fc6fda4 start [/usr/lib/dyld]

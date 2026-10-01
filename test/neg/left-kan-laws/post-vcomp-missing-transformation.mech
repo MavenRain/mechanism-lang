@@ -1,0 +1,4 @@
+def badPostVcompMissing : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant NestedPostCocone CompositePostCocone :=
+  Laws_postCoconeVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Cocone Alpha

@@ -108,3 +108,51 @@ def lanPostcomp : Nat := lanPostcompAt sharedLanInput
 def lanPostcompReference : Nat := lanPostcompReferenceAt sharedLanInput
 def lanReversePostcomp : Nat := lanReversePostcompAt sharedLanInput
 def lanReversePostcompReference : Nat := lanReversePostcompReferenceAt sharedLanInput
+
+-- Identity and both composition orders use the checked cocone laws.
+def IdentityPostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone (Run_Base_Second_idNat Nat Point IndexedPlain DoubleEnd Constant)
+def NestedPostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Constant
+    (Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+      Constant Constant Cocone Alpha) Beta
+def CompositePostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Constant Cocone
+    (Run_Base_Second_vcomp Nat Point IndexedPlain DoubleEnd Constant Constant Constant Alpha Beta)
+def ReverseNestedPostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Constant
+    (Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+      Constant Constant Cocone Beta) Alpha
+def ReverseCompositePostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Constant Cocone
+    (Run_Base_Second_vcomp Nat Point IndexedPlain DoubleEnd Constant Constant Constant Beta Alpha)
+def postIdentityLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant IdentityPostCocone Cocone :=
+  Laws_postCoconeId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Cocone
+def postVcompLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant NestedPostCocone CompositePostCocone :=
+  Laws_postCoconeVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Cocone Alpha Beta
+def postReverseVcompLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant ReverseNestedPostCocone ReverseCompositePostCocone :=
+  Laws_postCoconeVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Cocone Beta Alpha
+def lanPostIdentityAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (IdentityPostCocone.1 x) (Cocone.1 x) (postIdentityLaw x) x
+def lanPostIdentityReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 x) (Cocone.1 x) categoryRefl x
+def lanPostVcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (NestedPostCocone.1 x) (CompositePostCocone.1 x) (postVcompLaw x) x
+def lanPostVcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (CompositePostCocone.1 x) (CompositePostCocone.1 x) categoryRefl x
+def lanPostReverseVcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReverseNestedPostCocone.1 x) (ReverseCompositePostCocone.1 x) (postReverseVcompLaw x) x
+def lanPostReverseVcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReverseCompositePostCocone.1 x) (ReverseCompositePostCocone.1 x) categoryRefl x
+def lanPostIdentity : Nat := lanPostIdentityAt sharedLanInput
+def lanPostIdentityReference : Nat := lanPostIdentityReferenceAt sharedLanInput
+def lanPostVcomp : Nat := lanPostVcompAt sharedLanInput
+def lanPostVcompReference : Nat := lanPostVcompReferenceAt sharedLanInput
+def lanPostReverseVcomp : Nat := lanPostReverseVcompAt sharedLanInput
+def lanPostReverseVcompReference : Nat := lanPostReverseVcompReferenceAt sharedLanInput

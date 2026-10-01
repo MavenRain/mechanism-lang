@@ -1,0 +1,2 @@
+def badPostIdentityNominal : SeparateTarget ((Nat -> Nat) * (Nat -> Nat))
+    (IdentityPostCocone.1 37) (Cocone.1 37) := postIdentityLaw 37
