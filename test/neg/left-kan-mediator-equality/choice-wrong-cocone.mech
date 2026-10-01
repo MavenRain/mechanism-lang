@@ -1,0 +1,4 @@
+def BadChoiceWrongCocone : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    ((RoundtripChosen.1).1 x) ((RoundtripOtherChosen.1).1 x) :=
+  Laws_descChoiceEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta Cocone RoundtripChosen RoundtripOtherChosen

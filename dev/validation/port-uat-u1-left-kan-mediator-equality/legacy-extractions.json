@@ -1,0 +1,54 @@
+[
+  {
+    "mode": [],
+    "contracts": false,
+    "sha256": "678f4301a843308a2e81f21a07502a61511cc297d807b89b816b258c0e430819"
+  },
+  {
+    "mode": [],
+    "contracts": true,
+    "sha256": "0c290341508ad0a144b85fa3519001b5a6f6de3bb179836f24183665bdf4d145"
+  },
+  {
+    "mode": [
+      "--cocone-equality"
+    ],
+    "contracts": false,
+    "sha256": "5cbbe01197fb5f45013705ee4b9dd376f597666ce45d52b762e1dbd6e3331cb1"
+  },
+  {
+    "mode": [
+      "--cocone-equality"
+    ],
+    "contracts": true,
+    "sha256": "b637d9cc91cc63f842a686013fe0fdb3da303a6060fbc42a66c5f84876b7039c"
+  },
+  {
+    "mode": [
+      "--cocone-action"
+    ],
+    "contracts": false,
+    "sha256": "fc566266966295e7c990bf692fd7e10774324e7f4eec4c7fe247c7bbfdd4aa4b"
+  },
+  {
+    "mode": [
+      "--cocone-action"
+    ],
+    "contracts": true,
+    "sha256": "9deb9461b3f88dd1bb438a810f9874711b86410e7651f1419b3a02f490d6102d"
+  },
+  {
+    "mode": [
+      "--roundtrip"
+    ],
+    "contracts": false,
+    "sha256": "fb7fc9c736a0f067174729368d371452875f69276ff1587443718be8b5140a5f"
+  },
+  {
+    "mode": [
+      "--roundtrip"
+    ],
+    "contracts": true,
+    "sha256": "fb6969d6d48aa9bc054f90397ef1e2a2e0df14fd4345e6d0ce0ce9acc6c0176c"
+  }
+]

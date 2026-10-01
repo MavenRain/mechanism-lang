@@ -1,0 +1,11 @@
+All terms check, but 10 defs rely on unsafe or foreign code:
+- equality_values
+- values
+- suite
+- equality_checked
+- equality_suite
+- equality_oracles
+- equality_record
+- selected
+- arguments
+- main

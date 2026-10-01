@@ -51,8 +51,15 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-01
 
-The base is c76fe38, following left Kan cocone postcomposition action.
-The current increment proves both mediator round trips: reconstruction gives
+The base is e6d3e38, following left Kan mediator round trips.
+The current increment characterizes cocone equality by pointwise mediator
+equality and proves that mediator components are independent of the chosen
+universal solution. Its dedicated gates are
+PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY,
+PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-RUNTIME and
+PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-FOCUS.
+See `dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md`.
+The preceding increment proves both mediator round trips: reconstruction gives
 an equal cocone, and choosing a mediator for a postcomposed unit recovers the
 original transformation componentwise. Its dedicated gates are
 PRELUDE-LEFT-KAN-ROUNDTRIP, PRELUDE-LEFT-KAN-ROUNDTRIP-RUNTIME and

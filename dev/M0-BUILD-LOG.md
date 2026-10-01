@@ -4800,3 +4800,34 @@ Stage C and U1.
 The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md`.
 Validation captures, the checked focused source and pinned input hashes
 are in `dev/validation/port-uat-u1-left-kan-roundtrip/`.
+
+## Stage C / U1: left Kan mediator equality (2026-10-01)
+
+Base: e6d3e38. `MechLeftKanLaws` adds `descReflectsEq` and
+`descChoiceEq` at six independent universe levels. Equal mediator
+components imply equal cocones, and any two universal solutions for
+the same cocone have equal mediator components. The proofs use
+factorization, target hom equality and the existing uniqueness law.
+They introduce no axiom.
+
+The dedicated native gate checks two laws, two independent wide
+contracts, eight computations and five refusals. Complete diagnostic
+digests keep the refusal files compact while distinguishing all five
+cases. The runtime gate passes four certified exports on the kernel,
+Node and Wasmtime at inputs 37 and 41, for 24 comparisons. The focus
+guard rejects reference substitution.
+
+All eight older focused extractions are byte-identical to the committed
+base. Build selector checks pass 115 cases. Python and shell syntax,
+the full left Kan Bend driver check and diff whitespace checks pass.
+The full inventory now expects 1,041 entries and nine families, with
+26 computations and 23 refusals.
+
+The full battery, full left Kan suite and older runtime modes were not
+rerun. Existing suite and emission allowances are unchanged. Equality
+of whole transformation records and source-type parity remain open
+in Stage C and U1.
+
+The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md`.
+Validation captures, focused sources and pinned input hashes are in
+`dev/validation/port-uat-u1-left-kan-mediator-equality/`.

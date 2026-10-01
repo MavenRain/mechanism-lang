@@ -1,0 +1,74 @@
+def WideDescReflectsEqContract : (0 J : Type 2) -> (0 C : Type 1) ->
+    (0 D : Type 0) -> (j : Wide_Base_Base_Source_Category J) ->
+    (c : Wide_Base_Base_Middle_Category C) -> (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (s : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (t : Wide_Base_Lan_LanSolution J C D j c d K F H G eta beta) ->
+    ((y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      ((s.1).1 y) ((t.1).1 y)) ->
+    Wide_CoconeEq J C D j c d K F G alpha beta := Wide_descReflectsEq
+
+def WideDescChoiceEqContract : (0 J : Type 2) -> (0 C : Type 1) ->
+    (0 D : Type 0) -> (j : Wide_Base_Base_Source_Category J) ->
+    (c : Wide_Base_Base_Middle_Category C) -> (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (s : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (t : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    (y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      ((s.1).1 y) ((t.1).1 y) := Wide_descChoiceEq
+
+def MediatorAlternateChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone :=
+  (Alpha, ((fun (x : Point) => categoryRefl), roundtripUnique Alpha))
+def MediatorAlternateOtherChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta OtherCocone :=
+  (Beta, ((fun (x : Point) => categoryRefl), roundtripUnique Beta))
+def MediatorCopyCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => Cocone.1 x, Cocone.2)
+def MediatorCopyOtherCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => OtherCocone.1 x, OtherCocone.2)
+def mediatorReflectLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Cocone MediatorCopyCocone :=
+  Laws_descReflectsEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta Cocone MediatorCopyCocone RoundtripChosen MediatorAlternateChosen
+    (fun (x : Point) => categoryRefl)
+def mediatorOtherReflectLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant OtherCocone MediatorCopyOtherCocone :=
+  Laws_descReflectsEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta OtherCocone MediatorCopyOtherCocone RoundtripOtherChosen MediatorAlternateOtherChosen
+    (fun (x : Point) => categoryRefl)
+def mediatorChoiceLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    ((RoundtripChosen.1).1 x) ((MediatorAlternateChosen.1).1 x) :=
+  Laws_descChoiceEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta Cocone RoundtripChosen MediatorAlternateChosen
+def mediatorOtherChoiceLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    ((RoundtripOtherChosen.1).1 x) ((MediatorAlternateOtherChosen.1).1 x) :=
+  Laws_descChoiceEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta OtherCocone RoundtripOtherChosen MediatorAlternateOtherChosen
+def lanMediatorEqReflectAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 point) (MediatorCopyCocone.1 point) (mediatorReflectLaw point) x
+def lanMediatorEqOtherReflectAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (OtherCocone.1 point) (MediatorCopyOtherCocone.1 point) (mediatorOtherReflectLaw point) x
+def lanMediatorEqChoiceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((RoundtripChosen.1).1 point) ((MediatorAlternateChosen.1).1 point) (mediatorChoiceLaw point) x
+def lanMediatorEqOtherChoiceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((RoundtripOtherChosen.1).1 point) ((MediatorAlternateOtherChosen.1).1 point) (mediatorOtherChoiceLaw point) x
+def lanMediatorEqReflect : Nat := lanMediatorEqReflectAt sharedLanInput
+def lanMediatorEqOtherReflect : Nat := lanMediatorEqOtherReflectAt sharedLanInput
+def lanMediatorEqChoice : Nat := lanMediatorEqChoiceAt sharedLanInput
+def lanMediatorEqOtherChoice : Nat := lanMediatorEqOtherChoiceAt sharedLanInput
+def lanMediatorEqReflectReference : Nat := lanCertified (Cocone.1 point) (Cocone.1 point) categoryRefl sharedLanInput
+def lanMediatorEqOtherReflectReference : Nat := lanCertified (OtherCocone.1 point) (OtherCocone.1 point) categoryRefl sharedLanInput
+def lanMediatorEqChoiceReference : Nat := lanCertified (Alpha.1 point) (Alpha.1 point) categoryRefl sharedLanInput
+def lanMediatorEqOtherChoiceReference : Nat := lanCertified (Beta.1 point) (Beta.1 point) categoryRefl sharedLanInput

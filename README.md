@@ -86,6 +86,10 @@ congruence proofs directly in `CoconeEq`. See
 The mediator round-trip laws reconstruct equal cocones and recover the
 original transformation componentwise. See
 `dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md` for their contracts and dedicated gates.
+The mediator equality laws turn pointwise equality of mediator components
+into cocone equality. Two universal solutions for the same cocone have
+equal mediator components. See
+`dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md` for their contracts and dedicated gates.
 The iterated whiskering increment proves precomposition and postcomposition
 by composite functors, and their commutation, over four shared categories.
 All eight universe levels remain independent. The laws compare components

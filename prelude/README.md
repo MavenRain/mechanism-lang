@@ -661,6 +661,13 @@ Here `p` proves that `eta` postcomposed with `tau` is `CoconeEq` to
 `alpha`. Its proof applies the uniqueness field of `s` and the symmetry
 of the target hom equality family. They introduce no axiom.
 
+`L_descReflectsEq J C D j c d K F H G eta alpha beta s t p` turns
+pointwise equality `p` of the mediator components of `s` and `t` into
+`CoconeEq alpha beta`. Together with `L_descCongr`, it characterizes
+cocone equality by mediator equality. `L_descChoiceEq` proves that two
+universal solutions for the same cocone have equal mediator components.
+Both laws use the target hom equality family and introduce no axiom.
+
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
 26 computations and the 23 refusals on the kernel. The
 PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 26 exports on the
@@ -679,9 +686,14 @@ PRELUDE-LEFT-KAN-ROUNDTRIP-RUNTIME gate compares the four certified
 round-trip exports on the same three hosts at two payloads. The
 PRELUDE-LEFT-KAN-ROUNDTRIP-FOCUS gate checks that the extraction guard
 refuses a reference function in place of a certified export.
+The PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY gate checks two equality laws,
+two independent contracts, eight computations and five refusals. Its
+RUNTIME gate compares four certified exports on three hosts at two
+payloads. Its FOCUS gate rejects reference substitution.
 See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`,
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md` and
-`dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md` for the contracts and checks.
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md`,
+`dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md` for the contracts and checks.

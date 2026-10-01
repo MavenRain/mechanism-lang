@@ -270,7 +270,7 @@ leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_bend2/test/prelude_shared_left_kan.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
-  '^PRELUDE-LEFT-KAN-LAWS-OK entries=1037 families=9 computations=26 negatives=23$' \
+  '^PRELUDE-LEFT-KAN-LAWS-OK entries=1041 families=9 computations=26 negatives=23$' \
   $ROOT/_bend2/test/prelude_left_kan_laws.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-COCONE-EQUALITY \
   '^PRELUDE-LEFT-KAN-COCONE-EQUALITY-OK laws=3 contracts=3 computations=6 negatives=5$' \
@@ -281,6 +281,15 @@ leg CATEGORY PRELUDE-LEFT-KAN-COCONE-ACTION \
 leg CATEGORY PRELUDE-LEFT-KAN-ROUNDTRIP \
   '^PRELUDE-LEFT-KAN-ROUNDTRIP-OK laws=2 contracts=2 computations=8 negatives=4$' \
   python3 -I $ROOT/test/left_kan_roundtrip.py
+leg CATEGORY PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY \
+  '^PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-OK laws=2 contracts=2 computations=8 negatives=5$' \
+  python3 -I $ROOT/test/left_kan_mediator_equality.py
+leg CATEGORY PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-RUNTIME \
+  '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=4 hosts=3 payloads=2 comparisons=24$' \
+  python3 -I $ROOT/test/left_kan_laws_runtime.py --mediator-equality
+leg CATEGORY PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-FOCUS \
+  '^LEFT-KAN-MEDIATOR-EQUALITY-FOCUS-OK positive=1 mutation=1$' \
+  python3 -I $ROOT/dev/left-kan-mediator-equality-focus-test.py
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
   $ROOT/_bend2/test/prelude_heterogeneous_left_kan.exe $ROOT

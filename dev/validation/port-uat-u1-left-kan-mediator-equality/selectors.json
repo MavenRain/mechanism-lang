@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-I",
+    "dev/bend2-build-selector-test.py"
+  ],
+  "cwd": ".",
+  "exitCode": 0,
+  "seconds": 1.3,
+  "stdout_sha256": "efa6798e6b7a9e706d7066789144666c216d336205f595ce72f2a41444279222",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

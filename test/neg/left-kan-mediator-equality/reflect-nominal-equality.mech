@@ -1,0 +1,9 @@
+def BadReflectNominalEquality :
+    ((x : Point) -> SeparateTarget (Nat -> Nat)
+      ((RoundtripChosen.1).1 x) ((MediatorAlternateChosen.1).1 x)) ->
+    Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Cocone MediatorCopyCocone :=
+  fun (equal : (x : Point) -> SeparateTarget (Nat -> Nat)
+      ((RoundtripChosen.1).1 x) ((MediatorAlternateChosen.1).1 x)) =>
+    Laws_descReflectsEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+      RoundtripEta Cocone MediatorCopyCocone RoundtripChosen MediatorAlternateChosen equal

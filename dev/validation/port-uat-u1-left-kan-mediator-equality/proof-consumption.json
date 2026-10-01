@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-I",
+    "dev/left-kan-mediator-equality-focus-test.py"
+  ],
+  "cwd": ".",
+  "exitCode": 0,
+  "seconds": 0.6,
+  "stdout_sha256": "2c3f94ac378430f343ee54c34704a2b6e32169c4aca54de4cb739a18b697a88b",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
