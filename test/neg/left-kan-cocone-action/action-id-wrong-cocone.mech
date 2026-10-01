@@ -1,0 +1,3 @@
+def Bad : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant OtherCocone Cocone :=
+  Laws_postCoconeEqId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Cocone

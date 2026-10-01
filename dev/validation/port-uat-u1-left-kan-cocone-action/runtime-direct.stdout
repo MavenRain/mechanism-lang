@@ -1,0 +1,1 @@
+PRELUDE-LEFT-KAN-LAWS-RUNTIME FAIL kernel-emit exit=1 stdout='' stderr='mismatch: the term has type Type (u4 + 1) and the expected type is Type (u5 + 1)\n'

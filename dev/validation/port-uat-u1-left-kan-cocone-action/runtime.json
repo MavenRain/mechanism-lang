@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "test/left_kan_laws_runtime.py",
+    "--cocone-action"
+  ],
+  "exit_code": 1,
+  "seconds": 483.817,
+  "stdout_bytes": 775,
+  "stderr_bytes": 0
+}

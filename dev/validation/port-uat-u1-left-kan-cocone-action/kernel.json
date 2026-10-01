@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "test/left_kan_cocone_action.py"
+  ],
+  "exit_code": 0,
+  "seconds": 435.541,
+  "stdout_bytes": 80,
+  "stderr_bytes": 0
+}

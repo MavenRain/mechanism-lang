@@ -25,8 +25,9 @@ symmetry without a premise, an unrelated equality family, transitivity
 without its second premise, and a mismatched middle cocone.
 `PRELUDE-LEFT-KAN-COCONE-EQUALITY-RUNTIME` compares the six exports
 on the kernel, Node and Wasmtime at both inputs, for 36 comparisons.
-The full left Kan laws suite includes the same cases and expects 1,027
-entries, nine families, 26 computations and 23 refusals.
+The full left Kan laws suite includes the same cases and, with the cocone
+action methods, expects 1,033 entries, nine families, 26 computations and
+23 refusals.
 
 The focused extractor reads only the harness's declared template inventory.
 It preserves retained definitions verbatim, records source hashes and can

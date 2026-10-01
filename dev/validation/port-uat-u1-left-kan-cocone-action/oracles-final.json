@@ -1,0 +1,11 @@
+{
+  "command": [
+    "_bend2/test/prelude_left_kan_cocone_action.exe",
+    ".",
+    "--record-oracles"
+  ],
+  "exit_code": 1,
+  "seconds": 152.572,
+  "stdout_bytes": 108,
+  "stderr_bytes": 0
+}

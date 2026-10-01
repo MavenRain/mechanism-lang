@@ -8,7 +8,9 @@ import re
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--cocone-equality', action='store_true')
+selection = parser.add_mutually_exclusive_group()
+selection.add_argument('--cocone-equality', action='store_true')
+selection.add_argument('--cocone-action', action='store_true')
 parser.add_argument('--contracts', action='store_true')
 args = parser.parse_args()
 
@@ -18,6 +20,8 @@ templates = re.search(r'R\.read_all\(root,\s*\[([^\]]*)\]\)', harness)
 if templates is None:
     raise ValueError('missing left Kan template inventory')
 paths = re.findall(r'"([^"]+\.mech)"', templates.group(1))
+if args.cocone_action:
+    paths.append('test/fixtures/prelude/left-kan-cocone-action.mech')
 groups = {}
 global_blocks = []
 aliases = {}
@@ -65,11 +69,13 @@ def resolve(scope, word):
             return resolve(target,word[len(prefix):])
     return ('',word) if ('',word) in definitions else None
 
-prefixes = ('lanCoconeEq',) if args.cocone_equality else ('lanPostCongr', 'lanPostReverseCongr')
+prefixes = ('lanAction',) if args.cocone_action else (('lanCoconeEq',) if args.cocone_equality else ('lanPostCongr', 'lanPostReverseCongr'))
 seeds = [key for key in definitions if key[0]=='' and key[1].startswith(prefixes)]
 if args.contracts:
     seeds.extend(key for key in definitions if key[0]=='' and
-                 key[1].startswith('WideCoconeEq' if args.cocone_equality else 'WidePostCoconeCongr'))
+                 key[1].startswith('WidePostCoconeEq' if args.cocone_action else ('WideCoconeEq' if args.cocone_equality else 'WidePostCoconeCongr')))
+    if args.cocone_action:
+        seeds.append(('', 'OtherCocone'))
 if not seeds:
     raise ValueError('no focused cocone law definitions found')
 required=set(seeds)
@@ -91,7 +97,7 @@ pieces.extend(body for name,body in global_blocks
               and (args.contracts or not re.match(
                   r'specialize\s+MechLeftKanLaws\s+[^\n]*\bas\s+Wide\b', body)))
 text='\n'.join(pieces)
-directory=root/('_bend2/left-kan-cocone-equality' if args.cocone_equality else '_bend2/left-kan-cocone-congruence')
+directory=root/('_bend2/left-kan-cocone-action' if args.cocone_action else ('_bend2/left-kan-cocone-equality' if args.cocone_equality else '_bend2/left-kan-cocone-congruence'))
 if args.contracts:
     directory = directory.with_name(directory.name + '-contracts')
 directory.mkdir(parents=True, exist_ok=True)

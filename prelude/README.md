@@ -630,7 +630,18 @@ that `alpha x` followed by `tau (K x)` is equal to `beta x` followed by
 Its proof applies `eqCongr` of the target category to each argument
 separately and combines the two equalities with `eqTrans`.
 The three postcomposition conclusions are component equalities, not
-`CoconeEq` values.
+`CoconeEq` values. The `CoconeEq` forms follow.
+
+`L_postCoconeEqId J C D j c d K F G alpha` proves that `alpha` postcomposed
+with the identity transformation on `G` is `CoconeEq` to `alpha`.
+`L_postCoconeEqVcomp J C D j c d K F G I H alpha tau sigma` proves that
+`alpha` postcomposed with `tau` and then with `sigma` is `CoconeEq` to
+`alpha` postcomposed with the vertical composite of `tau` and `sigma`.
+`L_postCoconeEqCongr J C D j c d K F G I alpha beta tau sigma p q` proves
+that `alpha` postcomposed with `tau` is `CoconeEq` to `beta` postcomposed
+with `sigma`, with `p` and `q` as in `L_postCoconeCongr`. The proofs use
+the same identity, associativity, `eqCongr` and `eqTrans` laws.
+They introduce no axiom.
 
 `L_coconeEqRefl J C D j c d K F G alpha` proves `CoconeEq alpha alpha`.
 `L_coconeEqSymm J C D j c d K F G alpha beta p` changes a proof `p` of
@@ -648,8 +659,13 @@ kernel, Node and Wasmtime at two payloads. The
 PRELUDE-LEFT-KAN-COCONE-EQUALITY gate checks the three equality laws,
 their three contracts, six computations and five refusals. The
 PRELUDE-LEFT-KAN-COCONE-EQUALITY-RUNTIME gate compares the six equality
+exports on the same three hosts at two payloads. The
+PRELUDE-LEFT-KAN-COCONE-ACTION gate checks the three action laws, their
+three contracts, eight computations and four refusals. The
+PRELUDE-LEFT-KAN-COCONE-ACTION-RUNTIME gate compares the eight action
 exports on the same three hosts at two payloads.
 See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`,
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md` and
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md` for the contracts and checks.
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`,
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md` for the contracts and checks.

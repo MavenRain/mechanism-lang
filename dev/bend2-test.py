@@ -137,6 +137,11 @@ def main() -> int:
     for driver in manifest["drivers"]:
         if args.suite not in driver.get("suites", ["all"]):
             continue
+        preparation = driver.get("prepare")
+        if preparation is not None:
+            run(driver["mode"] + "-prepare",
+                [sys.executable, "-I", ROOT / preparation["script"], *preparation.get("args", [])],
+                timeout=preparation.get("timeout", 30))
         for index, check in enumerate(driver.get("checks", [])):
             arguments = [str(value).replace("{root}", str(ROOT)).replace("{log}", str(LOG))
                          for value in check.get("args", [])]

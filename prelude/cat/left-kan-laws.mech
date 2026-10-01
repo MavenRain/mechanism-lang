@@ -338,4 +338,105 @@ def descPostcomp : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
             (Base_Base_Target_comp D d (F.1 x) (H.1 (K.1 x)) (G.1 (K.1 x))
               (eta.1 x) ((s.1).1 (K.1 x))) (alpha.1 x)
             (Base_Lan_lanFac J C D j c d K F H G eta alpha s x))) y
+
+-- The cocone relation makes the postcomposition action available to clients.
+def postCoconeEqId : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    CoconeEq J C D j c d K F G
+      (postCocone J C D j c d K F G G alpha
+        (Base_Base_Second_idNat C D c d G)) alpha :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G) (x : J) =>
+    Base_Base_Target_compId D d (F.1 x) (G.1 (K.1 x)) (alpha.1 x)
+
+def postCoconeEqVcomp : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (I : Base_Base_Second_Base_Functor C D c d) ->
+    (H : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Base_Base_Second_NatTrans C D c d G I) ->
+    (sigma : Base_Base_Second_NatTrans C D c d I H) ->
+    CoconeEq J C D j c d K F H
+      (postCocone J C D j c d K F I H
+        (postCocone J C D j c d K F G I alpha tau) sigma)
+      (postCocone J C D j c d K F G H alpha
+        (Base_Base_Second_vcomp C D c d G I H tau sigma)) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (I : Base_Base_Second_Base_Functor C D c d)
+      (H : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (tau : Base_Base_Second_NatTrans C D c d G I)
+      (sigma : Base_Base_Second_NatTrans C D c d I H) (x : J) =>
+    Base_Base_Target_assoc D d (F.1 x) (G.1 (K.1 x))
+      (I.1 (K.1 x)) (H.1 (K.1 x)) (alpha.1 x)
+      (tau.1 (K.1 x)) (sigma.1 (K.1 x))
+
+def postCoconeEqCongr : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (I : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Base_Base_Second_NatTrans C D c d G I) ->
+    (sigma : Base_Base_Second_NatTrans C D c d G I) ->
+    CoconeEq J C D j c d K F G alpha beta ->
+    ((y : C) -> Base_Base_Target (Base_Base_Target_Hom D d (G.1 y) (I.1 y))
+      (tau.1 y) (sigma.1 y)) ->
+    CoconeEq J C D j c d K F I
+      (postCocone J C D j c d K F G I alpha tau)
+      (postCocone J C D j c d K F G I beta sigma) :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (I : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G)
+      (tau : Base_Base_Second_NatTrans C D c d G I)
+      (sigma : Base_Base_Second_NatTrans C D c d G I)
+      (coconeProof : CoconeEq J C D j c d K F G alpha beta)
+      (transProof : (y : C) -> Base_Base_Target
+        (Base_Base_Target_Hom D d (G.1 y) (I.1 y)) (tau.1 y) (sigma.1 y)) (x : J) =>
+    Base_Base_Target_eqTrans (Base_Base_Target_Hom D d (F.1 x) (I.1 (K.1 x)))
+      (Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (I.1 (K.1 x))
+        (alpha.1 x) (tau.1 (K.1 x)))
+      (Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (I.1 (K.1 x))
+        (beta.1 x) (tau.1 (K.1 x)))
+      (Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (I.1 (K.1 x))
+        (beta.1 x) (sigma.1 (K.1 x)))
+      (Base_Base_Target_eqCongr (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+        (Base_Base_Target_Hom D d (F.1 x) (I.1 (K.1 x)))
+        (fun (f : Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x))) =>
+          Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (I.1 (K.1 x)) f (tau.1 (K.1 x)))
+        (alpha.1 x) (beta.1 x) (coconeProof x))
+      (Base_Base_Target_eqCongr (Base_Base_Target_Hom D d (G.1 (K.1 x)) (I.1 (K.1 x)))
+        (Base_Base_Target_Hom D d (F.1 x) (I.1 (K.1 x)))
+        (fun (f : Base_Base_Target_Hom D d (G.1 (K.1 x)) (I.1 (K.1 x))) =>
+          Base_Base_Target_comp D d (F.1 x) (G.1 (K.1 x)) (I.1 (K.1 x)) (beta.1 x) f)
+        (tau.1 (K.1 x)) (sigma.1 (K.1 x)) (transProof (K.1 x)))
+
 end

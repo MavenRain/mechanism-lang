@@ -49,12 +49,16 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-09-30
+## Position on 2026-10-01
 
-The base is 543ff83, following left Kan cocone postcomposition congruence.
-The current increment adds reflexivity, symmetry and transitivity for
-pointwise cocone equality at six independent universe levels. The dedicated
-kernel and runtime gates are PRELUDE-LEFT-KAN-COCONE-EQUALITY and
+The base is dff8f83, following left Kan cocone equality operations.
+The current increment supplies postcomposition identity, vertical composition
+and congruence directly in the cocone equality relation, at six independent
+universe levels. Its dedicated gates are PRELUDE-LEFT-KAN-COCONE-ACTION and
+PRELUDE-LEFT-KAN-COCONE-ACTION-RUNTIME. See
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md`.
+Reflexivity, symmetry and transitivity for pointwise cocone equality use the
+dedicated kernel and runtime gates PRELUDE-LEFT-KAN-COCONE-EQUALITY and
 PRELUDE-LEFT-KAN-COCONE-EQUALITY-RUNTIME. See
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`.
 The preceding congruence laws are described in

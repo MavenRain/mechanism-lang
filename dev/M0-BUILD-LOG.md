@@ -4720,3 +4720,42 @@ and source-type parity remain open in Stage C and U1.
 The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`.
 Validation captures, the checked focused source and input hashes are in
 `dev/validation/port-uat-u1-left-kan-cocone-equality/`.
+
+## Stage C / U1: left Kan cocone postcomposition action (2026-10-01)
+
+Base: dff8f83. `MechLeftKanLaws` adds `postCoconeEqId`,
+`postCoconeEqVcomp` and `postCoconeEqCongr`, with conclusions stated
+directly in `CoconeEq`. The proofs use target-category identity and
+associativity, plus checked equality congruence and transitivity.
+Six independent universe levels remain intact. No axiom is introduced.
+
+Three contracts at `(2, 0, 1, 3, 0, 2)` bind their cocones and
+transformations independently and pin the actual postcomposition operations.
+The dedicated native gate passes three laws, three contracts, eight
+computations and four refusals in 435.541 seconds. The refusal diagnostics
+are distinct mismatch errors for an incorrect identity endpoint, reversed
+composition, missing premises and an equality for another cocone.
+
+The eight certified runtime exports pass on the kernel, Node and Wasmtime
+at inputs 37 and 41, for 48 comparisons in 187.971 seconds. Congruence
+changes the cocone operand, and composition covers both orders of
+noncommuting transformations. The runtime driver is reused only after
+checking its binary hash and all 118 recorded input hashes.
+
+All 113 build-selector regressions pass. Python and shell syntax and diff
+whitespace checks pass. The standard test runner executes the new manifest
+preparation entry before checking the focused driver. Its focused extractor
+retains the new proof bodies verbatim.
+
+The existing cocone equality runtime regression reached its unchanged
+480-second emission limit (480.790 seconds overall). Its extracted program
+is byte-identical to the program generated from committed dff8f83.
+All timeout allowances are preserved. The full battery and full left Kan
+suite were not rerun. The full inventory now expects 1,033 distinct entries
+and nine families, adding six specialized declarations.
+
+Equality of whole transformation records and source-type parity remain
+open in Stage C and U1. The API is documented in
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md`. Captures, the checked source,
+refusal oracles and input hashes are in
+`dev/validation/port-uat-u1-left-kan-cocone-action/`.

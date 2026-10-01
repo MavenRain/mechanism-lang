@@ -80,6 +80,9 @@ general contracts, five refusals and six certified exports on three hosts.
 See `dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md` for the API and checks.
 The same API now postcomposes cocones and proves that their chosen mediators
 commute with postcomposition. Both composition orders have checked examples.
+The postcomposition action now supplies identity, vertical-composition and
+congruence proofs directly in `CoconeEq`. See
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md` for its contracts and dedicated gates.
 The iterated whiskering increment proves precomposition and postcomposition
 by composite functors, and their commutation, over four shared categories.
 All eight universe levels remain independent. The laws compare components

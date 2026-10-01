@@ -1,0 +1,91 @@
+-- Relation-level contracts use independently bound cocones and transformations.
+def WidePostCoconeEqIdContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    Wide_CoconeEq J C D j c d K F G
+      (Wide_postCocone J C D j c d K F G G alpha
+        (Wide_Base_Base_Second_idNat C D c d G)) alpha := Wide_postCoconeEqId
+
+def WidePostCoconeEqVcompContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (I : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    (sigma : Wide_Base_Base_Second_NatTrans C D c d I H) ->
+    Wide_CoconeEq J C D j c d K F H
+      (Wide_postCocone J C D j c d K F I H
+        (Wide_postCocone J C D j c d K F G I alpha tau) sigma)
+      (Wide_postCocone J C D j c d K F G H alpha
+        (Wide_Base_Base_Second_vcomp C D c d G I H tau sigma)) := Wide_postCoconeEqVcomp
+
+def WidePostCoconeEqCongrContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (I : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    (sigma : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    Wide_CoconeEq J C D j c d K F G alpha beta ->
+    ((y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (G.1 y) (I.1 y))
+      (tau.1 y) (sigma.1 y)) ->
+    Wide_CoconeEq J C D j c d K F I
+      (Wide_postCocone J C D j c d K F G I alpha tau)
+      (Wide_postCocone J C D j c d K F G I beta sigma) := Wide_postCoconeEqCongr
+
+def actionIdLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant IdentityPostCocone Cocone :=
+  Laws_postCoconeEqId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Cocone
+def actionVcompLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant NestedPostCocone CompositePostCocone :=
+  Laws_postCoconeEqVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Cocone Alpha Beta
+def actionReverseVcompLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant ReverseNestedPostCocone ReverseCompositePostCocone :=
+  Laws_postCoconeEqVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Constant Cocone Beta Alpha
+def ActionSourcePost : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant IdentityPostCocone Beta
+def actionCongrLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant ActionSourcePost PostCocone :=
+  Laws_postCoconeEqCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant IdentityPostCocone Cocone Beta Beta actionIdLaw (fun (y : Nat) => categoryRefl)
+
+def lanActionIdAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (IdentityPostCocone.1 x) (Cocone.1 x) (actionIdLaw x) x
+def lanActionIdReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 x) (Cocone.1 x) categoryRefl x
+def lanActionVcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (NestedPostCocone.1 x) (CompositePostCocone.1 x) (actionVcompLaw x) x
+def lanActionVcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (CompositePostCocone.1 x) (CompositePostCocone.1 x) categoryRefl x
+def lanActionReverseVcompAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReverseNestedPostCocone.1 x) (ReverseCompositePostCocone.1 x) (actionReverseVcompLaw x) x
+def lanActionReverseVcompReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReverseCompositePostCocone.1 x) (ReverseCompositePostCocone.1 x) categoryRefl x
+def lanActionCongrAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ActionSourcePost.1 x) (PostCocone.1 x) (actionCongrLaw x) x
+def lanActionCongrReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (PostCocone.1 x) (PostCocone.1 x) categoryRefl x
+
+def lanActionId : Nat := lanActionIdAt sharedLanInput
+def lanActionIdReference : Nat := lanActionIdReferenceAt sharedLanInput
+def lanActionVcomp : Nat := lanActionVcompAt sharedLanInput
+def lanActionVcompReference : Nat := lanActionVcompReferenceAt sharedLanInput
+def lanActionReverseVcomp : Nat := lanActionReverseVcompAt sharedLanInput
+def lanActionReverseVcompReference : Nat := lanActionReverseVcompReferenceAt sharedLanInput
+def lanActionCongr : Nat := lanActionCongrAt sharedLanInput
+def lanActionCongrReference : Nat := lanActionCongrReferenceAt sharedLanInput

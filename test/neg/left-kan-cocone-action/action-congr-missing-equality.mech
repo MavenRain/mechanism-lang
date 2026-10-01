@@ -1,0 +1,4 @@
+def Bad : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant ActionSourcePost PostCocone :=
+  Laws_postCoconeEqCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant IdentityPostCocone Cocone Beta Beta
