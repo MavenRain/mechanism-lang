@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+    "bend2/tests/prelude_left_kan_laws.bend",
+    "--check-only"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 4.116,
+  "stdout_bytes": 199,
+  "stderr_bytes": 42
+}

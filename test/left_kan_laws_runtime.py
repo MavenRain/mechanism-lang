@@ -21,9 +21,10 @@ def main():
     action = sys.argv[1:] == ["--cocone-action"]
     roundtrip = sys.argv[1:] == ["--roundtrip"]
     mediator_equality = sys.argv[1:] == ["--mediator-equality"]
-    focused = focus or equality or action or roundtrip or mediator_equality
+    solution_transport = sys.argv[1:] == ["--solution-transport"]
+    focused = focus or equality or action or roundtrip or mediator_equality or solution_transport
     if len(sys.argv) != 1 and not focused:
-        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence|--cocone-equality|--cocone-action|--roundtrip|--mediator-equality]", file=sys.stderr)
+        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence|--cocone-equality|--cocone-action|--roundtrip|--mediator-equality|--solution-transport]", file=sys.stderr)
         return 64
     source = "\n".join((ROOT / path).read_text() for path in [
         "prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",
@@ -36,9 +37,13 @@ def main():
     ])
     if focused:
         selection = ["--mediator-equality"] if mediator_equality else (["--roundtrip"] if roundtrip else (["--cocone-action"] if action else (["--cocone-equality"] if equality else [])))
+        if solution_transport:
+            selection = ["--solution-transport"]
         subprocess.run([sys.executable, "-P", ROOT / "dev/left-kan-cocone-congruence-focus.py", *selection],
                        cwd=ROOT, check=True, capture_output=True, text=True, timeout=30)
         directory = "left-kan-mediator-equality" if mediator_equality else ("left-kan-roundtrip" if roundtrip else ("left-kan-cocone-action" if action else ("left-kan-cocone-equality" if equality else "left-kan-cocone-congruence")))
+        if solution_transport:
+            directory = "left-kan-solution-transport"
         source = (ROOT / "_bend2" / directory / "focused-source.mech").read_text()
     anchor = "def sharedLanInput : Nat := 37"
     alternate_input = "sharedLanInput41"
@@ -67,6 +72,9 @@ def main():
     elif mediator_equality:
         exports = ["lanMediatorEqReflect", "lanMediatorEqOtherReflect",
                    "lanMediatorEqChoice", "lanMediatorEqOtherChoice"]
+    elif solution_transport:
+        exports = ["lanSolutionRuntimeTargetFactor", "lanSolutionRuntimeTargetUnique",
+                   "lanSolutionRuntimeUnitFactor", "lanSolutionRuntimeUnitUnique"]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -113,6 +121,8 @@ def main():
             answers = [alpha, alpha, post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp, post, post]
         elif roundtrip or mediator_equality:
             answers = [alpha, beta, alpha, beta]
+        elif solution_transport:
+            answers = [payload + 1, payload + 1, 2 * payload + 3, 2 * payload + 3]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

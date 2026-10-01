@@ -1,0 +1,44 @@
+[
+  {
+    "name": "target-missing-equality",
+    "prefix": "mismatch: the term has type (Ran SPi w _ (Ran SPi w x (Lan SMu Po",
+    "md5": "784eb3d68ff1dd97415ce38652b2505e",
+    "sha256": "11675dcc568db62e5d1098f8df5cd3ef0b0bf3ddb631dda7a573d661e273e0ce",
+    "diagnostic_bytes": 6459
+  },
+  {
+    "name": "target-wrong-solution",
+    "prefix": "mismatch: the term has type (Lan SPi w beta (Lan SPi w app (Ran S",
+    "md5": "3ba97fe057510047998459d48dd440e8",
+    "sha256": "26785f6a8462fc18e2b4e32620b60f8de507da5d6534f97c6bd23528bad4ae23",
+    "diagnostic_bytes": 6020
+  },
+  {
+    "name": "target-nominal-equality",
+    "prefix": "mismatch: the term has type (Ran SPi w x (Lan SMu Point [] (Sec S",
+    "md5": "3fdda16f7d9a2a62d3987d5f5448e4c2",
+    "sha256": "6103944953cb77c686bffb58c9fb69bb7fa7f14f3757a2cdff3c6d04aa747acd",
+    "diagnostic_bytes": 909
+  },
+  {
+    "name": "unit-missing-equality",
+    "prefix": "mismatch: the term has type (Ran SPi w _ (Ran SPi w x (Lan SMu Po",
+    "md5": "783fe0cdc652df8858f4dd53fef86526",
+    "sha256": "270f8a972952f893b263f118e97941b5247888a46fb9c59f81cd7a32d5bd567f",
+    "diagnostic_bytes": 6217
+  },
+  {
+    "name": "unit-wrong-solution",
+    "prefix": "mismatch: the term has type (Lan SPi w beta (Lan SPi w app (Ran S",
+    "md5": "86cd80c7f408c9eb300778b8a11e83b9",
+    "sha256": "a77d0e6c9512541fe4471d63f3bf60fea183255e48648b109d5a7406c6734580",
+    "diagnostic_bytes": 6020
+  },
+  {
+    "name": "unit-wrong-equality",
+    "prefix": "mismatch: the term has type (Ran SPi w x (Lan SMu Point [] (Sec S",
+    "md5": "9f41c262b3a01ad5cbc02fee586935a7",
+    "sha256": "97553c030dbdeabc3310c7248195f7a116a707ab393c82a67ece02d101ff77d8",
+    "diagnostic_bytes": 660
+  }
+]

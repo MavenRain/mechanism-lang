@@ -4831,3 +4831,55 @@ in Stage C and U1.
 The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md`.
 Validation captures, focused sources and pinned input hashes are in
 `dev/validation/port-uat-u1-left-kan-mediator-equality/`.
+
+## Stage C / U1: left Kan solution transport (2026-10-01)
+
+Base: f230f34. `MechLeftKanLaws` adds `solutionCongr` and
+`solutionUnitCongr` at six independent universe levels. They construct
+universal solution records for pointwise equal target cocones and units,
+preserving the original mediator. Factorization composes cocone equalities;
+uniqueness converts the candidate's factorization back to the original
+inputs before applying the original uniqueness field. No axiom is added.
+
+Two contracts at `(2, 0, 1, 3, 0, 2)` bind the inputs and solutions
+independently and pin the resulting solution types. The dedicated native
+gate passes two constructors, two contracts, eight computations and six
+refusals. The six distinct mismatch diagnostics cover missing equality,
+wrong solutions, nominal equality and target equality used as unit equality.
+The existing prefix and complete-digest oracle policy is preserved.
+The OCaml reference checker also accepts the focused program.
+
+Four certified exports are configured to exercise the transported
+factorization and uniqueness fields on the kernel, Node and Wasmtime at
+inputs 37 and 41, for 24 comparisons with independent arithmetic oracles.
+Complete host comparisons have not passed. The runtime driver is
+reused only after checking its binary, compiler and all 118 input hashes.
+The focus gate rejects four individual reference substitutions that would
+bypass the certified proofs.
+The initial runtime run with the larger native arithmetic oracles reached
+the unchanged 480-second emission limit. Smaller arithmetic alone also
+reached that limit. Both captures are retained. The dedicated runtime
+fixture uses `n + 1` and `2 * n + 3`, with checked function wrappers around
+quantity-zero proof arguments to defer their eager kernel evaluation.
+The computed paths still use the transported records. The native
+computation fixture retains the larger cases, and the checked native
+contract program is byte-identical after separating the runtime fixture.
+The proof-wrapper attempt also reached the unchanged emission limit.
+Runtime performance remains open, and the optional runtime mode is not
+registered in the gate battery. The passing native suite and extraction
+guard are registered. Existing gate legs are preserved.
+
+All ten older focused extractions remain byte-identical to the committed
+base. Build-selector regressions pass 116 cases. The full left Kan Bend
+driver, Python and shell syntax, and diff whitespace checks pass.
+The full inventory now expects 1,045 entries and nine families, with
+26 computations and 23 refusals.
+
+The full battery, full left Kan suite and older runtime modes were not
+rerun. Existing suite and emission allowances are unchanged. Equality of
+whole transformation records and source-type parity remain open in Stage C
+and U1.
+
+The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-SOLUTION-TRANSPORT.md`.
+Validation captures, focused sources and pinned input hashes are in
+`dev/validation/port-uat-u1-left-kan-solution-transport/`.

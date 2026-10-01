@@ -1,0 +1,15 @@
+{
+  "command": [
+    "_bend2/test/prelude_left_kan_solution_transport.exe",
+    "/Users/oobi/Documents/gpt6/mechanism-solution-transport",
+    "--record-oracles"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 245.061,
+  "stdout_bytes": 26454,
+  "stderr_bytes": 0,
+  "published_stdout_bytes": 26453,
+  "stdout_archive": "native-oracles-raw.json",
+  "normalization": "Removed final empty lines in the published text; the JSON archive retains exact stdout."
+}

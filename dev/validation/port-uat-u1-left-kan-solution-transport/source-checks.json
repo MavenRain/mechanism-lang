@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "/Users/oobi/Documents/gpt6/mechanism-transport-whitespace-check.py"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 4.546,
+  "stdout_bytes": 65,
+  "stderr_bytes": 0
+}

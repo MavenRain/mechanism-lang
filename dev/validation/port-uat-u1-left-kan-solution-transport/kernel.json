@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "test/left_kan_solution_transport.py"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 732.754,
+  "stdout_bytes": 85,
+  "stderr_bytes": 0
+}

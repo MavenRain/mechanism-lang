@@ -1,0 +1,4 @@
+def BadTargetMissingEquality : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta SolutionCopyCocone :=
+  Laws_solutionCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta Cocone SolutionCopyCocone RoundtripChosen

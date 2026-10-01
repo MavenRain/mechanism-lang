@@ -1,0 +1,78 @@
+def WideSolutionCongrContract : (0 J : Type 2) -> (0 C : Type 1) ->
+    (0 D : Type 0) -> (j : Wide_Base_Base_Source_Category J) ->
+    (c : Wide_Base_Base_Middle_Category C) -> (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha ->
+    Wide_CoconeEq J C D j c d K F G alpha beta ->
+    Wide_Base_Lan_LanSolution J C D j c d K F H G eta beta := Wide_solutionCongr
+
+def WideSolutionUnitCongrContract : (0 J : Type 2) -> (0 C : Type 1) ->
+    (0 D : Type 0) -> (j : Wide_Base_Base_Source_Category J) ->
+    (c : Wide_Base_Base_Middle_Category C) -> (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (theta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha ->
+    Wide_CoconeEq J C D j c d K F H eta theta ->
+    Wide_Base_Lan_LanSolution J C D j c d K F H G theta alpha := Wide_solutionUnitCongr
+
+def SolutionCopyCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => Cocone.1 x, Cocone.2)
+def SolutionCopyEta : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => RoundtripEta.1 x, RoundtripEta.2)
+def SolutionTarget : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta SolutionCopyCocone :=
+  Laws_solutionCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta Cocone SolutionCopyCocone RoundtripChosen (fun (x : Point) => categoryRefl)
+def SolutionUnit : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant SolutionCopyEta OtherCocone :=
+  Laws_solutionUnitCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta SolutionCopyEta OtherCocone RoundtripOtherChosen (fun (x : Point) => categoryRefl)
+def solutionTargetFactorLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta (SolutionTarget.1)) SolutionCopyCocone := SolutionTarget.2.1
+def solutionTargetUniqueLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    (Alpha.1 x) ((SolutionTarget.1).1 x) :=
+  Run_Lan_lanUniq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta SolutionCopyCocone SolutionTarget Alpha (fun (x : Point) => categoryRefl)
+def solutionUnitFactorLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant SolutionCopyEta (SolutionUnit.1)) OtherCocone := SolutionUnit.2.1
+def solutionUnitUniqueLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    (Beta.1 x) ((SolutionUnit.1).1 x) :=
+  Run_Lan_lanUniq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    SolutionCopyEta OtherCocone SolutionUnit Beta (fun (x : Point) => categoryRefl)
+def lanSolutionTargetFactorAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta (SolutionTarget.1)).1 point)
+    (SolutionCopyCocone.1 point) (solutionTargetFactorLaw point) x
+def lanSolutionTargetUniqueAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Alpha.1 point) ((SolutionTarget.1).1 point) (solutionTargetUniqueLaw point) x
+def lanSolutionUnitFactorAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified ((Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant SolutionCopyEta (SolutionUnit.1)).1 point)
+    (OtherCocone.1 point) (solutionUnitFactorLaw point) x
+def lanSolutionUnitUniqueAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Beta.1 point) ((SolutionUnit.1).1 point) (solutionUnitUniqueLaw point) x
+def lanSolutionTargetFactorReferenceAt : Nat -> Nat := fun (x : Nat) => (Cocone.1 point) x
+def lanSolutionTargetUniqueReferenceAt : Nat -> Nat := fun (x : Nat) => (Alpha.1 point) x
+def lanSolutionUnitFactorReferenceAt : Nat -> Nat := fun (x : Nat) => (OtherCocone.1 point) x
+def lanSolutionUnitUniqueReferenceAt : Nat -> Nat := fun (x : Nat) => (Beta.1 point) x
+def lanSolutionTargetFactor : Nat := lanSolutionTargetFactorAt sharedLanInput
+def lanSolutionTargetUnique : Nat := lanSolutionTargetUniqueAt sharedLanInput
+def lanSolutionUnitFactor : Nat := lanSolutionUnitFactorAt sharedLanInput
+def lanSolutionUnitUnique : Nat := lanSolutionUnitUniqueAt sharedLanInput
+def lanSolutionTargetFactorReference : Nat := lanSolutionTargetFactorReferenceAt sharedLanInput
+def lanSolutionTargetUniqueReference : Nat := lanSolutionTargetUniqueReferenceAt sharedLanInput
+def lanSolutionUnitFactorReference : Nat := lanSolutionUnitFactorReferenceAt sharedLanInput
+def lanSolutionUnitUniqueReference : Nat := lanSolutionUnitUniqueReferenceAt sharedLanInput

@@ -1,0 +1,8 @@
+def BadUnitWrongEquality : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Cocone SolutionCopyCocone ->
+    Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant SolutionCopyEta OtherCocone :=
+  fun (equal : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Cocone SolutionCopyCocone) =>
+    Laws_solutionUnitCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+      RoundtripEta SolutionCopyEta OtherCocone RoundtripOtherChosen equal

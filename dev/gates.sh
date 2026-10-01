@@ -270,7 +270,7 @@ leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_bend2/test/prelude_shared_left_kan.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
-  '^PRELUDE-LEFT-KAN-LAWS-OK entries=1041 families=9 computations=26 negatives=23$' \
+  '^PRELUDE-LEFT-KAN-LAWS-OK entries=1045 families=9 computations=26 negatives=23$' \
   $ROOT/_bend2/test/prelude_left_kan_laws.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-COCONE-EQUALITY \
   '^PRELUDE-LEFT-KAN-COCONE-EQUALITY-OK laws=3 contracts=3 computations=6 negatives=5$' \
@@ -290,6 +290,12 @@ leg CATEGORY PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-RUNTIME \
 leg CATEGORY PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-FOCUS \
   '^LEFT-KAN-MEDIATOR-EQUALITY-FOCUS-OK positive=1 mutation=1$' \
   python3 -I $ROOT/dev/left-kan-mediator-equality-focus-test.py
+leg CATEGORY PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT \
+  '^PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-OK laws=2 contracts=2 computations=8 negatives=6$' \
+  python3 -I $ROOT/test/left_kan_solution_transport.py
+leg CATEGORY PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-FOCUS \
+  '^LEFT-KAN-SOLUTION-TRANSPORT-FOCUS-OK positive=1 mutation=4$' \
+  python3 -I $ROOT/dev/left-kan-solution-transport-focus-test.py
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
   $ROOT/_bend2/test/prelude_heterogeneous_left_kan.exe $ROOT

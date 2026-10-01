@@ -13,6 +13,7 @@ selection.add_argument('--cocone-equality', action='store_true')
 selection.add_argument('--cocone-action', action='store_true')
 selection.add_argument('--roundtrip', action='store_true')
 selection.add_argument('--mediator-equality', action='store_true')
+selection.add_argument('--solution-transport', action='store_true')
 parser.add_argument('--contracts', action='store_true')
 args = parser.parse_args()
 
@@ -24,13 +25,16 @@ if templates is None:
 paths = re.findall(r'"([^"]+\.mech)"', templates.group(1))
 if args.cocone_action:
     paths.append('test/fixtures/prelude/left-kan-cocone-action.mech')
-if args.roundtrip or args.mediator_equality:
+if args.roundtrip or args.mediator_equality or args.solution_transport:
     paths = [path for path in paths if path not in {
         'test/fixtures/prelude/shared-left-kan-runtime.mech',
         'test/fixtures/prelude/left-kan-laws-runtime.mech'}]
     paths.append('test/fixtures/prelude/left-kan-roundtrip.mech')
 if args.mediator_equality:
     paths.append('test/fixtures/prelude/left-kan-mediator-equality.mech')
+if args.solution_transport:
+    paths.append('test/fixtures/prelude/left-kan-solution-transport.mech' if args.contracts
+                 else 'test/fixtures/prelude/left-kan-solution-transport-runtime.mech')
 groups = {}
 global_blocks = []
 aliases = {}
@@ -80,6 +84,12 @@ def resolve(scope, word):
 
 prefixes = ('lanMediatorEq',) if args.mediator_equality else (('lanRoundtrip',) if args.roundtrip else (('lanAction',) if args.cocone_action else (('lanCoconeEq',) if args.cocone_equality else ('lanPostCongr', 'lanPostReverseCongr'))))
 seeds = [key for key in definitions if key[0]=='' and key[1].startswith(prefixes)]
+if args.solution_transport:
+    seeds = [key for key in definitions if key[0]=='' and key[1].startswith('lanSolution')]
+    if not args.contracts:
+        runtime_exports = {'lanSolutionRuntimeTargetFactor', 'lanSolutionRuntimeTargetUnique',
+                           'lanSolutionRuntimeUnitFactor', 'lanSolutionRuntimeUnitUnique'}
+        seeds = [key for key in seeds if key[1] in runtime_exports]
 if args.roundtrip and not args.contracts:
     runtime_exports = {'lanRoundtripCocone', 'lanRoundtripOtherCocone',
                        'lanRoundtripDesc', 'lanRoundtripOtherDesc'}
@@ -90,7 +100,7 @@ if args.mediator_equality and not args.contracts:
     seeds = [key for key in seeds if key[1] in runtime_exports]
 if args.contracts:
     seeds.extend(key for key in definitions if key[0]=='' and
-                  key[1].startswith(('WideDescReflectsEq', 'WideDescChoiceEq') if args.mediator_equality else (('WidePostCoconeDesc', 'WideDescPostCocone') if args.roundtrip else ('WidePostCoconeEq' if args.cocone_action else ('WideCoconeEq' if args.cocone_equality else 'WidePostCoconeCongr')))))
+                  key[1].startswith(('WideSolutionCongr', 'WideSolutionUnitCongr') if args.solution_transport else (('WideDescReflectsEq', 'WideDescChoiceEq') if args.mediator_equality else (('WidePostCoconeDesc', 'WideDescPostCocone') if args.roundtrip else ('WidePostCoconeEq' if args.cocone_action else ('WideCoconeEq' if args.cocone_equality else 'WidePostCoconeCongr'))))))
     if args.cocone_action:
         seeds.append(('', 'OtherCocone'))
 if not seeds:
@@ -123,6 +133,14 @@ if args.mediator_equality and not args.contracts:
         raise ValueError('runtime exports omit mediator equality proofs: ' +
                          ', '.join(sorted(name for _, name in missing_proofs)))
 pieces=[]
+if args.solution_transport and not args.contracts:
+    runtime_proofs = {('', name) for name in (
+        'solutionRuntimeTargetFactorLaw', 'solutionRuntimeTargetUniqueLaw',
+        'solutionRuntimeUnitFactorLaw', 'solutionRuntimeUnitUniqueLaw')}
+    missing_proofs = runtime_proofs - required
+    if missing_proofs:
+        raise ValueError('runtime exports omit solution transport proofs: ' +
+                         ', '.join(sorted(name for _, name in missing_proofs)))
 for scope,(header,rows,tail,relative) in groups.items():
     pieces.append(header+''.join(body for name,body in rows if (scope,name) in required)+tail)
 pieces.extend(body for name,body in global_blocks
@@ -133,6 +151,9 @@ text='\n'.join(pieces)
 directory=root/('_bend2/left-kan-mediator-equality' if args.mediator_equality else ('_bend2/left-kan-roundtrip' if args.roundtrip else ('_bend2/left-kan-cocone-action' if args.cocone_action else ('_bend2/left-kan-cocone-equality' if args.cocone_equality else '_bend2/left-kan-cocone-congruence'))))
 if args.contracts:
     directory = directory.with_name(directory.name + '-contracts')
+if args.solution_transport:
+    directory = root / ('_bend2/left-kan-solution-transport-contracts' if args.contracts
+                        else '_bend2/left-kan-solution-transport')
 directory.mkdir(parents=True, exist_ok=True)
 with tempfile.NamedTemporaryFile(mode='w', dir=directory, delete=False) as output:
     output.write(text)

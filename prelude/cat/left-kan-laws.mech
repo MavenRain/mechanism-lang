@@ -568,5 +568,83 @@ def descChoiceEq : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
       (t : Base_Lan_LanSolution J C D j c d K F H G eta alpha) =>
     descCongr J C D j c d K F H G eta alpha alpha s t
       (coconeEqRefl J C D j c d K F G alpha)
+def solutionCongr : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Base_Base_Second_Base_Functor C D c d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Base_Lan_LanCocone J C D j c d K F G) ->
+    Base_Lan_LanSolution J C D j c d K F H G eta alpha ->
+    CoconeEq J C D j c d K F G alpha beta ->
+    Base_Lan_LanSolution J C D j c d K F H G eta beta :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (H : Base_Base_Second_Base_Functor C D c d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (eta : Base_Lan_LanCocone J C D j c d K F H)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G)
+      (s : Base_Lan_LanSolution J C D j c d K F H G eta alpha)
+      (equal : CoconeEq J C D j c d K F G alpha beta) =>
+    (s.1,
+      (coconeEqTrans J C D j c d K F G
+        (postCocone J C D j c d K F H G eta (s.1)) alpha beta
+        (postCoconeDesc J C D j c d K F H G eta alpha s) equal,
+      fun (other : Base_Base_Second_NatTrans C D c d H G)
+          (factor : Base_Lan_LanFactor J C D j c d K F H G eta beta other) =>
+        Base_Lan_lanUniq J C D j c d K F H G eta alpha s other
+          (coconeEqTrans J C D j c d K F G
+            (postCocone J C D j c d K F H G eta other) beta alpha factor
+            (coconeEqSymm J C D j c d K F G alpha beta equal))))
+
+-- Transport a universal solution to a pointwise equal unit.
+def solutionUnitCongr : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Base_Base_Second_Base_Functor C D c d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Base_Lan_LanCocone J C D j c d K F H) ->
+    (theta : Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    Base_Lan_LanSolution J C D j c d K F H G eta alpha ->
+    CoconeEq J C D j c d K F H eta theta ->
+    Base_Lan_LanSolution J C D j c d K F H G theta alpha :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (H : Base_Base_Second_Base_Functor C D c d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (eta : Base_Lan_LanCocone J C D j c d K F H)
+      (theta : Base_Lan_LanCocone J C D j c d K F H)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (s : Base_Lan_LanSolution J C D j c d K F H G eta alpha)
+      (equal : CoconeEq J C D j c d K F H eta theta) =>
+    (s.1,
+      (coconeEqTrans J C D j c d K F G
+        (postCocone J C D j c d K F H G theta (s.1))
+        (postCocone J C D j c d K F H G eta (s.1)) alpha
+        (postCoconeEqCongr J C D j c d K F H G theta eta (s.1) (s.1)
+          (coconeEqSymm J C D j c d K F H eta theta equal)
+          (fun (y : C) => categoryRefl))
+        (postCoconeDesc J C D j c d K F H G eta alpha s),
+      fun (other : Base_Base_Second_NatTrans C D c d H G)
+          (factor : Base_Lan_LanFactor J C D j c d K F H G theta alpha other) =>
+        Base_Lan_lanUniq J C D j c d K F H G eta alpha s other
+          (coconeEqTrans J C D j c d K F G
+            (postCocone J C D j c d K F H G eta other)
+            (postCocone J C D j c d K F H G theta other) alpha
+            (postCoconeEqCongr J C D j c d K F H G eta theta other other equal
+              (fun (y : C) => categoryRefl)) factor)))
 
 end

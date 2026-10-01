@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "dev/bend2-build-selector-test.py"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 0.416,
+  "stdout_bytes": 37,
+  "stderr_bytes": 0
+}

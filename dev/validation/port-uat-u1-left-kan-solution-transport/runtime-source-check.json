@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/oobi/Documents/gpt6/mechanism-equality-live-20260929/ocaml-build/default/bin/mech.exe",
+    "check",
+    "_bend2/left-kan-solution-transport/focused-source.mech"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 555.512,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0
+}

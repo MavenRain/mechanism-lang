@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "test/left_kan_laws_runtime.py",
+    "--solution-transport"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 480.673,
+  "stdout_bytes": 638,
+  "stderr_bytes": 0
+}

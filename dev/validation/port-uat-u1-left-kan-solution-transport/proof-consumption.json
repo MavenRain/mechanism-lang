@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "dev/left-kan-solution-transport-focus-test.py"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 1.309,
+  "stdout_bytes": 59,
+  "stderr_bytes": 0
+}

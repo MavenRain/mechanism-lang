@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-I",
+    "/Users/oobi/Documents/gpt6/mechanism-transport-legacy-extractions.py"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 4.95,
+  "stdout_bytes": 37,
+  "stderr_bytes": 0
+}

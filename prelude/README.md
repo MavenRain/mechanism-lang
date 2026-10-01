@@ -668,6 +668,18 @@ cocone equality by mediator equality. `L_descChoiceEq` proves that two
 universal solutions for the same cocone have equal mediator components.
 Both laws use the target hom equality family and introduce no axiom.
 
+`L_solutionCongr J C D j c d K F H G eta alpha beta s equal` constructs
+a solution for `beta` from a solution `s` for `alpha` and
+`equal : CoconeEq alpha beta`. `L_solutionUnitCongr J C D j c d K F H G
+eta theta alpha s equal` changes the unit from `eta` to `theta`, using
+`equal : CoconeEq eta theta`. Both preserve `s.1` as their mediator.
+Factorization composes checked cocone equalities. Uniqueness converts a
+candidate's factorization back to the original inputs before applying
+`lanUniq`. Six independent universe levels and both universal properties
+are preserved. Neither constructor introduces an axiom or assumes equality
+of whole transformation records. See
+`dev/PORT-UAT-U1-LEFT-KAN-SOLUTION-TRANSPORT.md` for the dedicated gates.
+
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
 26 computations and the 23 refusals on the kernel. The
 PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 26 exports on the

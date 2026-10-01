@@ -1,0 +1,4 @@
+def BadUnitWrongSolution : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant SolutionCopyEta OtherCocone :=
+  Laws_solutionUnitCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta SolutionCopyEta OtherCocone RoundtripChosen (fun (x : Point) => categoryRefl)

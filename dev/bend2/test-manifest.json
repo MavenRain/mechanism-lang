@@ -626,7 +626,7 @@
           "args": [
             "{root}"
           ],
-          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1041 families=9 computations=26 negatives=23",
+          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1045 families=9 computations=26 negatives=23",
           "timeout": 1800
         }
       ]
@@ -1237,6 +1237,32 @@
             "{root}"
           ],
           "marker": "PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-OK laws=2 contracts=2 computations=8 negatives=5",
+          "timeout": 840
+        }
+      ]
+    },
+    {
+      "mode": "prelude-left-kan-solution-transport",
+      "prepare": {
+        "script": "dev/left-kan-cocone-congruence-focus.py",
+        "args": [
+          "--solution-transport",
+          "--contracts"
+        ],
+        "timeout": 30
+      },
+      "source": "bend2/tests/prelude_left_kan_solution_transport.bend",
+      "entry": "arguments",
+      "shard": "prelude-left-kan-solution-transport",
+      "aliases": [
+        "prelude_left_kan_solution_transport"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-OK laws=2 contracts=2 computations=8 negatives=6",
           "timeout": 840
         }
       ]

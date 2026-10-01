@@ -1,0 +1,7 @@
+def BadTargetNominalEquality :
+    ((x : Point) -> SeparateTarget (Nat -> Nat) (Cocone.1 x) (SolutionCopyCocone.1 x)) ->
+    Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta SolutionCopyCocone :=
+  fun (equal : (x : Point) -> SeparateTarget (Nat -> Nat) (Cocone.1 x) (SolutionCopyCocone.1 x)) =>
+    Laws_solutionCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+      RoundtripEta Cocone SolutionCopyCocone RoundtripChosen equal

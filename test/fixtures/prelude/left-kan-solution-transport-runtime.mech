@@ -1,0 +1,77 @@
+-- Compact arithmetic keeps checked record transport inside the emission budget.
+def RuntimeAlpha : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant :=
+  ((fun (x : Point) (n : Nat) => natAdd n 1),
+   (fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) => categoryRefl))
+def RuntimeBeta : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant :=
+  ((fun (x : Point) (n : Nat) => natAdd (natMul 2 n) 3),
+   (fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) => categoryRefl))
+def RuntimeCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Point Point Point SourceEnd MiddleEnd TargetEnd Constant Constant RuntimeAlpha Forget
+def RuntimeOtherCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Point Point Point SourceEnd MiddleEnd TargetEnd Constant Constant RuntimeBeta Forget
+def RuntimeChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta RuntimeCocone :=
+  (RuntimeAlpha, ((fun (x : Point) => categoryRefl), roundtripUnique RuntimeAlpha))
+def RuntimeOtherChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta RuntimeOtherCocone :=
+  (RuntimeBeta, ((fun (x : Point) => categoryRefl), roundtripUnique RuntimeBeta))
+
+def SolutionRuntimeCopyCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => RuntimeCocone.1 x, RuntimeCocone.2)
+def SolutionRuntimeCopyEta : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  (fun (x : Point) => RoundtripEta.1 x, RoundtripEta.2)
+def SolutionRuntimeTarget : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta SolutionRuntimeCopyCocone :=
+  Laws_solutionCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta RuntimeCocone SolutionRuntimeCopyCocone RuntimeChosen (fun (x : Point) => categoryRefl)
+def SolutionRuntimeUnit : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant SolutionRuntimeCopyEta RuntimeOtherCocone :=
+  Laws_solutionUnitCongr Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta SolutionRuntimeCopyEta RuntimeOtherCocone RuntimeOtherChosen (fun (x : Point) => categoryRefl)
+def solutionRuntimeTargetFactorLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta (SolutionRuntimeTarget.1)) SolutionRuntimeCopyCocone := SolutionRuntimeTarget.2.1
+def solutionRuntimeTargetUniqueLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    (RuntimeAlpha.1 x) ((SolutionRuntimeTarget.1).1 x) :=
+  Run_Lan_lanUniq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    RoundtripEta SolutionRuntimeCopyCocone SolutionRuntimeTarget RuntimeAlpha (fun (x : Point) => categoryRefl)
+def solutionRuntimeUnitFactorLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant SolutionRuntimeCopyEta (SolutionRuntimeUnit.1)) RuntimeOtherCocone := SolutionRuntimeUnit.2.1
+def solutionRuntimeUnitUniqueLaw : (x : Point) -> Run_Base_Target (Nat -> Nat)
+    (RuntimeBeta.1 x) ((SolutionRuntimeUnit.1).1 x) :=
+  Run_Lan_lanUniq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant
+    SolutionRuntimeCopyEta RuntimeOtherCocone SolutionRuntimeUnit RuntimeBeta (fun (x : Point) => categoryRefl)
+-- The kernel evaluator eagerly evaluates even quantity-zero arguments.
+def lanSolutionRuntimeCertified : (left : Nat -> Nat) -> (0 right : Nat -> Nat) ->
+    (0 proof : (0 witness : Point) -> Run_Base_Target (Nat -> Nat) left right) -> Nat -> Nat :=
+  fun (left : Nat -> Nat) (0 right : Nat -> Nat)
+      (0 proof : (0 witness : Point) -> Run_Base_Target (Nat -> Nat) left right)
+      (n : Nat) => left n
+def lanSolutionRuntimeTargetFactorAt : Nat -> Nat := fun (x : Nat) =>
+  lanSolutionRuntimeCertified ((Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta (SolutionRuntimeTarget.1)).1 point)
+    (SolutionRuntimeCopyCocone.1 point)
+    (fun (0 witness : Point) => solutionRuntimeTargetFactorLaw point) x
+def lanSolutionRuntimeTargetUniqueAt : Nat -> Nat := fun (x : Nat) =>
+  lanSolutionRuntimeCertified (RuntimeAlpha.1 point) ((SolutionRuntimeTarget.1).1 point)
+    (fun (0 witness : Point) => solutionRuntimeTargetUniqueLaw point) x
+def lanSolutionRuntimeUnitFactorAt : Nat -> Nat := fun (x : Nat) =>
+  lanSolutionRuntimeCertified ((Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant SolutionRuntimeCopyEta (SolutionRuntimeUnit.1)).1 point)
+    (RuntimeOtherCocone.1 point) (fun (0 witness : Point) => solutionRuntimeUnitFactorLaw point) x
+def lanSolutionRuntimeUnitUniqueAt : Nat -> Nat := fun (x : Nat) =>
+  lanSolutionRuntimeCertified (RuntimeBeta.1 point) ((SolutionRuntimeUnit.1).1 point)
+    (fun (0 witness : Point) => solutionRuntimeUnitUniqueLaw point) x
+def lanSolutionRuntimeTargetFactorReferenceAt : Nat -> Nat := fun (x : Nat) => (RuntimeCocone.1 point) x
+def lanSolutionRuntimeTargetUniqueReferenceAt : Nat -> Nat := fun (x : Nat) => (RuntimeAlpha.1 point) x
+def lanSolutionRuntimeUnitFactorReferenceAt : Nat -> Nat := fun (x : Nat) => (RuntimeOtherCocone.1 point) x
+def lanSolutionRuntimeUnitUniqueReferenceAt : Nat -> Nat := fun (x : Nat) => (RuntimeBeta.1 point) x
+def lanSolutionRuntimeTargetFactor : Nat := lanSolutionRuntimeTargetFactorAt sharedLanInput
+def lanSolutionRuntimeTargetUnique : Nat := lanSolutionRuntimeTargetUniqueAt sharedLanInput
+def lanSolutionRuntimeUnitFactor : Nat := lanSolutionRuntimeUnitFactorAt sharedLanInput
+def lanSolutionRuntimeUnitUnique : Nat := lanSolutionRuntimeUnitUniqueAt sharedLanInput
+def lanSolutionRuntimeTargetFactorReference : Nat := lanSolutionRuntimeTargetFactorReferenceAt sharedLanInput
+def lanSolutionRuntimeTargetUniqueReference : Nat := lanSolutionRuntimeTargetUniqueReferenceAt sharedLanInput
+def lanSolutionRuntimeUnitFactorReference : Nat := lanSolutionRuntimeUnitFactorReferenceAt sharedLanInput
+def lanSolutionRuntimeUnitUniqueReference : Nat := lanSolutionRuntimeUnitUniqueReferenceAt sharedLanInput

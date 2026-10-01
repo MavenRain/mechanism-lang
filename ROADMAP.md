@@ -51,8 +51,14 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-01
 
-The base is e6d3e38, following left Kan mediator round trips.
-The current increment characterizes cocone equality by pointwise mediator
+The base is f230f34, following left Kan mediator equality.
+The current increment transports universal solutions to pointwise equal
+cocones and units, retaining their mediators and rebuilding factorization
+and uniqueness. Its dedicated gates are PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT
+and PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-FOCUS. Its optional runtime mode
+remains open after reaching the unchanged 480-second emission limit.
+See `dev/PORT-UAT-U1-LEFT-KAN-SOLUTION-TRANSPORT.md`.
+The preceding increment characterizes cocone equality by pointwise mediator
 equality and proves that mediator components are independent of the chosen
 universal solution. Its dedicated gates are
 PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY,
