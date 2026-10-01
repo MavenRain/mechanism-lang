@@ -4759,3 +4759,44 @@ open in Stage C and U1. The API is documented in
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md`. Captures, the checked source,
 refusal oracles and input hashes are in
 `dev/validation/port-uat-u1-left-kan-cocone-action/`.
+
+## Stage C / U1: left Kan mediator round trips (2026-10-01)
+
+Base: c76fe38. `MechLeftKanLaws` adds `postCoconeDesc` and
+`descPostCocone` at six independent universe levels. The first law
+reconstructs the cocone from its chosen mediator using factorization.
+The second accepts an independently bound cocone and a factorization
+proof, then uses uniqueness to recover the original transformation
+componentwise. Both accept arbitrary solution records. No axiom is added.
+
+Two contracts at `(2, 0, 1, 3, 0, 2)` pin the actual operations and
+solution projections. The native kernel gate passes both laws, both
+contracts, eight computations and four refusals. Refusals cover a missing
+solution, a solution for another cocone, a factorization for another
+transformation and a nominally different equality family. Their recorded
+diagnostics are distinct mismatch errors. The OCaml checker also accepts
+the final focused program.
+
+Four certified runtime exports pass on the kernel, Node and Wasmtime at
+inputs 37 and 41, for 24 comparisons. Function-valued morphisms give
+independent arithmetic oracles for two distinct cocones. The runtime
+driver is reused after checking its binary hash and all 118 recorded
+input hashes. An extraction guard requires the four runtime proof
+dependencies; its mutation regression rejects a reference-function
+substitution that would bypass a certified result. The
+PRELUDE-LEFT-KAN-ROUNDTRIP-FOCUS gate runs that regression.
+
+All 114 build-selector regressions pass. Six existing focused programs,
+covering congruence, equality and action with and without contracts, remain
+byte-identical to the base. Python and shell syntax and diff whitespace
+checks pass. The full left Kan inventory now expects 1,037 entries and
+nine families. The stale shell marker is reconciled with that inventory.
+
+The full battery, full left Kan suite and older runtime modes were not
+rerun. Existing suite and emission time limits are unchanged. Equality
+of whole transformation records and source-type parity remain open in
+Stage C and U1.
+
+The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md`.
+Validation captures, the checked focused source and pinned input hashes
+are in `dev/validation/port-uat-u1-left-kan-roundtrip/`.

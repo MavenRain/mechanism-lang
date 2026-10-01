@@ -1,0 +1,17 @@
+def Bad : (tau : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant) ->
+    (sigma : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant) ->
+    (s : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta Cocone) ->
+    Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant
+      (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+        Constant Constant RoundtripEta sigma) Cocone ->
+    (y : Point) -> Run_Base_Target (Nat -> Nat) ((s.1).1 y) (tau.1 y) :=
+  fun (tau : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant)
+      (sigma : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant)
+      (s : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+        Constant Constant RoundtripEta Cocone)
+      (factor : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant
+        (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+          Constant Constant RoundtripEta sigma) Cocone) =>
+    Laws_descPostCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta Cocone tau s factor

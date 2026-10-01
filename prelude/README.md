@@ -652,6 +652,15 @@ of `CoconeEq alpha beta` and `CoconeEq beta gamma` into a proof of
 and transitivity of the target hom equality family at each source object.
 They introduce no axiom.
 
+`L_postCoconeDesc J C D j c d K F H G eta alpha s` proves that `eta`
+postcomposed with the mediator `s.1` chosen by the solution `s` is
+`CoconeEq` to `alpha`. Its proof is the factorization field of `s`.
+`L_descPostCocone J C D j c d K F H G eta alpha tau s p y` proves that
+the chosen mediator `s.1` at the middle object `y` is equal to `tau y`.
+Here `p` proves that `eta` postcomposed with `tau` is `CoconeEq` to
+`alpha`. Its proof applies the uniqueness field of `s` and the symmetry
+of the target hom equality family. They introduce no axiom.
+
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
 26 computations and the 23 refusals on the kernel. The
 PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 26 exports on the
@@ -663,9 +672,16 @@ exports on the same three hosts at two payloads. The
 PRELUDE-LEFT-KAN-COCONE-ACTION gate checks the three action laws, their
 three contracts, eight computations and four refusals. The
 PRELUDE-LEFT-KAN-COCONE-ACTION-RUNTIME gate compares the eight action
-exports on the same three hosts at two payloads.
+exports on the same three hosts at two payloads. The
+PRELUDE-LEFT-KAN-ROUNDTRIP gate checks the two round-trip laws, their two
+contracts, eight computations and four refusals. The
+PRELUDE-LEFT-KAN-ROUNDTRIP-RUNTIME gate compares the four certified
+round-trip exports on the same three hosts at two payloads. The
+PRELUDE-LEFT-KAN-ROUNDTRIP-FOCUS gate checks that the extraction guard
+refuses a reference function in place of a certified export.
 See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`,
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md` and
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md` for the contracts and checks.
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`,
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md` for the contracts and checks.

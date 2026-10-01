@@ -51,8 +51,14 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-01
 
-The base is dff8f83, following left Kan cocone equality operations.
-The current increment supplies postcomposition identity, vertical composition
+The base is c76fe38, following left Kan cocone postcomposition action.
+The current increment proves both mediator round trips: reconstruction gives
+an equal cocone, and choosing a mediator for a postcomposed unit recovers the
+original transformation componentwise. Its dedicated gates are
+PRELUDE-LEFT-KAN-ROUNDTRIP, PRELUDE-LEFT-KAN-ROUNDTRIP-RUNTIME and
+PRELUDE-LEFT-KAN-ROUNDTRIP-FOCUS.
+See `dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md`.
+The preceding increment supplies postcomposition identity, vertical composition
 and congruence directly in the cocone equality relation, at six independent
 universe levels. Its dedicated gates are PRELUDE-LEFT-KAN-COCONE-ACTION and
 PRELUDE-LEFT-KAN-COCONE-ACTION-RUNTIME. See

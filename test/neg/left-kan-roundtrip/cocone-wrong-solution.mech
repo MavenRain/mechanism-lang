@@ -1,0 +1,13 @@
+def Bad : (alpha : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant) ->
+    (beta : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant) ->
+    (s : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta beta) ->
+    Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant (Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+        Constant Constant RoundtripEta (s.1)) alpha :=
+  fun (alpha : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant)
+      (beta : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant)
+      (s : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+        Constant Constant RoundtripEta beta) =>
+    Laws_postCoconeDesc Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+      Constant Constant RoundtripEta alpha s

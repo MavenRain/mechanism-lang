@@ -626,7 +626,7 @@
           "args": [
             "{root}"
           ],
-          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1033 families=9 computations=26 negatives=23",
+          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1037 families=9 computations=26 negatives=23",
           "timeout": 1800
         }
       ]
@@ -1185,6 +1185,32 @@
             "{root}"
           ],
           "marker": "PRELUDE-LEFT-KAN-COCONE-ACTION-OK laws=3 contracts=3 computations=8 negatives=4",
+          "timeout": 840
+        }
+      ]
+    },
+    {
+      "mode": "prelude-left-kan-roundtrip",
+      "prepare": {
+        "script": "dev/left-kan-cocone-congruence-focus.py",
+        "args": [
+          "--roundtrip",
+          "--contracts"
+        ],
+        "timeout": 30
+      },
+      "source": "bend2/tests/prelude_left_kan_roundtrip.bend",
+      "entry": "arguments",
+      "shard": "prelude-left-kan-roundtrip",
+      "aliases": [
+        "prelude_left_kan_roundtrip"
+      ],
+      "checks": [
+        {
+          "args": [
+            "{root}"
+          ],
+          "marker": "PRELUDE-LEFT-KAN-ROUNDTRIP-OK laws=2 contracts=2 computations=8 negatives=4",
           "timeout": 840
         }
       ]

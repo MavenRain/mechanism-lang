@@ -1,0 +1,35 @@
+{
+  "baseline": "c76fe3811076e09a680a18f350caae11c8858ff5",
+  "checks": [
+    {
+      "mode": "left-kan-cocone-congruence",
+      "identical": true,
+      "sha256": "678f4301a843308a2e81f21a07502a61511cc297d807b89b816b258c0e430819"
+    },
+    {
+      "mode": "left-kan-cocone-congruence-contracts",
+      "identical": true,
+      "sha256": "0c290341508ad0a144b85fa3519001b5a6f6de3bb179836f24183665bdf4d145"
+    },
+    {
+      "mode": "left-kan-cocone-equality",
+      "identical": true,
+      "sha256": "5cbbe01197fb5f45013705ee4b9dd376f597666ce45d52b762e1dbd6e3331cb1"
+    },
+    {
+      "mode": "left-kan-cocone-equality-contracts",
+      "identical": true,
+      "sha256": "b637d9cc91cc63f842a686013fe0fdb3da303a6060fbc42a66c5f84876b7039c"
+    },
+    {
+      "mode": "left-kan-cocone-action",
+      "identical": true,
+      "sha256": "fc566266966295e7c990bf692fd7e10774324e7f4eec4c7fe247c7bbfdd4aa4b"
+    },
+    {
+      "mode": "left-kan-cocone-action-contracts",
+      "identical": true,
+      "sha256": "9deb9461b3f88dd1bb438a810f9874711b86410e7651f1419b3a02f490d6102d"
+    }
+  ]
+}

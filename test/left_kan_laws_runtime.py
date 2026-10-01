@@ -19,9 +19,10 @@ def main():
     focus = sys.argv[1:] == ["--cocone-congruence"]
     equality = sys.argv[1:] == ["--cocone-equality"]
     action = sys.argv[1:] == ["--cocone-action"]
-    focused = focus or equality or action
+    roundtrip = sys.argv[1:] == ["--roundtrip"]
+    focused = focus or equality or action or roundtrip
     if len(sys.argv) != 1 and not focused:
-        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence|--cocone-equality|--cocone-action]", file=sys.stderr)
+        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence|--cocone-equality|--cocone-action|--roundtrip]", file=sys.stderr)
         return 64
     source = "\n".join((ROOT / path).read_text() for path in [
         "prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",
@@ -33,10 +34,10 @@ def main():
         "test/fixtures/prelude/left-kan-laws-runtime.mech",
     ])
     if focused:
-        selection = ["--cocone-action"] if action else (["--cocone-equality"] if equality else [])
+        selection = ["--roundtrip"] if roundtrip else (["--cocone-action"] if action else (["--cocone-equality"] if equality else []))
         subprocess.run([sys.executable, "-P", ROOT / "dev/left-kan-cocone-congruence-focus.py", *selection],
                        cwd=ROOT, check=True, capture_output=True, text=True, timeout=30)
-        directory = "left-kan-cocone-action" if action else ("left-kan-cocone-equality" if equality else "left-kan-cocone-congruence")
+        directory = "left-kan-roundtrip" if roundtrip else ("left-kan-cocone-action" if action else ("left-kan-cocone-equality" if equality else "left-kan-cocone-congruence"))
         source = (ROOT / "_bend2" / directory / "focused-source.mech").read_text()
     anchor = "def sharedLanInput : Nat := 37"
     alternate_input = "sharedLanInput41"
@@ -59,6 +60,9 @@ def main():
     elif action:
         exports = ["lanActionId", "lanActionIdReference", "lanActionVcomp", "lanActionVcompReference",
                    "lanActionReverseVcomp", "lanActionReverseVcompReference", "lanActionCongr", "lanActionCongrReference"]
+    elif roundtrip:
+        exports = ["lanRoundtripCocone", "lanRoundtripOtherCocone",
+                   "lanRoundtripDesc", "lanRoundtripOtherDesc"]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -103,6 +107,8 @@ def main():
             answers = answers[-6:]
         elif action:
             answers = [alpha, alpha, post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp, post, post]
+        elif roundtrip:
+            answers = [alpha, beta, alpha, beta]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

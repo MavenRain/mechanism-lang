@@ -1,0 +1,156 @@
+-- The contracts bind the unit, cocone, transformation and solution independently.
+def WidePostCoconeDescContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (s : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    Wide_CoconeEq J C D j c d K F G
+      (Wide_postCocone J C D j c d K F H G eta (s.1)) alpha := Wide_postCoconeDesc
+
+def WideDescPostCoconeContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (H : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (eta : Wide_Base_Lan_LanCocone J C D j c d K F H) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Wide_Base_Base_Second_NatTrans C D c d H G) ->
+    (s : Wide_Base_Lan_LanSolution J C D j c d K F H G eta alpha) ->
+    Wide_CoconeEq J C D j c d K F G
+      (Wide_postCocone J C D j c d K F H G eta tau) alpha ->
+    (y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (H.1 y) (G.1 y))
+      ((s.1).1 y) (tau.1 y) := Wide_descPostCocone
+
+mu Point : Type 0 with | point : Point
+specialize MechSharedLeftKan (0, 0, 0, 0, 0, 0) as Run
+specialize MechLeftKanLaws (0, 0, 0, 0, 0, 0) as Laws
+  with (Base_Base_Source := Run_Base_Source, Base_Base_Middle := Run_Base_Middle,
+        Base_Base_Target := Run_Base_Target)
+specialize MechCategoryCore (0, 0) as SeparateTarget
+def sharedLanInput : Nat := 37
+
+def SourceEnd : Run_Base_Source_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => Nat -> Nat),
+   ((fun (0 x : Point) (n : Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+def MiddleEnd : Run_Base_Middle_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => Nat -> Nat),
+   ((fun (0 x : Point) (n : Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+def TargetEnd : Run_Base_Target_Category Point :=
+  ((fun (0 x : Point) (0 y : Point) => Nat -> Nat),
+   ((fun (0 x : Point) (n : Nat) => n),
+    ((fun (0 x : Point) (0 y : Point) (0 z : Point) (f : Nat -> Nat) (g : Nat -> Nat) (n : Nat) => g (f n)),
+     ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+      ((fun (0 x : Point) (0 y : Point) (0 f : Nat -> Nat) => categoryRefl),
+       (fun (0 w : Point) (0 x : Point) (0 y : Point) (0 z : Point)
+            (0 f : Nat -> Nat) (0 g : Nat -> Nat) (0 h : Nat -> Nat) => categoryRefl))))))
+def Forget : Run_Base_First_Base_Functor Point Point SourceEnd MiddleEnd :=
+  ((fun (x : Point) => x),
+   ((fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) => f),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point) (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Constant : Run_Base_Second_Base_Functor Point Point MiddleEnd TargetEnd :=
+  ((fun (x : Point) => point),
+   ((fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) (n : Nat) => n),
+    ((fun (0 x : Point) => categoryRefl),
+     (fun (0 x : Point) (0 y : Point) (0 z : Point) (0 f : Nat -> Nat) (0 g : Nat -> Nat) => categoryRefl))))
+def Original : Run_Base_Composite_Base_Functor Point Point SourceEnd TargetEnd :=
+  Run_Base_Compose_Base_compFunctor Point Point Point SourceEnd MiddleEnd TargetEnd Forget Constant
+def Alpha : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant :=
+  ((fun (x : Point) (n : Nat) => natAdd (natMul 103 n) 11),
+   (fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) => categoryRefl))
+def Beta : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant :=
+  ((fun (x : Point) (n : Nat) => natAdd (natMul 103 n) 1126),
+   (fun (0 x : Point) (0 y : Point) (f : Nat -> Nat) => categoryRefl))
+def Cocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Point Point Point SourceEnd MiddleEnd TargetEnd Constant Constant Alpha Forget
+def OtherCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Point Point Point SourceEnd MiddleEnd TargetEnd Constant Constant Beta Forget
+def RoundtripEta : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Run_Base_Compose_whiskerRight Point Point Point SourceEnd MiddleEnd TargetEnd Constant Constant
+    (Run_Base_Second_idNat Point Point MiddleEnd TargetEnd Constant) Forget
+def roundtripUnique : (tau : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant) ->
+    (other : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant) ->
+    ((x : Point) -> Run_Base_Target (Nat -> Nat)
+      (Run_Base_Target_comp Point TargetEnd point point point (RoundtripEta.1 x) (other.1 x)) (tau.1 x)) ->
+    (y : Point) -> Run_Base_Target (Nat -> Nat) (other.1 y) (tau.1 y) :=
+  fun (tau : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant)
+      (other : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant)
+      (factor : (x : Point) -> Run_Base_Target (Nat -> Nat)
+        (Run_Base_Target_comp Point TargetEnd point point point (RoundtripEta.1 x) (other.1 x)) (tau.1 x))
+      (y : Point) =>
+    Run_Base_Target_eqTrans (Nat -> Nat) (other.1 y)
+      (Run_Base_Target_comp Point TargetEnd point point point (RoundtripEta.1 y) (other.1 y)) (tau.1 y)
+      (Run_Base_Second_targetEqSymm (Nat -> Nat)
+        (Run_Base_Target_comp Point TargetEnd point point point (RoundtripEta.1 y) (other.1 y)) (other.1 y)
+        (Run_Base_Target_idComp Point TargetEnd point point (other.1 y))) (factor y)
+def RoundtripChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone :=
+  (Alpha, ((fun (x : Point) => Run_Base_Target_idComp Point TargetEnd point point (Alpha.1 x)), roundtripUnique Alpha))
+def RoundtripOtherChosen : Run_Lan_LanSolution Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta OtherCocone :=
+  (Beta, ((fun (x : Point) => Run_Base_Target_idComp Point TargetEnd point point (Beta.1 x)), roundtripUnique Beta))
+def RoundtripMediator : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant := RoundtripChosen.1
+def RoundtripOtherMediator : Run_Base_Second_NatTrans Point Point MiddleEnd TargetEnd Constant Constant := RoundtripOtherChosen.1
+def RoundtripCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant RoundtripEta RoundtripMediator
+def RoundtripOtherCocone : Run_Lan_LanCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant :=
+  Laws_postCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original Constant Constant RoundtripEta RoundtripOtherMediator
+def roundtripCoconeLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant RoundtripCocone Cocone :=
+  Laws_postCoconeDesc Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone RoundtripChosen
+def roundtripOtherCoconeLaw : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant RoundtripOtherCocone OtherCocone :=
+  Laws_postCoconeDesc Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta OtherCocone RoundtripOtherChosen
+def roundtripDescLaw : (y : Point) -> Run_Base_Target (Nat -> Nat) (RoundtripMediator.1 y) (Alpha.1 y) :=
+  Laws_descPostCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone Alpha RoundtripChosen (RoundtripChosen.2.1)
+def roundtripOtherDescLaw : (y : Point) -> Run_Base_Target (Nat -> Nat) (RoundtripOtherMediator.1 y) (Beta.1 y) :=
+  Laws_descPostCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta OtherCocone Beta RoundtripOtherChosen (RoundtripOtherChosen.2.1)
+def lanCertified : (left : Nat -> Nat) -> (0 right : Nat -> Nat) ->
+    (0 proof : Run_Base_Target (Nat -> Nat) left right) -> Nat -> Nat :=
+  fun (left : Nat -> Nat) (0 right : Nat -> Nat) (0 proof : Run_Base_Target (Nat -> Nat) left right)
+      (n : Nat) => left n
+def lanRoundtripCoconeAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (RoundtripCocone.1 point) (Cocone.1 point) (roundtripCoconeLaw point) x
+def lanRoundtripCoconeReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 point) (Cocone.1 point) categoryRefl x
+def lanRoundtripOtherCoconeAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (RoundtripOtherCocone.1 point) (OtherCocone.1 point) (roundtripOtherCoconeLaw point) x
+def lanRoundtripOtherCoconeReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (OtherCocone.1 point) (OtherCocone.1 point) categoryRefl x
+def lanRoundtripDescAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (RoundtripMediator.1 point) (Alpha.1 point) (roundtripDescLaw point) x
+def lanRoundtripDescReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Alpha.1 point) (Alpha.1 point) categoryRefl x
+def lanRoundtripOtherDescAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (RoundtripOtherMediator.1 point) (Beta.1 point) (roundtripOtherDescLaw point) x
+def lanRoundtripOtherDescReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Beta.1 point) (Beta.1 point) categoryRefl x
+def lanRoundtripCocone : Nat := lanRoundtripCoconeAt sharedLanInput
+def lanRoundtripCoconeReference : Nat := lanRoundtripCoconeReferenceAt sharedLanInput
+def lanRoundtripOtherCocone : Nat := lanRoundtripOtherCoconeAt sharedLanInput
+def lanRoundtripOtherCoconeReference : Nat := lanRoundtripOtherCoconeReferenceAt sharedLanInput
+def lanRoundtripDesc : Nat := lanRoundtripDescAt sharedLanInput
+def lanRoundtripDescReference : Nat := lanRoundtripDescReferenceAt sharedLanInput
+def lanRoundtripOtherDesc : Nat := lanRoundtripOtherDescAt sharedLanInput
+def lanRoundtripOtherDescReference : Nat := lanRoundtripOtherDescReferenceAt sharedLanInput

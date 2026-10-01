@@ -1,0 +1,4 @@
+def Bad : (y : Point) -> SeparateTarget (Nat -> Nat)
+    (RoundtripMediator.1 y) (Alpha.1 y) :=
+  Laws_descPostCocone Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone Alpha RoundtripChosen (RoundtripChosen.2.1)

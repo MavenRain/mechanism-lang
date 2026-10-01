@@ -1,0 +1,4 @@
+def Bad : Laws_CoconeEq Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant RoundtripCocone Cocone :=
+  Laws_postCoconeDesc Point Point Point SourceEnd MiddleEnd TargetEnd Forget Original
+    Constant Constant RoundtripEta Cocone
