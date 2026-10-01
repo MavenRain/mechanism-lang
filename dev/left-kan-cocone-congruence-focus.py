@@ -1,13 +1,23 @@
-"""Extract unchanged cocone congruence definitions for focused host validation."""
+"""Extract unchanged cocone law definitions for focused validation."""
 
+import argparse
 from pathlib import Path
 import hashlib
 import json
 import re
 import tempfile
 
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--cocone-equality', action='store_true')
+parser.add_argument('--contracts', action='store_true')
+args = parser.parse_args()
+
 root = Path(__file__).resolve().parents[1]
-paths = re.findall(r'"([^"]+\.mech)"', (root / 'bend2/tests/prelude_left_kan_laws.bend').read_text())
+harness = (root / 'bend2/tests/prelude_left_kan_laws.bend').read_text()
+templates = re.search(r'R\.read_all\(root,\s*\[([^\]]*)\]\)', harness)
+if templates is None:
+    raise ValueError('missing left Kan template inventory')
+paths = re.findall(r'"([^"]+\.mech)"', templates.group(1))
 groups = {}
 global_blocks = []
 aliases = {}
@@ -55,8 +65,13 @@ def resolve(scope, word):
             return resolve(target,word[len(prefix):])
     return ('',word) if ('',word) in definitions else None
 
-seeds = [('', key[1]) for key in definitions if key[0]=='' and
-         (key[1].startswith('lanPostCongr') or key[1].startswith('lanPostReverseCongr'))]
+prefixes = ('lanCoconeEq',) if args.cocone_equality else ('lanPostCongr', 'lanPostReverseCongr')
+seeds = [key for key in definitions if key[0]=='' and key[1].startswith(prefixes)]
+if args.contracts:
+    seeds.extend(key for key in definitions if key[0]=='' and
+                 key[1].startswith('WideCoconeEq' if args.cocone_equality else 'WidePostCoconeCongr'))
+if not seeds:
+    raise ValueError('no focused cocone law definitions found')
 required=set(seeds)
 pending=list(seeds)
 while pending:
@@ -73,9 +88,12 @@ for scope,(header,rows,tail,relative) in groups.items():
     pieces.append(header+''.join(body for name,body in rows if (scope,name) in required)+tail)
 pieces.extend(body for name,body in global_blocks
               if (name is None or ('',name) in required)
-              and not re.match(r'specialize\s+MechLeftKanLaws\s+[^\n]*\bas\s+Wide\b', body))
+              and (args.contracts or not re.match(
+                  r'specialize\s+MechLeftKanLaws\s+[^\n]*\bas\s+Wide\b', body)))
 text='\n'.join(pieces)
-directory=root/'_bend2/left-kan-cocone-congruence'
+directory=root/('_bend2/left-kan-cocone-equality' if args.cocone_equality else '_bend2/left-kan-cocone-congruence')
+if args.contracts:
+    directory = directory.with_name(directory.name + '-contracts')
 directory.mkdir(parents=True, exist_ok=True)
 with tempfile.NamedTemporaryFile(mode='w', dir=directory, delete=False) as output:
     output.write(text)

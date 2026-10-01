@@ -1,0 +1,5 @@
+def badCoconeEqTransMissing : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Cocone OtherCocone :=
+  Laws_coconeEqTrans Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Cocone Cocone OtherCocone
+    (Laws_coconeEqRefl Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Cocone)

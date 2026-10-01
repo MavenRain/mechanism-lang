@@ -51,11 +51,14 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-30
 
-The base is fb0eb36, following the left Kan cocone postcomposition laws.
-The current increment adds preservation of pointwise cocone and
-transformation equality under postcomposition at six independent universe levels.
-The kernel and runtime gates are PRELUDE-LEFT-KAN-LAWS and
-PRELUDE-LEFT-KAN-LAWS-RUNTIME. See `dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`.
+The base is 543ff83, following left Kan cocone postcomposition congruence.
+The current increment adds reflexivity, symmetry and transitivity for
+pointwise cocone equality at six independent universe levels. The dedicated
+kernel and runtime gates are PRELUDE-LEFT-KAN-COCONE-EQUALITY and
+PRELUDE-LEFT-KAN-COCONE-EQUALITY-RUNTIME. See
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`.
+The preceding congruence laws are described in
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`.
 The identity and vertical-composition laws are described in
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`.
 The mediator identity, congruence and postcomposition laws are described in

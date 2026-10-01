@@ -3,6 +3,42 @@
 -- conclusion is trivial fails to convert against the pinned statement.
 specialize MechLeftKanLaws (2, 0, 1, 3, 0, 2) as Wide
 
+def WideCoconeEqReflContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) -> (x : J) ->
+    Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (alpha.1 x) (alpha.1 x) := Wide_coconeEqRefl
+
+def WideCoconeEqSymmContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    Wide_CoconeEq J C D j c d K F G alpha beta -> (x : J) ->
+    Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (beta.1 x) (alpha.1 x) := Wide_coconeEqSymm
+
+def WideCoconeEqTransContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (gamma : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    Wide_CoconeEq J C D j c d K F G alpha beta ->
+    Wide_CoconeEq J C D j c d K F G beta gamma -> (x : J) ->
+    Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (alpha.1 x) (gamma.1 x) := Wide_coconeEqTrans
+
 def WidePostCoconeCongrContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
     (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
     (d : Wide_Base_Base_Target_Category D) ->

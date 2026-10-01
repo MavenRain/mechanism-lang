@@ -1,0 +1,3 @@
+def badCoconeEqSymmMissing : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Cocone Cocone :=
+  Laws_coconeEqSymm Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant Cocone Cocone

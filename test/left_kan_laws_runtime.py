@@ -16,9 +16,11 @@ HOST_BUDGET = 30
 
 
 def main():
-    focused = sys.argv[1:] == ["--cocone-congruence"]
+    focus = sys.argv[1:] == ["--cocone-congruence"]
+    equality = sys.argv[1:] == ["--cocone-equality"]
+    focused = focus or equality
     if len(sys.argv) != 1 and not focused:
-        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence]", file=sys.stderr)
+        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence|--cocone-equality]", file=sys.stderr)
         return 64
     source = "\n".join((ROOT / path).read_text() for path in [
         "prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",
@@ -30,9 +32,11 @@ def main():
         "test/fixtures/prelude/left-kan-laws-runtime.mech",
     ])
     if focused:
-        subprocess.run([sys.executable, "-P", ROOT / "dev/left-kan-cocone-congruence-focus.py"],
+        selection = ["--cocone-equality"] if equality else []
+        subprocess.run([sys.executable, "-P", ROOT / "dev/left-kan-cocone-congruence-focus.py", *selection],
                        cwd=ROOT, check=True, capture_output=True, text=True, timeout=30)
-        source = (ROOT / "_bend2/left-kan-cocone-congruence/focused-source.mech").read_text()
+        directory = "left-kan-cocone-equality" if equality else "left-kan-cocone-congruence"
+        source = (ROOT / "_bend2" / directory / "focused-source.mech").read_text()
     anchor = "def sharedLanInput : Nat := 37"
     alternate_input = "sharedLanInput41"
     if source.count(anchor) != 1 or re.search(r"\b" + alternate_input + r"\b", source):
@@ -44,9 +48,13 @@ def main():
                "lanPostIdentity", "lanPostIdentityReference", "lanPostVcomp", "lanPostVcompReference",
                "lanPostReverseVcomp", "lanPostReverseVcompReference",
                "lanPostCongr", "lanPostCongrReference",
-               "lanPostReverseCongr", "lanPostReverseCongrReference"]
-    if focused:
-        exports = exports[-4:]
+               "lanPostReverseCongr", "lanPostReverseCongrReference",
+               "lanCoconeEqRefl", "lanCoconeEqReflReference", "lanCoconeEqSymm", "lanCoconeEqSymmReference",
+               "lanCoconeEqTrans", "lanCoconeEqTransReference"]
+    if focus:
+        exports = exports[-10:-6]
+    elif equality:
+        exports = exports[-6:]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -84,9 +92,11 @@ def main():
         answers = [identity, identity, alpha, alpha, beta, beta,
                    post, post, reverse_post, reverse_post, alpha, alpha,
                    post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp,
-                   post, post, reverse_post, reverse_post]
-        if focused:
-            answers = answers[-4:]
+                   post, post, reverse_post, reverse_post, beta, beta, alpha, alpha, alpha, alpha]
+        if focus:
+            answers = answers[-10:-6]
+        elif equality:
+            answers = answers[-6:]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

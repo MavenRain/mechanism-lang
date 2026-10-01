@@ -1,0 +1,118 @@
+{
+  "base": "543ff831da6c8bfa14243838c188db9ab13c08a2",
+  "checks": [
+    {
+      "name": "native-runtime-build",
+      "exit_code": 0,
+      "marker": null,
+      "capture_manifest_sha256": "659d5bfb870c87723ef4f5e53f6ba6e1c79b8fbd83cb2749cc04ae94f08ad9d0",
+      "command": [
+        "python3",
+        "-P",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--backend",
+        "native",
+        "--test-mode",
+        "prelude-runtime"
+      ]
+    },
+    {
+      "name": "native-kernel-build",
+      "exit_code": 0,
+      "marker": null,
+      "capture_manifest_sha256": "9261000f87012c483180faa84a0424b568788ddb0853de458ed9cd64c97cb669",
+      "command": [
+        "python3",
+        "-P",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--backend",
+        "native",
+        "--test-mode",
+        "prelude-left-kan-laws"
+      ]
+    },
+    {
+      "name": "universe-contracts",
+      "exit_code": 0,
+      "marker": null,
+      "capture_manifest_sha256": "d3c4688adbb356b7544544792e938799eac5793e5753728ce05c251990336f2d",
+      "command": [
+        "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe",
+        "check",
+        "/Users/oobi/Documents/gpt6/mechanism-lang-cocone-equality-20260930/_bend2/left-kan-cocone-equality-contracts/focused-source.mech"
+      ]
+    },
+    {
+      "name": "runtime",
+      "exit_code": 0,
+      "marker": "PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=6 hosts=3 payloads=2 comparisons=36",
+      "capture_manifest_sha256": "c61f72a02ae294ddfbd859d4d10a652b50290689dd93c4f5f691d392cf86affc",
+      "command": [
+        "python3",
+        "-I",
+        "test/left_kan_laws_runtime.py",
+        "--cocone-equality"
+      ]
+    },
+    {
+      "name": "kernel",
+      "exit_code": 0,
+      "marker": "PRELUDE-LEFT-KAN-COCONE-EQUALITY-OK laws=3 contracts=3 computations=6 negatives=5",
+      "capture_manifest_sha256": "c264adbafa322b09ff336946bf23d462dac6c0a7015c53591a360683e41ba027",
+      "command": [
+        "python3",
+        "-I",
+        "test/left_kan_cocone_equality.py"
+      ]
+    },
+    {
+      "name": "congruence-regression",
+      "exit_code": 0,
+      "marker": "PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=4 hosts=3 payloads=2 comparisons=24",
+      "capture_manifest_sha256": "2ce2114c3546ccabc60d34aad9a26ea90255ed5a1494fa9aea53dd8e7578c8a7",
+      "command": [
+        "python3",
+        "-I",
+        "test/left_kan_laws_runtime.py",
+        "--cocone-congruence"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "bend2/tests/prelude_left_kan_laws.bend": "ab3e91eedae4f24bf5c06f921a0705772d96c3bc3a65017496b972e9f98cd2d6",
+    "dev/bend2/test-manifest.json": "236effc2cf6f0bd4abf6b888f5bd5df2b1f69b768edc7444defdd3b287c4c38e",
+    "dev/gates.sh": "02733080c3efb719afb85fc42e9c06105e8c1bcaba7d23e39476779e75cd428b",
+    "dev/left-kan-cocone-congruence-focus.py": "e381f20d4dc1b79d2d4555c8e7b9710a9008403ed6b0d5c6722a6961f42d3821",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/cat/left-kan-laws.mech": "a026dfb414fd6db37d418cb278d800e6ae478bfffc9fafb3ffdba15f488f4f84",
+    "prelude/cat/shared-left-kan.mech": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+    "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+    "test/fixtures/prelude/left-kan-laws-runtime.mech": "be047af8d81edb3764754ceed503b71f6a7de13bf431c3399989c8ccb5865534",
+    "test/fixtures/prelude/left-kan-laws.mech": "1f115b3deb76752c1768c257f30224586e2cc87c97c01e76b5f99448ed072286",
+    "test/fixtures/prelude/shared-left-kan-runtime.mech": "37fff03f6b286fd2bb70c502d0eb860634d7d906298e5871daa22a6c3e54d838",
+    "test/left_kan_cocone_equality.py": "1059ed67c30336c2d7fa606b37f46294cf4afb30626b2b23123c9f8a81256c8c",
+    "test/left_kan_laws_runtime.py": "25f0fa7f15b0a8171a959fe3b0d3baa85ff2e2b65a670c6a8ca55453deec2f9b",
+    "test/neg/left-kan-laws/cocone-eq-refl-unequal.err": "619c2f464c48211c78583cd805b719a0ec920a4321442dc61a57cab836933f3f",
+    "test/neg/left-kan-laws/cocone-eq-refl-unequal.mech": "f8f9f07e165127fb9c2f901dbc57c1dfe2a7968de93aa6533ab4ae8568e31103",
+    "test/neg/left-kan-laws/cocone-eq-symm-missing-equality.err": "0b2e6d921988bf1d20ef1a6672d70a952cd16abcffd0507bef08a674fc40dad3",
+    "test/neg/left-kan-laws/cocone-eq-symm-missing-equality.mech": "655bbaa3bb52cb1637fb430403f4e8fd5badbc9264db7a0e0f4f25d4715b8dc6",
+    "test/neg/left-kan-laws/cocone-eq-symm-nominal-equality.err": "d81cbce90af94549af1f34238b4026baa80b2022fe15c11939f79d6d30d7fc1f",
+    "test/neg/left-kan-laws/cocone-eq-symm-nominal-equality.mech": "a04f64fc8fbb0bf4c6897785838b794b73a7fec6073b922f93ef684062b42ae8",
+    "test/neg/left-kan-laws/cocone-eq-trans-missing-equality.err": "980f8e05f1b72fd0b4805b8bfdce6f5e7b78bb6033af9a157bb281506c614570",
+    "test/neg/left-kan-laws/cocone-eq-trans-missing-equality.mech": "8716f4244fbcdc33e1fc37416fc5d9443d5c902cbc595dfe70c886cf5d537b44",
+    "test/neg/left-kan-laws/cocone-eq-trans-wrong-middle.err": "1e56725d09ef6905973a93fb20f3eeeedc5edc49cee57217ce24e11b7b719d11",
+    "test/neg/left-kan-laws/cocone-eq-trans-wrong-middle.mech": "e1976776205447ace79b45c6622279a79a3ed191b38c8b2e4159bb49f6269720"
+  },
+  "full_battery": "not rerun",
+  "full_left_kan_suite": "not rerun; preceding slice exceeded its unchanged 1800-second allowance",
+  "default_left_kan_runtime": "not rerun; preceding slice reached its unchanged 480-second emission allowance"
+}

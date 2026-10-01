@@ -22,6 +22,70 @@ def CoconeEq : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
     (x : J) -> Base_Base_Target (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
       (alpha.1 x) (beta.1 x)
 
+def coconeEqRefl : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    CoconeEq J C D j c d K F G alpha alpha :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G) (x : J) => categoryRefl
+
+def coconeEqSymm : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Base_Lan_LanCocone J C D j c d K F G) ->
+    CoconeEq J C D j c d K F G alpha beta ->
+    CoconeEq J C D j c d K F G beta alpha :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G)
+      (proof : CoconeEq J C D j c d K F G alpha beta) (x : J) =>
+    Base_Base_Second_targetEqSymm (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (alpha.1 x) (beta.1 x) (proof x)
+
+def coconeEqTrans : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
+    (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->
+    (c : Base_Base_Middle_Category C) -> (d : Base_Base_Target_Category D) ->
+    (K : Base_Base_First_Base_Functor J C j c) ->
+    (F : Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Base_Lan_LanCocone J C D j c d K F G) ->
+    (gamma : Base_Lan_LanCocone J C D j c d K F G) ->
+    CoconeEq J C D j c d K F G alpha beta ->
+    CoconeEq J C D j c d K F G beta gamma ->
+    CoconeEq J C D j c d K F G alpha gamma :=
+  fun (0 J : Sort (succ u)) (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (j : Base_Base_Source_Category J) (c : Base_Base_Middle_Category C)
+      (d : Base_Base_Target_Category D)
+      (K : Base_Base_First_Base_Functor J C j c)
+      (F : Base_Base_Composite_Base_Functor J D j d)
+      (G : Base_Base_Second_Base_Functor C D c d)
+      (alpha : Base_Lan_LanCocone J C D j c d K F G)
+      (beta : Base_Lan_LanCocone J C D j c d K F G)
+      (gamma : Base_Lan_LanCocone J C D j c d K F G)
+      (first : CoconeEq J C D j c d K F G alpha beta)
+      (second : CoconeEq J C D j c d K F G beta gamma) (x : J) =>
+    Base_Base_Target_eqTrans (Base_Base_Target_Hom D d (F.1 x) (G.1 (K.1 x)))
+      (alpha.1 x) (beta.1 x) (gamma.1 x) (first x) (second x)
+
 -- Solving the unit cocone gives the identity mediator at every object.
 def descId : (0 J : Sort (succ u)) -> (0 C : Sort (succ w)) ->
     (0 D : Sort (succ p)) -> (j : Base_Base_Source_Category J) ->

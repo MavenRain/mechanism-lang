@@ -138,6 +138,42 @@ def postReverseVcompLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain Do
     Constant ReverseNestedPostCocone ReverseCompositePostCocone :=
   Laws_postCoconeVcomp Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
     Constant Constant Constant Cocone Beta Alpha
+
+-- Equality reversal and chaining consume the existing identity cocone law.
+def TwiceIdentityPostCocone : Run_Lan_LanCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant :=
+  Laws_postCocone Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant IdentityPostCocone (Run_Base_Second_idNat Nat Point IndexedPlain DoubleEnd Constant)
+def coconeReflLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant OtherCocone OtherCocone :=
+  Laws_coconeEqRefl Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant OtherCocone
+def coconeSymmLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Cocone IdentityPostCocone :=
+  Laws_coconeEqSymm Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant IdentityPostCocone Cocone postIdentityLaw
+def coconeTransLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant TwiceIdentityPostCocone Cocone :=
+  Laws_coconeEqTrans Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant TwiceIdentityPostCocone IdentityPostCocone Cocone
+    (Laws_postCoconeId Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original Constant IdentityPostCocone)
+    postIdentityLaw
+def lanCoconeEqReflAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (OtherCocone.1 x) (OtherCocone.1 x) (coconeReflLaw x) x
+def lanCoconeEqReflReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (OtherCocone.1 x) (OtherCocone.1 x) categoryRefl x
+def lanCoconeEqSymmAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 x) (IdentityPostCocone.1 x) (coconeSymmLaw x) x
+def lanCoconeEqSymmReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (IdentityPostCocone.1 x) (IdentityPostCocone.1 x) categoryRefl x
+def lanCoconeEqTransAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (TwiceIdentityPostCocone.1 x) (Cocone.1 x) (coconeTransLaw x) x
+def lanCoconeEqTransReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (Cocone.1 x) (Cocone.1 x) categoryRefl x
+def lanCoconeEqRefl : Nat := lanCoconeEqReflAt sharedLanInput
+def lanCoconeEqReflReference : Nat := lanCoconeEqReflReferenceAt sharedLanInput
+def lanCoconeEqSymm : Nat := lanCoconeEqSymmAt sharedLanInput
+def lanCoconeEqSymmReference : Nat := lanCoconeEqSymmReferenceAt sharedLanInput
+def lanCoconeEqTrans : Nat := lanCoconeEqTransAt sharedLanInput
+def lanCoconeEqTransReference : Nat := lanCoconeEqTransReferenceAt sharedLanInput
 def lanPostIdentityAt : Nat -> Nat := fun (x : Nat) =>
   lanCertified (IdentityPostCocone.1 x) (Cocone.1 x) (postIdentityLaw x) x
 def lanPostIdentityReferenceAt : Nat -> Nat := fun (x : Nat) =>

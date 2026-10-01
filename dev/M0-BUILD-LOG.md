@@ -4689,3 +4689,34 @@ kernel, Node and Wasmtime, for 24 comparisons. All runtime watchdogs remain
 unchanged. Equality of whole transformation records and source-type parity
 remain open. Evidence is in
 `dev/validation/port-uat-u1-left-kan-cocone-congruence/`.
+
+## Stage C / U1: left Kan cocone equality operations (2026-09-30)
+
+Base: 543ff83. `MechLeftKanLaws` adds `coconeEqRefl`, `coconeEqSymm`
+and `coconeEqTrans` at six independent universe levels, using checked
+target-category equality operations. No axiom is introduced. Three symbolic
+contracts at `(2, 0, 1, 3, 0, 2)` pin reversal and chaining to the actual
+component projections of independently bound cocones.
+
+Both focused native drivers build successfully. The dedicated kernel gate
+passes three laws, three contracts, six computations and all five refusals.
+The new refusal oracles are distinct from one another and from the existing
+18 left Kan cases. The full suite expects 1,027 entries, nine families,
+26 computations and 23 refusals.
+
+The six new certified runtime exports pass on the kernel, Node and Wasmtime
+at inputs 37 and 41, for 36 comparisons. The existing cocone-congruence
+mode also passes its four exports, for 24 comparisons. The focused extractor
+uses the declared template inventory and retains definition bodies verbatim.
+The kernel gate isolates its five refusal fixtures so the exact directory
+inventory guard applies.
+
+The full battery, full left Kan suite and default runtime mode were not
+rerun. The preceding slice exceeded its unchanged 1,800-second native suite
+allowance and reached its unchanged 480-second default emission allowance.
+Those allowances remain unchanged. Equality of whole transformation records
+and source-type parity remain open in Stage C and U1.
+
+The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md`.
+Validation captures, the checked focused source and input hashes are in
+`dev/validation/port-uat-u1-left-kan-cocone-equality/`.

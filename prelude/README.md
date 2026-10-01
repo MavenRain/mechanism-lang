@@ -629,12 +629,27 @@ that `alpha x` followed by `tau (K x)` is equal to `beta x` followed by
 `tau y` is equal to `sigma y` at each middle object `y`.
 Its proof applies `eqCongr` of the target category to each argument
 separately and combines the two equalities with `eqTrans`.
-The three conclusions are component equalities, not `CoconeEq` values.
+The three postcomposition conclusions are component equalities, not
+`CoconeEq` values.
+
+`L_coconeEqRefl J C D j c d K F G alpha` proves `CoconeEq alpha alpha`.
+`L_coconeEqSymm J C D j c d K F G alpha beta p` changes a proof `p` of
+`CoconeEq alpha beta` into a proof of `CoconeEq beta alpha`.
+`L_coconeEqTrans J C D j c d K F G alpha beta gamma p q` combines proofs
+of `CoconeEq alpha beta` and `CoconeEq beta gamma` into a proof of
+`CoconeEq alpha gamma`. The three proofs apply the reflexivity, symmetry
+and transitivity of the target hom equality family at each source object.
+They introduce no axiom.
 
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
-20 computations and the 18 refusals on the kernel. The
-PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 20 exports on the
-kernel, Node and Wasmtime at two payloads.
+26 computations and the 23 refusals on the kernel. The
+PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 26 exports on the
+kernel, Node and Wasmtime at two payloads. The
+PRELUDE-LEFT-KAN-COCONE-EQUALITY gate checks the three equality laws,
+their three contracts, six computations and five refusals. The
+PRELUDE-LEFT-KAN-COCONE-EQUALITY-RUNTIME gate compares the six equality
+exports on the same three hosts at two payloads.
 See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` and
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md` for the contracts and checks.
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`,
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-EQUALITY.md` for the contracts and checks.

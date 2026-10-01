@@ -626,7 +626,7 @@
           "args": [
             "{root}"
           ],
-          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1002 families=9 computations=20 negatives=18",
+          "marker": "PRELUDE-LEFT-KAN-LAWS-OK entries=1027 families=9 computations=26 negatives=23",
           "timeout": 1800
         }
       ]
