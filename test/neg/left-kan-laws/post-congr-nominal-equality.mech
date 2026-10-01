@@ -1,0 +1,7 @@
+axiom unrelatedPostCongr : (x : Nat) -> SeparateTarget ((Nat -> Nat) * (Nat -> Nat))
+  (Beta.1 x) (Beta.1 x)
+def badPostCongrNominalEquality : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant PostCocone PostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone Cocone Beta Beta
+    (fun (x : Nat) => categoryRefl) unrelatedPostCongr

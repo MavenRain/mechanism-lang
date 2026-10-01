@@ -1,0 +1,87 @@
+"""Extract unchanged cocone congruence definitions for focused host validation."""
+
+from pathlib import Path
+import hashlib
+import json
+import re
+import tempfile
+
+root = Path(__file__).resolve().parents[1]
+paths = re.findall(r'"([^"]+\.mech)"', (root / 'bend2/tests/prelude_left_kan_laws.bend').read_text())
+groups = {}
+global_blocks = []
+aliases = {}
+definitions = {}
+
+def alias_rows(text):
+    return dict((alias, group) for group, alias in re.findall(
+        r'specialize\s+(\w+)\s+\([^\n]*?\)\s+as\s+(\w+)', text))
+
+for relative in paths:
+    text = (root / relative).read_text()
+    group = re.search(r'^poly\s+\([^\n]*?\)\s+(?:group|mu)\s+(\w+)', text, re.M)
+    if group:
+        scope = group.group(1)
+        matches = list(re.finditer(r'^def\s+(\w+)\s*:', text, re.M))
+        header = text[:matches[0].start()] if matches else text
+        end = text.rfind('\nend') if ' group ' in group.group(0) else len(text)
+        rows = [(match.group(1), text[match.start():matches[i+1].start() if i+1<len(matches) else end])
+                for i,match in enumerate(matches)]
+        groups[scope] = (header, rows, text[end:] if end<len(text) else '', relative)
+        aliases[scope] = alias_rows(text)
+        definitions.update(((scope,name),body) for name,body in rows)
+    else:
+        matches = list(re.finditer(r'^(def|data|mu|specialize)\s+(\w+)', text, re.M))
+        if not matches:
+            global_blocks.append((None,text))
+            continue
+        global_blocks.append((None,text[:matches[0].start()]))
+        for i, match in enumerate(matches):
+            body = text[match.start():matches[i+1].start() if i+1<len(matches) else len(text)]
+            if match.group(1)=='def':
+                name=match.group(2)
+                definitions[('',name)] = body
+                global_blocks.append((name,body))
+            else:
+                global_blocks.append((None,body))
+        aliases.setdefault('',{}).update(alias_rows(text))
+
+def resolve(scope, word):
+    if (scope,word) in definitions:
+        return (scope,word)
+    for alias, target in aliases.get(scope,{}).items():
+        prefix=alias+'_'
+        if word.startswith(prefix):
+            return resolve(target,word[len(prefix):])
+    return ('',word) if ('',word) in definitions else None
+
+seeds = [('', key[1]) for key in definitions if key[0]=='' and
+         (key[1].startswith('lanPostCongr') or key[1].startswith('lanPostReverseCongr'))]
+required=set(seeds)
+pending=list(seeds)
+while pending:
+    key=pending.pop()
+    for word in re.findall(r'\b[A-Za-z][A-Za-z0-9_]*\b',definitions[key]):
+        candidate=resolve(key[0],word)
+        if candidate and candidate not in required:
+            required.add(candidate)
+            pending.append(candidate)
+# Keep the category equality family and its complete foundational members.
+required.update(key for key in definitions if key[0]=='MechCategoryCore')
+pieces=[]
+for scope,(header,rows,tail,relative) in groups.items():
+    pieces.append(header+''.join(body for name,body in rows if (scope,name) in required)+tail)
+pieces.extend(body for name,body in global_blocks
+              if (name is None or ('',name) in required)
+              and not re.match(r'specialize\s+MechLeftKanLaws\s+[^\n]*\bas\s+Wide\b', body))
+text='\n'.join(pieces)
+directory=root/'_bend2/left-kan-cocone-congruence'
+directory.mkdir(parents=True, exist_ok=True)
+with tempfile.NamedTemporaryFile(mode='w', dir=directory, delete=False) as output:
+    output.write(text)
+Path(output.name).replace(directory/'focused-source.mech')
+(directory/'focused-extraction.json').write_text(json.dumps({
+    'source_files':{path:hashlib.sha256((root/path).read_bytes()).hexdigest() for path in paths},
+    'retained_definitions':sorted('.'.join(filter(None,key)) for key in required),
+    'focused_sha256':hashlib.sha256(text.encode()).hexdigest()},indent=2)+'\n')
+print(json.dumps({'bytes':len(text.encode()),'definitions':len(required),'original_bytes':sum((root/path).stat().st_size for path in paths)}))

@@ -1,0 +1,7 @@
+axiom transformationEquality : (y : Nat) -> Run_Base_Target ((Nat -> Nat) * (Nat -> Nat))
+  (Beta.1 y) (Beta.1 y)
+def badPostCongrMissingCocone : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant PostCocone PostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone Cocone Beta Beta
+    transformationEquality

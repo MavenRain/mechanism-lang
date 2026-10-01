@@ -1,0 +1,5 @@
+def badPostCongrUnequalCocones : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant PostCocone PostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone OtherCocone Beta Beta
+    (fun (sourceIndex : Nat) => categoryRefl) (fun (targetIndex : Nat) => categoryRefl)

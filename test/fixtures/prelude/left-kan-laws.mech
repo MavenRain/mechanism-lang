@@ -3,6 +3,25 @@
 -- conclusion is trivial fails to convert against the pinned statement.
 specialize MechLeftKanLaws (2, 0, 1, 3, 0, 2) as Wide
 
+def WidePostCoconeCongrContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
+    (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
+    (d : Wide_Base_Base_Target_Category D) ->
+    (K : Wide_Base_Base_First_Base_Functor J C j c) ->
+    (F : Wide_Base_Base_Composite_Base_Functor J D j d) ->
+    (G : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (I : Wide_Base_Base_Second_Base_Functor C D c d) ->
+    (alpha : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (beta : Wide_Base_Lan_LanCocone J C D j c d K F G) ->
+    (tau : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    (sigma : Wide_Base_Base_Second_NatTrans C D c d G I) ->
+    Wide_CoconeEq J C D j c d K F G alpha beta ->
+    ((y : C) -> Wide_Base_Base_Target (Wide_Base_Base_Target_Hom D d (G.1 y) (I.1 y))
+      (tau.1 y) (sigma.1 y)) ->
+    Wide_CoconeEq J C D j c d K F I
+      (Wide_postCocone J C D j c d K F G I alpha tau)
+      (Wide_postCocone J C D j c d K F G I beta sigma) :=
+  Wide_postCoconeCongr
+
 def WidePostCoconeIdContract : (0 J : Type 2) -> (0 C : Type 1) -> (0 D : Type 0) ->
     (j : Wide_Base_Base_Source_Category J) -> (c : Wide_Base_Base_Middle_Category C) ->
     (d : Wide_Base_Base_Target_Category D) ->

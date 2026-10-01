@@ -16,8 +16,9 @@ HOST_BUDGET = 30
 
 
 def main():
-    if len(sys.argv) != 1:
-        print("usage: python3 -I test/left_kan_laws_runtime.py", file=sys.stderr)
+    focused = sys.argv[1:] == ["--cocone-congruence"]
+    if len(sys.argv) != 1 and not focused:
+        print("usage: python3 -I test/left_kan_laws_runtime.py [--cocone-congruence]", file=sys.stderr)
         return 64
     source = "\n".join((ROOT / path).read_text() for path in [
         "prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",
@@ -28,6 +29,10 @@ def main():
         "test/fixtures/prelude/shared-left-kan-runtime.mech",
         "test/fixtures/prelude/left-kan-laws-runtime.mech",
     ])
+    if focused:
+        subprocess.run([sys.executable, "-P", ROOT / "dev/left-kan-cocone-congruence-focus.py"],
+                       cwd=ROOT, check=True, capture_output=True, text=True, timeout=30)
+        source = (ROOT / "_bend2/left-kan-cocone-congruence/focused-source.mech").read_text()
     anchor = "def sharedLanInput : Nat := 37"
     alternate_input = "sharedLanInput41"
     if source.count(anchor) != 1 or re.search(r"\b" + alternate_input + r"\b", source):
@@ -37,7 +42,11 @@ def main():
                "lanOtherCongr", "lanOtherCongrReference", "lanPostcomp", "lanPostcompReference",
                "lanReversePostcomp", "lanReversePostcompReference",
                "lanPostIdentity", "lanPostIdentityReference", "lanPostVcomp", "lanPostVcompReference",
-               "lanPostReverseVcomp", "lanPostReverseVcompReference"]
+               "lanPostReverseVcomp", "lanPostReverseVcompReference",
+               "lanPostCongr", "lanPostCongrReference",
+               "lanPostReverseCongr", "lanPostReverseCongrReference"]
+    if focused:
+        exports = exports[-4:]
     seen = set()
     blocks = []
     for block in re.split(r"(?m)(?=^def )", source):
@@ -74,7 +83,10 @@ def main():
         reverse_vcomp = 105 * payload + 15
         answers = [identity, identity, alpha, alpha, beta, beta,
                    post, post, reverse_post, reverse_post, alpha, alpha,
-                   post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp]
+                   post_vcomp, post_vcomp, reverse_vcomp, reverse_vcomp,
+                   post, post, reverse_post, reverse_post]
+        if focused:
+            answers = answers[-4:]
         cases.extend((payload, name + suffix, value)
                      for name, value in zip(exports, answers, strict=True))
     deadline = time.monotonic() + TOTAL_BUDGET

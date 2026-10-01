@@ -4661,3 +4661,31 @@ check exhausts its default heap. Native and focused kernel evidence is
 recorded alongside these failures in
 `dev/validation/port-uat-u1-left-kan-cocone-laws/`. No watchdog was raised.
 Full runtime acceptance and the existing Bend acceptance work remain open.
+
+## 2026-09-30: left Kan cocone postcomposition congruence
+
+Added `postCoconeCongr` to `MechLeftKanLaws`. It takes `CoconeEq alpha beta`
+and an equality of `tau` and `sigma` at every middle object, and gives
+`CoconeEq (postCocone alpha tau) (postCocone beta sigma)`. The proof applies
+the target category's `eqCongr` to each argument and combines the two
+equalities with `eqTrans`. It introduces no axiom and works at six
+independent universe levels. `WidePostCoconeCongrContract` pins the
+conclusion on the actual cocone records. Certified runtime examples cover
+forward and reverse composition at inputs 37 and 41. The runtime
+congruence pairs are reflexive instances, and the wide contract carries
+the general kernel check.
+
+The native suite passes 1,002 checked entries, nine families,
+20 computations and all 18 refusal cases. The five new refusals cover
+either missing equality argument, unequal cocones, unequal transformations
+and a proof from an unrelated equality family. The direct native kernel
+check passed in 1,867.876 seconds, which exceeds the manifest's unchanged
+1,800-second allowance on this machine.
+
+The default 20-export runtime suite reached its existing 480-second
+emission limit, as in the preceding slice. The focused
+`--cocone-congruence` mode passed the four new exports at two inputs on the
+kernel, Node and Wasmtime, for 24 comparisons. All runtime watchdogs remain
+unchanged. Equality of whole transformation records and source-type parity
+remain open. Evidence is in
+`dev/validation/port-uat-u1-left-kan-cocone-congruence/`.

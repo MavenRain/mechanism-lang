@@ -1,0 +1,5 @@
+def badPostCongrMissingTransformation : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant PostCocone PostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone Cocone Beta Beta
+    (fun (x : Nat) => categoryRefl)

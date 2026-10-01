@@ -623,11 +623,18 @@ Its proof uses the right identity law of the target category.
 `alpha x` followed by `tau (K x)` and then by `sigma (K x)` is equal to
 `alpha x` followed by the composite of `tau (K x)` and `sigma (K x)`.
 Its proof uses the associativity law of the target category.
-Both conclusions are component equalities, not `CoconeEq` values.
+`L_postCoconeCongr J C D j c d K F G I alpha beta tau sigma p q x` says
+that `alpha x` followed by `tau (K x)` is equal to `beta x` followed by
+`sigma (K x)`. Here `p` proves `CoconeEq alpha beta` and `q` proves that
+`tau y` is equal to `sigma y` at each middle object `y`.
+Its proof applies `eqCongr` of the target category to each argument
+separately and combines the two equalities with `eqTrans`.
+The three conclusions are component equalities, not `CoconeEq` values.
 
 The PRELUDE-LEFT-KAN-LAWS gate checks the closed specializations, the
-16 computations and the 13 refusals on the kernel. The
-PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 16 exports on the
+20 computations and the 18 refusals on the kernel. The
+PRELUDE-LEFT-KAN-LAWS-RUNTIME gate compares the 20 exports on the
 kernel, Node and Wasmtime at two payloads.
-See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md` and
-`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` for the contracts and checks.
+See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` and
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md` for the contracts and checks.

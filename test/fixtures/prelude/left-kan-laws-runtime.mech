@@ -156,3 +156,26 @@ def lanPostVcomp : Nat := lanPostVcompAt sharedLanInput
 def lanPostVcompReference : Nat := lanPostVcompReferenceAt sharedLanInput
 def lanPostReverseVcomp : Nat := lanPostReverseVcompAt sharedLanInput
 def lanPostReverseVcompReference : Nat := lanPostReverseVcompReferenceAt sharedLanInput
+
+def postCongrLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant PostCocone PostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant Cocone Cocone Beta Beta
+    (fun (x : Nat) => categoryRefl) (fun (y : Nat) => categoryRefl)
+def postReverseCongrLaw : Laws_CoconeEq Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant ReversePostCocone ReversePostCocone :=
+  Laws_postCoconeCongr Nat Nat Point IndexedEnd IndexedPlain DoubleEnd Forget Original
+    Constant Constant OtherCocone OtherCocone Alpha Alpha
+    (fun (x : Nat) => categoryRefl) (fun (y : Nat) => categoryRefl)
+def lanPostCongrAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (PostCocone.1 x) (PostCocone.1 x) (postCongrLaw x) x
+def lanPostCongrReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (PostCocone.1 x) (PostCocone.1 x) categoryRefl x
+def lanPostReverseCongrAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReversePostCocone.1 x) (ReversePostCocone.1 x) (postReverseCongrLaw x) x
+def lanPostReverseCongrReferenceAt : Nat -> Nat := fun (x : Nat) =>
+  lanCertified (ReversePostCocone.1 x) (ReversePostCocone.1 x) categoryRefl x
+def lanPostCongr : Nat := lanPostCongrAt sharedLanInput
+def lanPostCongrReference : Nat := lanPostCongrReferenceAt sharedLanInput
+def lanPostReverseCongr : Nat := lanPostReverseCongrAt sharedLanInput
+def lanPostReverseCongrReference : Nat := lanPostReverseCongrReferenceAt sharedLanInput

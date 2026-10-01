@@ -270,7 +270,7 @@ leg CATEGORY PRELUDE-SHARED-LEFT-KAN \
   '^PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7$' \
   $ROOT/_bend2/test/prelude_shared_left_kan.exe $ROOT
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS \
-  '^PRELUDE-LEFT-KAN-LAWS-OK entries=989 families=9 computations=16 negatives=13$' \
+  '^PRELUDE-LEFT-KAN-LAWS-OK entries=1002 families=9 computations=20 negatives=18$' \
   $ROOT/_bend2/test/prelude_left_kan_laws.exe $ROOT
 leg SUITE PRELUDE-HETEROGENEOUS-LEFT-KAN \
   '^PRELUDE-HETEROGENEOUS-LEFT-KAN-OK entries=294 instances=3 computations=4 negatives=15$' \
@@ -318,7 +318,7 @@ leg CATEGORY PRELUDE-SHARED-LEFT-KAN-RUNTIME \
   '^PRELUDE-SHARED-LEFT-KAN-RUNTIME OK cases=6 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_left_kan_runtime.py
 leg CATEGORY PRELUDE-LEFT-KAN-LAWS-RUNTIME \
-  '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=16 hosts=3 payloads=2 comparisons=96$' \
+  '^PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=20 hosts=3 payloads=2 comparisons=120$' \
   python3 -I $ROOT/test/left_kan_laws_runtime.py
 leg MED EQUALITY-RUNTIME '^EQUALITY-RUNTIME OK cases=' \
   python3 -P $ROOT/test/equality_runtime.py

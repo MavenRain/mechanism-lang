@@ -51,11 +51,13 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-09-30
 
-The base is 84a122d, following the Bend 2 migration and focused test builds.
-The current increment adds pointwise identity and vertical-composition
-laws for left Kan cocone postcomposition at six independent universe levels.
+The base is fb0eb36, following the left Kan cocone postcomposition laws.
+The current increment adds preservation of pointwise cocone and
+transformation equality under postcomposition at six independent universe levels.
 The kernel and runtime gates are PRELUDE-LEFT-KAN-LAWS and
-PRELUDE-LEFT-KAN-LAWS-RUNTIME. See `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`.
+PRELUDE-LEFT-KAN-LAWS-RUNTIME. See `dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`.
+The identity and vertical-composition laws are described in
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md`.
 The mediator identity, congruence and postcomposition laws are described in
 `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`.
 Dependency export clauses inside `poly group` let chosen local member names

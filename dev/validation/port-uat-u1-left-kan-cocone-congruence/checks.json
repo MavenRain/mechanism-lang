@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "base": "fb0eb36e2b3cf4b6f1c30047fda82c3b6cba1ef3",
+  "checks": {
+    "native-build": {
+      "passed": true,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/.kanon-exec/run-uGtJCW",
+      "stdout_excerpt": "compile: _bend2/test/entries/single-prelude-left-kan-laws.bend (native)",
+      "stdout_excerpt_truncated": false,
+      "streams": {
+        "stdout": "46434b4d420f78a93a1de4efe296bcbb5856aa9f5855c4e7821ba5fd31e3d249",
+        "stderr": "66efd3a14db85b081edd7ea47f9bf1d696840d9a75087e72be4b5bf3ae587a56"
+      }
+    },
+    "runtime-build": {
+      "passed": true,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/.kanon-exec/run-NHxiIc",
+      "stdout_excerpt": "current: _bend2/test/bend_single-prelude-runtime-native",
+      "stdout_excerpt_truncated": false,
+      "streams": {
+        "stdout": "e28b2ee3e80c6be963266eec115f548f7a2abdeb3dd73ad5db268a27d54e29fc",
+        "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "kernel": {
+      "passed": true,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/.kanon-exec/run-pp0AWW",
+      "stdout_excerpt": "PRELUDE-LEFT-KAN-LAWS-OK entries=1002 families=9 computations=20 negatives=18",
+      "stdout_excerpt_truncated": false,
+      "streams": {
+        "stdout": "7bb2166e6cf6666aa0051c16e828786be47c324ed38746f754809fe860cfc232",
+        "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "scope": "direct native driver",
+      "elapsed_seconds": 1867.876,
+      "manifest_timeout_seconds": 1800,
+      "within_manifest_timeout": false,
+      "timing_state_sha256": "76b784943900251af4e80fbe2836486b6940d10991d629b03ad3dc2a6e4b6c2a"
+    },
+    "runtime": {
+      "passed": true,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/.kanon-exec/run-2jxHCT",
+      "stdout_excerpt": "PRELUDE-LEFT-KAN-LAWS-RUNTIME OK cases=4 hosts=3 payloads=2 comparisons=24",
+      "stdout_excerpt_truncated": false,
+      "streams": {
+        "stdout": "d282b700846060018a597d318768bf979249259cd254d0348f0d2287594742b1",
+        "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "default-runtime": {
+      "passed": false,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/.kanon-exec/run-TBOc5M",
+      "stdout_excerpt": "PRELUDE-LEFT-KAN-LAWS-RUNTIME FAIL Command '['/Users/oobi/Documents/gpt6/mechanism-lang-nattrans-ext-20260930/_bend2/test/prelude_runtime.exe', '--reachable', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-laws-3a91qn22/source.mech', '/var/folders/d4/9sdgktzs23s857pdkm4yfndw0000gn/T/mechanism-left-kan-laws-3a91qn22', 'lanIdentity', 'lanIdentityReference', 'lanCongr', 'lanCongrReference', 'lanOtherCongr', 'lanOtherCongrReference', 'lanPostcomp', 'lanPostcompReference', 'lanReversePostco",
+      "stdout_excerpt_truncated": true,
+      "streams": {
+        "stdout": "57f8248c0baf52dabc319277632957e5338a623036b5ab03b491da50886754f1",
+        "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "builds": {
+    "prelude-left-kan-laws": {
+      "artifact_sha256": "89970aa990b5433932f953d827e788e2314ebe468072bfc4cde08c80b7e1e364",
+      "receipt_sha256": "c2c49d1075b13b145a520b5396b4bfa15d12279a9ee8951bd9cc074fa3c89f97",
+      "bend": "2.0.27",
+      "backend": "native",
+      "optimization": "O1",
+      "inputs": 121
+    },
+    "prelude-runtime": {
+      "artifact_sha256": "b715b5ca2416ba9aa6d3ee3e40bdd12cb4787b718cbfc31a95cec47b618f84b4",
+      "receipt_sha256": "c406db4831317f90de41f3976d49342feffa8194517dcf5b37150e4d75341725",
+      "bend": "2.0.27",
+      "backend": "native",
+      "optimization": "O1",
+      "inputs": 118
+    }
+  },
+  "sources": {
+    "README.md": "ea18c33a45bae36f204e8c0a0b1a6e57929adad8a2d8978d9f1e87e1a796d02d",
+    "ROADMAP.md": "9129e9ca52a9c8e1f61c464115ce8ca5ccf1ec6dca51a00f9ac3dd7a4d4dfccb",
+    "bend2/tests/prelude_left_kan_laws.bend": "d1fa29ddfacda79c6fa39824ffef5b613fd8b03f7db8373cb5b0f6e037e0f7ef",
+    "dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md": "595fd661b071cf2db57840dc316026f68449b0bc6f9bd87aa419f3240d55b8a5",
+    "dev/bend2/test-manifest.json": "bfd99c54c48877f79d3a94559ba9bc0201db7ec9df7ca517f0786fcb14b45a40",
+    "dev/left-kan-cocone-congruence-focus.py": "40f6dadce3804efe83de697ff23e0f20b72bca8e53adaef78be6b666095b7203",
+    "prelude/cat/left-kan-laws.mech": "78392f6676753cab7e65e1d1401074c0b788afc8314281088b7a9a828069881f",
+    "test/fixtures/prelude/left-kan-laws-runtime.mech": "db86681b1c38d78484e3d440b67a104de115226f9299cbd610248af0525c36ca",
+    "test/fixtures/prelude/left-kan-laws.mech": "0cf062c1934592d1800574fe6facc892f70a047c812866870dc131c538b6632e",
+    "test/left_kan_laws_runtime.py": "a7f9cbf1580131d61eebd9a8870b1f9955bb96ec1027723d6811fbace140ce98",
+    "test/neg/left-kan-laws/post-congr-missing-cocone-equality.err": "9e0a1e17dddbd9a4e2197dd033fe5132b1ebf0df208018397316fc538812f894",
+    "test/neg/left-kan-laws/post-congr-missing-cocone-equality.mech": "fad740af3fa5e1df52a0a2a385f7444a02b4a18e3a8305ad2fd07a8cde95dee0",
+    "test/neg/left-kan-laws/post-congr-missing-transformation-equality.err": "37b7f353ed853ec875815b63c76f2a264968e56c712587e4276e72a842759360",
+    "test/neg/left-kan-laws/post-congr-missing-transformation-equality.mech": "8632cf188fde40eed6ab6806e2a0ba9fb8f58ceab55aa6a9a41a986a3d7f2b6f",
+    "test/neg/left-kan-laws/post-congr-nominal-equality.err": "f7d6b1bbf0d978ec23a4e0a75fed96798f2b04df219f8e1769bb2df0fcabd3c1",
+    "test/neg/left-kan-laws/post-congr-nominal-equality.mech": "bf858be87ef7c6f846ec7796693ceed30fabec4678ef2ebe865223177147ad62",
+    "test/neg/left-kan-laws/post-congr-unequal-cocones.err": "1575b8bb489f6fbb3ba01dac2e723578990561e2bca655b89b004b6eb777ebc6",
+    "test/neg/left-kan-laws/post-congr-unequal-cocones.mech": "6f6fcc7b4b3dd663acf0bd9bad5a29d7c3328641094ba3484bb7460046317ed9",
+    "test/neg/left-kan-laws/post-congr-unequal-transformations.err": "4dd1c595e934be86c8c619447d68e9f9bc7299197539f7315165769f96c1a761",
+    "test/neg/left-kan-laws/post-congr-unequal-transformations.mech": "bbafbf2b580f07da66f9763488c29f938cf94d7e55e6adf4cb1a88937c4412f1"
+  },
+  "focused_extraction": {
+    "source_files": {
+      "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+      "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+      "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+      "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+      "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+      "prelude/cat/shared-nattrans.mech": "3a2a0254793384883fc4ae19617a17b11657775d96fb585bd5c58c10ad6e4f05",
+      "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+      "prelude/cat/shared-left-kan.mech": "f5554be4a908e143d75a3c904ce90b453ca2806b0e05fc615d7b3e6ef888880b",
+      "prelude/cat/left-kan-laws.mech": "78392f6676753cab7e65e1d1401074c0b788afc8314281088b7a9a828069881f",
+      "test/fixtures/prelude/left-kan-laws.mech": "0cf062c1934592d1800574fe6facc892f70a047c812866870dc131c538b6632e",
+      "test/fixtures/prelude/shared-left-kan-runtime.mech": "37fff03f6b286fd2bb70c502d0eb860634d7d906298e5871daa22a6c3e54d838",
+      "test/fixtures/prelude/left-kan-laws-runtime.mech": "db86681b1c38d78484e3d440b67a104de115226f9299cbd610248af0525c36ca"
+    },
+    "retained_definitions": [
+      "Alpha",
+      "Beta",
+      "Cocone",
+      "Components",
+      "Constant",
+      "DoubleEnd",
+      "Forget",
+      "IndexedEnd",
+      "IndexedPlain",
+      "MechCategoryCore.Category",
+      "MechCategoryCore.Hom",
+      "MechCategoryCore.assoc",
+      "MechCategoryCore.comp",
+      "MechCategoryCore.compId",
+      "MechCategoryCore.eqCongr",
+      "MechCategoryCore.eqTrans",
+      "MechCategoryCore.id",
+      "MechCategoryCore.idComp",
+      "MechComposableFunctors.Composite_Functor",
+      "MechComposableFunctors.Composite_functorMap",
+      "MechComposableFunctors.Composite_functorObj",
+      "MechComposableFunctors.First_Functor",
+      "MechComposableFunctors.First_functorMap",
+      "MechComposableFunctors.First_functorMapComp",
+      "MechComposableFunctors.First_functorMapId",
+      "MechComposableFunctors.First_functorObj",
+      "MechComposableFunctors.Second_Functor",
+      "MechComposableFunctors.Second_eqCongr",
+      "MechComposableFunctors.Second_functorMap",
+      "MechComposableFunctors.Second_functorMapComp",
+      "MechComposableFunctors.Second_functorMapId",
+      "MechComposableFunctors.Second_functorObj",
+      "MechComposableFunctors.compFunctor",
+      "MechHeterogeneousFunctor.Functor",
+      "MechHeterogeneousFunctor.functorMap",
+      "MechHeterogeneousFunctor.functorObj",
+      "MechHeterogeneousLeftKan.LanCocone",
+      "MechHeterogeneousNatTrans.NatTrans",
+      "MechHeterogeneousNatTrans.naturality",
+      "MechHeterogeneousNatTrans.targetEqSymm",
+      "MechHeterogeneousNatTrans.vcomp",
+      "MechHeterogeneousNatTrans.vcompLaw",
+      "MechHeterogeneousWhiskering.Composite_NatTrans",
+      "MechHeterogeneousWhiskering.Second_NatTrans",
+      "MechHeterogeneousWhiskering.Second_naturality",
+      "MechHeterogeneousWhiskering.whiskerRight",
+      "MechLeftKanLaws.CoconeEq",
+      "MechLeftKanLaws.postCocone",
+      "MechLeftKanLaws.postCoconeCongr",
+      "Original",
+      "OtherCocone",
+      "OtherComponents",
+      "PostCocone",
+      "ReversePostCocone",
+      "componentLaw",
+      "lanCertified",
+      "lanPostCongr",
+      "lanPostCongrAt",
+      "lanPostCongrReference",
+      "lanPostCongrReferenceAt",
+      "lanPostReverseCongr",
+      "lanPostReverseCongrAt",
+      "lanPostReverseCongrReference",
+      "lanPostReverseCongrReferenceAt",
+      "otherComponentLaw",
+      "pathTrans",
+      "postCongrLaw",
+      "postReverseCongrLaw",
+      "sharedLanInput"
+    ],
+    "focused_sha256": "dd5d524d1a1041c7950c079b2ba5ffa7c4f12a7126f751a400d25bded980d152"
+  },
+  "limitations": [
+    {
+      "result": "Direct native driver passed in 1867.876 seconds, beyond the unchanged 1800-second manifest allowance."
+    },
+    {
+      "result": "Default runtime emission reached its unchanged 480-second deadline.",
+      "preceding_slice": "dev/validation/port-uat-u1-left-kan-cocone-laws/runtime.stdout",
+      "preceding_slice_sha256": "d86e5ada6045be48ab42ae28085c7bf6e4167a8ad209125d79f6b14009950919",
+      "focused_runtime": "Four new exports, three hosts, two payloads, 24 comparisons passed."
+    }
+  ],
+  "earlier_attempts": [
+    {
+      "result": "JavaScript default emission reached the same 480-second deadline.",
+      "capture": ".kanon-exec/run-00wOMl"
+    },
+    {
+      "result": "Initial abstract mixed-universe contract passed before component-form simplification.",
+      "capture": ".kanon-exec/run-yeHRvR"
+    },
+    {
+      "result": "Kernel positives passed; first negative run stopped at missing diagnostic files.",
+      "capture": ".kanon-exec/run-UKyJMs"
+    },
+    {
+      "result": "Native runtime artifact reuse verified all 118 inputs and the binary fingerprint."
+    },
+    {
+      "result": "Five refusal diagnostics recorded using a single cached OCaml checker context."
+    }
+  ]
+}

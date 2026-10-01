@@ -392,6 +392,10 @@ Left Kan cocone postcomposition preserves identity and vertical composition
 pointwise through `postCoconeId` and `postCoconeVcomp`. The proofs use the
 target category's right identity and associativity laws. See
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-LAWS.md` for the contracts and validation.
+`postCoconeCongr` also preserves supplied pointwise equalities of both
+the cocone and the postcomposing transformation. Its mixed-universe contract,
+refusals and certified runtime applications are described in
+`dev/PORT-UAT-U1-LEFT-KAN-COCONE-CONGRUENCE.md`.
 
 ## Roadmap
 
