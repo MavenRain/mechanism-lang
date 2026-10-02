@@ -24,6 +24,19 @@ The core CLI, equality, composition and reuse runtime cases also require
 `node`, `wasmtime`, `zsh`, and `rg` in `PATH`.
 Their executable hashes and both runtime scripts are recorded in the report.
 
+The seven observation adapters are retrieved byte for byte from Git commit
+`ed923e2130b8501ccbe500b538cfa3d39aa2bcda` and written into the reference
+check's evidence directory. This keeps the Bend source tree free of OCaml
+sources while preserving the live comparison checks. The checkout running
+these checks must be a Git repository whose history contains that commit;
+shallow clones must fetch the required history first. The runner retrieves
+the adapters before the OCaml build and stops if that history is missing.
+It ignores Git replacement objects and checks each adapter against its
+recorded SHA-256 hash. The report records the adapter revision and, under
+`inputs`, the hash of each retrieved adapter in the evidence directory.
+The adapter retrieval receipt is in
+`dev/validation/bend2-reference-adapters/`.
+
 | Case set | Cases |
 | --- | ---: |
 | JSON | 166 |
@@ -210,6 +223,11 @@ these pins, run
 `shasum -a 256 -c dev/validation/bend2-core-cli-live/sources.sha256` from the
 repository root. The second-slice pins record the second-slice run. Files
 that a later slice changed do not agree with these pins.
+
+The seven `dev/bend2/reference/*.ml` rows in the second- and third-slice
+`sources.sha256` files name adapters that are no longer in the tree. The two
+`shasum` commands above report them as missing. Check each of them with
+`git show ed923e2130b8501ccbe500b538cfa3d39aa2bcda:dev/bend2/reference/<name>.ml | shasum -a 256`.
 
 The fourth-slice receipt is in `dev/validation/bend2-equality-runtime-live/`.
 It records 99 live OCaml and 99 native Bend observations across the CLI,

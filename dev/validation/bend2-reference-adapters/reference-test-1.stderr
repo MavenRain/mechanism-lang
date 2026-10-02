@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/oobi/Documents/mechanism-lang/dev/bend2-reference-test.py", line 166, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/Users/oobi/Documents/mechanism-lang/dev/bend2-reference-test.py", line 159, in main
+    raise AssertionError("core timeout did not preserve its verdict and captured output")
+AssertionError: core timeout did not preserve its verdict and captured output

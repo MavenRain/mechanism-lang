@@ -17,6 +17,17 @@ import threading
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+ADAPTER_REPOSITORY = ROOT
+ADAPTER_REVISION = "ed923e2130b8501ccbe500b538cfa3d39aa2bcda"
+ADAPTER_SHA256 = {
+    "json": "64a211b647abca7998618b86f1b934a9acf4b54a89ea8ef17ded1a336589bdc5",
+    "export": "500a26e41b181cfeaa77f60828e8e35249ac5b83ceb8f1e8897c702608ce4b5d",
+    "translate": "592e9c48fa62bf511e074a9ee1d8436ab5807e9e1cb9ed4d62a968269236b7e6",
+    "pipeline": "2e09b1a5ec05c74d7fe10da7fa04246afae4a875f42b7ed02831e1fe6976cb53",
+    "parser": "6af2e530ceeaceb72ffbae00eadd767c701ab64fc6c8dc57df7d076a436c3e99",
+    "surface": "8a3454ced292f9b6ca656a1f5d3e30a4fb943ef9eca3242665b77b853441b910",
+    "erase": "1e108f0ed33fd779bf762f9679fd94fcfaefdff16259e1e7f8743e51123e7a76",
+}
 RUNTIME_SUITES = ("core-cli", "equality-runtime", "composition-runtime", "reuse-runtime")
 CLI_SUITES = ("cli", *RUNTIME_SUITES)
 SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase", *CLI_SUITES)
@@ -24,6 +35,23 @@ SUITES = ("json", "export", "translate", "pipeline", "parser", "surface", "erase
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def archived_adapter(name: str) -> bytes:
+    result = subprocess.run(
+        ["git", "--no-replace-objects", "cat-file", "blob",
+         f"{ADAPTER_REVISION}:dev/bend2/reference/{name}.ml"],
+        cwd=ADAPTER_REPOSITORY, capture_output=True, timeout=30)
+    if result.returncode:
+        raise RuntimeError(
+            f"cannot read historical OCaml adapter {name}; run this check in a Git "
+            f"repository and fetch Git history containing {ADAPTER_REVISION}\n"
+            f"{result.stderr.decode(errors='replace')}")
+    digest = hashlib.sha256(result.stdout).hexdigest()
+    if digest != ADAPTER_SHA256[name]:
+        raise RuntimeError(f"historical OCaml adapter {name} does not match its recorded "
+                           f"sha256: {digest}")
+    return result.stdout
 
 
 def load_helper(name: str):
@@ -86,6 +114,7 @@ def verify(reference: Path, output: Path, suites: list[str], jobs: int = 1) -> d
     adapters = output / "adapters"
     adapters.mkdir()
     report = dict(version=1, status="running", reference=str(reference), suites=[],
+                  adapter_revision=ADAPTER_REVISION,
                   scope=suites, normalizations=["CLI temporary root",
                   "CLI mkdir process-specific staging path"], runtime_jobs=jobs, inputs={}, tools={})
     report_path = output / "report.json"
@@ -97,6 +126,8 @@ def verify(reference: Path, output: Path, suites: list[str], jobs: int = 1) -> d
         if pins.setdefault(str(path), digest) != digest:
             raise ValueError(f"input changed during reference replay: {path}")
 
+    # Read the historical adapters before the long OCaml build.
+    sources = {name: archived_adapter(name) for name in suites if name not in CLI_SUITES}
     native = any(name in suites for name in ("surface", "erase"))
     runtime_helpers = {name: load_helper(name) for name in suites if name in RUNTIME_SUITES}
     hosts = ("node", "wasmtime", "zsh", "rg") if runtime_helpers else ()
@@ -169,10 +200,9 @@ def verify(reference: Path, output: Path, suites: list[str], jobs: int = 1) -> d
         name = suite
         if name in drivers:
             continue
-        source = ROOT / "dev/bend2/reference" / f"{name}.ml"
-        pin(source)
-        copied = adapters / source.name
-        shutil.copyfile(source, copied)
+        copied = adapters / f"{name}.ml"
+        copied.write_bytes(sources[name])
+        pin(copied)
         driver = adapters / f"{name}.exe"
         compiler = "ocamlopt" if name in ("surface", "erase") else "ocamlc"
         selected_archives = native_archives if compiler == "ocamlopt" else archives

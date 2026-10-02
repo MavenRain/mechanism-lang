@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "status": "error",
+  "reference": "/Users/oobi/Documents/gpt6/mechanism-lang-ocaml-reference-7a2f9f2",
+  "suites": [],
+  "adapter_revision": "ed923e2130b8501ccbe500b538cfa3d39aa2bcda",
+  "scope": [
+    "parser"
+  ],
+  "normalizations": [
+    "CLI temporary root",
+    "CLI mkdir process-specific staging path"
+  ],
+  "runtime_jobs": 1,
+  "inputs": {},
+  "tools": {},
+  "error": "ValueError: stale corpus input: /Users/oobi/Documents/mechanism-lang/prelude/cat/left-kan-laws.mech"
+}

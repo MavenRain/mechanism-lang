@@ -24,11 +24,33 @@ def main() -> int:
         root = Path(tmp)
         corpus = root / "dev/bend2/json-cases.json"
         corpus.parent.mkdir(parents=True)
-        shutil.copytree(ROOT / "dev/bend2/reference", root / "dev/bend2/reference")
         for name in ("cli", "surface"):
             shutil.copyfile(ROOT / "dev" / f"bend2-{name}-check.py",
                             root / "dev" / f"bend2-{name}-check.py")
         module.ROOT = root
+        revision, digests = module.ADAPTER_REVISION, module.ADAPTER_SHA256
+        try:
+            module.ADAPTER_REVISION = "0" * 40
+            try:
+                module.archived_adapter("json")
+            except RuntimeError as error:
+                if "fetch Git history" not in str(error):
+                    raise AssertionError(f"missing adapter history gave {error}")
+            else:
+                raise AssertionError("missing adapter history was accepted")
+            module.ADAPTER_REVISION = revision
+            module.ADAPTER_SHA256 = dict(digests, json="0" * 64)
+            try:
+                module.archived_adapter("json")
+            except RuntimeError as error:
+                if "sha256" not in str(error):
+                    raise AssertionError(f"changed adapter digest gave {error}")
+            else:
+                raise AssertionError("changed adapter digest was accepted")
+        finally:
+            module.ADAPTER_REVISION, module.ADAPTER_SHA256 = revision, digests
+        print("REFERENCE CONTROL adapter-history PASS", flush=True)
+        print("REFERENCE CONTROL adapter-digest PASS", flush=True)
         cases = [dict(source="null", code=0, stdout="null\n", stderr=""),
                  dict(source="true", code=0, stdout="changed expectation\n", stderr=""),
                  dict(source="\"timeout-control\"", code=0, stdout="\"timeout-control\"\n", stderr="")]

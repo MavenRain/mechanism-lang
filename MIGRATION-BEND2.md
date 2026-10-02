@@ -53,8 +53,9 @@ validation results below record the migration's previous development stages.
 Small C and JavaScript effects provide filesystem and process operations;
 Python orchestrates builds and validation. The replacement does not invoke an
 OCaml compiler or executable. The Bend checks replay frozen reference fixtures.
-An optional live-reference verifier now retains small OCaml test adapters under
-`dev/bend2/reference/`. It rebuilds an external OCaml checkout in an isolated
+An optional live-reference verifier retrieves seven small OCaml test adapters
+from Git commit `ed923e2130b8501ccbe500b538cfa3d39aa2bcda` into its evidence
+directory. It rebuilds an external OCaml checkout in an isolated
 output directory and compares observations without replacing expected outputs.
 See `dev/BEND2-REFERENCE.md` for its scope, controls and validation record.
 

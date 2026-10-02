@@ -1,0 +1,15 @@
+REFERENCE CONTROL adapter-history PASS
+REFERENCE CONTROL adapter-digest PASS
+REFERENCE json: 3 cases, 2 differences
+REFERENCE CONTROL changed-expectation PASS
+REFERENCE CONTROL timeout PASS
+REFERENCE json: 2 cases, 0 differences
+REFERENCE CONTROL input-drift PASS
+REFERENCE CONTROL core-missing-case PASS
+REFERENCE CONTROL core-extra-case PASS
+REFERENCE CONTROL core-invalid-bytes PASS
+REFERENCE CONTROL core-invalid-status PASS
+REFERENCE core-cli: 28 cases, 3 differences
+REFERENCE CONTROL core-wasm-bytes PASS
+REFERENCE CONTROL core-runtime-answer PASS
+REFERENCE CONTROL core-timeout PASS
