@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "base": "699f9ed6d0579601dca53dc79917f37f66230b12",
+  "scope": "Skip proposition probes for universe type arguments to general conversion",
+  "inputs": {
+    "bend2/kernel/check_engine.bend": "95e9dda911b529a795fab52c207ce1fdeedf62f9a0c2cf4bd0b516649655dbbf",
+    "bend2/tests/kernel_conversion.bend": "d763cad8ab272e0af239fd19c9d08887f953e28866c2541d597134524cf1c138",
+    "dev/bend2/test-manifest.json": "f0a0d993ba1d9a9a987e9a3081e6dd30f66970fb997301a8f4f71012c998e266",
+    "dev/validation/universe-conversion/polls.bend": "acb6c896b887585ddf1031f43969dfa56b89bf9f64f5c0b8c87da00210f84ac4",
+    "dev/validation/universe-conversion/run-units.py": "b5383eade6fdf9664216cfbca9c673e5582e1f817939b77279380ee4a2084c87"
+  },
+  "compiler": {
+    "version": "2.0.27",
+    "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+    "sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8"
+  },
+  "builds": {
+    "kernel": {
+      "metadata_sha256": "be177419f79f91a052b7993fe1811d9dc264275a67b77eb7260a942b59404259",
+      "artifact_sha256": "eacb2a106275529539ac67a050f35a1e7d85f409107f8411e72260076230711a",
+      "verified_inputs": 144
+    },
+    "surface": {
+      "metadata_sha256": "631c2ce8e8e84f171d635bb05a2e01ac3eab9906ce4a6bbd32a937d7d8ae91a8",
+      "artifact_sha256": "8f40de21ded6701d7ab1e3a9c6e56398bcf7beb8be3dfab80a92ea98b2451df4",
+      "verified_inputs": 137
+    },
+    "prelude-runtime": {
+      "metadata_sha256": "8d005212000ad6ea8142505769ae6a0859dcb9cdb7afeb216fd3fa2b754d6dc4",
+      "artifact_sha256": "3e36dea6fc3883437021164bdadf6fa714620e0e5a6d32ebe3879cb51f28f454",
+      "verified_inputs": 119
+    }
+  },
+  "commands": {
+    "kernel-build": {
+      "argv": [
+        "python3",
+        "-I",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-shard",
+        "kernel",
+        "--backend",
+        "javascript"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-qhoCut",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-ccDZcl",
+      "manifest_sha256": "f8cdd8043b6e7fe617351e06cf74277d1f838889d54c6e9cb6913bf13b7e690e",
+      "log": "kernel-build.log",
+      "rerun": "review_rerun"
+    },
+    "surface-build": {
+      "argv": [
+        "python3",
+        "-I",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-shard",
+        "surface",
+        "--backend",
+        "javascript"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-toFmTb",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-zw37SN",
+      "manifest_sha256": "0e079d1d8bab3d2941542cda0e7df5e79827f8ca511190da8192ff79dee56f1b",
+      "log": "surface-build.log"
+    },
+    "polls-build": {
+      "argv": [
+        "/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+        "dev/validation/universe-conversion/polls.bend",
+        "-o",
+        "_bend2/universe-conversion-polls.js"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-Kg8jyt",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-zUJti3",
+      "manifest_sha256": "b113ff31cc4a5f24ebfd7ac3f0e85926a098bcdbd3cd7470dacb79632df4b6c9",
+      "log": "polls-build.log"
+    },
+    "polls": {
+      "argv": [
+        "node",
+        "_bend2/universe-conversion-polls.js"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-sQI1bK",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-hIwbVq",
+      "manifest_sha256": "72d069c0a261a827b3dad4a340c23347568fbb44d1671a782659f3d7d6d7cd7a",
+      "log": "polls.log"
+    },
+    "runtime-js-build": {
+      "argv": [
+        "python3",
+        "-I",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-mode",
+        "prelude-runtime",
+        "--backend",
+        "javascript"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-RBc2Jt",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-6L070z",
+      "manifest_sha256": "e68ebde5ae467878865c7f306052be620909682792796d1c45b37537ee950260",
+      "log": "runtime-js-build.log"
+    },
+    "runtime-reachable": {
+      "argv": [
+        "python3",
+        "-I",
+        "test/prelude_runtime_reachable.py"
+      ],
+      "exit_code": 0,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-tqgGiR",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-bPFYie",
+      "manifest_sha256": "b0b150130fc8da90780f61d62517ae32a04f1696da75a4193cd6144ef2b0e043",
+      "log": "runtime-reachable.log"
+    },
+    "solution-transport-runtime": {
+      "argv": [
+        "python3",
+        "-I",
+        "test/left_kan_laws_runtime.py",
+        "--solution-transport"
+      ],
+      "exit_code": 1,
+      "capture": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-exec/run-I6zv2t",
+      "job": "/Users/oobi/Documents/gpt6/mechanism-lang-next/.kanon-wait/job-bxXWwL",
+      "manifest_sha256": "77acfc3d69beca62d243ab9010a922528807dfdd12ee3f6aade1b99301a2c6e5",
+      "log": "solution-transport-runtime.log"
+    }
+  },
+  "units": {
+    "kernel": {
+      "groups": 20,
+      "passed": 20,
+      "report": "kernel.json"
+    },
+    "surface": {
+      "groups": 14,
+      "passed": 14,
+      "report": "surface.json"
+    }
+  },
+  "measurement": {
+    "initial_polls": 100,
+    "previous_consumed": 2,
+    "universe_consumed": 0,
+    "scope": "One identical opaque proposition type comparison at Prop"
+  },
+  "runtime": {
+    "hosts": 3,
+    "comparisons": 27,
+    "refusals": 4
+  },
+  "not_run": [
+    "Full gate battery",
+    "Native runtime rebuild"
+  ],
+  "log_hashes": {
+    "kernel-build.log": "c336baf8acb886a6f36ae7df9527b450b9065203dfb10eacfddda11908ec5349",
+    "polls-build.log": "1153276eeb67f068bf19eab838f6e268c65b9c8d0db01561b5df962cde717783",
+    "polls.log": "0a392b9dbbdc5a3b95bfa92c0f68a169e55b00893ac62813550d95ff871a3612",
+    "runtime-js-build.log": "ea159692ea093786e16e19859879e2e4b25776694ac69ef00b74cf70d5457624",
+    "runtime-reachable.log": "43313db87edcdad50b5021ad7e03d4e429d3d9ee2d82bc136484612c7e2570a9",
+    "solution-transport-runtime.log": "f6a8fdd18789675db0d83655b3ec0f68e7279ca22fe4b52a46ebecb59db66e84",
+    "surface-build.log": "9e90187f4e0e39e0e3c8427b3c9bc7d98c1bab86fa058f1e484bed8ea47ae465"
+  },
+  "solution_transport_runtime": {
+    "status": "open",
+    "exit_code": 1,
+    "emission_timeout_seconds": 480
+  },
+  "review_rerun": {
+    "date": "2026-10-01",
+    "reason": "Review finding: the kernel-conversion PASS line now names the universe inhabitant checks",
+    "tree": "index export at 4dffd0f122791b7e19f9e52895218f4147a1bd40",
+    "compiler": "BEND=/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+    "commands": [
+      [
+        "python3",
+        "-I",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-shard",
+        "kernel",
+        "--backend",
+        "javascript"
+      ],
+      [
+        "python3",
+        "-I",
+        "dev/validation/universe-conversion/run-units.py",
+        "kernel"
+      ]
+    ],
+    "exit_codes": [
+      0,
+      0
+    ],
+    "kernel_groups": 20,
+    "kernel_passed": 20,
+    "replaced": [
+      "kernel.json",
+      "kernel-build.log"
+    ]
+  }
+}

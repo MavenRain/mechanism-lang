@@ -4913,3 +4913,65 @@ The full gate battery was not rerun. Existing time allowances are preserved.
 
 The execution captures and source fingerprints are recorded in
 `dev/validation/runtime-reachable/`.
+
+## Stage C / U1: structural type conversion (2026-10-01)
+
+Base: 699f9ed. Type conversion now calls structural conversion directly.
+The previous route invoked general value conversion with a universe
+placeholder. Classifying that placeholder as a proposition or a
+subsingleton and selecting a value eta rule always led to structural
+conversion. Removing those probes avoids redundant quoting and inference.
+
+Five new regression cases distinguish opaque proposition types, compare
+an identical proposition type, reject unequal universes, retain proof
+irrelevance for proposition inhabitants and compare renamed function
+binders. The complete kernel and frontend unit shards pass: 20 kernel
+groups and 14 frontend groups, including existing budget boundaries and
+callback checks. The fresh JavaScript runtime driver passes 27 comparisons
+on the kernel, Node and Wasmtime, with four refusal cases.
+
+A reproducible universe comparison uses 18 checker polls through the
+structural path, versus 20 through the previous general conversion path.
+This measures checker work on one input, not whole-program runtime.
+
+The native runtime driver reports that all terms check, then its compiler
+is killed during C generation. Native runtime validation remains open.
+The full gate battery and the optional solution transport runtime mode
+were not rerun. Whole transformation equality and source-type parity
+remain open in Stage C and U1.
+
+Commands, results and input hashes are recorded in
+`dev/validation/type-conversion/`.
+
+## Stage C / U1: universe proposition probes (2026-10-01)
+
+Base: 699f9ed, with the preceding structural type conversion increment.
+General value conversion now classifies universe type arguments as
+non-propositions directly. A universe inhabits a successor universe.
+Other type arguments retain the original quoting and inference probe,
+including budget-exhaustion propagation. Value eta and subsingleton
+conversion continue through the existing rules.
+
+Four new regressions compare identical and distinct opaque types as
+inhabitants of Prop and Type. The fresh JavaScript kernel and frontend
+shards pass all 20 kernel and 14 frontend unit groups, including proof
+irrelevance and the conversion-budget and callback checks. Both shards
+retain the same two unsafe or foreign entry points.
+
+A reproducible comparison of an opaque proposition type with itself uses
+zero checker polls through the universe path, versus two through the
+preceding probe. This measures one conversion. It does not establish a
+whole-program runtime improvement.
+
+The fresh JavaScript runtime driver passes 27 comparisons on the kernel,
+Node and Wasmtime, with four refusal cases. Its build inputs and both unit
+shards' build inputs are verified against their recorded hashes.
+The optional solution transport runtime mode was rerun before and after
+this increment. Both attempts reached the unchanged 480-second emission
+limit. The latest timeout log is retained with the validation record.
+Native runtime compilation and the full gate battery were not rerun.
+Whole transformation equality and source-type parity remain open in
+Stage C and U1.
+
+Commands, results and input hashes are recorded in
+`dev/validation/universe-conversion/`.

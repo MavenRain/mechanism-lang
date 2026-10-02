@@ -51,8 +51,29 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-01
 
-The base is f230f34, following left Kan mediator equality.
-The current increment transports universal solutions to pointwise equal
+The base is 699f9ed, following reachable runtime erasure.
+The current increment skips proposition probes for universe type arguments
+to general value conversion. A universe inhabits a successor universe and
+cannot be a proposition. Other types retain the quoting and inference probe,
+including its budget-exhaustion propagation. Four regressions distinguish
+and identify opaque types in both Prop and Type. All 20 kernel and 14 frontend
+unit groups pass. A comparison of an opaque proposition type with itself
+uses zero checker polls, versus two through the preceding probe. This
+measures one conversion, not whole-program runtime.
+See `dev/validation/universe-conversion/`.
+
+The preceding increment sends type comparisons directly to structural
+conversion. Types inhabit a universe, so the proof-irrelevance,
+subsingleton and value-eta probes in general conversion cannot apply.
+The value conversion path is unchanged. Kernel and frontend unit suites
+cover proposition and universe distinctions, binder renaming, proof
+irrelevance and budget boundaries.
+See `dev/validation/type-conversion/`.
+
+The preceding runtime increment checks the complete source and erases
+the shared dependency closure of requested exports. Its dedicated gate
+is PRELUDE-RUNTIME-REACHABLE. See `dev/validation/runtime-reachable/`.
+The preceding prelude increment transports universal solutions to pointwise equal
 cocones and units, retaining their mediators and rebuilding factorization
 and uniqueness. Its dedicated gates are PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT
 and PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-FOCUS. Its optional runtime mode

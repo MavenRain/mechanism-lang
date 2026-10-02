@@ -1,0 +1,5 @@
+compile: _bend2/test/entries/single-prelude-runtime.bend (native)
+All terms check, but 2 defs rely on unsafe or foreign code:
+- arguments
+- main
+Bend build failed: Command '['/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend', '/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/entries/single-prelude-runtime.bend', '-o', '/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/bend_single-prelude-runtime.tmp-67148.c']' died with <Signals.SIGKILL: 9>.

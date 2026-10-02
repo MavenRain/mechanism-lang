@@ -1,0 +1,144 @@
+{
+  "results": [
+    {
+      "mode": "surface-lexer",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-lexer.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-lexer\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-parser",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-parser.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-parser\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-transform",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-transform.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-transform\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-poly",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-poly.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-poly\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-family",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-family.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-family\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-elab",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-elab.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface elaboration and trusted checking\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-catalog",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-catalog.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS raw family catalog trust boundaries\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-program",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-program.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface declarations, templates, composition, reuse and shared budget\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-prelude",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-prelude.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS four trusted prelude catalogs and computed specializations\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-crypto",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-crypto.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS seven original ZK, FHC, MPC and circuit frontend fixtures\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-trust",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-trust.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS family order, reuse metadata, rechecking, and refusal precedence\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-boundary",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-boundary.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS raw family scope, universality, callback cancellation, nested budgets and inventories\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-universes",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-universes.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS Eq Prop/data/high universes and Sum unequal universes in both directions\n",
+      "stderr": ""
+    },
+    {
+      "mode": "surface-diagnostics",
+      "command": [
+        "/Users/oobi/Documents/gpt6/mechanism-lang-next/_bend2/test/unit_surface-diagnostics.exe"
+      ],
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS surface-diagnostics\n",
+      "stderr": ""
+    }
+  ]
+}

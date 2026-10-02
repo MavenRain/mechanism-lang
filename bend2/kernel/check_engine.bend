@@ -1895,7 +1895,9 @@ def conv_prop_failure(error:Error.T) -> B.Comp(Bool):
     case _: B.pure(Bool,False{})
 
 def conv_is_prop(ctx:C.Ctx,ty:Value.T) -> B.Comp(Bool):
-  B.recover(Bool,conv_prop_probe(ctx,ty),conv_prop_failure)
+  match ty:
+    case Value.VUniv{level}: B.pure(Bool,False{})
+    case _: B.recover(Bool,conv_prop_probe(ctx,ty),conv_prop_failure)
 
 def conv_fields_zero(xs:Positivity.Telescope) -> Bool:
   match xs:
@@ -2030,4 +2032,4 @@ def conv_after_prop(prop:Bool,+ctx:C.Ctx,ty:Value.T,a:Value.T,b:Value.T) -> B.Co
     conv_after_prop(prop,ctx,ty,a,b)
 
 @unsafe def conv_type(ctx,a,b):
-  conv(ctx,conv_placeholder(),a,b)
+  conv_structural(ctx,a,b)

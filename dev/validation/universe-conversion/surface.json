@@ -1,0 +1,114 @@
+[
+  {
+    "mode": "surface-lexer",
+    "exit_code": 0,
+    "stdout": "PASS surface-lexer\n",
+    "stderr": "",
+    "seconds": 2.173,
+    "passed": true
+  },
+  {
+    "mode": "surface-parser",
+    "exit_code": 0,
+    "stdout": "PASS surface-parser\n",
+    "stderr": "",
+    "seconds": 1.136,
+    "passed": true
+  },
+  {
+    "mode": "surface-transform",
+    "exit_code": 0,
+    "stdout": "PASS surface-transform\n",
+    "stderr": "",
+    "seconds": 1.078,
+    "passed": true
+  },
+  {
+    "mode": "surface-poly",
+    "exit_code": 0,
+    "stdout": "PASS surface-poly\n",
+    "stderr": "",
+    "seconds": 1.396,
+    "passed": true
+  },
+  {
+    "mode": "surface-family",
+    "exit_code": 0,
+    "stdout": "PASS surface-family\n",
+    "stderr": "",
+    "seconds": 1.722,
+    "passed": true
+  },
+  {
+    "mode": "surface-elab",
+    "exit_code": 0,
+    "stdout": "PASS surface elaboration and trusted checking\n",
+    "stderr": "",
+    "seconds": 2.817,
+    "passed": true
+  },
+  {
+    "mode": "surface-catalog",
+    "exit_code": 0,
+    "stdout": "PASS raw family catalog trust boundaries\n",
+    "stderr": "",
+    "seconds": 4.348,
+    "passed": true
+  },
+  {
+    "mode": "surface-program",
+    "exit_code": 0,
+    "stdout": "PASS surface declarations, templates, composition, reuse and shared budget\n",
+    "stderr": "",
+    "seconds": 7.368,
+    "passed": true
+  },
+  {
+    "mode": "surface-prelude",
+    "exit_code": 0,
+    "stdout": "PASS four trusted prelude catalogs and computed specializations\n",
+    "stderr": "",
+    "seconds": 6.551,
+    "passed": true
+  },
+  {
+    "mode": "surface-crypto",
+    "exit_code": 0,
+    "stdout": "PASS seven original ZK, FHC, MPC and circuit frontend fixtures\n",
+    "stderr": "",
+    "seconds": 5.135,
+    "passed": true
+  },
+  {
+    "mode": "surface-trust",
+    "exit_code": 0,
+    "stdout": "PASS family order, reuse metadata, rechecking, and refusal precedence\n",
+    "stderr": "",
+    "seconds": 2.49,
+    "passed": true
+  },
+  {
+    "mode": "surface-boundary",
+    "exit_code": 0,
+    "stdout": "PASS raw family scope, universality, callback cancellation, nested budgets and inventories\n",
+    "stderr": "",
+    "seconds": 1.551,
+    "passed": true
+  },
+  {
+    "mode": "surface-universes",
+    "exit_code": 0,
+    "stdout": "PASS Eq Prop/data/high universes and Sum unequal universes in both directions\n",
+    "stderr": "",
+    "seconds": 3.802,
+    "passed": true
+  },
+  {
+    "mode": "surface-diagnostics",
+    "exit_code": 0,
+    "stdout": "PASS surface-diagnostics\n",
+    "stderr": "",
+    "seconds": 2.636,
+    "passed": true
+  }
+]

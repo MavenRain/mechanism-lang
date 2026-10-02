@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "base": "699f9ed6d0579601dca53dc79917f37f66230b12",
+  "scope": "Structural conversion for types",
+  "inputs": {
+    "bend2/kernel/check_engine.bend": "8a511d7dd04f5c858d7cb2d9db61d12856128c3a4ecec4048475da81616c01f4",
+    "bend2/tests/kernel_conversion.bend": "e6412b4fcb2ac1918b66384ee40cc401d3e7a03e6eadb096399e37b553606418",
+    "dev/validation/type-conversion/polls.bend": "d5c84381d70b8d82d052939bf3f2abc0f7d3f2063586bef2cc3f20a91b271a50"
+  },
+  "compiler": {
+    "path": "/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+    "sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8"
+  },
+  "commands": {
+    "kernel_build": [
+      "python3",
+      "-I",
+      "dev/bend2-build.py",
+      "--target",
+      "tests",
+      "--backend",
+      "javascript",
+      "--test-shard",
+      "kernel"
+    ],
+    "surface_build": [
+      "python3",
+      "-I",
+      "dev/bend2-build.py",
+      "--target",
+      "tests",
+      "--backend",
+      "javascript",
+      "--test-shard",
+      "surface"
+    ],
+    "runtime_build": [
+      "python3",
+      "-I",
+      "dev/bend2-build.py",
+      "--target",
+      "tests",
+      "--backend",
+      "javascript",
+      "--test-mode",
+      "prelude-runtime"
+    ],
+    "native_build": [
+      "python3",
+      "-I",
+      "dev/bend2-build.py",
+      "--target",
+      "tests",
+      "--backend",
+      "native",
+      "--test-mode",
+      "prelude-runtime"
+    ],
+    "runtime": [
+      "python3",
+      "-I",
+      "test/prelude_runtime_reachable.py"
+    ],
+    "measurement": [
+      "bend",
+      "dev/validation/type-conversion/polls.bend",
+      "-o",
+      "_bend2/type-conversion-polls.js"
+    ]
+  },
+  "units": {
+    "kernel": {
+      "groups": 20,
+      "passed": 20,
+      "report": "kernel.json"
+    },
+    "surface": {
+      "groups": 14,
+      "passed": 14,
+      "report": "surface.json"
+    }
+  },
+  "runtime": {
+    "backend": "javascript",
+    "exit_code": 0,
+    "programs": 4,
+    "exports": 9,
+    "hosts": 3,
+    "comparisons": 27,
+    "negatives": 4
+  },
+  "measurement": {
+    "initial_polls": 100,
+    "previous_consumed": 20,
+    "structural_consumed": 18,
+    "scope": "One normalized universe comparison"
+  },
+  "native_build": {
+    "exit_code": 1,
+    "signal": "SIGKILL",
+    "stage": "C generation",
+    "terms_check": true
+  },
+  "not_run": [
+    "Full gate battery",
+    "Optional solution transport runtime mode"
+  ],
+  "log_hashes": {
+    "kernel-build": "c336baf8acb886a6f36ae7df9527b450b9065203dfb10eacfddda11908ec5349",
+    "surface-build": "9e90187f4e0e39e0e3c8427b3c9bc7d98c1bab86fa058f1e484bed8ea47ae465",
+    "runtime-js-build": "ea159692ea093786e16e19859879e2e4b25776694ac69ef00b74cf70d5457624",
+    "runtime-native-build": "4b27af23d3b7ffa2c3745cfe2facd88ebaad8e1485e8688b7c78c90a58e1462d",
+    "runtime-reachable": "43313db87edcdad50b5021ad7e03d4e429d3d9ee2d82bc136484612c7e2570a9",
+    "polls": "05db810a569eb8ca9cf4657b5ed3f877633440461b27c9ed08ea3535e04daf27"
+  }
+}

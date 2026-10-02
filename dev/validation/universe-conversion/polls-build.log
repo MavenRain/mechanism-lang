@@ -1,0 +1,6 @@
+All terms check, but 4 defs rely on unsafe or foreign code:
+- measured_state
+- measured
+- previous
+- main
+bend 2.0.31 is available: run bend update

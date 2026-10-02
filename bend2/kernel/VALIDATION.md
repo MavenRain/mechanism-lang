@@ -18,7 +18,7 @@ Observed passing execution suites:
 - `kernel_quantity.bend`: linear path usage.
 - `kernel_check.bend`: linearity and raw universe scope.
 - `kernel_declarations.bend`: sequential declarations, family installation, erased index rejection, late constructor budget exhaustion. A compiled native binary executed successfully.
-- `kernel_conversion.bend`: function eta, exact universe equality, unequal literals. Both Bend execution and a compiled native binary passed.
+- `kernel_conversion.bend`: function eta, exact universe equality, unequal literals, type distinction, proof irrelevance, universe inhabitants. Bend execution and a compiled native binary passed the first three checks. The JavaScript unit shard passed all six.
 - `levels_exact.bend`, `levels_budget.bend`: universal comparison, arbitrary precision offsets, late budget exhaustion.
 - `levels_regression.bend`: 17 algebra regression families from original `test/levels.ml`.
 - `levels_checker.bend`: symbolic schemes, Prop impredicativity, rejected finite-sampling counterfeits, ten raw syntax scope positions, family scope, budget rejection.
