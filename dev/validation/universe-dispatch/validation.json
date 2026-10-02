@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "date": "2026-10-02",
+  "base": "a9eca9a4936eaa8fdd5fb5b33e0e72cff0368cea",
+  "suites": {
+    "kernel": {
+      "groups": 20,
+      "passed": 20,
+      "sha256": "4e05d030e10972c0202152a7f44502fe571d0fbd1a0d5e43a133d5fb2895773e"
+    },
+    "frontend": {
+      "groups": 14,
+      "passed": 14,
+      "sha256": "762de14e40c536c6c4cd0b0f06b788bd4280de3a04725c3aa5ff778ddb640750"
+    }
+  },
+  "compiler": {
+    "version": "bend 2.0.27",
+    "sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8"
+  },
+  "inputs": {
+    "files": 354,
+    "sha256": "dd8e37fbf0b8a66858b3867264f3fb3acdadfb7817e0d3379d639cbe352ad5a8"
+  },
+  "source_hashes": {
+    "bend2/kernel/check_engine.bend": "374108a1de703f71a917d8fac9c42f0097aa55d3d1f4d16f5af494bcd1fa65de",
+    "bend2/tests/kernel_conversion_budget.bend": "a9b5e9854c9e935a970756c225e0e8d0aa3d94743fa2586818e40af73503a1c7",
+    "dev/validation/universe-dispatch/polls.bend": "ea6da39f0294876150c70d29ea6430049a625f7279024bc0470a984b550f1e80"
+  },
+  "polls": {
+    "previous": 0,
+    "universe": 0,
+    "structural": 0
+  },
+  "captures": {
+    "kernel": "/Users/oobi/Documents/gpt6/.kanon-exec/run-DiioyF",
+    "frontend": "/Users/oobi/Documents/gpt6/mechanism-universe-values/.kanon-exec/run-0xO2fg",
+    "polls": "/Users/oobi/Documents/gpt6/mechanism-universe-values/.kanon-exec/run-AV9URZ"
+  },
+  "limitations": [
+    "Native runtime driver and combined kernel shard builds were killed by the host.",
+    "Full gate battery and optional solution transport runtime mode were not rerun."
+  ]
+}

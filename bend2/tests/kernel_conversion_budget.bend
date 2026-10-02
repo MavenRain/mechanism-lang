@@ -65,11 +65,36 @@ def finish(result: Test.R(Unit)) -> IO(Unit):
     case Fail{message}: IO.die(Unit,1,message)
     case Done{unit}: IO.print("PASS conversion level budgets: universes, annotations, exact boundaries, shape short circuit")
 
+def universe_action() -> B.Comp(Bool):
+  Engine.conv(Context.make(G.initial(),B.unlimited(),3n),V.VUniv{L.succ(L.max(left(),right()))},V.VUniv{left()},V.VUniv{right()})
+
+def universe_counts(measured: C.Pair<U32,Bool>, reference: C.Pair<U32,Bool>) -> Test.R(U32):
+  match measured reference:
+    case C.Pair{+count,same} C.Pair{expected,structural}:
+      do Result<&2,&2,String,U32>:
+        ok : Unit <- Test.require(Bool.and(Bool.and(same,structural),U32.is_eq(count,expected)),"universe value conversion changed comparison polls")
+        ok : Unit <- Test.require(U32.is_gt(count,0),"universe conversion omitted comparison polls")
+        return count
+
+def universe_dispatch() -> Test.R(Unit):
+  do Result<&2,&2,String,Unit>:
+    measured : C.Pair<U32,Result<&2,&2,E.T,Bool>> <- Test.measure(Bool,universe_action(),None{})
+    done : C.Pair<U32,Bool> <- Test.completed(Bool,measured)
+    reference : C.Pair<U32,Result<&2,&2,E.T,Bool>> <- Test.measure(Bool,Engine.conv_type(Context.make(G.initial(),B.unlimited(),3n),V.VUniv{left()},V.VUniv{right()}),None{})
+    structural : C.Pair<U32,Bool> <- Test.completed(Bool,reference)
+    +complete : U32 <- universe_counts(done,structural)
+    refused : C.Pair<U32,Result<&2,&2,E.T,Bool>> <- Test.measure(Bool,universe_action(),Some{U32.sub(complete,1)})
+    ok : Unit <- failed(refused,complete)
+    accepted : C.Pair<U32,Result<&2,&2,E.T,Bool>> <- Test.measure(Bool,universe_action(),Some{complete})
+    done : C.Pair<U32,Bool> <- Test.completed(Bool,accepted)
+    succeeded(done,complete)
+
 def run() -> Test.R(Unit):
   do Result<&2,&2,String,Unit>:
     ok : Unit <- check(False{})
     ok : Unit <- check(True{})
-    short_circuit()
+    ok : Unit <- short_circuit()
+    universe_dispatch()
 
 def arguments(args: List<String>) -> IO(Unit):
   finish(run())

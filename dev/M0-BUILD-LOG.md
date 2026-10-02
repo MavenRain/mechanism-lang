@@ -4975,3 +4975,34 @@ Stage C and U1.
 
 Commands, results and input hashes are recorded in
 `dev/validation/universe-conversion/`.
+
+## Stage C / U1: universe value conversion dispatch (2026-10-02)
+
+Base: a9eca9a. General conversion at a universe type now calls structural
+conversion directly. The predecessor already skipped proposition inference
+for that type, then reduced it and passed through subsingleton and eta
+selection. Each of those branches selected structural comparison.
+Comparisons at other types retain their existing path.
+
+The conversion budget regression compares general universe conversion with
+type conversion on equivalent symbolic universe expressions. Both paths
+must use the same measured poll count. One fewer poll must exhaust the
+budget, and the measured boundary must succeed. Existing conversion cases
+cover unequal opaque types in Prop and Type, proof irrelevance, function
+eta and binder renaming.
+
+All 20 kernel and 14 frontend unit groups pass, including the new conversion
+budget boundary regression. The frontend reproducer selects the surface
+shard from the test manifest.
+
+The small opaque proposition comparison uses zero checker polls through
+the predecessor path, the new dispatch and type conversion. This records
+budget compatibility. Whole-program performance is unmeasured.
+
+The host killed native runtime driver and combined kernel shard compilation
+attempts. Validation uses individual unit group builds and rejects an
+empty selected scope. The optional solution transport runtime mode and
+full gate battery were not rerun after this increment.
+
+Commands, results and input fingerprints are recorded in
+`dev/validation/universe-dispatch/`.

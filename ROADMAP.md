@@ -49,10 +49,20 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-10-01
+## Position on 2026-10-02
 
-The base is 699f9ed, following reachable runtime erasure.
-The current increment skips proposition probes for universe type arguments
+The base is a9eca9a, following structural type conversion and universe probes.
+The current increment sends general value comparisons at universe types
+directly to structural conversion. Universe types have no value eta or
+subsingleton rule, and their proposition classification is already false.
+The conversion budget suite compares this route with type conversion and
+checks both sides of the exact poll boundary. Comparisons at other types
+retain the existing proof irrelevance and eta rules. The poll reproducer
+compares this dispatch with the committed predecessor and records unchanged
+poll counts. All 20 kernel and 14 frontend unit groups pass.
+See `dev/validation/universe-dispatch/`.
+
+The preceding increment skips proposition probes for universe type arguments
 to general value conversion. A universe inhabits a successor universe and
 cannot be a proposition. Other types retain the quoting and inference probe,
 including its budget-exhaustion propagation. Four regressions distinguish

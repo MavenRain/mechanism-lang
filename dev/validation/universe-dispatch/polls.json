@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "compiler": {
+    "version": "bend 2.0.27",
+    "sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8"
+  },
+  "sources": {
+    "bend2/kernel/check_engine.bend": "374108a1de703f71a917d8fac9c42f0097aa55d3d1f4d16f5af494bcd1fa65de",
+    "bend2/tests/kernel_conversion_budget.bend": "a9b5e9854c9e935a970756c225e0e8d0aa3d94743fa2586818e40af73503a1c7",
+    "dev/validation/universe-dispatch/polls.bend": "ea6da39f0294876150c70d29ea6430049a625f7279024bc0470a984b550f1e80"
+  },
+  "polls": {
+    "previous": 0,
+    "universe": 0,
+    "structural": 0
+  },
+  "stdout": "previous remaining=100\nuniverse remaining=100\nstructural remaining=100\n",
+  "stderr": "",
+  "passed": true
+}

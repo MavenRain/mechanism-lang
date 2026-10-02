@@ -1,0 +1,144 @@
+{
+  "results": [
+    {
+      "mode": "kernel-numbers",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS arbitrary precision arithmetic\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-eval",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS evaluator beta, primitives, closure readback\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-quantity",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS linear path usage\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-check",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS checker linearity and raw universe scope\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-declarations",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS declarations, family installation, erased indices, late budget\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-conversion",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS conversion function eta, universe equality, unequal literals, type distinction, proof irrelevance, universe inhabitants\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-recursive",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS original recursive values, guarded neutrals, opacity and raw kernel negatives\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-budget-dag",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS successful universe extraction skips rendering; shared term DAG exhausts bounded polls\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-spec-count",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "formers 2: Lan Ran\nschema constructors 4: In Elim Sec Out\nshapes declared 8: SPi SColl SPar SMu SNu SZk SFhc SMpc\nshapes admitted 6: SPi SColl SMu SZk SFhc SMpc\nnamed rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc\nnamed rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path\neta rows 3: Ran-SPi Lan-SPi Ran-SColl\nno eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc Lan-SMpc\n\n",
+      "stderr": ""
+    },
+    {
+      "mode": "levels-exact",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS exact universe comparison\n",
+      "stderr": ""
+    },
+    {
+      "mode": "levels-budget",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS threaded universe budget and late exhaustion\n",
+      "stderr": ""
+    },
+    {
+      "mode": "levels-checker",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS universe schemes, impredicativity, 10 raw-field scopes, family scope, budget\n",
+      "stderr": ""
+    },
+    {
+      "mode": "levels-regression",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS 17 original universe algebra regression families\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-budget-callbacks",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS budget callbacks, exact polls, recovery, laziness and clock deadline\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-budget-callback-check",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS callback kernel comparison, conversion recovery, scope and totality\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-global-lookup",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS global, family and constructor first-match lookup boundaries\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-projection-motive",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS dependent pair projection motives: 9 positive assertions, 3 old-port refusals\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-conversion-budget",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS conversion level budgets: universes, annotations, exact boundaries, shape short circuit\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-large-addresses",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "PASS signed large kernel widths and addresses\n",
+      "stderr": ""
+    },
+    {
+      "mode": "kernel-head-ty-invalid-level",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "HEAD-TY-INVALID-LEVEL OK cases=14 observations=56\n",
+      "stderr": ""
+    }
+  ]
+}

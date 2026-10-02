@@ -2026,10 +2026,13 @@ def conv_after_prop(prop:Bool,+ctx:C.Ctx,ty:Value.T,a:Value.T,b:Value.T) -> B.Co
         conv_after_sub(sub,ctx,w,a,b)
 
 @unsafe def conv(ctx,ty,a,b):
-  +ty = ty
-  do B.Comp<Bool>:
-    prop : Bool <- conv_is_prop(ctx,ty)
-    conv_after_prop(prop,ctx,ty,a,b)
+  match ty:
+    case Value.VUniv{u}: conv_structural(ctx,a,b)
+    case _:
+      +ty = ty
+      do B.Comp<Bool>:
+        prop : Bool <- conv_is_prop(ctx,ty)
+        conv_after_prop(prop,ctx,ty,a,b)
 
 @unsafe def conv_type(ctx,a,b):
   conv_structural(ctx,a,b)
