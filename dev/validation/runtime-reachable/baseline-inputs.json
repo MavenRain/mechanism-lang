@@ -1,0 +1,7 @@
+{
+  "artifact": "/Users/oobi/Documents/mechanism-lang/_bend2/test/bend_prelude-runtime.js",
+  "artifact_sha256": "a0d5903dafde2a9e76f5812650c7ac3c4894127183a46bd1e4dd8560dddf8b1d",
+  "compiler_sha256": "aaa9e73e31419d939825ceb24e746d96426b68b5901db799b4afd78619e319f8",
+  "inputs_verified": 118,
+  "backend": "javascript"
+}

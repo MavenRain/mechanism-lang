@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "date": "2026-10-01",
+  "base": "e6597c27e14a5c4790b68878a0139071b30efd28",
+  "objective": "Continue mechanism-lang development and stage all changes",
+  "scope": "Check complete runtime sources and erase shared reachable exports",
+  "validation": {
+    "build": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-yKRV3R",
+      "exit_code": 0,
+      "manifest_sha256": "b8838f06cdc4419e5b420a5f2176ec00e0f35d658fa267a225a0364ccc2e1d26",
+      "command": [
+        "env",
+        "BEND=/Users/oobi/Documents/gpt6/mechanism-bend2-toolchain/v2.0.27/bend/bin/bend",
+        "python3",
+        "-P",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-mode",
+        "prelude-runtime",
+        "--backend",
+        "javascript"
+      ],
+      "counts": {
+        "stdout_bytes": 70,
+        "stderr_bytes": 121,
+        "stdout_lines": 1,
+        "stderr_lines": 4,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "b74ae731940847be0bf510b883ed6e0a9772e55abb1f75ce30ac4bc79196df63",
+      "stderr_sha256": "66efd3a14db85b081edd7ea47f9bf1d696840d9a75087e72be4b5bf3ae587a56",
+      "outcome": "passed"
+    },
+    "hosts": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-cjbCEL",
+      "exit_code": 0,
+      "manifest_sha256": "edb3fca24939777f019dba5eb8ab8083a052131bb43782c153f21b1664912d3d",
+      "command": [
+        "python3",
+        "-I",
+        "test/prelude_runtime_reachable.py"
+      ],
+      "counts": {
+        "stdout_bytes": 85,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "43313db87edcdad50b5021ad7e03d4e429d3d9ee2d82bc136484612c7e2570a9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "passed"
+    },
+    "transport": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-bAlIMQ",
+      "exit_code": 1,
+      "manifest_sha256": "308a85a84f2961e659c6727f2adba06e7d9052a32227faf86b8fa1429d643f60",
+      "command": [
+        "python3",
+        "-I",
+        "test/left_kan_laws_runtime.py",
+        "--solution-transport"
+      ],
+      "counts": {
+        "stdout_bytes": 642,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "23c825909f10817b85e96b889f71722d89ee8b50b7c9b52e09891ed9b4ade284",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "timeout"
+    },
+    "native-base-build": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-AgftUH",
+      "exit_code": 1,
+      "manifest_sha256": "f05e3c2dddce253d87e45a23762bcd02feead8ceab0b15013b7ef098f037c237",
+      "command": [
+        "python3",
+        "-P",
+        "dev/bend2-build.py",
+        "--target",
+        "tests",
+        "--test-mode",
+        "prelude-runtime",
+        "--backend",
+        "native"
+      ],
+      "counts": {
+        "stdout_bytes": 66,
+        "stderr_bytes": 450,
+        "stdout_lines": 1,
+        "stderr_lines": 4,
+        "error_lines": 1,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "a59e39c6cbd1e73adc7a8304bfa8b9672d4e1bb16fa65dc8eb0441d9c354b4be",
+      "stderr_sha256": "0531ea3586874010d1813cd255cb5b5c783062775eaebe0a3f77601b14974636",
+      "outcome": "failed"
+    },
+    "extraction-guard": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-ECEGWt",
+      "exit_code": 0,
+      "manifest_sha256": "2bfb135fe2e8242db015a3b40c8380a0f646c889d2ee6b0247eda98c424b3ea9",
+      "command": [
+        "python3",
+        "-I",
+        "dev/left-kan-solution-transport-focus-test.py"
+      ],
+      "counts": {
+        "stdout_bytes": 59,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "61edb79cd360d5097386ace36ba5f3ff4a6cbaa8b3e6cae657285d03f2b25f00",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "passed"
+    },
+    "mediator-equality": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-veBe4F",
+      "exit_code": 1,
+      "manifest_sha256": "4e985653194b345973ea18314365fa5015053feecc81fed352191efeeecae216",
+      "command": [
+        "python3",
+        "-I",
+        "test/left_kan_laws_runtime.py",
+        "--mediator-equality"
+      ],
+      "counts": {
+        "stdout_bytes": 586,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "1c40b58c15b25268fdf10842031a8e28fdb6db8db4524493c2ccc2b008658942",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "timeout"
+    },
+    "baseline-mediator-equality": {
+      "artifact": "/Users/oobi/Documents/gpt6/mechanism-lang-continue-20261001/.kanon-exec/run-flaJ0N",
+      "exit_code": 1,
+      "manifest_sha256": "2940a811af6e5495958b0e4e730f5ad61969378ca0619c541a1c1066fd2457c5",
+      "command": [
+        "python3",
+        "-I",
+        "/Users/oobi/Documents/gpt6/mechanism-reachable-baseline.py"
+      ],
+      "counts": {
+        "stdout_bytes": 563,
+        "stderr_bytes": 0,
+        "stdout_lines": 1,
+        "stderr_lines": 0,
+        "error_lines": 0,
+        "warning_lines": 0
+      },
+      "stdout_sha256": "a6f2480aacfb9582dce3d7c86aabffd9e6e7cbf3b0782f9f62e307065843e183",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "timeout"
+    }
+  },
+  "sources": {
+    "bend2/tests/prelude_runtime.bend": "038d2e552176ce286cbe99122a3c50e55561e1bb4f5d0f9fc3a66a679d05b99b",
+    "bend2/tests/runtime_reachable.bend": "c639c4871ba831957946181fa259bb9c7a4756d42b6b8e3e8d9fa5e80e83b1fe",
+    "test/prelude_runtime_reachable.py": "eebddc849e2f65bb9f6e0f56228ce1113b1e6dae5cb99660e7dcff090d7ff5a6",
+    "dev/gates.sh": "871a1f8ce1c8104d56cc15cec7d179cb1e783594d38778f379c7f10bbce8cf5a",
+    "dev/M0-BUILD-LOG.md": "3aa64ff321ea7c6f44d41eba04d23ba877f331df8f7f1aabb18215831150dea5",
+    "dev/BEND2-GATES.md": "9248398d6b504f94a84ef91b6fe476807ec93e211ee97b0aab1c8af456cee55f",
+    "test/left_kan_laws_runtime.py": "4bcd31a79bedfe1ba9f1de4be6549a76709862813949a468badd148d9ea5ca02",
+    "test/fixtures/prelude/left-kan-solution-transport-runtime.mech": "16c7b4edbae57da785b4594d25d3b72bce3c7fde597a54b017136d67b3e097e1"
+  },
+  "review_rerun": {
+    "reason": "review fixes: refusal 4 pins exit code 1 and the kernel mismatch diagnostic; OK line counts derive from the cases",
+    "command": [
+      "python3",
+      "-I",
+      "test/prelude_runtime_reachable.py"
+    ],
+    "driver_artifact_sha256": "0eb695671678b892f3be6fe3f1a24239f54d7f727ed565086c7651589de326e8",
+    "harness_sha256": "eebddc849e2f65bb9f6e0f56228ce1113b1e6dae5cb99660e7dcff090d7ff5a6",
+    "exit_code": 0,
+    "stdout_sha256": "43313db87edcdad50b5021ad7e03d4e429d3d9ee2d82bc136484612c7e2570a9",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outcome": "passed"
+  },
+  "driver_build_sha256": "355813ae2c2761581393e7cdc8ac501f915f6f7099df02ea17b438da55d6cd20",
+  "transport": {
+    "status": "pending",
+    "emission_limit_seconds": 480
+  },
+  "full_gate_battery": "not rerun",
+  "r3_comparison": "unmeasured"
+}

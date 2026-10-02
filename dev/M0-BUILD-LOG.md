@@ -4883,3 +4883,33 @@ and U1.
 The API contract is in `dev/PORT-UAT-U1-LEFT-KAN-SOLUTION-TRANSPORT.md`.
 Validation captures, focused sources and pinned input hashes are in
 `dev/validation/port-uat-u1-left-kan-solution-transport/`.
+
+
+## Stage C / U1: reachable runtime erasure (2026-10-01)
+
+Base: e6597c2. The runtime driver checks the complete source and rejects
+declared axioms before erasing the shared runtime dependency closure of
+requested exports. It indexes lifted functions as each declaration is erased,
+retains checked declaration order, and applies the existing function slice
+to each export. Calls without `--reachable` use complete program erasure.
+
+The fresh Bend 2.0.27 JavaScript driver builds successfully. All terms check,
+with the same two unsafe or foreign entry points as the base driver.
+The new CATEGORY gate, PRELUDE-RUNTIME-REACHABLE, passes 27 comparisons on
+the kernel, Node and Wasmtime. Four refusal cases cover missing exports,
+invalid paths, unused axioms and unused ill-typed declarations. Self-checks
+compare selected erasure with complete erasure and cover shared roots,
+declaration order, dropped definitions and missing dependency diagnostics.
+The host fixture includes captured closures and functions generated during erasure.
+Both the original and updated JavaScript drivers reach the 480-second
+limit on mediator equality with the same source and inputs. The original
+driver artifact, compiler and all 118 inputs were verified before comparison.
+The historical passing mediator-equality run used a native driver.
+
+Solution transport still reaches the existing 480-second emission limit.
+Its optional runtime mode remains pending. The initial native build against
+the base was killed during C generation after reporting that all terms check.
+The full gate battery was not rerun. Existing time allowances are preserved.
+
+The execution captures and source fingerprints are recorded in
+`dev/validation/runtime-reachable/`.

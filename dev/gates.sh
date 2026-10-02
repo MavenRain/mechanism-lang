@@ -317,6 +317,9 @@ leg FAST IMPORT-CLI '^IMPORT-CLI OK cases=12$' \
   python3 -P $ROOT/test/import_cli.py $ROOT/_bend2/bin/mech.exe
 leg MED CORPUS-UAT '^CORPUS-OK$' zsh $ROOT/dev/import-gates.sh corpus
 leg MED PARITY-COUNTS '^PARITY-COUNTS OK$' zsh $ROOT/dev/import-gates.sh counts
+leg CATEGORY PRELUDE-RUNTIME-REACHABLE \
+  '^PRELUDE-RUNTIME-REACHABLE OK programs=4 exports=9 hosts=3 comparisons=27 negatives=4$' \
+  python3 -I $ROOT/test/prelude_runtime_reachable.py
 leg SUITE PRELUDE-SHARED-NATTRANS-RUNTIME \
   '^PRELUDE-SHARED-NATTRANS-RUNTIME OK cases=4 hosts=3 mutation=1$' \
   python3 -I $ROOT/test/shared_nattrans_runtime.py

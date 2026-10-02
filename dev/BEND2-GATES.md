@@ -159,3 +159,29 @@ recorded separately; this does not replace a fresh full auction or Linux CI run.
 CI pins Bend 2.0.27, Binaryen 130, and Wasmtime 48.0.1 release archives with
 their official SHA-256 digests and verifies executable versions. The workflow
 itself still needs execution on its Linux and provisioned GPU runners.
+
+
+## Reachable runtime exports
+
+The runtime driver fully checks the source and rejects declared axioms,
+including declarations unused by the requested exports. With `--reachable`,
+it then erases the shared export dependency closure once. Lifted functions
+use the existing runtime catalog, and emitted declarations keep their checked
+order. Each export retains the existing final function slice.
+
+`PRELUDE-RUNTIME-REACHABLE` is a CATEGORY gate. It compares complete and
+reachable erasure with captured closures and shared, reordered and
+repeated exports, for 27 kernel, Node and Wasmtime comparisons. Four
+refusal cases check missing exports, invalid paths, unused axioms and
+unused ill-typed declarations. The driver's selection self-check also
+compares erased code with complete erasure.
+
+```sh
+BEND=/path/to/bend-2.0.27 python3 -P dev/bend2-build.py --target tests --test-mode prelude-runtime --backend javascript
+python3 -I test/prelude_runtime_reachable.py
+```
+
+The solution-transport host mode still reaches its 480-second emission limit
+and remains opt-in. Its full host comparisons have not passed. The records
+in `dev/validation/runtime-reachable/` distinguish passing checks from this
+timeout and the unsuccessful native build attempt.
