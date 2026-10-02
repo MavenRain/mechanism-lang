@@ -1,0 +1,5 @@
+All terms check, but 3 defs rely on unsafe or foreign code:
+- kanon
+- arguments
+- main
+bend 2.0.31 is available: run bend update

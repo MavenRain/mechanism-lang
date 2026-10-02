@@ -27,6 +27,11 @@ test-native: acceptance-build
 test-import:
 	$(PYTHON) dev/bend2-test.py --suite import
 
+.PHONY: prelude-compatibility-test
+prelude-compatibility-test:
+	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(PYTHON) -P dev/prelude-compatibility-gates.py
+
 .PHONY: reference-check reference-test require-ocaml-reference
 
 reference-check: bend2-reference-check

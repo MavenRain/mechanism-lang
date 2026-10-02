@@ -165,6 +165,12 @@ that integration.  Values remain scheduled for M1.
 
 ## Checked prelude foundation
 
+The [typed compatibility pilot](dev/M0-STAGE-C-COMPATIBILITY-PILOT.md)
+checks the 19 existing mapping candidates and four U1 record signatures
+against their imported source types.  Run `make prelude-compatibility-test`
+to produce a fresh report and run its kernel mutation controls.  The report
+retains blocked candidates and leaves the M0 inventory unchanged.
+
 `prelude/init.mech` declares the data foundation and its recursors.
 The PRELUDE and AXIOMS gates check it from an empty kernel environment,
 so it cannot silently use the driver's initial Nat axiom.  Parameterized

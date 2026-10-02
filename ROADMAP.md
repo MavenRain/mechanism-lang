@@ -51,8 +51,15 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-02
 
-The base is a9eca9a, following structural type conversion and universe probes.
-The current increment sends general value comparisons at universe types
+The base is 18477c9. The typed compatibility pilot checks 11 of the 19
+existing candidate signatures and all four U1 record signatures at symbolic
+universes. Seven equality targets need symbolic adapters, and
+Decidable.isFalse needs a checked Not mapping. These are signature results;
+constructor and recursor representation, whole-record equality and full
+typed mapping remain open. The inventory and NEVER ledger are unchanged.
+See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md`.
+
+The preceding increment sends general value comparisons at universe types
 directly to structural conversion. Universe types have no value eta or
 subsingleton rule, and their proposition classification is already false.
 The conversion budget suite compares this route with type conversion and

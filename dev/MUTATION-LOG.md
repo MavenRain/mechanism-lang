@@ -1371,3 +1371,21 @@ The results, full streams and source hashes are in
 `dev/validation/port-uat-u1-left-kan-postcomposition/mutations/`.
 The evidence directory also records the earlier interrupted run and the
 duplicate-refusal-pin test failure that prompted its interruption.
+
+## Typed compatibility pilot (2026-10-02)
+
+The kernel control changes Bool.false's target from mechFalse to
+mechZero in a scratch witness.  The source annotation stays the imported
+Bool type.  The checker rejects the wrong target, and the control
+requires the kernel message that mechZero is not a constructor of
+MechBool.  A parse error cannot satisfy it.  A separate control
+requires the adapted Nat.succ signature to check.
+
+Eleven graph controls cover unbound or discarded universe arguments,
+distinct symbolic category instances, unmapped constants, unsupported
+projections, bound-variable escape, cyclic rendering, duplicate nodes,
+unproved dependency chains, dependency cycles and source binder names
+that contain target-language text.  The controls preserve failure states.
+
+The 13 test results and kernel streams are recorded in
+`dev/validation/prelude-compatibility-pilot/`.

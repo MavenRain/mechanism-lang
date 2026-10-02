@@ -1,0 +1,391 @@
+{
+  "version": 1,
+  "scope": "19 existing candidates and four U1 record type signatures",
+  "export_sha256": "f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354",
+  "import_graph_sha256": "7f669031bf5b25f6edce35ff5da033cb06d12cad19e7897b1feebb64a2d08b2f",
+  "mech_sha256": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+  "map_sha256": "1240d914d773adafc67a1c3d9f24c133f330a2e1635fb0b919db32e067eb3c14",
+  "prelude_sha256": "6ecbdd8b33c01b2348c5a520a7d4ae64faa38009eef182ee354f1037a9db9aa1",
+  "inputs": {
+    "dev/denominators.json": "3148d714a481696297e75ef416255618cbc2cd9b56ab84c34f5fb9464fa7cd51",
+    "dev/prelude-compatibility-gates.py": "9b3af85a5df888b67e6ca485aae968ca699a8e162e0ae9cb7c2d72c434583705",
+    "dev/prelude-compatibility-pilot.py": "df2a6e842019533a37a4a99256bed992eb6ea3424441e3699abf41633692d9f6",
+    "map/prelude.map.tsv": "1240d914d773adafc67a1c3d9f24c133f330a2e1635fb0b919db32e067eb3c14",
+    "prelude/cat/category-core.mech": "9ec54c855b8cfb0918ea560222e86217b903df9bb995cb3cc9cce5fce7386f2b",
+    "prelude/cat/composable-functors.mech": "360e4db2ff7ab1e9a769f00ee9a5a854c9e32c1d715946e26b58dffff3af593a",
+    "prelude/cat/heterogeneous-functor.mech": "22fdeef47297a28008eb8c0b706f57ea5cb532ece04cc620b330029f714768fd",
+    "prelude/cat/heterogeneous-left-kan.mech": "9456121a6b12b319cbc6dedf4aa50642fafd7274ac90a9e34e17bcb198d0f8c1",
+    "prelude/cat/heterogeneous-nattrans.mech": "d0838b11d31d51701cb4304d114d70573023dd3cddb77ef59c36efc5f3531d79",
+    "prelude/cat/heterogeneous-whiskering.mech": "38269f0b1e6200909afbc21ab5a41478a516cca6fd91f00ab4f89899cdd4fae9",
+    "prelude/init.mech": "6ecbdd8b33c01b2348c5a520a7d4ae64faa38009eef182ee354f1037a9db9aa1",
+    "test/prelude_compatibility.py": "5c705c90042537c3f1630e2f3e71c8b36b04fc4a648332a9b94d74f7fa9c1ad5"
+  },
+  "native_sha256": "cc89a8430870c4a6cdc69296902b2a9078983275aeae430aaa5103c20120c9ca",
+  "candidates": [
+    {
+      "name": "Bool",
+      "target": "MechBool",
+      "scope": "type-signature",
+      "source_line": 1823,
+      "universes": [],
+      "dependencies": [],
+      "fixture": "Bool.mech",
+      "fixture_sha256": "d6629b8dbb738cfb253d8a0d95d9170fbdee85c8bed5905fe50d87aa84b3e7e5",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Bool.false",
+      "target": "mechFalse",
+      "scope": "type-signature",
+      "source_line": 1823,
+      "universes": [],
+      "dependencies": [
+        "Bool"
+      ],
+      "fixture": "Bool-false.mech",
+      "fixture_sha256": "4decb241c804eeb1c3673b6ec265cbd67064a3a7bac8f5043e0a684522559a3b",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Bool.true",
+      "target": "mechTrue",
+      "scope": "type-signature",
+      "source_line": 1823,
+      "universes": [],
+      "dependencies": [
+        "Bool"
+      ],
+      "fixture": "Bool-true.mech",
+      "fixture_sha256": "70508182b66d83643eae8a779d0ec3e69f87219f7be888c272ce7256ab150e67",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Decidable",
+      "target": "MechDecidable",
+      "scope": "type-signature",
+      "source_line": 716,
+      "universes": [],
+      "dependencies": [],
+      "fixture": "Decidable.mech",
+      "fixture_sha256": "9c69684b9674791a20f8650e6cad77e98e5632459c407f1d775e6cbde1b909c7",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Decidable.isFalse",
+      "target": "mechIsFalse",
+      "scope": "type-signature",
+      "source_line": 716,
+      "universes": [],
+      "dependencies": [
+        "Not",
+        "Decidable"
+      ],
+      "status": "BLOCKED",
+      "code": "UNMAPPED_DEPENDENCY",
+      "detail": "Not"
+    },
+    {
+      "name": "Decidable.isTrue",
+      "target": "mechIsTrue",
+      "scope": "type-signature",
+      "source_line": 716,
+      "universes": [],
+      "dependencies": [
+        "Decidable"
+      ],
+      "fixture": "Decidable-isTrue.mech",
+      "fixture_sha256": "3b96ccc4049d5e5a8294240f11ef5212449c2ac6f13aa55159d4ea90c2237e77",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Eq",
+      "target": "MechEq",
+      "scope": "type-signature",
+      "source_line": 154,
+      "universes": [
+        "u_1"
+      ],
+      "dependencies": [],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "Eq.ndrec",
+      "target": "mechTransport",
+      "scope": "type-signature",
+      "source_line": 2034,
+      "universes": [
+        "u1",
+        "u2"
+      ],
+      "dependencies": [
+        "Eq"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "Eq.rec",
+      "target": "mechJ",
+      "scope": "type-signature",
+      "source_line": 154,
+      "universes": [
+        "u",
+        "u_1"
+      ],
+      "dependencies": [
+        "Eq",
+        "Eq.refl"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "Eq.refl",
+      "target": "mechRefl",
+      "scope": "type-signature",
+      "source_line": 154,
+      "universes": [
+        "u_1"
+      ],
+      "dependencies": [
+        "Eq"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "Eq.symm",
+      "target": "mechSymm",
+      "scope": "type-signature",
+      "source_line": 1374,
+      "universes": [
+        "u"
+      ],
+      "dependencies": [
+        "Eq"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "Eq.trans",
+      "target": "mechTrans",
+      "scope": "type-signature",
+      "source_line": 1451,
+      "universes": [
+        "u"
+      ],
+      "dependencies": [
+        "Eq"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    },
+    {
+      "name": "False",
+      "target": "MechFalse",
+      "scope": "type-signature",
+      "source_line": 108,
+      "universes": [],
+      "dependencies": [],
+      "fixture": "False.mech",
+      "fixture_sha256": "40d2d82820ceb376982817731cfda2f4689d4bf8e762ef568c8303c9d39ecf60",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Nat",
+      "target": "MechNat",
+      "scope": "type-signature",
+      "source_line": 3679,
+      "universes": [],
+      "dependencies": [],
+      "fixture": "Nat.mech",
+      "fixture_sha256": "f46963ed3fba89ce89cbfb50c02e777a0e1dff2b51ab848cf335a603fef8cb6e",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Nat.succ",
+      "target": "mechSucc",
+      "scope": "type-signature",
+      "source_line": 3679,
+      "universes": [],
+      "dependencies": [
+        "Nat"
+      ],
+      "fixture": "Nat-succ.mech",
+      "fixture_sha256": "3d7a27959e6a64b45c7f04cbff159a613df247ae4d3672a291b0839f2ac3d454",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Nat.zero",
+      "target": "mechZero",
+      "scope": "type-signature",
+      "source_line": 3679,
+      "universes": [],
+      "dependencies": [
+        "Nat"
+      ],
+      "fixture": "Nat-zero.mech",
+      "fixture_sha256": "35a2f3fcd72f391aae0379be2c9bdaa178aa4c16b04b94c644a0da6e12ca456c",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Unit",
+      "target": "MechUnit",
+      "scope": "type-signature",
+      "source_line": 4203,
+      "universes": [],
+      "dependencies": [],
+      "fixture": "Unit.mech",
+      "fixture_sha256": "073ef7aeaef4abbe598d1a9fcfb9fb3023b0cfffc3e63654063ab3db9fba33dd",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "Unit.unit",
+      "target": "mechUnit",
+      "scope": "type-signature",
+      "source_line": 4207,
+      "universes": [],
+      "dependencies": [
+        "Unit"
+      ],
+      "fixture": "Unit-unit.mech",
+      "fixture_sha256": "472bd30203fe4f3919d6eabd8ba1d767e680585a6de8e62cec415d1ea5d581a8",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "congrArg",
+      "target": "mechCongr",
+      "scope": "type-signature",
+      "source_line": 1575,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "Eq"
+      ],
+      "status": "BLOCKED",
+      "code": "SYMBOLIC_TARGET_REQUIRED",
+      "detail": "candidate needs an explicit symbolic specialization"
+    }
+  ],
+  "u1_records": [
+    {
+      "name": "CompCatTheory.Category",
+      "target": "Candidate_Category",
+      "scope": "type-signature",
+      "source_line": 23244,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [],
+      "fixture": "CompCatTheory-Category.mech",
+      "fixture_sha256": "ba52d1e383209dd0fd2503fe808d942a107f87e1f1dba08eb046cf3a589e3958",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor",
+      "target": "Candidate_Functor",
+      "scope": "type-signature",
+      "source_line": 28650,
+      "universes": [
+        "«\"u₁\"»",
+        "«\"v₁\"»",
+        "«\"u₂\"»",
+        "«\"v₂\"»"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category"
+      ],
+      "fixture": "CompCatTheory-Functor.mech",
+      "fixture_sha256": "b8b227862b798e7d2019e12b036c42d82126e2321641692f327666ea0bf9de3a",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.NatTrans",
+      "target": "Candidate_NatTrans",
+      "scope": "type-signature",
+      "source_line": 31362,
+      "universes": [
+        "«\"u₁\"»",
+        "«\"v₁\"»",
+        "«\"u₂\"»",
+        "«\"v₂\"»"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Functor"
+      ],
+      "fixture": "CompCatTheory-NatTrans.mech",
+      "fixture_sha256": "83951466f13544c09863df86dba322f1af28bbe8a86c702e187b2c625c8bf5a8",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.LeftKanExtension",
+      "target": "Candidate_LeftKanExtension",
+      "scope": "type-signature",
+      "source_line": 32334,
+      "universes": [
+        "«\"u₁\"»",
+        "«\"v₁\"»",
+        "«\"u₂\"»",
+        "«\"v₂\"»",
+        "«\"u₃\"»",
+        "«\"v₃\"»"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Functor"
+      ],
+      "fixture": "CompCatTheory-LeftKanExtension.mech",
+      "fixture_sha256": "ad2d989f6ef2bfa6fc8d8f5a7fb639df7f7632dc6b9059d75dcb8251fd944997",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    }
+  ],
+  "counts": {
+    "NAME_AND_TYPE": 11,
+    "BLOCKED": 8
+  },
+  "u1_counts": {
+    "NAME_AND_TYPE": 4
+  }
+}

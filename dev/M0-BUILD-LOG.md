@@ -5006,3 +5006,35 @@ full gate battery were not rerun after this increment.
 
 Commands, results and input fingerprints are recorded in
 `dev/validation/universe-dispatch/`.
+
+## Stage C / U1: typed compatibility pilot (2026-10-02)
+
+Base: 18477c9.  The pilot checks the 19 existing mapping candidates and
+four U1 record signatures against the frozen UAT export types.
+
+Eleven candidate signatures and all four symbolic U1 signatures match.
+Seven equality candidates need symbolic target adapters.
+Decidable.isFalse needs a checked Not mapping.  Dependency closure is
+required before a successful check receives the report's NAME_AND_TYPE
+verdict.  The inventory TSV and NEVER ledger remain unchanged.
+
+The pilot preserves scoped binders and universe arguments.  Constructor
+adapters saturate the checked target.  U1 witnesses retain two, four,
+four and six independent universe parameters.  The report fingerprints
+the actual checker, inputs, imported graph and checked fixtures.
+
+Validation: prepare the production CLI with Bend 2.0.27, run the pilot
+and all 13 controls through prelude-compatibility-gates.py, and run the
+unchanged trusted-line check.  The kernel mutation replaces Bool.false's
+target with mechZero and requires rejection.  Graph controls reject
+unbound universes, discarded universe arguments, unmapped constants,
+projections, escaping variables, oversized or duplicate graphs,
+unproved dependency chains, dependency cycles and binder-name injection.
+
+The new Make target prepares only the production CLI before the scoped
+gate.  The full acceptance battery has no new claim in this increment.
+Constructor and recursor representations, whole-record equality and the
+full M0 typed mapping remain open.  Stage C and U1 remain open.
+
+Results and checked fixtures are recorded in
+`dev/validation/prelude-compatibility-pilot/`.
