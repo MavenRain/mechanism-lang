@@ -1,0 +1,21 @@
+{
+  "name": "CompCatTheory.Category.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 23244,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category"
+  ],
+  "fixture": "CompCatTheory-Category-mk.mech",
+  "fixture_sha256": "122af20dff8243e6c465866b4bfc6cb1c5200d3ad3c9d599540e0052f0a99883",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type (Ran SPi w b1 b0 (Ran SPi w b2 b0 Type (u1 + 1))) and the expected type is (Ran SPi 0 x b0 (Ran SPi 0 y b0 Type (u1 + 1)))"
+}

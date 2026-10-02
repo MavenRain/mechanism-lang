@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "gate_passed": true,
+  "scope": "eight Category signatures with a source-compatible record adapter and projection computations",
+  "export_sha256": "f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354",
+  "import_graph_sha256": "7f669031bf5b25f6edce35ff5da033cb06d12cad19e7897b1feebb64a2d08b2f",
+  "inputs": {
+    "prelude/compatibility/equality.mech": "568ba802b928750ce25a7eb012446c44099b8b2bbc31d6d03d876a655d537b1b",
+    "prelude/compatibility/category.mech": "aa5e9f53090e5c128d30f297802819b6111d19cf57ee6279c3f536b390ed594f",
+    "test/fixtures/prelude/compatibility-category.mech": "9fe4f91d371fd79855806965ce79fcbb1831bb51d8827c43c1473b5944ce84ce",
+    "dev/denominators.json": "3148d714a481696297e75ef416255618cbc2cd9b56ab84c34f5fb9464fa7cd51",
+    "dev/prelude-compatibility-pilot.py": "6245558512e84ea703c7d8d9c38615156c6d6046162ecd92332eca1545ba46b4",
+    "dev/prelude-category-compatibility.py": "00de34a6fc0ecc5468a3ce9b8282f33adbc01bff30666e90b2c93ad9258f1b7f",
+    "test/prelude_category_compatibility.py": "f003f0ac3d316bfbc4a63f78bc52266ccd9b7c819eebdd954236c2f800be379b"
+  },
+  "binaries": {
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mechanism-native": "cc89a8430870c4a6cdc69296902b2a9078983275aeae430aaa5103c20120c9ca",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/prelude.exe": "0e842520ba8b0826ec2f701b05e5f8fb1455043e8b53a2cd0e11fce1d6fa6d58",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/bend_protocol.js": "1482aabfdd04982045021dcb212abd324c2dd00ce2fe089b74cc2e309117be36"
+  },
+  "signatures": [
+    {
+      "name": "CompCatTheory.Category",
+      "target": "Candidate_Category",
+      "scope": "type-signature",
+      "adapter": "Candidate_Category",
+      "source_line": 23244,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [],
+      "fixture": "CompCatTheory-Category.mech",
+      "fixture_sha256": "d4787aaf35cdb2f945a8f2c18747e609aac8fe6786c4785f0fef54d9bd323cbd",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.mk",
+      "target": "Candidate_mk",
+      "scope": "type-signature",
+      "adapter": "Candidate_mk",
+      "source_line": 23244,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category"
+      ],
+      "fixture": "CompCatTheory-Category-mk.mech",
+      "fixture_sha256": "cecf90b5fc7e712de212e13fc9cfa188db416da1787bec6795dfeea51d472e8f",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.Hom",
+      "target": "Candidate_Hom",
+      "scope": "type-signature",
+      "adapter": "Candidate_Hom",
+      "source_line": 23251,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category"
+      ],
+      "fixture": "CompCatTheory-Category-Hom.mech",
+      "fixture_sha256": "e24028f83a590b1d3b21828369c4aa97aad79892e552f2ab981f4bb02c06c7b9",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.id",
+      "target": "Candidate_id",
+      "scope": "type-signature",
+      "adapter": "Candidate_id",
+      "source_line": 23384,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom"
+      ],
+      "fixture": "CompCatTheory-Category-id.mech",
+      "fixture_sha256": "6ec377074c6f74e89b45db48da5a39f672ad571afba45e646b43be7826e2904f",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.comp",
+      "target": "Candidate_comp",
+      "scope": "type-signature",
+      "adapter": "Candidate_comp",
+      "source_line": 23276,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom"
+      ],
+      "fixture": "CompCatTheory-Category-comp.mech",
+      "fixture_sha256": "400c3b302be4a68614bc6741cff591355ded5aa290f05b0aca3490827290adef",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.comp_id",
+      "target": "Candidate_comp_id",
+      "scope": "type-signature",
+      "adapter": "Candidate_comp_id",
+      "source_line": 23412,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Category.id"
+      ],
+      "fixture": "CompCatTheory-Category-comp_id.mech",
+      "fixture_sha256": "2aeb98d13f6c9663625588b4534b1f6d5d8fd3c8ae52ba9fedcc8f3a6ffe55b6",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.id_comp",
+      "target": "Candidate_id_comp",
+      "scope": "type-signature",
+      "adapter": "Candidate_id_comp",
+      "source_line": 23442,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Category.id"
+      ],
+      "fixture": "CompCatTheory-Category-id_comp.mech",
+      "fixture_sha256": "c1baac74e03333c839c3f98c105d5be03865536193ab0306ff00b2db0da61499",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.assoc",
+      "target": "Candidate_assoc",
+      "scope": "type-signature",
+      "adapter": "Candidate_assoc",
+      "source_line": 23325,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp"
+      ],
+      "fixture": "CompCatTheory-Category-assoc.mech",
+      "fixture_sha256": "4015c872dbc2b27044436bdb13e3034b1860b209789d0af61a228af9de7337a4",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    }
+  ],
+  "support": [
+    {
+      "name": "Eq",
+      "adapter": "Candidate_Eq",
+      "scope": "type-signature-at-morphism-universe",
+      "specialization": "succ u1",
+      "dependencies": [],
+      "fixture": "contextual-equality.mech",
+      "fixture_sha256": "4f0f07ffe1e24dd1b0a9c6581a37a59a8779fb82838f495fe3e137d9b048f447",
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED",
+      "checker": {
+        "command": "check",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ],
+  "counts": {
+    "NAME_AND_TYPE": 8
+  },
+  "computation_fixture": "projection-computations.mech",
+  "computation_sha256": "2ee4495be0d5bb64971daf7b6b1fa7ac562d7b2e32f1ad465c1fd4fa2554011b",
+  "computations": [
+    {
+      "command": "check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "axioms",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "--audit",
+      "exit": 0,
+      "stdout": "PRELUDE-AXIOMS OK",
+      "stderr": ""
+    }
+  ],
+  "controls": {
+    "tests": 8,
+    "passed": true,
+    "failures": 0,
+    "errors": 0
+  }
+}

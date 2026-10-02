@@ -50,17 +50,34 @@ and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-02
-The current increment builds on c4793ae and checks all 19 candidate signatures
-with seven explicit symbolic equality adapters and a separate checked Not
-support mapping. Motive and carrier levels, and congruence domain and codomain
-levels, remain independent. The report records the original inventory target
-and the actual adapter separately. Six added controls cover complete candidate
-discharge, wrong helpers, swapped universe levels, missing Not and closed
-specializations at Prop and data universes. The inventory and NEVER ledger
-remain unchanged; full typed mapping remains open. In the recorded report,
-all four U1 record signatures match; CompCatTheory.LeftKanExtension checks in
-about 64 seconds at load 12, and earlier runs under heavier load reached the
-180-second limit. See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
+
+The current increment on d6ac149 adds an explicit source-compatible Category
+record. Eight translated signatures, including the constructor and all six field
+accessors, match at independent symbolic object and morphism levels. The adapter
+retains relevant nested object arguments and the exported field order. Generic
+Hom, identity and composition projection computations check without axioms. A
+stored-field order witness pins `comp_id` as the fourth stored component. Eight
+controls pass. A consistent field reorder and a consistent nested-binder erasure
+check on their own; the reorder is rejected by that witness and the erasure by
+the imported constructor signature. Altered accessors keep matching types while
+their computation witnesses are rejected. The contextual Eq signature is checked
+at the successor of the morphism universe. The mapping and NEVER inventories
+remain unchanged. Category recursors, whole-record equality, source theorem
+bodies, runtime parity and conversion to the erased core record remain open. See
+`dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
+`dev/validation/prelude-category-compatibility/`.
+
+The preceding signature increment builds on c4793ae and checks all 19 candidate
+signatures with seven explicit symbolic equality adapters and a separate checked
+Not support mapping. Motive and carrier levels, and congruence domain and
+codomain levels, remain independent. The report records the original inventory
+target and the actual adapter separately. Six added controls cover complete
+candidate discharge, wrong helpers, swapped universe levels, missing Not and
+closed specializations at Prop and data universes. The inventory and NEVER
+ledger remain unchanged; full typed mapping remains open. In the recorded
+report, all four U1 record signatures match; CompCatTheory.LeftKanExtension
+checks in about 64 seconds at load 12, and earlier runs under heavier load
+reached the 180-second limit. See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
 `dev/validation/prelude-compatibility-adapters/`.
 
 The following entries record the preceding increments.

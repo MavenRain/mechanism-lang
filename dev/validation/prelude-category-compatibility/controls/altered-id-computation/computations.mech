@@ -1,0 +1,198 @@
+-- Source adapters keep QMany binders inside motive types and the imported universe order; top-level binders are erased.
+poly (u) mu MechSignatureEq (0 A : Sort u) (0 x : A) : (0 y : A) -> Prop with
+| signatureReflCtor : MechSignatureEq A x x
+where
+def refl : (0 A : Sort u) -> (0 x : A) -> MechSignatureEq A x x :=
+  fun (0 A : Sort u) (0 x : A) => signatureReflCtor
+def symm : (0 A : Sort u) -> (0 x : A) -> (0 y : A) ->
+    MechSignatureEq A x y -> MechSignatureEq A y x :=
+  fun (0 A : Sort u) (0 x : A) (0 y : A) (e : MechSignatureEq A x y) =>
+    case e as self in MechSignatureEq right return MechSignatureEq A right x with
+    | signatureReflCtor => refl A x
+def trans : (0 A : Sort u) -> (0 x : A) -> (0 y : A) -> (0 z : A) ->
+    MechSignatureEq A x y -> MechSignatureEq A y z -> MechSignatureEq A x z :=
+  fun (0 A : Sort u) (0 x : A) (0 y : A) (0 z : A)
+    (first : MechSignatureEq A x y) (second : MechSignatureEq A y z) =>
+      case second as self in MechSignatureEq right return MechSignatureEq A x right with
+      | signatureReflCtor => first
+end
+
+poly (v, u) group MechSignatureElimination where
+specialize MechSignatureEq (u) as Carrier
+def ndrec : (0 A : Sort u) -> (0 x : A) -> (0 P : A -> Sort v) ->
+    P x -> (0 y : A) -> Carrier A x y -> P y :=
+  fun (0 A : Sort u) (0 x : A) (0 P : A -> Sort v)
+    (base : P x) (0 y : A) (e : Carrier A x y) =>
+      case e as self in Carrier right return P right with
+      | signatureReflCtor => base
+def dependentRec : (0 A : Sort u) -> (0 x : A) ->
+    (0 P : (y : A) -> Carrier A x y -> Sort v) ->
+    P x (Carrier_refl A x) -> (0 y : A) -> (e : Carrier A x y) -> P y e :=
+  fun (0 A : Sort u) (0 x : A)
+    (0 P : (y : A) -> Carrier A x y -> Sort v)
+    (base : P x (Carrier_refl A x)) (0 y : A) (e : Carrier A x y) =>
+      case e as self in Carrier right return P right self with
+      | signatureReflCtor => base
+end
+
+poly (u, v) group MechSignatureCongruence where
+specialize MechSignatureEq (u) as Source
+specialize MechSignatureEq (v) as Target
+def congrArg : (0 A : Sort u) -> (0 B : Sort v) -> (0 x : A) -> (0 y : A) ->
+    (f : A -> B) -> Source A x y -> Target B (f x) (f y) :=
+  fun (0 A : Sort u) (0 B : Sort v) (0 x : A) (0 y : A)
+    (f : A -> B) (e : Source A x y) =>
+      case e as self in Source right return Target B (f x) (f right) with
+      | signatureReflCtor => Target_refl B (f x)
+end
+
+-- The export keeps relevant object binders inside stored fields.
+-- Constructor fields retain the source order: comp_id precedes id_comp.
+poly (u, v) group MechSignatureCategory where
+specialize MechSignatureEq ((succ v)) as Eq
+
+def Category : (0 Obj : Sort (succ u)) -> Sort (max (succ u) (succ (succ v))) :=
+  fun (0 Obj : Sort (succ u)) =>
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) *
+    (identity : (x : Obj) -> hom x x) *
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) *
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x y y f (identity y)) f) *
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x x y (identity x) f) f) *
+    ((w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h)))
+
+def mk : (0 Obj : Sort (succ u)) ->
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) ->
+    (identity : (x : Obj) -> hom x x) ->
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) ->
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x y y f (identity y)) f) ->
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x x y (identity x) f) f) ->
+    (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h))) -> Category Obj :=
+  fun (0 Obj : Sort (succ u))
+      (hom : (x : Obj) -> (y : Obj) -> Sort (succ v))
+      (identity : (x : Obj) -> hom x x)
+      (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        hom x y -> hom y z -> hom x z)
+      (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        Eq (hom x y) (compose x y y f (identity y)) f)
+      (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        Eq (hom x y) (compose x x y (identity x) f) f)
+      (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+        Eq (hom w z) (compose w y z (compose w x y f g) h)
+          (compose w x z f (compose x y z g h))) =>
+    (hom, (identity, (compose, (right, (left, associativity)))))
+
+def Hom : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> Sort (succ v) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.1
+
+def id : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> Hom Obj category x x :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.1
+
+def comp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (z : Obj) ->
+    Hom Obj category x y -> Hom Obj category y z -> Hom Obj category x z :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.1
+
+def comp_id : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : Hom Obj category x y) ->
+    Eq (Hom Obj category x y)
+      (comp Obj category x y y f (id Obj category y)) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.1
+
+def id_comp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : Hom Obj category x y) ->
+    Eq (Hom Obj category x y)
+      (comp Obj category x x y (id Obj category x) f) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.1
+
+def assoc : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+    (f : Hom Obj category w x) -> (g : Hom Obj category x y) ->
+    (h : Hom Obj category y z) ->
+    Eq (Hom Obj category w z)
+      (comp Obj category w y z (comp Obj category w x y f g) h)
+      (comp Obj category w x z f (comp Obj category x y z g h)) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.2
+end
+
+-- These proofs require projection reduction for arbitrary stored fields.
+poly (u, v) group CompatibilityCategoryComputations where
+specialize MechSignatureCategory (u, v) as C
+specialize MechSignatureEq ((succ (succ v))) as Types
+def alteredid : (0 Obj : Sort (succ u)) -> (record : C_Category Obj) -> (x : Obj) -> C_Hom Obj record x x := fun (0 Obj : Sort (succ u)) (record : C_Category Obj) (x : Obj) => C_comp Obj record x x x (C_id Obj record x) (C_id Obj record x)
+
+def projections : (0 Obj : Sort (succ u)) ->
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) ->
+    (identity : (x : Obj) -> hom x x) ->
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) ->
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      C_Eq (hom x y) (compose x y y f (identity y)) f) ->
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      C_Eq (hom x y) (compose x x y (identity x) f) f) ->
+    (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      C_Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h))) ->
+    ((x : Obj) -> (y : Obj) ->
+      Types (Sort (succ v))
+        (C_Hom Obj (C_mk Obj hom identity compose right left associativity) x y)
+        (hom x y)) *
+    ((x : Obj) ->
+      C_Eq (hom x x)
+        (alteredid Obj (C_mk Obj hom identity compose right left associativity) x)
+        (identity x)) *
+    ((x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom x y) -> (g : hom y z) ->
+      C_Eq (hom x z)
+        (C_comp Obj (C_mk Obj hom identity compose right left associativity) x y z f g)
+        (compose x y z f g)) :=
+  fun (0 Obj : Sort (succ u))
+      (hom : (x : Obj) -> (y : Obj) -> Sort (succ v))
+      (identity : (x : Obj) -> hom x x)
+      (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        hom x y -> hom y z -> hom x z)
+      (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        C_Eq (hom x y) (compose x y y f (identity y)) f)
+      (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        C_Eq (hom x y) (compose x x y (identity x) f) f)
+      (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+        C_Eq (hom w z) (compose w y z (compose w x y f g) h)
+          (compose w x z f (compose x y z g h))) =>
+    ((fun (x : Obj) (y : Obj) => Types_refl (Sort (succ v)) (hom x y)),
+      ((fun (x : Obj) => C_Eq_refl (hom x x) (identity x)),
+        (fun (x : Obj) (y : Obj) (z : Obj) (f : hom x y) (g : hom y z) =>
+          C_Eq_refl (hom x z) (compose x y z f g))))
+
+-- comp_id is the fourth stored component; this witness pins that order.
+def storedFieldOrder : (0 Obj : Sort (succ u)) -> (category : C_Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : C_Hom Obj category x y) ->
+    C_Eq (C_Hom Obj category x y)
+      (C_comp Obj category x y y f (C_id Obj category y)) f :=
+  fun (0 Obj : Sort (succ u)) (category : C_Category Obj) => category.2.2.2.1
+end
+
+-- Expanding this group checks all of its members at independent symbolic levels.
+poly (u, v) group CompatibilityCategoryComputationCheck where
+specialize CompatibilityCategoryComputations (u, v) as Checked
+end
+
+-- The closed expansions also exercise client reuse at unequal data levels.
+specialize CompatibilityCategoryComputations (0, 0) as Small
+specialize CompatibilityCategoryComputations (1, 0) as LargerObjects
+specialize CompatibilityCategoryComputations (0, 1) as LargerMorphisms

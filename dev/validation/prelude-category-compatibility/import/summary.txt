@@ -1,0 +1,11 @@
+IMPORT-GRAMMAR lines=219778 names=17759 levels=146 expressions=198927 format=3.1.0
+IMPORT-COUNTS declarations=3202 external_referenced=2477 external_declared=2543 const_names=3017
+PARITY-KIND axiom declared=3 scoped_types=3 kernel_types=0 deferred=3 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND def declared=1176 scoped_types=1176 kernel_types=23 deferred=1153 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND thm declared=1649 scoped_types=1649 kernel_types=0 deferred=1649 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND opaque declared=1 scoped_types=1 kernel_types=0 deferred=1 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND quot declared=4 scoped_types=4 kernel_types=1 deferred=3 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND inductive declared=112 scoped_types=112 kernel_types=76 deferred=36 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND constructor declared=143 scoped_types=143 kernel_types=0 deferred=143 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-KIND recursor declared=114 scoped_types=114 kernel_types=0 deferred=114 unsupported=0 kernel_errors=0 NEVER=0
+PARITY-STATUS mapping=not-checked values=M1 NEVER=0 (no NEVER ledger applied)

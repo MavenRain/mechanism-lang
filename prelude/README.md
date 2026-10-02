@@ -117,6 +117,34 @@ name collisions, scope, closed rechecking, template references from a
 member, and a refusal after which the caller globals stay usable.  See
 `dev/M0-STAGE-C-CONGRUENCE.md` for the API and reproducible controls.
 
+## Source compatibility adapters
+
+`compatibility/equality.mech` and `compatibility/not.mech` support the
+19-candidate typed signature pilot. Run `make prelude-compatibility-test`
+for that report and its existing four U1 record signatures.
+
+`compatibility/category.mech` defines `MechSignatureCategory`, an explicit
+source-compatible Category record at independent object and morphism levels. Its
+stored fields retain the export's relevant nested object arguments and its
+constructor order, with `comp_id` before `id_comp`. Its outer `Obj` parameter
+stays erased. It shares the checked symbolic equality schema from
+`compatibility/equality.mech`.
+
+Run `make prelude-category-compatibility-test` for eight translated Category
+signatures, the contextual equality signature, and generic Hom, identity and
+composition projection computations. A `storedFieldOrder` witness pins `comp_id`
+as the fourth stored component. Eight controls include a consistent field
+reorder rejected by that witness, a consistent nested-binder erasure rejected by
+the imported `Category.mk` signature, and signatures that still check after
+accessor behavior changes, followed by rejected computation witnesses for those
+changes.
+
+This adapter has a different nested quantity representation from
+`MechCategoryCore.Category`. The focused report does not certify conversion
+between them. Category recursors, whole-record equality, source theorem
+bodies and runtime parity remain open. The mapping inventory and NEVER ledger
+are unchanged.
+
 ## Textual ordered groups
 
 `poly (...) mu ... and ... where def ... end` declares ordered family

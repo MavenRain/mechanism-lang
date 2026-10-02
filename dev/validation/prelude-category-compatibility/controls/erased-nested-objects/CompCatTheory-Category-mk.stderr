@@ -1,0 +1,1 @@
+mismatch: the term has type (Ran SPi w b1 b0 (Ran SPi w b2 b0 Type (u1 + 1))) and the expected type is (Ran SPi 0 x b0 (Ran SPi 0 y b0 Type (u1 + 1)))

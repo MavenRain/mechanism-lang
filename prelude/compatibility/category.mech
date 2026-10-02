@@ -1,0 +1,82 @@
+-- The export keeps relevant object binders inside stored fields.
+-- Constructor fields retain the source order: comp_id precedes id_comp.
+poly (u, v) group MechSignatureCategory where
+specialize MechSignatureEq ((succ v)) as Eq
+
+def Category : (0 Obj : Sort (succ u)) -> Sort (max (succ u) (succ (succ v))) :=
+  fun (0 Obj : Sort (succ u)) =>
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) *
+    (identity : (x : Obj) -> hom x x) *
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) *
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x y y f (identity y)) f) *
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x x y (identity x) f) f) *
+    ((w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h)))
+
+def mk : (0 Obj : Sort (succ u)) ->
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) ->
+    (identity : (x : Obj) -> hom x x) ->
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) ->
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x y y f (identity y)) f) ->
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      Eq (hom x y) (compose x x y (identity x) f) f) ->
+    (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h))) -> Category Obj :=
+  fun (0 Obj : Sort (succ u))
+      (hom : (x : Obj) -> (y : Obj) -> Sort (succ v))
+      (identity : (x : Obj) -> hom x x)
+      (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        hom x y -> hom y z -> hom x z)
+      (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        Eq (hom x y) (compose x y y f (identity y)) f)
+      (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        Eq (hom x y) (compose x x y (identity x) f) f)
+      (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+        Eq (hom w z) (compose w y z (compose w x y f g) h)
+          (compose w x z f (compose x y z g h))) =>
+    (hom, (identity, (compose, (right, (left, associativity)))))
+
+def Hom : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> Sort (succ v) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.1
+
+def id : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> Hom Obj category x x :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.1
+
+def comp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (z : Obj) ->
+    Hom Obj category x y -> Hom Obj category y z -> Hom Obj category x z :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.1
+
+def comp_id : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : Hom Obj category x y) ->
+    Eq (Hom Obj category x y)
+      (comp Obj category x y y f (id Obj category y)) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.1
+
+def id_comp : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : Hom Obj category x y) ->
+    Eq (Hom Obj category x y)
+      (comp Obj category x x y (id Obj category x) f) f :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.1
+
+def assoc : (0 Obj : Sort (succ u)) -> (category : Category Obj) ->
+    (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+    (f : Hom Obj category w x) -> (g : Hom Obj category x y) ->
+    (h : Hom Obj category y z) ->
+    Eq (Hom Obj category w z)
+      (comp Obj category w y z (comp Obj category w x y f g) h)
+      (comp Obj category w x z f (comp Obj category x y z g h)) :=
+  fun (0 Obj : Sort (succ u)) (category : Category Obj) => category.2.2.2.2.2
+end

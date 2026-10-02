@@ -1,0 +1,66 @@
+-- These proofs require projection reduction for arbitrary stored fields.
+poly (u, v) group CompatibilityCategoryComputations where
+specialize MechSignatureCategory (u, v) as C
+specialize MechSignatureEq ((succ (succ v))) as Types
+
+def projections : (0 Obj : Sort (succ u)) ->
+    (hom : (x : Obj) -> (y : Obj) -> Sort (succ v)) ->
+    (identity : (x : Obj) -> hom x x) ->
+    (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      hom x y -> hom y z -> hom x z) ->
+    (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      C_Eq (hom x y) (compose x y y f (identity y)) f) ->
+    (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+      C_Eq (hom x y) (compose x x y (identity x) f) f) ->
+    (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+      C_Eq (hom w z) (compose w y z (compose w x y f g) h)
+        (compose w x z f (compose x y z g h))) ->
+    ((x : Obj) -> (y : Obj) ->
+      Types (Sort (succ v))
+        (C_Hom Obj (C_mk Obj hom identity compose right left associativity) x y)
+        (hom x y)) *
+    ((x : Obj) ->
+      C_Eq (hom x x)
+        (C_id Obj (C_mk Obj hom identity compose right left associativity) x)
+        (identity x)) *
+    ((x : Obj) -> (y : Obj) -> (z : Obj) ->
+      (f : hom x y) -> (g : hom y z) ->
+      C_Eq (hom x z)
+        (C_comp Obj (C_mk Obj hom identity compose right left associativity) x y z f g)
+        (compose x y z f g)) :=
+  fun (0 Obj : Sort (succ u))
+      (hom : (x : Obj) -> (y : Obj) -> Sort (succ v))
+      (identity : (x : Obj) -> hom x x)
+      (compose : (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        hom x y -> hom y z -> hom x z)
+      (right : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        C_Eq (hom x y) (compose x y y f (identity y)) f)
+      (left : (x : Obj) -> (y : Obj) -> (f : hom x y) ->
+        C_Eq (hom x y) (compose x x y (identity x) f) f)
+      (associativity : (w : Obj) -> (x : Obj) -> (y : Obj) -> (z : Obj) ->
+        (f : hom w x) -> (g : hom x y) -> (h : hom y z) ->
+        C_Eq (hom w z) (compose w y z (compose w x y f g) h)
+          (compose w x z f (compose x y z g h))) =>
+    ((fun (x : Obj) (y : Obj) => Types_refl (Sort (succ v)) (hom x y)),
+      ((fun (x : Obj) => C_Eq_refl (hom x x) (identity x)),
+        (fun (x : Obj) (y : Obj) (z : Obj) (f : hom x y) (g : hom y z) =>
+          C_Eq_refl (hom x z) (compose x y z f g))))
+
+-- comp_id is the fourth stored component; this witness pins that order.
+def storedFieldOrder : (0 Obj : Sort (succ u)) -> (category : C_Category Obj) ->
+    (x : Obj) -> (y : Obj) -> (f : C_Hom Obj category x y) ->
+    C_Eq (C_Hom Obj category x y)
+      (C_comp Obj category x y y f (C_id Obj category y)) f :=
+  fun (0 Obj : Sort (succ u)) (category : C_Category Obj) => category.2.2.2.1
+end
+
+-- Expanding this group checks all of its members at independent symbolic levels.
+poly (u, v) group CompatibilityCategoryComputationCheck where
+specialize CompatibilityCategoryComputations (u, v) as Checked
+end
+
+-- The closed expansions also exercise client reuse at unequal data levels.
+specialize CompatibilityCategoryComputations (0, 0) as Small
+specialize CompatibilityCategoryComputations (1, 0) as LargerObjects
+specialize CompatibilityCategoryComputations (0, 1) as LargerMorphisms

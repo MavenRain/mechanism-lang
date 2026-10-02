@@ -1,0 +1,19 @@
+{
+  "name": "CompCatTheory.Category.Hom",
+  "target": "Candidate_Hom",
+  "scope": "type-signature",
+  "adapter": "Twin_Hom",
+  "source_line": 23251,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category"
+  ],
+  "fixture": "CompCatTheory-Category-Hom.mech",
+  "fixture_sha256": "87440e711f24525f2683eb57e4fbedaddf3ba0e9f555208a360dfb6fb55be299",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

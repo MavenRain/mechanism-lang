@@ -5075,3 +5075,54 @@ and swap only the adapter, with a well-formed twin, and the three equality
 refusal controls assert the kernel diagnostic. The gate was rerun after these
 fixes; the pre-review final report, its gate logs and the record comparison
 with the c4793ae pilot are retained under the receipt's `attempts/`.
+
+## Stage C / U1: source-compatible Category record (2026-10-02)
+
+Base: d6ac149. User request: "Continue building mechanism-lang. Stage all
+changes." The implementation adds an explicit Category adapter with the
+export's relevant nested object arguments and constructor field order.
+It reuses the checked symbolic equality schema at the successor of the
+morphism universe. The existing erased core record is not a constructor
+representation match for these imported nested function types.
+
+The focused production gate checks eight imported Category signatures and the
+contextual equality signature. Generic Hom, identity and composition projection
+proofs check at independent symbolic levels and three closed level pairs. A
+stored-field order witness pins `comp_id` as the fourth stored component. The
+`mech axioms` audit is empty and the empty-environment `prelude.exe --audit`
+passes. All eight controls pass, including two altered accessors whose
+signatures check but whose projection computations are rejected. The runner
+requires all controls and unchanged export, graph, input and checker hashes
+before recording `gate_passed`.
+
+The prepared native checker and JavaScript test build are reused; kernel and
+frontend sources are unchanged in this increment. `make -n
+prelude-category-compatibility-test` confirms the new entry point. The
+validation receipt, generated witnesses and control diagnostics are retained in
+`dev/validation/prelude-category-compatibility/`. The complete imported graph is
+reproducible and is not duplicated in Git. An initial run outside the repository
+is not retained in Git. In that run the two same-type computation controls
+failed as intended: the inserted helper caused a parse error, not the kernel
+mismatch the controls require. The final run inserts the helper after the last
+specialization.
+
+The mapping inventory and NEVER ledger are unchanged. Category recursors,
+whole-record equality, source theorem bodies, runtime parity and conversion
+to the erased core record remain open. The scoped gate does not close M0,
+Stage C or U1. All repository changes are staged; no commit is created.
+
+Review fixes (2026-10-02): a `storedFieldOrder` witness in the computation
+fixture now pins the constructor field order. The reorder control applies a
+consistent reorder that checks on its own and is rejected by that witness. The
+erasure control erases every nested object binder consistently; the prelude
+checks and the imported `Category.mk` signature rejects it. The swapped-universe
+control uses its own aliases, and a twin at the original levels matches. The
+altered-accessor controls first check the fixture with only the helper added.
+The pilot document no longer claims an unchecked core accessor match and states
+that the outer `Obj` binder is erased. The receipt README names the export
+argument, and this log no longer cites a workspace run. The projection fixture
+is also audited with `prelude.exe --audit`, which the Makefile target now
+builds. The Makefile spacing, ROADMAP wrap, controls timeout and gate counts are
+corrected. The receipt was regenerated after these fixes. The gate prints
+`PRELUDE-CATEGORY-COMPATIBILITY signatures=8 support=1 computations=3 audits=2
+controls=8 OK`.

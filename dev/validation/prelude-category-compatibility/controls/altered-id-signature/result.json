@@ -1,0 +1,20 @@
+{
+  "name": "CompCatTheory.Category.id",
+  "target": "Candidate_id",
+  "scope": "type-signature",
+  "adapter": "alteredid",
+  "source_line": 23384,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom"
+  ],
+  "fixture": "CompCatTheory-Category-id.mech",
+  "fixture_sha256": "28f2c06ddfc87b716aa393f718767bf81767accbc8f9ebfac968eda6147eece3",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

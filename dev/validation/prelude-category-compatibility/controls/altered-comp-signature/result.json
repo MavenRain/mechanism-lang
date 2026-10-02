@@ -1,0 +1,20 @@
+{
+  "name": "CompCatTheory.Category.comp",
+  "target": "Candidate_comp",
+  "scope": "type-signature",
+  "adapter": "alteredcomp",
+  "source_line": 23276,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom"
+  ],
+  "fixture": "CompCatTheory-Category-comp.mech",
+  "fixture_sha256": "74d16b15128b2a981251c4b02239a583253cb15a45ac3cef10d3d9b440a14277",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

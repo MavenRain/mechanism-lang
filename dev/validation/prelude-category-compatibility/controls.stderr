@@ -1,0 +1,13 @@
+test_all_signatures_and_contextual_equality_match (__main__.CategoryControls.test_all_signatures_and_contextual_equality_match) ... ok
+test_constructor_proof_fields_cannot_be_swapped (__main__.CategoryControls.test_constructor_proof_fields_cannot_be_swapped) ... ok
+test_missing_equality_dependency_blocks_constructor_and_laws (__main__.CategoryControls.test_missing_equality_dependency_blocks_constructor_and_laws) ... ok
+test_nested_object_quantities_are_preserved (__main__.CategoryControls.test_nested_object_quantities_are_preserved) ... ok
+test_projection_computations_check_without_axioms (__main__.CategoryControls.test_projection_computations_check_without_axioms) ... ok
+test_same_type_composition_adapter_must_preserve_computation (__main__.CategoryControls.test_same_type_composition_adapter_must_preserve_computation) ... ok
+test_same_type_identity_adapter_must_preserve_computation (__main__.CategoryControls.test_same_type_identity_adapter_must_preserve_computation) ... ok
+test_symbolic_object_and_morphism_levels_cannot_be_swapped (__main__.CategoryControls.test_symbolic_object_and_morphism_levels_cannot_be_swapped) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 12.307s
+
+OK

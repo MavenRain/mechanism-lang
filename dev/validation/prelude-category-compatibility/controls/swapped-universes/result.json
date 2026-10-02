@@ -1,0 +1,20 @@
+{
+  "name": "CompCatTheory.Category.Hom",
+  "target": "Candidate_Hom",
+  "scope": "type-signature",
+  "adapter": "Swapped_Hom",
+  "source_line": 23251,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category"
+  ],
+  "fixture": "CompCatTheory-Category-Hom.mech",
+  "fixture_sha256": "540a91d392a574c17a5c7774138d01f39618032f89bde58925da53097bdef9e1",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type Type (u0 + 1) and the expected type is Type (u1 + 1)"
+}
