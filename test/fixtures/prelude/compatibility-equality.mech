@@ -1,0 +1,26 @@
+specialize MechSignatureEq (0) as Proofs
+specialize MechSignatureEq (1) as Values
+specialize MechSignatureEq (2) as Types
+specialize MechSignatureElimination (1, 0) as ProofElimination with (Carrier := Proofs)
+specialize MechSignatureElimination (2, 1) as TypeElimination with (Carrier := Values)
+specialize MechSignatureCongruence (1, 2) as Mixed with (Source := Values, Target := Types)
+
+def proofReflexivity : Proofs MechTrue mechTrivial mechTrivial :=
+  Proofs_refl MechTrue mechTrivial
+def valueTransitivity : Values MechNat mechZero mechZero :=
+  Values_trans MechNat mechZero mechZero mechZero
+    (Values_refl MechNat mechZero)
+    (Values_symm MechNat mechZero mechZero (Values_refl MechNat mechZero))
+def typeTransport : Type 0 :=
+  TypeElimination_ndrec MechNat mechZero (fun (n : MechNat) => Type 0)
+    MechNat mechZero (Values_refl MechNat mechZero)
+def dependentTypeTransport : Type 0 :=
+  TypeElimination_dependentRec MechNat mechZero
+    (fun (n : MechNat) (e : Values MechNat mechZero n) => Type 0)
+    MechNat mechZero (Values_refl MechNat mechZero)
+def proofTransport : MechNat :=
+  ProofElimination_ndrec MechTrue mechTrivial (fun (p : MechTrue) => MechNat)
+    (mechSucc mechZero) mechTrivial proofReflexivity
+def mixedCongruence : Types (Type 0) MechNat MechNat :=
+  Mixed_congrArg MechNat (Type 0) mechZero mechZero
+    (fun (n : MechNat) => MechNat) (Values_refl MechNat mechZero)

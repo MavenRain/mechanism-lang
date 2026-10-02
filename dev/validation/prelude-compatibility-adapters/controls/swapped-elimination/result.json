@@ -1,0 +1,21 @@
+{
+  "name": "Eq.rec",
+  "target": "mechJ",
+  "scope": "type-signature",
+  "adapter": "Swapped_dependentRec",
+  "source_line": 154,
+  "universes": [
+    "u",
+    "u_1"
+  ],
+  "dependencies": [
+    "Eq",
+    "Eq.refl"
+  ],
+  "fixture": "Eq-rec.mech",
+  "fixture_sha256": "a9025a7a269bd0aface152b561994b343c3bf76101f55c701ec7908458718668",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type Type u1 and the expected type is Type u0"
+}

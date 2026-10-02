@@ -1,0 +1,3 @@
+-- Checked support mapping for the imported Decidable.isFalse signature.
+def mechNot : Prop -> Prop :=
+  fun (P : Prop) => P -> MechFalse

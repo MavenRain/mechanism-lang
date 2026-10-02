@@ -1,0 +1,20 @@
+{
+  "name": "congrArg",
+  "target": "mechCongr",
+  "scope": "type-signature",
+  "adapter": "Swapped_congrArg",
+  "source_line": 1575,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "Eq"
+  ],
+  "fixture": "congrArg.mech",
+  "fixture_sha256": "e3ccd575fa29dd15a159aec326893246715b61b2326ace204237e515378f2a4c",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type Type u0 and the expected type is Type u1"
+}

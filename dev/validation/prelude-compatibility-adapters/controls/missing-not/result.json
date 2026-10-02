@@ -1,0 +1,14 @@
+{
+  "name": "Decidable.isFalse",
+  "target": "mechIsFalse",
+  "scope": "type-signature",
+  "source_line": 716,
+  "universes": [],
+  "dependencies": [
+    "Not",
+    "Decidable"
+  ],
+  "status": "BLOCKED",
+  "code": "UNMAPPED_DEPENDENCY",
+  "detail": "Not"
+}

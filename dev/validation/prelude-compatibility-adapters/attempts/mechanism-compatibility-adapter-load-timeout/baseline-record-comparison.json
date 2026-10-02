@@ -1,0 +1,11 @@
+{
+  "name": "CompCatTheory.LeftKanExtension",
+  "same_native": true,
+  "same_fixture": true,
+  "previous_report": "../../../prelude-compatibility-pilot/report.json",
+  "previous_status": "NAME_AND_TYPE",
+  "current_report": "report.json",
+  "current_status": "BLOCKED",
+  "current_code": "CHECK_TIMEOUT",
+  "timeout_seconds": 180
+}

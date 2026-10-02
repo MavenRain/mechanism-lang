@@ -1,0 +1,19 @@
+{
+  "name": "congrArg",
+  "target": "mechCongr",
+  "scope": "type-signature",
+  "adapter": "Candidate_congrArg",
+  "source_line": 1575,
+  "universes": [
+    "u",
+    "v"
+  ],
+  "dependencies": [
+    "Eq"
+  ],
+  "fixture": "congrArg.mech",
+  "fixture_sha256": "46f2d5e80f3b5e7b9a23dda6933e8cb473d150471b34c06ed54692d3a51d94c0",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

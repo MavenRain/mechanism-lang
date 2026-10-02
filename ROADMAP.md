@@ -50,6 +50,20 @@ and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-02
+The current increment builds on c4793ae and checks all 19 candidate signatures
+with seven explicit symbolic equality adapters and a separate checked Not
+support mapping. Motive and carrier levels, and congruence domain and codomain
+levels, remain independent. The report records the original inventory target
+and the actual adapter separately. Six added controls cover complete candidate
+discharge, wrong helpers, swapped universe levels, missing Not and closed
+specializations at Prop and data universes. The inventory and NEVER ledger
+remain unchanged; full typed mapping remains open. In the recorded report,
+all four U1 record signatures match; CompCatTheory.LeftKanExtension checks in
+about 64 seconds at load 12, and earlier runs under heavier load reached the
+180-second limit. See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
+`dev/validation/prelude-compatibility-adapters/`.
+
+The following entries record the preceding increments.
 
 The base is 18477c9. The typed compatibility pilot checks 11 of the 19
 existing candidate signatures and all four U1 record signatures at symbolic

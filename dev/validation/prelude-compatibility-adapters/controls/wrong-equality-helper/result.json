@@ -1,0 +1,19 @@
+{
+  "name": "Eq.trans",
+  "target": "mechTrans",
+  "scope": "type-signature",
+  "adapter": "Candidate_symm",
+  "source_line": 1451,
+  "universes": [
+    "u"
+  ],
+  "dependencies": [
+    "Eq"
+  ],
+  "fixture": "Eq-trans.mech",
+  "fixture_sha256": "d5573d62b4f1775e7ef4da4821b4c33fe4d5d15afa8a25b8ea600bb899552737",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type b0 and the expected type is (Lan SMu Candidate [b2] (Sec SColl 2 [ => b0;  => b1]))"
+}

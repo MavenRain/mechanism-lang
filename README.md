@@ -166,10 +166,14 @@ that integration.  Values remain scheduled for M1.
 ## Checked prelude foundation
 
 The [typed compatibility pilot](dev/M0-STAGE-C-COMPATIBILITY-PILOT.md)
-checks the 19 existing mapping candidates and four U1 record signatures
-against their imported source types.  Run `make prelude-compatibility-test`
-to produce a fresh report and run its kernel mutation controls.  The report
-retains blocked candidates and leaves the M0 inventory unchanged.
+checks all 19 candidate signatures using explicit symbolic equality adapters
+and checked Not support, plus four U1 record signatures, against their
+imported source types.  In the recorded adapter report, all four U1 record
+signatures match; CompCatTheory.LeftKanExtension checks in about 64 seconds
+at load 12, and earlier runs under heavier load reached the 180-second
+limit.  Run `make prelude-compatibility-test` to produce a fresh report and
+run its kernel mutation controls.  The report retains blocked rows and their
+reasons and leaves the M0 inventory unchanged.
 
 `prelude/init.mech` declares the data foundation and its recursors.
 The PRELUDE and AXIOMS gates check it from an empty kernel environment,

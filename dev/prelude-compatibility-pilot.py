@@ -13,6 +13,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 U1 = "CompCatTheory."
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z_0-9]*(?:\.[A-Za-z_][A-Za-z_0-9]*)*\Z")
+EQUALITY = {"Eq", "Eq.refl", "Eq.ndrec", "Eq.rec", "Eq.symm", "Eq.trans", "congrArg"}
+SUPPORT = {"Not": "mechNot"}
+EQUALITY_SOURCE = "prelude/compatibility/equality.mech"
+NOT_SOURCE = "prelude/compatibility/not.mech"
 
 
 class Blocked(Exception):
@@ -207,8 +211,10 @@ def mappings_from(path):
 
 
 def check_signature(graph, mappings, name, target, prelude, directory, mech, timeout,
-                    group=None, aliases=None):
+                    group=None, aliases=None, adapter=None):
     result = {"name": name, "target": target, "scope": "type-signature"}
+    if adapter is not None:
+        result["adapter"] = adapter
     try:
         declaration = graph["declaration"].get(name)
         if declaration is None:
@@ -222,7 +228,8 @@ def check_signature(graph, mappings, name, target, prelude, directory, mech, tim
             raise Blocked("SYMBOLIC_TARGET_REQUIRED", "candidate needs an explicit symbolic specialization")
         renderer = Renderer(graph, mappings, declaration.get("parameters", []), aliases)
         expected = renderer.expression(declaration["type"])
-        body = renderer.witness(declaration["type"], target, family_parameters(graph, declaration))
+        omitted = family_parameters(graph, declaration) if adapter is None else 0
+        body = renderer.witness(declaration["type"], adapter or target, omitted)
         witness = f"def compatibilityWitness : {expected} := {body}\n"
         if group is not None:
             parameters = ", ".join(renderer.parameters.values())
@@ -302,6 +309,30 @@ def record_inputs(name):
     return source, group, aliases, "Candidate_" + member, files
 
 
+def equality_inputs(name):
+    """Select the checked source adapter at the export's universe order."""
+    if name not in EQUALITY:
+        raise Blocked("UNKNOWN_EQUALITY_ADAPTER", name)
+    aliases = {}
+    if name in {"Eq.ndrec", "Eq.rec"}:
+        schema, levels = "MechSignatureElimination", ("u0", "u1")
+        aliases[("Eq", ("u1",))] = "Candidate_Carrier"
+        aliases[("Eq.refl", ("u1",))] = "Candidate_Carrier_refl"
+        target = "Candidate_ndrec" if name == "Eq.ndrec" else "Candidate_dependentRec"
+    elif name == "congrArg":
+        schema, levels = "MechSignatureCongruence", ("u0", "u1")
+        aliases[("Eq", ("u0",))] = "Candidate_Source"
+        aliases[("Eq", ("u1",))] = "Candidate_Target"
+        target = "Candidate_congrArg"
+    else:
+        schema, levels = "MechSignatureEq", ("u0",)
+        aliases[("Eq", levels)] = "Candidate"
+        aliases[("Eq.refl", levels)] = "Candidate_refl"
+        target = "Candidate" if name == "Eq" else "Candidate_" + name.split(".")[1]
+    group = "  specialize " + schema + " (" + ", ".join(levels) + ") as Candidate"
+    return (ROOT / EQUALITY_SOURCE).read_text(), group, aliases, target
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export", type=Path, default=Path("/Users/oobi/Documents/kanon-m2-corpus/corpus/lean-parity/uat/uat.export"))
@@ -333,14 +364,16 @@ def main():
             raise Blocked("DENOMINATOR_DRIFT", "expected 3202 imported declarations")
         inputs = {"prelude/init.mech", "map/prelude.map.tsv", "dev/denominators.json",
                   "dev/prelude-compatibility-pilot.py", "dev/prelude-compatibility-gates.py",
-                  "test/prelude_compatibility.py"}
+                  "test/prelude_compatibility.py", EQUALITY_SOURCE, NOT_SOURCE,
+                  "test/fixtures/prelude/compatibility-equality.mech"}
         for name in ("Category", "Functor", "NatTrans", "LeftKanExtension"):
             inputs.update(record_inputs(name)[4])
         input_hashes = {path: digest(ROOT / path) for path in sorted(inputs)}
         mappings = mappings_from(ROOT / "map/prelude.map.tsv")
         if len(mappings) != 19:
             raise Blocked("PILOT_SCOPE_DRIFT", "expected the 19 existing candidates")
-        prelude = (ROOT / "prelude/init.mech").read_text()
+        mappings.update(SUPPORT)
+        prelude = (ROOT / "prelude/init.mech").read_text() + "\n" + (ROOT / NOT_SOURCE).read_text()
         baseline = args.out / "baseline.mech"
         baseline.write_text(prelude)
         if invoke(args.mech, "check", baseline, args.timeout).returncode:
@@ -350,9 +383,18 @@ def main():
         (args.out / "axioms.stderr").write_text(axioms.stderr)
         if axioms.returncode or axioms.stdout.strip():
             raise Blocked("AXIOM_AUDIT_FAILED", axioms.stdout.strip() or axioms.stderr.strip())
-        results = [check_signature(graph, mappings, name, target, prelude, args.out,
-                                   args.mech, args.timeout) for name, target in mappings.items()]
-        discharge_dependencies(results)
+        results, support = [], []
+        for name, target in mappings.items():
+            if name in EQUALITY:
+                source, group, aliases, adapter = equality_inputs(name)
+                row = check_signature(graph, mappings, name, target, prelude + "\n" + source,
+                                      args.out, args.mech, args.timeout, group=group,
+                                      aliases=aliases, adapter=adapter)
+            else:
+                row = check_signature(graph, mappings, name, target, prelude, args.out,
+                                      args.mech, args.timeout)
+            (support if name in SUPPORT else results).append(row)
+        discharge_dependencies(results + support)
         records = []
         for name in ("Category", "Functor", "NatTrans", "LeftKanExtension"):
             source, group, aliases, target, files = record_inputs(name)
@@ -364,14 +406,15 @@ def main():
             raise Blocked("INPUT_CHANGED", "pilot inputs changed during checking")
         if any(digest(path) != value for path, value in binaries.items()):
             raise Blocked("CHECKER_CHANGED", "checker changed during the pilot")
-        report = {"version": 1, "scope": "19 existing candidates and four U1 record type signatures",
+        report = {"version": 2, "scope": "19 candidate type signatures with explicit equality adapters, Not support and four U1 records",
                   "export_sha256": expected, "import_graph_sha256": digest(imported / "types.ndjson"),
                   "mech_sha256": digest(args.mech.resolve()), "map_sha256": digest(ROOT / "map/prelude.map.tsv"),
                   "prelude_sha256": digest(ROOT / "prelude/init.mech"),
                   "inputs": input_hashes,
                   "native_sha256": digest(args.mech.resolve().parent / "mechanism-native"),
-                  "candidates": results, "u1_records": records,
+                  "candidates": results, "support": support, "u1_records": records,
                   "counts": dict(collections.Counter(row["status"] for row in results)),
+                  "support_counts": dict(collections.Counter(row["status"] for row in support)),
                   "u1_counts": dict(collections.Counter(row["status"] for row in records))}
         (args.out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
         print("PRELUDE-COMPATIBILITY-PILOT candidates=19 records=4 checked="

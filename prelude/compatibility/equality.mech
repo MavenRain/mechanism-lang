@@ -1,0 +1,47 @@
+-- Source adapters keep QMany binders inside motive types and the imported universe order; top-level binders are erased.
+poly (u) mu MechSignatureEq (0 A : Sort u) (0 x : A) : (0 y : A) -> Prop with
+| signatureReflCtor : MechSignatureEq A x x
+where
+def refl : (0 A : Sort u) -> (0 x : A) -> MechSignatureEq A x x :=
+  fun (0 A : Sort u) (0 x : A) => signatureReflCtor
+def symm : (0 A : Sort u) -> (0 x : A) -> (0 y : A) ->
+    MechSignatureEq A x y -> MechSignatureEq A y x :=
+  fun (0 A : Sort u) (0 x : A) (0 y : A) (e : MechSignatureEq A x y) =>
+    case e as self in MechSignatureEq right return MechSignatureEq A right x with
+    | signatureReflCtor => refl A x
+def trans : (0 A : Sort u) -> (0 x : A) -> (0 y : A) -> (0 z : A) ->
+    MechSignatureEq A x y -> MechSignatureEq A y z -> MechSignatureEq A x z :=
+  fun (0 A : Sort u) (0 x : A) (0 y : A) (0 z : A)
+    (first : MechSignatureEq A x y) (second : MechSignatureEq A y z) =>
+      case second as self in MechSignatureEq right return MechSignatureEq A x right with
+      | signatureReflCtor => first
+end
+
+poly (v, u) group MechSignatureElimination where
+specialize MechSignatureEq (u) as Carrier
+def ndrec : (0 A : Sort u) -> (0 x : A) -> (0 P : A -> Sort v) ->
+    P x -> (0 y : A) -> Carrier A x y -> P y :=
+  fun (0 A : Sort u) (0 x : A) (0 P : A -> Sort v)
+    (base : P x) (0 y : A) (e : Carrier A x y) =>
+      case e as self in Carrier right return P right with
+      | signatureReflCtor => base
+def dependentRec : (0 A : Sort u) -> (0 x : A) ->
+    (0 P : (y : A) -> Carrier A x y -> Sort v) ->
+    P x (Carrier_refl A x) -> (0 y : A) -> (e : Carrier A x y) -> P y e :=
+  fun (0 A : Sort u) (0 x : A)
+    (0 P : (y : A) -> Carrier A x y -> Sort v)
+    (base : P x (Carrier_refl A x)) (0 y : A) (e : Carrier A x y) =>
+      case e as self in Carrier right return P right self with
+      | signatureReflCtor => base
+end
+
+poly (u, v) group MechSignatureCongruence where
+specialize MechSignatureEq (u) as Source
+specialize MechSignatureEq (v) as Target
+def congrArg : (0 A : Sort u) -> (0 B : Sort v) -> (0 x : A) -> (0 y : A) ->
+    (f : A -> B) -> Source A x y -> Target B (f x) (f y) :=
+  fun (0 A : Sort u) (0 B : Sort v) (0 x : A) (0 y : A)
+    (f : A -> B) (e : Source A x y) =>
+      case e as self in Source right return Target B (f x) (f right) with
+      | signatureReflCtor => Target_refl B (f x)
+end

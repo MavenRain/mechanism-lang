@@ -1,0 +1,16 @@
+{
+  "name": "Bool.false",
+  "target": "mechZero",
+  "scope": "type-signature",
+  "source_line": 1823,
+  "universes": [],
+  "dependencies": [
+    "Bool"
+  ],
+  "fixture": "Bool-false.mech",
+  "fixture_sha256": "a6e2f6bc3f2412d5fef46a22cde384a970b67ba066618607b5025de741b8fe1a",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "unbound: mechZero is not a constructor of MechBool"
+}

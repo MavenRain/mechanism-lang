@@ -5038,3 +5038,40 @@ full M0 typed mapping remain open.  Stage C and U1 remain open.
 
 Results and checked fixtures are recorded in
 `dev/validation/prelude-compatibility-pilot/`.
+
+## 2026-10-02: symbolic compatibility adapters (base c4793ae)
+
+The pilot now checks the seven equality signatures with explicit symbolic
+source adapters and checks Not as a separate support mapping for
+Decidable.isFalse. All 19 candidate signatures and the one support signature
+are NAME_AND_TYPE in the scoped report. Each equality row retains its
+inventory target and identifies the actual checked adapter. The adapters
+preserve motive-first universe order for Eq.ndrec and Eq.rec, independent
+congruence carrier universes, and QMany binders inside each motive type. The
+adapters erase their top-level binders, and the eta-expanded witness accepts
+that erasure. The M0 inventory and NEVER ledger remain unchanged.
+
+Validation: the production CLI was reused with native SHA-256
+cc89a8430870c4a6cdc69296902b2a9078983275aeae430aaa5103c20120c9ca.
+The scoped gate exits 0 and all 19 controls pass. New controls reject swapped
+eliminator and congruence universe levels, a wrong equality helper and a
+missing Not mapping, and require all candidates and support to match.
+Closed clients specialize at Sort 0, 1 and 2, bind shared equality families
+explicitly, and check without postulates.
+
+The final report matches all four U1 record signatures. The unchanged
+CompCatTheory.LeftKanExtension fixture checks in about 64 seconds at load 12.
+Earlier runs under heavier load reached the 180-second limit and are
+retained; there is no new acceptance claim for the full battery. The first
+control run also caught missing family reuse bindings in the closed fixture.
+The fixture was corrected and the complete scoped gate was rerun. Failed
+reports and controls are retained.
+
+Results, checked fixtures, refusal controls and the failed-attempt receipts
+are recorded in `dev/validation/prelude-compatibility-adapters/`.
+
+Review fixes: the swapped-level controls keep the expected type well formed
+and swap only the adapter, with a well-formed twin, and the three equality
+refusal controls assert the kernel diagnostic. The gate was rerun after these
+fixes; the pre-review final report, its gate logs and the record comparison
+with the c4793ae pilot are retained under the receipt's `attempts/`.

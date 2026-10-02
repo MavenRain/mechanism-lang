@@ -1,0 +1,15 @@
+{
+  "name": "Nat.succ",
+  "target": "mechSucc",
+  "scope": "type-signature",
+  "source_line": 3679,
+  "universes": [],
+  "dependencies": [
+    "Nat"
+  ],
+  "fixture": "Nat-succ.mech",
+  "fixture_sha256": "3d7a27959e6a64b45c7f04cbff159a613df247ae4d3672a291b0839f2ac3d454",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Eq.rec",
+  "target": "mechJ",
+  "scope": "type-signature",
+  "adapter": "Candidate_dependentRec",
+  "source_line": 154,
+  "universes": [
+    "u",
+    "u_1"
+  ],
+  "dependencies": [
+    "Eq",
+    "Eq.refl"
+  ],
+  "fixture": "Eq-rec.mech",
+  "fixture_sha256": "8a51b48fd4394f397c75e7460743595d9ab5ebb3fc2dc631d937d81500160712",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

@@ -36,7 +36,7 @@ def main():
             print("PRELUDE-COMPATIBILITY-GATES FAIL")
             print(f"Evidence: {output}", file=sys.stderr)
             return 1
-    print("PRELUDE-COMPATIBILITY-GATES candidates=19 records=4 mutation=1 OK")
+    print("PRELUDE-COMPATIBILITY-GATES candidates=19 support=1 records=4 mutation=4 OK")
     print(f"Evidence: {output}", file=sys.stderr)
     return 0
 

@@ -105,6 +105,86 @@ class KernelControls(unittest.TestCase):
         if pilot.digest(MECH.resolve().parent / "mechanism-native") != report["native_sha256"]:
             raise AssertionError("native checker changed after the pilot")
 
+    def test_all_candidates_and_support_match(self):
+        report = json.loads(REPORT.read_text())
+        self.assertEqual(len(report["candidates"]), 19)
+        self.assertEqual(report["counts"], {"NAME_AND_TYPE": 19})
+        self.assertEqual(report["support_counts"], {"NAME_AND_TYPE": 1})
+        self.assertEqual(report["support"][0]["name"], "Not")
+        self.assertEqual({row["name"] for row in report["candidates"] if "adapter" in row},
+                         pilot.EQUALITY)
+
+    def equality_control(self, name, label, diagnostic, swap_levels=False, wrong_helper=False):
+        graph = pilot.read_graph(REPORT.parent / "import/types.ndjson")
+        mappings = pilot.mappings_from(ROOT / "map/prelude.map.tsv")
+        source, group, aliases, adapter = pilot.equality_inputs(name)
+        prelude = (ROOT / "prelude/init.mech").read_text() + "\n" + source
+        evidence = REPORT.parent / "controls" / label
+
+        def check(directory, adapter):
+            directory.mkdir(parents=True, exist_ok=True)
+            row = pilot.check_signature(graph, mappings, name, mappings[name], prelude,
+                                        directory, MECH, 30, group=group,
+                                        aliases=aliases, adapter=adapter)
+            (directory / "result.json").write_text(json.dumps(row, indent=2) + "\n")
+            return row
+
+        if swap_levels:
+            # The expected type keeps its aliases; only the adapter uses swapped levels.
+            group += "\n  specialize " + group.split()[1] + " (u1, u0) as Swapped"
+            twin = check(evidence / "well-formed", adapter)
+            self.assertEqual(twin["status"], "KERNEL_TYPE_MATCH", twin.get("detail"))
+            adapter = adapter.replace("Candidate_", "Swapped_", 1)
+        if wrong_helper:
+            adapter = "Candidate_symm"
+        row = check(evidence, adapter)
+        self.assertEqual(row["status"], "BLOCKED")
+        self.assertEqual(row["code"], "KERNEL_REJECTED")
+        self.assertIn(diagnostic, row["detail"])
+
+    def test_eliminator_universes_cannot_be_swapped(self):
+        self.equality_control("Eq.rec", "swapped-elimination",
+                              "mismatch: the term has type Type u1 and the expected type is Type u0",
+                              swap_levels=True)
+
+    def test_congruence_universes_cannot_be_swapped(self):
+        self.equality_control("congrArg", "swapped-congruence",
+                              "mismatch: the term has type Type u0 and the expected type is Type u1",
+                              swap_levels=True)
+
+    def test_wrong_equality_helper_fails(self):
+        self.equality_control("Eq.trans", "wrong-equality-helper",
+                              "mismatch: the term has type b0 and the expected type is",
+                              wrong_helper=True)
+
+    def test_not_mapping_is_required(self):
+        graph = pilot.read_graph(REPORT.parent / "import/types.ndjson")
+        mappings = pilot.mappings_from(ROOT / "map/prelude.map.tsv")
+        prelude = (ROOT / "prelude/init.mech").read_text() + "\n" + (ROOT / pilot.NOT_SOURCE).read_text()
+        evidence = REPORT.parent / "controls/missing-not"
+        evidence.mkdir(parents=True, exist_ok=True)
+        row = pilot.check_signature(graph, mappings, "Decidable.isFalse", "mechIsFalse",
+                                    prelude, evidence, MECH, 30)
+        (evidence / "result.json").write_text(json.dumps(row, indent=2) + "\n")
+        self.assertEqual(row["code"], "UNMAPPED_DEPENDENCY")
+        self.assertEqual(row["detail"], "Not")
+
+    def test_closed_equality_instances_check_without_axioms(self):
+        evidence = REPORT.parent / "controls/closed-equality"
+        evidence.mkdir(parents=True, exist_ok=True)
+        source = "\n".join((ROOT / path).read_text() for path in
+                           ("prelude/init.mech", pilot.EQUALITY_SOURCE,
+                            "test/fixtures/prelude/compatibility-equality.mech"))
+        path = evidence / "closed.mech"
+        path.write_text(source)
+        checked = pilot.invoke(MECH, "check", path, 30)
+        axioms = pilot.invoke(MECH, "axioms", path, 30)
+        for command, result in (("check", checked), ("axioms", axioms)):
+            (evidence / (command + ".stdout")).write_text(result.stdout)
+            (evidence / (command + ".stderr")).write_text(result.stderr)
+            self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(axioms.stdout.strip(), "")
+
     def test_wrong_constructor_target_fails(self):
         directory = REPORT.parent
         graph = pilot.read_graph(directory / "import/types.ndjson")

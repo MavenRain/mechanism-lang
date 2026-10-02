@@ -1,0 +1,24 @@
+test_cyclic_graph_has_a_work_limit (__main__.GraphControls.test_cyclic_graph_has_a_work_limit) ... ok
+test_dependency_cycle_cannot_certify_itself (__main__.GraphControls.test_dependency_cycle_cannot_certify_itself) ... ok
+test_dependency_failure_propagates (__main__.GraphControls.test_dependency_failure_propagates) ... ok
+test_duplicate_graph_node_is_rejected (__main__.GraphControls.test_duplicate_graph_node_is_rejected) ... ok
+test_escaping_bound_variable_is_rejected (__main__.GraphControls.test_escaping_bound_variable_is_rejected) ... ok
+test_missing_dependency_is_not_invented (__main__.GraphControls.test_missing_dependency_is_not_invented) ... ok
+test_projection_is_not_replaced_with_a_variable (__main__.GraphControls.test_projection_is_not_replaced_with_a_variable) ... ok
+test_source_binder_names_cannot_inject_target_code (__main__.GraphControls.test_source_binder_names_cannot_inject_target_code) ... ok
+test_symbolic_instances_remain_distinct (__main__.GraphControls.test_symbolic_instances_remain_distinct) ... ok
+test_unbound_universe_is_not_zero (__main__.GraphControls.test_unbound_universe_is_not_zero) ... ok
+test_universe_argument_is_not_discarded (__main__.GraphControls.test_universe_argument_is_not_discarded) ... ok
+test_all_candidates_and_support_match (__main__.KernelControls.test_all_candidates_and_support_match) ... ok
+test_closed_equality_instances_check_without_axioms (__main__.KernelControls.test_closed_equality_instances_check_without_axioms) ... ok
+test_congruence_universes_cannot_be_swapped (__main__.KernelControls.test_congruence_universes_cannot_be_swapped) ... ok
+test_correct_constructor_target_checks (__main__.KernelControls.test_correct_constructor_target_checks) ... ok
+test_eliminator_universes_cannot_be_swapped (__main__.KernelControls.test_eliminator_universes_cannot_be_swapped) ... ok
+test_not_mapping_is_required (__main__.KernelControls.test_not_mapping_is_required) ... ok
+test_wrong_constructor_target_fails (__main__.KernelControls.test_wrong_constructor_target_fails) ... ok
+test_wrong_equality_helper_fails (__main__.KernelControls.test_wrong_equality_helper_fails) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 1.138s
+
+OK
