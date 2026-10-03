@@ -1,0 +1,20 @@
+01_loop.rs	2:5	loop
+02_while.rs	2:5	while
+03_for.rs	2:5	for
+04_ref_mut.rs	1:20	&mut
+05_mut_binding.rs	2:9	mut binding
+06_unsafe.rs	1:5	unsafe
+07_unwrap.rs	2:6	.unwrap()
+08_expect.rs	2:6	.expect(
+09_panic.rs	2:5	panic!
+10_assert.rs	2:5	assert!
+11_assert_eq.rs	2:5	assert_eq!
+12_as.rs	2:7	as
+13_index.rs	2:7	indexing
+14_scan.rs	2:19	.scan(
+15_dyn.rs	1:20	dyn Trait
+16_lifetime.rs	2:12	lifetime
+17_async.rs	1:5	async
+18_await.rs	2:9	.await
+19_macro.rs	2:5	macro format!
+20_comment.rs	2:5	comment

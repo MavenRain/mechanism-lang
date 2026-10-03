@@ -55,7 +55,7 @@ jobs:
       - name: Verify the Bend toolchain
         run: |
           test "$(bend version)" = 'bend 2.0.27'
-          test "$(wasm-opt --version)" = 'wasm-opt version 130'
+          wasm-opt --version | rg '^wasm-opt version 130( |$)'
           wasmtime --version | rg '^wasmtime 48\.0\.1 '
       - name: Build the mechanism compiler and certificate checker
         run: make build
