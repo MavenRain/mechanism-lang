@@ -1,0 +1,13 @@
+test_all_signatures_and_support_match (__main__.FunctorControls.test_all_signatures_and_support_match) ... ok
+test_consistent_law_reorder_breaks_stored_order (__main__.FunctorControls.test_consistent_law_reorder_breaks_stored_order) ... ok
+test_missing_dependencies_are_refused (__main__.FunctorControls.test_missing_dependencies_are_refused) ... ok
+test_morphism_universes_are_independent (__main__.FunctorControls.test_morphism_universes_are_independent) ... ok
+test_nested_object_quantities_match_export (__main__.FunctorControls.test_nested_object_quantities_match_export) ... ok
+test_object_universes_are_independent (__main__.FunctorControls.test_object_universes_are_independent) ... ok
+test_projections_check_without_axioms (__main__.FunctorControls.test_projections_check_without_axioms) ... ok
+test_same_type_map_must_preserve_computation (__main__.FunctorControls.test_same_type_map_must_preserve_computation) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1597.665s
+
+OK

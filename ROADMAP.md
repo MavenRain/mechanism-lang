@@ -51,7 +51,27 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-02
 
-The current increment on d6ac149 adds an explicit source-compatible Category
+The current increment on 252733d adds a source-compatible Functor record. The
+record, constructor, object and morphism maps, and both preservation laws match
+six imported signatures at four independent symbolic universe levels. Five
+support signatures discharge the Category and equality dependencies. Generic
+component proofs check the four accessors, the stored morphism binder order,
+both stored law positions and the field count. Bare-constant pins fix the outer
+binder quantities, which the signature check does not compare. Three closed
+specializations and an empty-environment axiom audit check the same fixture.
+Eight controls cover independent universes, relevant arguments erased in one
+member or in all, consistent field reordering, swapped stored morphism binders,
+dependency refusal, and a map and two law proofs whose matching types conceal
+altered computation. No other well-typed object map exists, so the object
+projection has no such control. The contextual target-equality row, not the
+Functor rows, pins the morphism levels. The mapping and NEVER inventories
+remain unchanged. Functor recursors, whole-record equality, source theorem
+bodies, runtime parity and conversion to the erased core record remain open.
+See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
+`dev/validation/prelude-functor-compatibility/`. NaturalTransformation is the
+next source-compatible record slice.
+
+The preceding increment on d6ac149 adds an explicit source-compatible Category
 record. Eight translated signatures, including the constructor and all six field
 accessors, match at independent symbolic object and morphism levels. The adapter
 retains relevant nested object arguments and the exported field order. Generic

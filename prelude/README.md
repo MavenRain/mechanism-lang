@@ -737,3 +737,30 @@ See `dev/PORT-UAT-U1-LEFT-KAN-LAWS.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-COCONE-ACTION.md`,
 `dev/PORT-UAT-U1-LEFT-KAN-ROUNDTRIP.md` and
 `dev/PORT-UAT-U1-LEFT-KAN-MEDIATOR-EQUALITY.md` for the contracts and checks.
+
+## Source-compatible Functor adapter
+
+`compatibility/functor.mech` defines `MechSignatureFunctor (u, v, w, z)` on
+`MechSignatureCategory` and `MechSignatureEq`. Include the equality and Category
+sources before this file. The source and target retain separate object and
+morphism universes. Outer object-type parameters are erased, although the
+rendered import binds them relevant. Category records and nested object
+arguments retain the imported quantities.
+
+The record stores the object map, morphism map, identity law and composition
+law in export order. `mk`, `obj`, `map`, `map_id` and `map_comp` match the
+imported signatures. The signature check compares quantities inside argument
+types only, so the generic fixture pins the outer quantities of all six members
+with bare constants: category records relevant, object types erased. Its
+component proofs check projection reduction for all four accessors and pin the
+stored morphism binder order, both stored law positions and the field count. It
+also specializes at three distinct level tuples without postulates.
+
+Run `make prelude-functor-compatibility-test` for the six signature checks,
+five dependency checks, projection proof and axiom audits, and eight controls.
+The controls reject an adapter mutant at each quantity pin, each stored witness
+and the map and law projections. No other well-typed object map exists, so the
+object projection has no mutant. Evidence is in
+`dev/validation/prelude-functor-compatibility/`. This adapter does not yet
+establish source theorem bodies, recursors, runtime parity, whole-record
+equality or conversion to the erased core Functor.

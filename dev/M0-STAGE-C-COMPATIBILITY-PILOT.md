@@ -135,3 +135,55 @@ recursor representation, source theorem bodies, whole-record equality,
 runtime parity or conversion to the existing erased core record. The prior
 19-candidate pilot and the mapping and NEVER ledgers remain unchanged.
 Stage C, U1 and PRELUDE-CHECKED remain open.
+
+## Source-compatible Functor record (2026-10-02)
+
+The 252733d follow-up adds `prelude/compatibility/functor.mech`. Its
+`MechSignatureFunctor (u, v, w, z)` specializes the source-compatible Category
+schema independently for the source and target. It preserves relevant nested
+object arguments and the exported order of the object map, morphism map,
+identity law and composition law. The outer object-type binders are erased.
+
+The scoped gate checks the Functor record and its five members against the
+frozen UAT export. The contextual target equality, Category record, Hom,
+identity and composition signatures discharge the dependencies. All eleven
+rows must reach `NAME_AND_TYPE` before the gate accepts. Input, checker and
+import-graph hashes are checked before and after the controls.
+
+The generic fixture proves computation of the object map, morphism map and both
+law accessors in separate component proofs. Three stored-order witnesses pin
+the stored morphism binder order, both law positions and the field count. The
+signature check compares quantities inside argument types only. The rendered
+import binds the outer object-type parameters relevant, while the adapter
+erases them. Six bare-constant pins therefore fix the adapter's outer
+quantities: category records relevant, object types erased. Three distinct
+closed universe tuples check, `mech axioms` is empty, and the empty-environment
+prelude audit accepts the combined source.
+
+Eight controls pass. Three run no kernel check: two re-read the report, and the
+dependency control asserts that no checker ran. Every altered adapter must
+check on its own. Each fixture rejection has a twin without the rejecting
+components, and that twin checks. Both law witnesses reject a consistent law
+reorder. The morphism witness rejects an adapter that stores the morphism map
+with binders (y, x) and swaps them back in `map`. The quantity pins reject a
+consistent erasure of the category records. An erasure of the source category
+in one member is rejected only by that member's pin, so each of the six pins is
+needed. The constructor row rejects erased nested object arguments, and it
+rejects the object-level swap with the level diagnostic. The Functor rows
+cannot see morphism levels. The contextual target-equality row pins them and
+rejects a cross-wired adapter. Unswapped twins are accepted.
+
+Three accessor proofs have negative controls. The altered map matches its own
+map signature, while the map_id and map_comp rows reject it. Without the map
+law pins, the fixture rejects it at the morphism projection. Without that
+projection, the fixture rejects it at the map law pins. Adapters that return
+map_id or map_comp through a double `Target_Eq_symm` pass all six Functor rows.
+Only the identity projection rejects the first, and only the composition
+projection rejects the second. No other well-typed object map exists, so the
+object projection stays a positive check. Missing equality and Category
+mappings are refused.
+
+Run `make prelude-functor-compatibility-test`. The receipt is
+`dev/validation/prelude-functor-compatibility/`. The original inventories and
+NEVER ledger remain unchanged. Source theorem bodies, recursors, whole-record
+equality, runtime parity and conversion to the erased core record remain open.

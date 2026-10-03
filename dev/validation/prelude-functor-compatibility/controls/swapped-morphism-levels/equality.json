@@ -1,0 +1,17 @@
+{
+  "name": "Eq",
+  "adapter": "Candidate_Target_Eq",
+  "scope": "type-signature-at-target-morphism-universe",
+  "specialization": "succ u3",
+  "dependencies": [],
+  "fixture": "contextual-equality.mech",
+  "fixture_sha256": "cd1a980a5f9bbcfea9c7300c37e088b87437b02e0436f49cee7c25b54f329935",
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "checker": {
+    "command": "check",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "mismatch: the term has type Type (u3 + 1) and the expected type is Type (u1 + 1)"
+  }
+}

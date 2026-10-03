@@ -1,0 +1,4 @@
+{
+  "code": "SIGNATURE_FAILED",
+  "detail": "Functor signature or dependency did not match"
+}

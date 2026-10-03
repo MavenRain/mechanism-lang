@@ -1,0 +1,48 @@
+{
+  "gate_passed": true,
+  "counts": {
+    "NAME_AND_TYPE": 8
+  },
+  "controls": {
+    "tests": 8,
+    "passed": true,
+    "failures": 0,
+    "errors": 0
+  },
+  "inputs": {
+    "prelude/compatibility/equality.mech": "568ba802b928750ce25a7eb012446c44099b8b2bbc31d6d03d876a655d537b1b",
+    "prelude/compatibility/category.mech": "aa5e9f53090e5c128d30f297802819b6111d19cf57ee6279c3f536b390ed594f",
+    "test/fixtures/prelude/compatibility-category.mech": "9fe4f91d371fd79855806965ce79fcbb1831bb51d8827c43c1473b5944ce84ce",
+    "dev/denominators.json": "3148d714a481696297e75ef416255618cbc2cd9b56ab84c34f5fb9464fa7cd51",
+    "dev/prelude-compatibility-pilot.py": "6245558512e84ea703c7d8d9c38615156c6d6046162ecd92332eca1545ba46b4",
+    "dev/prelude-category-compatibility.py": "00de34a6fc0ecc5468a3ce9b8282f33adbc01bff30666e90b2c93ad9258f1b7f",
+    "test/prelude_category_compatibility.py": "f003f0ac3d316bfbc4a63f78bc52266ccd9b7c819eebdd954236c2f800be379b"
+  },
+  "binaries": {
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mechanism-native": "cc89a8430870c4a6cdc69296902b2a9078983275aeae430aaa5103c20120c9ca",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/prelude.exe": "0e842520ba8b0826ec2f701b05e5f8fb1455043e8b53a2cd0e11fce1d6fa6d58",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/bend_protocol.js": "1482aabfdd04982045021dcb212abd324c2dd00ce2fe089b74cc2e309117be36"
+  },
+  "computations": [
+    {
+      "command": "check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "axioms",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "--audit",
+      "exit": 0,
+      "stdout": "PRELUDE-AXIOMS OK",
+      "stderr": ""
+    }
+  ],
+  "source_report_sha256": "b5f5630faaf1c3d5925400cc564bc8c37c816c9e6f8a486dc551a7a293fb9279"
+}

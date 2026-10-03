@@ -1,0 +1,24 @@
+{
+  "name": "CompCatTheory.Functor.map",
+  "target": "Candidate_map",
+  "scope": "type-signature",
+  "adapter": "Candidate_map",
+  "source_line": 28787,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Functor",
+    "CompCatTheory.Functor.obj"
+  ],
+  "fixture": "CompCatTheory-Functor-map.mech",
+  "fixture_sha256": "9d9ffa0f87f3b27c3d2fb185ebbdc0240259159d5fd401f06e12ed59b7656e33",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

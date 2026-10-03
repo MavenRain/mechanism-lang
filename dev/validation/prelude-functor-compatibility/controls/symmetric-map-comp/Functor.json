@@ -1,0 +1,21 @@
+{
+  "name": "CompCatTheory.Functor",
+  "target": "Candidate_Functor",
+  "scope": "type-signature",
+  "adapter": "Candidate_Functor",
+  "source_line": 28650,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category"
+  ],
+  "fixture": "CompCatTheory-Functor.mech",
+  "fixture_sha256": "0a9206ed94d6e22a8b97b669aac5bb8ffd289510fb32e338926b38c6a3684b53",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

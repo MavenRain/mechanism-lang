@@ -1,0 +1,27 @@
+{
+  "name": "CompCatTheory.Functor.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 28650,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Category.id",
+    "CompCatTheory.Functor"
+  ],
+  "fixture": "CompCatTheory-Functor-mk.mech",
+  "fixture_sha256": "4b0c3e2c500da785214bc53445cfe1477442166541e10092ce171ab993e7e572",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type Type (u0 + 1) and the expected type is Type (u2 + 1)"
+}

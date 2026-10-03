@@ -5126,3 +5126,58 @@ builds. The Makefile spacing, ROADMAP wrap, controls timeout and gate counts are
 corrected. The receipt was regenerated after these fixes. The gate prints
 `PRELUDE-CATEGORY-COMPATIBILITY signatures=8 support=1 computations=3 audits=2
 controls=8 OK`.
+
+## Stage C / U1: source-compatible Functor record (2026-10-02)
+
+Base: 252733d. User request: "Continue building mechanism-lang. Stage all
+changes." The increment adds `MechSignatureFunctor` over the source-compatible
+Category schema. Four independent universe parameters and relevant nested
+object arguments preserve the imported shape. The stored components are the
+object map, morphism map, identity law and composition law.
+
+The production gate checks six Functor signatures and five support signatures
+against the frozen 3202-declaration UAT graph. Dependency discharge is required
+before acceptance. The generic fixture proves all four accessor computations in
+separate component proofs, pins the stored morphism binder order, both law
+positions and the field count, and specializes at three distinct closed level
+tuples. Six bare-constant pins fix the outer binder quantities, which the
+signature check does not compare: category records relevant, object types
+erased. `mech axioms` is empty and the empty-environment prelude audit passes.
+All eight controls pass. Three run no kernel check: two re-read the report, and
+the dependency control asserts that no checker ran. The controls cover a
+consistent field reorder, a stored morphism map with swapped binders,
+consistent erasures of nested object arguments and of the category records, an
+erasure of the source category in each member alone, an object-level swap
+rejected by the constructor row, a cross-wired morphism level rejected by the
+contextual target-equality row, and dependency refusal. They also cover a map
+that matches its own signature but fails the map_id and map_comp rows, and two
+law adapters that pass all six Functor rows. Each of these three adapters is
+rejected by its own projection. No other well-typed object map exists, so the
+object projection has no negative control. Unswapped twins and fixtures without
+the rejecting components check. Input, checker and graph hashes remain
+unchanged through the gate.
+
+The first run passed its kernel and audit checks but failed the new harness's
+status comparison. That comparison mistakenly expected `KERNEL_TYPE_MATCH` after
+dependency discharge. It now requires `NAME_AND_TYPE`, as the Category gate
+does. Failed report and capture receipts are retained under `attempts/`. The
+complete corrected gate passes. The unchanged Category regression gate also
+passes all eight controls. The native checker and JavaScript audit build are
+reused; kernel and frontend sources are unchanged. The Makefile dry run confirms
+the new entry point. After review, the receipt was regenerated from the
+repository with the native checker and audit build.
+
+A second review added the per-member erasures, the stored morphism witness and
+the two law adapters. It also sized the control subprocess timeout to the 64
+checker calls that the controls make.
+
+The gate prints `PRELUDE-FUNCTOR-COMPATIBILITY signatures=6 support=5
+computations=3 audits=2 controls=8 OK`. Evidence and reproduction instructions
+are in `dev/validation/prelude-functor-compatibility/`. The full import graph
+is reproducible and omitted from Git. The mapping and NEVER ledgers remain
+unchanged. Source theorem bodies, recursors, whole-record equality, runtime
+parity and conversion to the erased core record remain open.
+
+NaturalTransformation is the next source-compatible record slice. This gate
+does not close M0, Stage C or U1. All repository changes are staged; no commit
+is created.

@@ -1,0 +1,80 @@
+-- Preserve the imported Functor's relevant arguments and stored field order.
+poly (u, v, w, z) group MechSignatureFunctor where
+specialize MechSignatureCategory (u, v) as Source
+specialize MechSignatureCategory (w, z) as Target
+
+def Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    Source_Category C -> Target_Category D ->
+    Sort (max (max (max (succ u) (succ w)) (succ v)) (succ z)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) =>
+    (objects : C -> D) *
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) *
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Target_id D d (objects x))) *
+    ((x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g)))
+
+def mk : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (objects : C -> D) ->
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) ->
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Target_id D d (objects x))) ->
+    (composition : (x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g))) -> Functor C D c d :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D)
+      (objects : C -> D)
+      (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+        Target_Hom D d (objects x) (objects y))
+      (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+        (morphisms x x (Source_id C c x)) (Target_id D d (objects x)))
+      (composition : (x : C) -> (y : C) -> (a : C) ->
+        (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+        Target_Eq (Target_Hom D d (objects x) (objects a))
+          (morphisms x a (Source_comp C c x y a f g))
+          (Target_comp D d (objects x) (objects y) (objects a)
+            (morphisms x y f) (morphisms y a g))) =>
+    (objects, (morphisms, (identities, composition)))
+
+def obj : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.1
+
+def map : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (x : C) -> (y : C) -> Source_Hom C c x y ->
+    Target_Hom D d (obj C D c d F x) (obj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.1
+
+def map_id : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (x : C) -> Target_Eq (Target_Hom D d (obj C D c d F x) (obj C D c d F x))
+      (map C D c d F x x (Source_id C c x)) (Target_id D d (obj C D c d F x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.2.1
+
+def map_comp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Functor C D c d) ->
+    (x : C) -> (y : C) -> (a : C) ->
+    (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+    Target_Eq (Target_Hom D d (obj C D c d F x) (obj C D c d F a))
+      (map C D c d F x a (Source_comp C c x y a f g))
+      (Target_comp D d (obj C D c d F x) (obj C D c d F y) (obj C D c d F a)
+        (map C D c d F x y f) (map C D c d F y a g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Target_Category D) (F : Functor C D c d) => F.2.2.2
+end

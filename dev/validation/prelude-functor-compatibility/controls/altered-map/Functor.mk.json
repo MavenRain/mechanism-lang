@@ -1,0 +1,26 @@
+{
+  "name": "CompCatTheory.Functor.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 28650,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Category.id",
+    "CompCatTheory.Functor"
+  ],
+  "fixture": "CompCatTheory-Functor-mk.mech",
+  "fixture_sha256": "1599b4cd44eb629da08a98eee67b9c9fd4b7be0c1060c466b7b2bd53814226f9",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}
