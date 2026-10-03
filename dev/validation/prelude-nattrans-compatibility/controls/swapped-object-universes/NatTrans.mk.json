@@ -1,0 +1,29 @@
+{
+  "name": "CompCatTheory.NatTrans.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 31362,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Functor",
+    "CompCatTheory.Functor.obj",
+    "CompCatTheory.Functor.map",
+    "CompCatTheory.NatTrans"
+  ],
+  "fixture": "CompCatTheory-NatTrans-mk.mech",
+  "fixture_sha256": "c684aedcb9e2bed97d9ce4d888440b04a625e7b0e203e2aeb325477e60b14ffc",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type Type (u0 + 1) and the expected type is Type (u2 + 1)"
+}

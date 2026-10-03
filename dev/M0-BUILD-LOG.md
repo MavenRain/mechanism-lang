@@ -5181,3 +5181,71 @@ parity and conversion to the erased core record remain open.
 NaturalTransformation is the next source-compatible record slice. This gate
 does not close M0, Stage C or U1. All repository changes are staged; no commit
 is created.
+
+## Stage C / U1: source-compatible NatTrans record (2026-10-02)
+
+Base: ba35171. User request: "Continue building mechanism-lang. Stage all
+changes." The increment adds `MechSignatureNatTrans` over the source-compatible
+Functor schema, with four independent universe parameters. It stores component
+morphisms first and the naturality square second. Object-type parameters are
+erased, while category and functor records and nested object arguments remain
+relevant.
+
+The production gate checks `NatTrans`, `mk`, `app` and `naturality` against the
+frozen 3202-declaration UAT graph. Eleven checked Category, Functor and equality
+support signatures discharge dependencies before acceptance. The generic
+fixture proves both accessor computations for arbitrary stored fields, pins the
+complete stored pair shape and all four members' outer quantities, and
+specializes at three closed universe tuples. A level pin fixes the source hom
+level, which the four signature rows cannot detect. The kernel axiom listing is
+empty, and the independent empty-environment prelude audit passes.
+
+All ten controls pass. They cover dependency refusal, consistent nested
+object erasure, source and target object universe swaps, and individual erased
+source-category and target-functor binders in all four members. These eight
+outer erasures pass their translated signatures but fail the corresponding
+bare-constant quantity pins. The unmapped-dependency controls assert that no
+checker runs. Every mutated prelude checks on its own, and every rejected
+computation has an accepted twin.
+
+An extra stored component passes all four signatures but fails the complete
+stored-shape witness. A consistently reversed square is rejected by the
+constructor, naturality signature and the fixture. An app accessor with an
+extra identity composition matches its own signature but changes the law's
+dependent signature and fails its projection. A double-symmetry naturality
+accessor matches all four signatures but fails its projection. A Functor
+specialization with the target hom level `z` in place of `v` checks on its own
+and matches all four signatures. The source hom level pin rejects it, and the
+fixture without that pin passes. Parser or scope errors cannot satisfy the
+controls' required kernel diagnostics.
+
+The initial run passed all signatures and audits and seven of eight controls,
+then failed the outer-quantity control's source-count assertion. Its original
+NatTrans type had an anonymous functor arrow where the control expected a
+second named G binder. Making both outer functor binders explicit corrected
+the mutation setup without changing the type. The fresh final run passes all
+ten controls, including the later stored-field and source hom level controls.
+The failed receipt and three original source snapshots are retained under
+`attempts/`; their hashes match the failed report's input hashes. The retained
+failure files show `<checkout>/` in place of the absolute checkout path.
+
+The native checker and JavaScript audit build are reused. Validation runs in a
+writable checkout of ba35171 with the prepared checkers from the main
+repository. Kernel and frontend sources are unchanged. The driver also writes
+the NatTrans prelude and the existing generic Category and Functor projection
+fixtures to one regression file. It checks that file, records its hash and
+exit status in the report, and requires exit 0 for `gate_passed`. The Makefile
+dry run confirms the new entry point. The frozen export, graph, input and
+checker hashes remain unchanged through the final gate, and the staged source
+bytes match the final receipt.
+
+The gate prints `PRELUDE-NATTRANS-COMPATIBILITY signatures=4 support=11
+computations=3 audits=2 regressions=1 controls=10 OK`. Evidence and
+reproduction instructions are in
+`dev/validation/prelude-nattrans-compatibility/`; the reproducible import graph
+is omitted from Git. The mapping and NEVER ledgers remain unchanged.
+Source-compatible recursors, whole-record equality, operation and theorem
+bodies, runtime parity and conversion to the erased core record remain open.
+LeftKanExtension is the next source-compatible record slice. This gate does
+not close M0, Stage C or U1. All repository changes are staged; no commit is
+created.

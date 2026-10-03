@@ -1,0 +1,29 @@
+{
+  "name": "CompCatTheory.NatTrans.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 31362,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Functor",
+    "CompCatTheory.Functor.obj",
+    "CompCatTheory.Functor.map",
+    "CompCatTheory.NatTrans"
+  ],
+  "fixture": "CompCatTheory-NatTrans-mk.mech",
+  "fixture_sha256": "881cbdf86713740c690b562f746063f5398b48310ab4389a50911f67bd9271cc",
+  "checker_exit": 1,
+  "status": "BLOCKED",
+  "code": "KERNEL_REJECTED",
+  "detail": "mismatch: the term has type (Ran SPi w b6 b0 (Out SPi w y b1 (APt w (Out SPi w _ b0 (APt w b6) (Elim SPi w objects (Ran SPi w _ b0 b1) b5 as self return (Ran SPi w _ b0 b1) with | (ALeg 0) x y => x))) (Out SPi w x b1 (APt w (Out SPi w _ b0 (APt w b6) (Elim SPi w objects (Ran SPi w _ b0 b1) b4 as self return (Ran SPi w _ b0 b1) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi w x b1 (Ran SPi w y b1 Type (u3 + 1))) b3 as self return (Ran SPi w x b1 (Ran SPi w y b1 Type (u3 + 1))) with | (ALeg 0) x y => x)))) and the expected type is (Ran SPi 0 x b0 (Out SPi w y b1 (APt w (Out SPi w _ b0 (APt w x) (Elim SPi w objects (Ran SPi w _ b0 b1) b5 as self return (Ran SPi w _ b0 b1) with | (ALeg 0) x y => x))) (Out SPi w x b1 (APt w (Out SPi w _ b0 (APt w x) (Elim SPi w objects (Ran SPi w _ b0 b1) b4 as self return (Ran SPi w _ b0 b1) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi w x b1 (Ran SPi w y b1 Type (u3 + 1))) b3 as self return (Ran SPi w x b1 (Ran SPi w y b1 Type (u3 + 1))) with | (ALeg 0) x y => x))))"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "CompCatTheory.NatTrans.naturality",
+  "target": "Candidate_naturality",
+  "scope": "type-signature",
+  "adapter": "Candidate_naturality",
+  "source_line": 31414,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Functor",
+    "CompCatTheory.Functor.obj",
+    "CompCatTheory.Functor.map",
+    "CompCatTheory.NatTrans",
+    "CompCatTheory.NatTrans.app"
+  ],
+  "fixture": "CompCatTheory-NatTrans-naturality.mech",
+  "fixture_sha256": "d96642b87846f553085a8b9c16db1ef277ee3f4c04b6f91d8be49bf9f8d24c0e",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

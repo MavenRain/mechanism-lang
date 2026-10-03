@@ -1,0 +1,6 @@
+{
+  "command": "check",
+  "exit": 1,
+  "stdout": "",
+  "stderr": "mismatch: the term has type (Ran SPi w x C (Out SPi w y D (APt w (Out SPi w _ C (APt w x) (Elim SPi w objects (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi w x D (APt w (Out SPi w _ C (APt w x) (Elim SPi w objects (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi w x D (Ran SPi w y D Type (u3 + 1))) d as self return (Ran SPi w x D (Ran SPi w y D Type (u3 + 1))) with | (ALeg 0) x y => x)))) and the expected type is (Ran SPi 0 x C (Out SPi w y D (APt w (Out SPi w _ C (APt w x) (Elim SPi w objects (Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi w x D (APt w (Out SPi w _ C (APt w x) (Elim SPi w objects (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi w x D (Ran SPi w y D Type (u3 + 1))) d as self return (Ran SPi w x D (Ran SPi w y D Type (u3 + 1))) with | (ALeg 0) x y => x))))"
+}

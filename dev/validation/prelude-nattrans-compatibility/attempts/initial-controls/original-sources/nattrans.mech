@@ -1,0 +1,81 @@
+-- Source-compatible natural transformations with relevant nested object arguments.
+poly (u, v, w, z) group MechSignatureNatTrans where
+specialize MechSignatureFunctor (u, v, w, z) as Base
+
+def NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    Base_Functor C D c d -> Base_Functor C D c d ->
+    Sort (max (succ u) (succ z)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d) =>
+    (components : (x : C) -> Base_Target_Hom D d
+      (Base_obj C D c d F x) (Base_obj C D c d G x)) *
+    ((x : C) -> (y : C) -> (f : Base_Source_Hom C c x y) ->
+      Base_Target_Eq (Base_Target_Hom D d
+        (Base_obj C D c d F x) (Base_obj C D c d G y))
+      (Base_Target_comp D d
+        (Base_obj C D c d F x) (Base_obj C D c d F y) (Base_obj C D c d G y)
+        (Base_map C D c d F x y f) (components y))
+      (Base_Target_comp D d
+        (Base_obj C D c d F x) (Base_obj C D c d G x) (Base_obj C D c d G y)
+        (components x) (Base_map C D c d G x y f)))
+
+def mk : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    (components : (x : C) -> Base_Target_Hom D d
+      (Base_obj C D c d F x) (Base_obj C D c d G x)) ->
+    ((x : C) -> (y : C) -> (f : Base_Source_Hom C c x y) ->
+      Base_Target_Eq (Base_Target_Hom D d
+        (Base_obj C D c d F x) (Base_obj C D c d G y))
+      (Base_Target_comp D d
+        (Base_obj C D c d F x) (Base_obj C D c d F y) (Base_obj C D c d G y)
+        (Base_map C D c d F x y f) (components y))
+      (Base_Target_comp D d
+        (Base_obj C D c d F x) (Base_obj C D c d G x) (Base_obj C D c d G y)
+        (components x) (Base_map C D c d G x y f))) -> NatTrans C D c d F G :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d)
+      (components : (x : C) -> Base_Target_Hom D d
+        (Base_obj C D c d F x) (Base_obj C D c d G x))
+      (naturality : (x : C) -> (y : C) -> (f : Base_Source_Hom C c x y) ->
+        Base_Target_Eq (Base_Target_Hom D d
+          (Base_obj C D c d F x) (Base_obj C D c d G y))
+        (Base_Target_comp D d
+          (Base_obj C D c d F x) (Base_obj C D c d F y) (Base_obj C D c d G y)
+          (Base_map C D c d F x y f) (components y))
+        (Base_Target_comp D d
+          (Base_obj C D c d F x) (Base_obj C D c d G x) (Base_obj C D c d G y)
+          (components x) (Base_map C D c d G x y f))) =>
+    (components, naturality)
+
+def app : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    NatTrans C D c d F G -> (x : C) -> Base_Target_Hom D d
+      (Base_obj C D c d F x) (Base_obj C D c d G x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.1
+
+def naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Base_Source_Category C) -> (d : Base_Target_Category D) ->
+    (F : Base_Functor C D c d) -> (G : Base_Functor C D c d) ->
+    (alpha : NatTrans C D c d F G) ->
+    (x : C) -> (y : C) -> (f : Base_Source_Hom C c x y) ->
+    Base_Target_Eq (Base_Target_Hom D d
+      (Base_obj C D c d F x) (Base_obj C D c d G y))
+    (Base_Target_comp D d
+      (Base_obj C D c d F x) (Base_obj C D c d F y) (Base_obj C D c d G y)
+      (Base_map C D c d F x y f) (app C D c d F G alpha y))
+    (Base_Target_comp D d
+      (Base_obj C D c d F x) (Base_obj C D c d G x) (Base_obj C D c d G y)
+      (app C D c d F G alpha x) (Base_map C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Base_Source_Category C) (d : Base_Target_Category D)
+      (F : Base_Functor C D c d) (G : Base_Functor C D c d)
+      (alpha : NatTrans C D c d F G) => alpha.2
+end

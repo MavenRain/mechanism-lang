@@ -51,7 +51,27 @@ SNu, macro, syntax, elab and Array literals NEVER through M3.
 
 ## Position on 2026-10-02
 
-The current increment on 252733d adds a source-compatible Functor record. The
+The current increment on ba35171 adds a source-compatible NatTrans record.
+Its record, constructor, component accessor and naturality accessor match four
+imported signatures at independent symbolic universe levels. Eleven support
+signatures discharge the Category, Functor and equality dependencies. Generic
+proofs check both accessor computations and the complete stored pair shape.
+Four bare-constant pins fix outer binder quantities. A fifth pin fixes the
+source hom level, which the four signature rows cannot detect. Three closed
+specializations and an empty-environment axiom audit check the same fixture.
+The gate also rechecks the Category and Functor projection fixtures with the
+new prelude. Ten controls cover dependency refusal, relevant outer and nested
+binders, object universe swaps, the source hom level, an extra stored field
+and a reversed square. They also cover an app adapter that matches its own
+signature but changes the law's signature and projection, and a naturality
+adapter whose matching types conceal changed computation. The mapping and
+NEVER inventories remain unchanged. Source-compatible recursors, whole-record
+equality, operation and theorem bodies, runtime parity and conversion to the
+erased core record remain open. See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
+`dev/validation/prelude-nattrans-compatibility/`. LeftKanExtension is the next
+source-compatible record slice.
+
+The preceding increment on 252733d adds a source-compatible Functor record. The
 record, constructor, object and morphism maps, and both preservation laws match
 six imported signatures at four independent symbolic universe levels. Five
 support signatures discharge the Category and equality dependencies. Generic
@@ -68,8 +88,7 @@ Functor rows, pins the morphism levels. The mapping and NEVER inventories
 remain unchanged. Functor recursors, whole-record equality, source theorem
 bodies, runtime parity and conversion to the erased core record remain open.
 See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
-`dev/validation/prelude-functor-compatibility/`. NaturalTransformation is the
-next source-compatible record slice.
+`dev/validation/prelude-functor-compatibility/`.
 
 The preceding increment on d6ac149 adds an explicit source-compatible Category
 record. Eight translated signatures, including the constructor and all six field

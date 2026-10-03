@@ -1,0 +1,26 @@
+{
+  "name": "CompCatTheory.NatTrans.mk",
+  "target": "Candidate_mk",
+  "scope": "type-signature",
+  "adapter": "Candidate_mk",
+  "source_line": 31362,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "Eq",
+    "CompCatTheory.Category",
+    "CompCatTheory.Category.Hom",
+    "CompCatTheory.Category.comp",
+    "CompCatTheory.Functor",
+    "CompCatTheory.Functor.obj",
+    "CompCatTheory.Functor.map",
+    "CompCatTheory.NatTrans"
+  ],
+  "status": "BLOCKED",
+  "code": "UNMAPPED_DEPENDENCY",
+  "detail": "Eq"
+}

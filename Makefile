@@ -44,6 +44,12 @@ prelude-functor-compatibility-test:
 	$(PYTHON) dev/bend2-build.py --target production --backend native
 	$(PYTHON) -P dev/prelude-functor-compatibility.py --out "$$(mktemp -d)/evidence"
 
+.PHONY: prelude-nattrans-compatibility-test
+prelude-nattrans-compatibility-test:
+	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
+	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(PYTHON) -P dev/prelude-nattrans-compatibility.py --out "$$(mktemp -d)/evidence"
+
 .PHONY: reference-check reference-test require-ocaml-reference
 
 reference-check: bend2-reference-check

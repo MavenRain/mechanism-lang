@@ -1,0 +1,414 @@
+{
+  "version": 1,
+  "gate_passed": true,
+  "scope": "four NatTrans signatures, eleven support signatures, projection computations and Category and Functor projection regressions",
+  "export_sha256": "f4439dce6a0b488e9bc328592e53c47867c4d19fb123b31358aeb35ed5d14354",
+  "import_graph_sha256": "7f669031bf5b25f6edce35ff5da033cb06d12cad19e7897b1feebb64a2d08b2f",
+  "inputs": {
+    "prelude/compatibility/equality.mech": "568ba802b928750ce25a7eb012446c44099b8b2bbc31d6d03d876a655d537b1b",
+    "prelude/compatibility/category.mech": "aa5e9f53090e5c128d30f297802819b6111d19cf57ee6279c3f536b390ed594f",
+    "prelude/compatibility/functor.mech": "5f9f66f6c01602f6d27c3eba420df28c930b73f9970677f72d36d8a82c080e3f",
+    "prelude/compatibility/nattrans.mech": "565e0421250aaee373c0a2226a4062d3b20736d376ec3ecc9d2e121d898e56bf",
+    "test/fixtures/prelude/compatibility-nattrans.mech": "3466cae615c9c7593b5c0e110bea047fa1577fa37e3c39a8e71c47ef6161824d",
+    "test/fixtures/prelude/compatibility-category.mech": "9fe4f91d371fd79855806965ce79fcbb1831bb51d8827c43c1473b5944ce84ce",
+    "test/fixtures/prelude/compatibility-functor.mech": "f081518596aac8308dbc30831420313e51775a8969d07fa448d753b57da84fbf",
+    "dev/denominators.json": "3148d714a481696297e75ef416255618cbc2cd9b56ab84c34f5fb9464fa7cd51",
+    "dev/prelude-compatibility-pilot.py": "6245558512e84ea703c7d8d9c38615156c6d6046162ecd92332eca1545ba46b4",
+    "dev/prelude-functor-compatibility.py": "293cc3af727b1c042e83d22f8dd15c7f2b9fb192aced365daf2bee215561bf29",
+    "dev/prelude-nattrans-compatibility.py": "cd34380faac6aebf22315d03abcbb118f8f0e06a879a2b46dd19a3235e7d38d5",
+    "test/prelude_nattrans_compatibility.py": "166e77e60023b8759600a8657c6e6250b51776f55cf0c4ed110505c2a27c3c88"
+  },
+  "binaries": {
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mech.exe": "f5a628281fa5218d6dc84096776e5edd5282e7b5872b45d402225837997eccf4",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/bin/mechanism-native": "cc89a8430870c4a6cdc69296902b2a9078983275aeae430aaa5103c20120c9ca",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/prelude.exe": "0e842520ba8b0826ec2f701b05e5f8fb1455043e8b53a2cd0e11fce1d6fa6d58",
+    "/Users/oobi/Documents/mechanism-lang/_bend2/test/bend_protocol.js": "1482aabfdd04982045021dcb212abd324c2dd00ce2fe089b74cc2e309117be36"
+  },
+  "signatures": [
+    {
+      "name": "CompCatTheory.NatTrans",
+      "target": "Candidate_NatTrans",
+      "scope": "type-signature",
+      "adapter": "Candidate_NatTrans",
+      "source_line": 31362,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Functor"
+      ],
+      "fixture": "CompCatTheory-NatTrans.mech",
+      "fixture_sha256": "739db7a73eb985e55ceb594315fa3e52ca37d4e9fbaa0e55e3b70614cdd57958",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.NatTrans.mk",
+      "target": "Candidate_mk",
+      "scope": "type-signature",
+      "adapter": "Candidate_mk",
+      "source_line": 31362,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj",
+        "CompCatTheory.Functor.map",
+        "CompCatTheory.NatTrans"
+      ],
+      "fixture": "CompCatTheory-NatTrans-mk.mech",
+      "fixture_sha256": "f242ba419f2552ce857cf4c102b4e7365d01b170b08c135e3ee487cbc740b88c",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.NatTrans.app",
+      "target": "Candidate_app",
+      "scope": "type-signature",
+      "adapter": "Candidate_app",
+      "source_line": 31379,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj",
+        "CompCatTheory.NatTrans"
+      ],
+      "fixture": "CompCatTheory-NatTrans-app.mech",
+      "fixture_sha256": "d0dfaac8e5a3df2d006e1bcdf8b8f1119d3ad1f13de00ea25ddeffe8329fd409",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.NatTrans.naturality",
+      "target": "Candidate_naturality",
+      "scope": "type-signature",
+      "adapter": "Candidate_naturality",
+      "source_line": 31414,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj",
+        "CompCatTheory.Functor.map",
+        "CompCatTheory.NatTrans",
+        "CompCatTheory.NatTrans.app"
+      ],
+      "fixture": "CompCatTheory-NatTrans-naturality.mech",
+      "fixture_sha256": "8589bab8a5ca4fde853abc27029bd581fe41794a4abb71db6393bb81eb1fa3cd",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    }
+  ],
+  "support": [
+    {
+      "name": "Eq",
+      "adapter": "Candidate_Target_Eq",
+      "scope": "type-signature-at-target-morphism-universe",
+      "specialization": "succ u3",
+      "dependencies": [],
+      "fixture": "contextual-equality.mech",
+      "fixture_sha256": "096909627adba0a1f02c495f7f6660be807c95f93fefc4dc5dfd3bd15387479b",
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED",
+      "checker": {
+        "command": "check",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "CompCatTheory.Category",
+      "target": "Dependency_Category",
+      "scope": "type-signature",
+      "adapter": "Dependency_Category",
+      "source_line": 23244,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [],
+      "fixture": "CompCatTheory-Category.mech",
+      "fixture_sha256": "673c5970a0375c662e84790fe89a63ea9cf1109141d7d2cc94f396926e22c950",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.Hom",
+      "target": "Dependency_Hom",
+      "scope": "type-signature",
+      "adapter": "Dependency_Hom",
+      "source_line": 23251,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category"
+      ],
+      "fixture": "CompCatTheory-Category-Hom.mech",
+      "fixture_sha256": "718fc64063aa3ca6f605baf04c43da6e208f918da3dc75fbbba2bead8a4d1f3c",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.id",
+      "target": "Dependency_id",
+      "scope": "type-signature",
+      "adapter": "Dependency_id",
+      "source_line": 23384,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom"
+      ],
+      "fixture": "CompCatTheory-Category-id.mech",
+      "fixture_sha256": "7497a0f919d0946e1a9dccaaebe02cae80544f83da22c9bb2a9121eb9e9feeaf",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Category.comp",
+      "target": "Dependency_comp",
+      "scope": "type-signature",
+      "adapter": "Dependency_comp",
+      "source_line": 23276,
+      "universes": [
+        "u",
+        "v"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom"
+      ],
+      "fixture": "CompCatTheory-Category-comp.mech",
+      "fixture_sha256": "961a68b54d8cdebd4243b90dc577e46b9b83bfaa20394f7f3e3d03af9135a560",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor",
+      "target": "Candidate_Functor",
+      "scope": "type-signature",
+      "adapter": "Candidate_Functor",
+      "source_line": 28650,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category"
+      ],
+      "fixture": "CompCatTheory-Functor.mech",
+      "fixture_sha256": "27445504fec97bc0a81da9a044314a7475f7d48e21984bf14c55d3d8416438aa",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor.mk",
+      "target": "Candidate_mk",
+      "scope": "type-signature",
+      "adapter": "Candidate_mk",
+      "source_line": 28650,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Category.id",
+        "CompCatTheory.Functor"
+      ],
+      "fixture": "CompCatTheory-Functor-mk.mech",
+      "fixture_sha256": "535b3195b8918adacbb4402a5d2f60e716070a7594737de0081955a40adecbbc",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor.obj",
+      "target": "Candidate_obj",
+      "scope": "type-signature",
+      "adapter": "Candidate_obj",
+      "source_line": 28761,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Functor"
+      ],
+      "fixture": "CompCatTheory-Functor-obj.mech",
+      "fixture_sha256": "93d4ca8d838d25b8df340551e0544aa7e2db6b5eac6a760e8b1ba5ae3f5441d3",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor.map",
+      "target": "Candidate_map",
+      "scope": "type-signature",
+      "adapter": "Candidate_map",
+      "source_line": 28787,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj"
+      ],
+      "fixture": "CompCatTheory-Functor-map.mech",
+      "fixture_sha256": "7712e75f704305d63c770fd5b36898fc81608590019ded26e649d8e50e57bbb9",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor.map_id",
+      "target": "Candidate_map_id",
+      "scope": "type-signature",
+      "adapter": "Candidate_map_id",
+      "source_line": 28829,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.id",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj",
+        "CompCatTheory.Functor.map"
+      ],
+      "fixture": "CompCatTheory-Functor-map_id.mech",
+      "fixture_sha256": "13852d4c1be8bb740178285a4573eb57572e321af92a997741e63e60d375ea2b",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    },
+    {
+      "name": "CompCatTheory.Functor.map_comp",
+      "target": "Candidate_map_comp",
+      "scope": "type-signature",
+      "adapter": "Candidate_map_comp",
+      "source_line": 29066,
+      "universes": [
+        "\u00ab\"u\u2081\"\u00bb",
+        "\u00ab\"v\u2081\"\u00bb",
+        "\u00ab\"u\u2082\"\u00bb",
+        "\u00ab\"v\u2082\"\u00bb"
+      ],
+      "dependencies": [
+        "Eq",
+        "CompCatTheory.Category",
+        "CompCatTheory.Category.Hom",
+        "CompCatTheory.Category.comp",
+        "CompCatTheory.Functor",
+        "CompCatTheory.Functor.obj",
+        "CompCatTheory.Functor.map"
+      ],
+      "fixture": "CompCatTheory-Functor-map_comp.mech",
+      "fixture_sha256": "072cf39fde6d0e15cbd3599c8a382a39f6e3134135d5a80ed8c24bc03a28b62e",
+      "checker_exit": 0,
+      "status": "NAME_AND_TYPE",
+      "code": "CHECKED"
+    }
+  ],
+  "counts": {
+    "NAME_AND_TYPE": 4
+  },
+  "computation_fixture": "projection-computations.mech",
+  "computation_sha256": "c9bdf3197a3b2023d99586674f18dba683344b055c63874b07e6fc0c10140107",
+  "computations": [
+    {
+      "command": "check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "axioms",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "--audit",
+      "exit": 0,
+      "stdout": "PRELUDE-AXIOMS OK",
+      "stderr": ""
+    }
+  ],
+  "regression_fixture": "dependency-projection-regressions.mech",
+  "regression_sha256": "2313c16fbcdf8fd5330a8b8039e3d6cabd24085cb0a6892b20ce6edbcccc91cb",
+  "regression": {
+    "command": "check",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "controls": {
+    "tests": 10,
+    "failures": 0,
+    "errors": 0,
+    "passed": true
+  }
+}

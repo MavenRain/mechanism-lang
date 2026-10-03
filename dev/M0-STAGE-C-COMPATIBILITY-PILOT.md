@@ -187,3 +187,54 @@ Run `make prelude-functor-compatibility-test`. The receipt is
 `dev/validation/prelude-functor-compatibility/`. The original inventories and
 NEVER ledger remain unchanged. Source theorem bodies, recursors, whole-record
 equality, runtime parity and conversion to the erased core record remain open.
+
+## Source-compatible NatTrans record (2026-10-02)
+
+`MechSignatureNatTrans (u, v, w, z)` specializes the source-compatible Functor
+schema. `NatTrans`, `mk`, `app` and `naturality` match four imported signatures
+at independent symbolic universe levels. Eleven support signatures discharge
+the Category, Functor and equality dependencies. The mapping and NEVER ledgers
+remain unchanged.
+
+The representation stores the component function first and its naturality
+proof second. Each component maps `F.obj x` to `G.obj x`. For `f : Hom x y`, the
+square compares `comp (F.map f) (components y)` with
+`comp (components x) (G.map f)`. Outer object types are erased; category
+records, functor records and nested object arguments remain relevant. The
+record's result universe is `max (succ u) (succ z)`.
+
+The fixture proves both projections for arbitrary components and naturality
+proofs. A conversion witness pins the complete stored pair shape, including
+field order and count. Four bare-constant witnesses pin the outer quantities,
+which the imported signature checker does not compare. A level witness pins
+the source hom level `v`, which the four signature rows cannot detect. The
+fixture checks at symbolic levels and three closed tuples, and runs through
+`mech axioms` and the empty-environment `prelude.exe --audit`.
+
+The controls require all four signatures and eleven support rows, reject
+unproven and unmapped dependencies before acceptance, and reject erased outer
+source-category and target-functor binders in each member. They also cover
+consistent nested object erasure, exchanged source and target object levels
+and a consistently reversed naturality square. An extra stored component
+passes all four signatures but fails the stored-shape witness. An app adapter
+with an extra identity composition matches its own signature but changes
+projection computation and the law's dependent signature. A double-symmetry
+naturality adapter matches every signature but fails its projection proof. A
+Functor specialization with `z` in place of `v` also matches every signature,
+but the source hom level witness rejects it. Every altered prelude checks on
+its own, and every rejected computation has a corresponding accepted twin.
+
+Run `make prelude-nattrans-compatibility-test`, or invoke
+`dev/prelude-nattrans-compatibility.py` with a frozen `--export`, prepared
+`--mech` and `--audit` executables, and a fresh `--out` directory. The driver
+checks the export, graph, source and checker hashes before setting
+`gate_passed`. It also checks the NatTrans prelude with the existing Category
+and Functor projection fixtures. The report records the hash and exit status
+of this check, and the gate line counts it as `regressions=1`. See
+`dev/validation/prelude-nattrans-compatibility/` for the receipt and
+reproduction instructions.
+
+This slice does not establish source-compatible recursors, whole-record
+equality, operation or theorem bodies, runtime parity or conversion to the
+erased core record. It does not close M0, Stage C or U1. LeftKanExtension is the
+next source-compatible record slice.

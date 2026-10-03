@@ -1,0 +1,22 @@
+{
+  "name": "CompCatTheory.NatTrans",
+  "target": "Candidate_NatTrans",
+  "scope": "type-signature",
+  "adapter": "Candidate_NatTrans",
+  "source_line": 31362,
+  "universes": [
+    "\u00ab\"u\u2081\"\u00bb",
+    "\u00ab\"v\u2081\"\u00bb",
+    "\u00ab\"u\u2082\"\u00bb",
+    "\u00ab\"v\u2082\"\u00bb"
+  ],
+  "dependencies": [
+    "CompCatTheory.Category",
+    "CompCatTheory.Functor"
+  ],
+  "fixture": "CompCatTheory-NatTrans.mech",
+  "fixture_sha256": "c24b7e9b48dce6e493cc6e81ec810c9399fb78beaa43ca03a2ce45a1d4a3c118",
+  "checker_exit": 0,
+  "status": "KERNEL_TYPE_MATCH",
+  "code": "CHECKED"
+}

@@ -764,3 +764,34 @@ object projection has no mutant. Evidence is in
 `dev/validation/prelude-functor-compatibility/`. This adapter does not yet
 establish source theorem bodies, recursors, runtime parity, whole-record
 equality or conversion to the erased core Functor.
+
+## Source-compatible NatTrans adapter
+
+`compatibility/nattrans.mech` defines `MechSignatureNatTrans (u, v, w, z)`
+over `MechSignatureFunctor`. Include the equality, Category and Functor sources
+before this file. The stored components are a component morphism for each
+source object and the naturality square. The square composes the source
+functor's map with the target component on its left side, and the source
+component with the target functor's map on its right side.
+
+Outer object-type parameters are erased. Category and functor records and
+nested object arguments remain relevant. Source and target object and morphism
+universes stay independent. The record lives in `Sort (max (succ u) (succ z))`,
+as the imported NatTrans signature requires.
+
+Run `make prelude-nattrans-compatibility-test` to check the record, constructor,
+`app` and `naturality` against four imported signatures, with eleven Category,
+Functor and equality support signatures. The generic fixture checks both
+projection computations and the stored pair shape, and pins all four members'
+outer quantities with bare constants. A level pin fixes the source hom level,
+which the four signature checks cannot detect. Three closed specializations,
+`mech axioms` and the empty-environment prelude audit check the same fixture.
+
+The ten controls check dependencies, binder erasures, object universes, the
+source hom level, stored field count, square orientation and accessor
+computation. Each altered adapter checks on its own, and each rejected
+computation has an accepted twin. The gate also rechecks the Category and
+Functor projection fixtures with this adapter. Evidence is in
+`dev/validation/prelude-nattrans-compatibility/`. Source-compatible recursors,
+whole-record equality, operation and theorem bodies, runtime parity and
+conversion to the erased core record remain open.

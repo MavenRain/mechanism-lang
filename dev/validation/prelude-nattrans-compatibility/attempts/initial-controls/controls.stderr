@@ -1,0 +1,22 @@
+test_all_signatures_and_support_match (__main__.NatTransControls.test_all_signatures_and_support_match) ... ok
+test_nested_object_erasure_is_refused (__main__.NatTransControls.test_nested_object_erasure_is_refused) ... ok
+test_object_universe_swap_is_refused (__main__.NatTransControls.test_object_universe_swap_is_refused) ... ok
+test_outer_categories_and_functors_remain_relevant (__main__.NatTransControls.test_outer_categories_and_functors_remain_relevant) ... FAIL
+test_reversed_naturality_square_is_refused (__main__.NatTransControls.test_reversed_naturality_square_is_refused) ... ok
+test_same_type_app_must_preserve_computation (__main__.NatTransControls.test_same_type_app_must_preserve_computation) ... ok
+test_same_type_naturality_must_preserve_computation (__main__.NatTransControls.test_same_type_naturality_must_preserve_computation) ... ok
+test_unproven_dependencies_are_refused (__main__.NatTransControls.test_unproven_dependencies_are_refused) ... ok
+
+======================================================================
+FAIL: test_outer_categories_and_functors_remain_relevant (__main__.NatTransControls.test_outer_categories_and_functors_remain_relevant)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<checkout>/test/prelude_nattrans_compatibility.py", line 130, in test_outer_categories_and_functors_remain_relevant
+    self.assertEqual(chunk.count("(" + binder + ")"), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 8 tests in 231.552s
+
+FAILED (failures=1)
