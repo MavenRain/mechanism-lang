@@ -544,6 +544,8 @@ def pp(j: Job) -> String:
       pp(JIfFlat{c, b, x})
     case JFl{A.ELet{p, i}}:
       "let " ++ pp(JPat{p}) ++ " = " ++ pp(JFl{i})
+    case JFl{A.EMatch{s, Nil{}}}:
+      "match " ++ pp(JFl{s}) ++ " {}"
     case JFl{A.EMatch{s, arms}}:
       "match\n"
     case JFl{A.EStruct{segs, fs, base}}:
@@ -612,6 +614,8 @@ def pp(j: Job) -> String:
       pp(JBlock{ss, ind})
     case JBrk{A.EIf{c, b, x}, ind, avail}:
       pp(JIf{c, b, x, ind})
+    case JBrk{A.EMatch{s, Nil{}}, ind, avail}:
+      "match " ++ pp(JFl{s}) ++ " {}"
     case JBrk{A.EMatch{s, arms}, +ind, avail}:
       "match " ++ pp(JFl{s}) ++ " {\n" ++ pp(JArms{arms, ind4(ind)}) ++ sp(ind) ++ "}"
     case JBrk{A.EClosure{mv, ps, r, b}, ind, avail}:
