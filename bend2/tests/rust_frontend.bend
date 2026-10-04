@@ -35,6 +35,21 @@ def parse_report(r: Result<&2, &2, String, A.SrcFile>) -> String:
     case Fail{msg}:
       "PARSE-FAIL " ++ msg ++ "\n"
 
+# One `<line>:<col> <kind> <name>` line for each item of the file.
+def pos_lines(ns: List<&2, A.Node>) -> String:
+  match ns:
+    case Nil{}:
+      ""
+    case Con{+n, rest}:
+      A.show_pos(A.item_pos(n)) ++ " " ++ A.item_line(n) ++ "\n" ++ pos_lines(rest)
+
+def pos_report(r: Result<&2, &2, String, A.SrcFile>) -> String:
+  match r:
+    case Done{A.SrcFile{inner, items}}:
+      pos_lines(items)
+    case Fail{msg}:
+      "PARSE-FAIL " ++ msg ++ "\n"
+
 def print_report(r: Result<&2, &2, String, A.SrcFile>) -> String:
   match r:
     case Done{f}:
@@ -72,12 +87,14 @@ type Md is Data:
   MParse{}
   MPrint{}
   MCheck{}
+  MPos{}
   MNone{}
 
 def mode_of(+mode: String) -> Md:
   Bool.pick(Md, String.eq(mode, "lex"), MLex{},
     Bool.pick(Md, String.eq(mode, "parse"), MParse{},
-      Bool.pick(Md, String.eq(mode, "print"), MPrint{}, Bool.pick(Md, String.eq(mode, "check"), MCheck{}, MNone{}))))
+      Bool.pick(Md, String.eq(mode, "print"), MPrint{},
+        Bool.pick(Md, String.eq(mode, "check"), MCheck{}, Bool.pick(Md, String.eq(mode, "pos"), MPos{}, MNone{})))))
 
 def run_mode(m: Md, src: String) -> String:
   match m:
@@ -89,6 +106,8 @@ def run_mode(m: Md, src: String) -> String:
       print_report(Parser.file(src))
     case MCheck{}:
       check_report(Lexer.lex(src))
+    case MPos{}:
+      pos_report(Parser.file(src))
     case MNone{}:
       "unknown mode\n"
 
@@ -100,7 +119,7 @@ def run_args(args: List<String>) -> String:
     case Con{mode, Con{src, rest}}:
       dispatch(mode, src)
     case other:
-      "usage: rust_frontend.bend <lex|parse|print|check> <source text>\n"
+      "usage: rust_frontend.bend <lex|parse|print|check|pos> <source text>\n"
 
 def main() -> IO(Unit):
   do IO<Unit>:

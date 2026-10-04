@@ -172,13 +172,13 @@ def lines(xs: List<&2, String>, +pre: String) -> String:
 # What a `Meta` puts ahead of its construct: a blank line, docs, attributes.
 def meta(m: A.Meta, +ind: Nat) -> String:
   match m:
-    case A.Meta{gap, docs, ats}:
+    case A.Meta{gap, docs, ats, pos}:
       Bool.pick(String, gap, "\n", "") ++ lines(docs, sp(ind) ++ "///") ++ attrs(ats, sp(ind))
 
 # A field with docs or attributes forces its enclosing body vertical.
 def meta_mark(m: A.Meta) -> String:
   match m:
-    case A.Meta{gap, docs, ats}:
+    case A.Meta{gap, docs, ats, pos}:
       Bool.pick(String, none_s(docs) && none_a(ats), "", "\n")
 
 def body_len(b: Maybe<&2, List<&2, A.Stmt<A.Node>>>) -> Nat:

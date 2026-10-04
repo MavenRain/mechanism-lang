@@ -8,11 +8,12 @@ import ./print.bend as Pr
 # has no mutual recursion, so each recursive walker takes a list, and a
 # single value goes through it as a list of one element.
 
+# An emitted construct has no source text, so each `Meta` has the position 0:0.
 def m0() -> A.Meta:
-  A.Meta{False{}, [], []}
+  A.Meta{False{}, [], [], A.no_pos()}
 
 def gap(ats: List<&2, A.Attr>) -> A.Meta:
-  A.Meta{True{}, [], ats}
+  A.Meta{True{}, [], ats, A.no_pos()}
 
 def path1(a: String) -> List<&2, A.Seg<A.Ty>>:
   [A.Seg{a, []}]
@@ -190,7 +191,7 @@ def items(xs: List<&2, R.Item>, use_gap: Bool) -> List<&2, A.Node>:
     case Nil{}:
       []
     case Con{R.IUse{m}, rest}:
-      A.IUse{A.Meta{use_gap, [], []}, A.Priv{}, A.UPath{"crate", A.UPath{m, A.UGlob{}}}} <> items(rest, False{})
+      A.IUse{A.Meta{use_gap, [], [], A.no_pos()}, A.Priv{}, A.UPath{"crate", A.UPath{m, A.UGlob{}}}} <> items(rest, False{})
     case Con{R.IEnum{name, gs, copy, vs}, rest}:
       A.IEnum{gap(derive(copy)), A.Pub{}, name, bounds(gs, []), variants(vs)} <> items(rest, True{})
     case Con{R.IUnit{+name, ctor}, rest}:

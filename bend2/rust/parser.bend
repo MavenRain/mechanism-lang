@@ -159,6 +159,14 @@ def head_gap(ts: List<&2, PT>) -> Bool:
     case Nil{}:
       False{}
 
+# The position of the next token; it goes into the `Meta` of a construct.
+def head_pos(ts: List<&2, PT>) -> A.Pos:
+  match ts:
+    case Con{PT{k, Info{text, Tk.Loc{line, col}, gap}}, tail}:
+      A.Pos{line, col}
+    case Nil{}:
+      A.no_pos()
+
 # Literal-like kinds never satisfy `expect`, even when their text matches.
 def is_lit(k: K) -> Bool:
   match k:
@@ -1076,7 +1084,7 @@ def parse(+mode: Mode, +tokens: List<&2, PT>) -> Result<&2, &2, String, Value>:
         +a : Parsed<A.Attr> <- read_attr(parse(MAttr{}, tail))
         parse(MMeta{after, gap, docs, pv(A.Attr, a) <> attrs}, pr(A.Attr, a))
     case MMeta{after, gap, docs, attrs} tokens:
-      parse(after_meta(after, A.Meta{gap, List.reverse(&2, String, docs), List.reverse(&2, A.Attr, attrs)}), tokens)
+      parse(after_meta(after, A.Meta{gap, List.reverse(&2, String, docs), List.reverse(&2, A.Attr, attrs), head_pos(tokens)}), tokens)
     case MAttr{} Con{PT{Name{}, Info{name, l, g}}, Con{PT{RBrack{}, i}, tail}}:
       Done{VAttr{A.Attr{name, None{}}, tail}}
     case MAttr{} Con{PT{Name{}, Info{name, l, g}}, Con{PT{LParen{}, i}, tail}}:
