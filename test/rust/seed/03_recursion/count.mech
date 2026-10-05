@@ -1,0 +1,11 @@
+mu Count : Type 0 with
+| countZero : Count
+| countNext : (_ : Count) -> Count
+
+def rec countFold : (0 P : Type 0) -> (base : P) -> (step : (_ : Count) -> (_ : P) -> P) -> (n : Count) -> P :=
+  fun (0 P : Type 0) (base : P) (step : (_ : Count) -> (_ : P) -> P) (n : Count) => case n as which in Count return P with
+  | countZero => base
+  | countNext before => step before (countFold P base step before)
+
+def countDouble : (n : Count) -> Count :=
+  fun (n : Count) => countFold Count (countZero : Count) (fun (seen : Count) (total : Count) => ((countNext ((countNext total) : Count)) : Count)) n

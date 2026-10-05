@@ -1,0 +1,11 @@
+mu Choice (0 A : Type 0) (0 B : Type 0) : Type 0 with
+| choiceLeft : (_ : A) -> Choice A B
+| choiceRight : (_ : B) -> Choice A B
+
+def choiceFold : (0 A : Type 0) -> (0 B : Type 0) -> (0 C : Type 0) -> (onLeft : (_ : A) -> C) -> (onRight : (_ : B) -> C) -> (c : Choice A B) -> C :=
+  fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0) (onLeft : (_ : A) -> C) (onRight : (_ : B) -> C) (c : Choice A B) => case c as which in Choice return C with
+  | choiceLeft a => onLeft a
+  | choiceRight b => onRight b
+
+def choicePick : (0 A : Type 0) -> (c : Choice A A) -> A :=
+  fun (0 A : Type 0) (c : Choice A A) => choiceFold A A A (fun (x : A) => x) (fun (y : A) => y) c

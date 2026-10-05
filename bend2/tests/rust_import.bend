@@ -7,6 +7,7 @@ import ../rust/lift.bend as Li
 import ../rust/resolve.bend as Rs
 import ../rust/infer.bend as In
 import ../rust/lower.bend as Lo
+import ../rust/roundtrip.bend as Rt
 import ../surface/elab.bend as Elab
 import ../kernel/global.bend as Global
 import ../kernel/budget.bend as Budget
@@ -111,16 +112,57 @@ def check_report(r: Result<&2, &2, Rs.Bad, List<&2, Lo.Low>>) -> String:
     case Fail{b}:
       "REFUSED " ++ Rs.show(b) ++ "\n"
 
+# Modes `seed-check` and `rt-mech` (D1): the input is mech text, not Rust
+# text. A program text is the files of one program, joined in manifest
+# order. `seed-check <program text>` runs the kernel check and prints the
+# line of `check`. `rt-mech <left program text> <right program text>` runs
+# the kernel check on each text and compares the rows in pairs, up to bound
+# names (bend2/rust/roundtrip.bend). It prints `RT-MECH-OK <n>` (n rows
+# agree), `RT-MECH-FAIL <name>` (the first row that differs), or
+# `MECH-CHECK-FAIL left|right <error>`.
+def checked(src: String) -> Result<&2, &2, E.T, Elab.Rows>:
+  Elab.check_text(Global.initial(), Budget.unlimited(), src)
+
+def second_text(more: List<String>) -> String:
+  match more:
+    case Con{t, rest}:
+      t
+    case other:
+      ""
+
+def rt_verdict(n: String, d: Maybe<&2, String>) -> String:
+  match d:
+    case None{}:
+      "RT-MECH-OK " ++ n ++ "\n"
+    case Some{name}:
+      "RT-MECH-FAIL " ++ name ++ "\n"
+
+def rt_right(+x: Elab.Rows, b: Result<&2, &2, E.T, Elab.Rows>) -> String:
+  match b:
+    case Done{y}:
+      rt_verdict(Nat.show(List.length(&2, String, row_marks(x))), Rt.first_diff(x, y))
+    case Fail{e}:
+      "MECH-CHECK-FAIL right " ++ E.message(e) ++ "\n"
+
+def rt_report(a: Result<&2, &2, E.T, Elab.Rows>, b: Result<&2, &2, E.T, Elab.Rows>) -> String:
+  match a:
+    case Done{rows}:
+      rt_right(rows, b)
+    case Fail{e}:
+      "MECH-CHECK-FAIL left " ++ E.message(e) ++ "\n"
+
 type Md is Data:
   MLift{}
   MResolve{}
   MTypes{}
   MLower{}
   MCheck{}
+  MSeedCheck{}
+  MRtMech{}
   MNone{}
 
 def mode_of(+mode: String) -> Md:
-  Bool.pick(Md, String.eq(mode, "lift"), MLift{}, Bool.pick(Md, String.eq(mode, "resolve"), MResolve{}, Bool.pick(Md, String.eq(mode, "types"), MTypes{}, Bool.pick(Md, String.eq(mode, "lower"), MLower{}, Bool.pick(Md, String.eq(mode, "check"), MCheck{}, MNone{})))))
+  Bool.pick(Md, String.eq(mode, "lift"), MLift{}, Bool.pick(Md, String.eq(mode, "resolve"), MResolve{}, Bool.pick(Md, String.eq(mode, "types"), MTypes{}, Bool.pick(Md, String.eq(mode, "lower"), MLower{}, Bool.pick(Md, String.eq(mode, "check"), MCheck{}, Bool.pick(Md, String.eq(mode, "seed-check"), MSeedCheck{}, Bool.pick(Md, String.eq(mode, "rt-mech"), MRtMech{}, MNone{})))))))
 
 def run_mode(m: Md, src: String, more: List<String>) -> String:
   match m:
@@ -134,6 +176,10 @@ def run_mode(m: Md, src: String, more: List<String>) -> String:
       lower_report(Ri.lows_of(Rs.resolve(src, srcs_of(more))))
     case MCheck{}:
       check_report(Ri.lows_of(Rs.resolve(src, srcs_of(more))))
+    case MSeedCheck{}:
+      check_rows(checked(src))
+    case MRtMech{}:
+      rt_report(checked(src), checked(second_text(more)))
     case MNone{}:
       "unknown mode\n"
 
@@ -145,7 +191,7 @@ def run_args(args: List<String>) -> String:
     case Con{mode, Con{src, rest}}:
       dispatch(mode, src, rest)
     case other:
-      "usage: rust_import.bend lift <source text> | resolve|types|lower|check <lib.rs text> (<module> <text>)* | run <crate dir> <out dir>\n"
+      "usage: rust_import.bend lift <source text> | resolve|types|lower|check <lib.rs text> (<module> <text>)* | seed-check <program text> | rt-mech <program text> <program text> | run <crate dir> <out dir>\n"
 
 # Mode `run` does IO; each other mode writes the text of `run_args`.
 def run_io(args: List<String>) -> IO(Unit):

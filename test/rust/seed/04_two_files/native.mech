@@ -1,0 +1,5 @@
+def tallyNative : (t : Tally) -> Nat :=
+  fun (t : Tally) => tallyFold Nat 0 (fun (seen : Tally) (total : Nat) => natAdd 1 total) t
+
+def tallyBump : (n : Nat) -> Nat :=
+  fun (n : Nat) => natAdd 2 n
