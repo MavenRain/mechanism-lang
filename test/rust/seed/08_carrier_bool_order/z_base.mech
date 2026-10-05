@@ -1,0 +1,9 @@
+mu MechBool : Type 0 with
+| mechFalse : MechBool
+| mechTrue : MechBool
+
+-- This carried chunk is anchored to the implicit Boolean family.
+mu Safe : Prop with
+| safe : Safe
+
+def baseBool : MechBool := mechTrue

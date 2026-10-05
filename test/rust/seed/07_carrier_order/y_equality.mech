@@ -1,0 +1,3 @@
+-- This proof-only file precedes its alphabetically earlier consumer.
+mu ProofEq (0 A : Type 0) (0 x : A) : (0 y : A) -> Prop with
+| proofRefl : ProofEq A x x

@@ -252,6 +252,21 @@ def lines_go(s: String, +cur: String, +done: List<&2, String>) -> List<&2, Strin
 def lines_of(s: String) -> List<&2, String>:
   lines_go(s, "", [])
 
+def words_go(s: String, +cur: String, +done: List<&2, String>) -> List<&2, String>:
+  match s:
+    case SNil{}:
+      List.reverse(&2, String, String.reverse(cur) <> done)
+    case SCon{+c, rest}:
+      +sp = code_is(c, 32)
+      words_go(rest, Bool.pick(String, sp, "", SCon{c, cur}), Bool.pick(List<&2, String>, sp, String.reverse(cur) <> done, done))
+
+# The words of a line: the parts between single spaces.
+def words(s: String) -> List<&2, String>:
+  words_go(s, "", [])
+
+def join_lines(lines: List<&2, String>) -> String:
+  Et.join("\n", lines)
+
 type Lk is Data:
   LHead{}
   LBlank{}
@@ -421,14 +436,32 @@ def car_bad(car: Car, why: String) -> Car:
     case Car{text, bad}:
       Car{text, why <> bad}
 
-def add_vd(chunk: List<&2, String>, name: String, v: Vd, car: Car, file: String) -> Car:
+# The key line of a carried chunk (unit D, D2): the file of the chunk and
+# `prev`, the first name of the nearest runtime declaration before the chunk
+# in that file. `prev` is "" if there is no such declaration. `rust-in` reads
+# the key and puts the chunk back at that place.
+def key_line(+file: String, +prev: String) -> String:
+  Bool.pick(String, String.eq(prev, ""), "-- at " ++ file ++ " start", "-- at " ++ file ++ " after " ++ prev)
+
+def is_run(v: Vd) -> Bool:
+  match v:
+    case VNone{}:
+      False{}
+    case VRun{}:
+      True{}
+    case VProof{}:
+      False{}
+    case VMixed{}:
+      False{}
+
+def add_vd(chunk: List<&2, String>, name: String, v: Vd, car: Car, file: String, prev: String) -> Car:
   match v:
     case VNone{}:
       car
     case VRun{}:
       car
     case VProof{}:
-      car_text(car, chunk)
+      car_text(car, key_line(file, prev) <> chunk)
     case VMixed{}:
       car_bad(car, "refused " ++ file ++ ": carrier: the declaration of " ++ name ++ " has runtime names and non-runtime names (D2)")
 
@@ -439,12 +472,13 @@ def any_has(lines: List<&2, String>, +p: String) -> Bool:
     case Con{line, rest}:
       contains(line, p) || any_has(rest, p)
 
-def add_chunk(+chunk: List<&2, String>, +name: String, v: Vd, +car: Car, +file: String) -> Car:
-  Bool.pick(Car, any_has(chunk, " " ++ name), add_vd(chunk, name, v, car, file),
+def add_chunk(+chunk: List<&2, String>, +name: String, v: Vd, +car: Car, +file: String, prev: String) -> Car:
+  Bool.pick(Car, any_has(chunk, " " ++ name), add_vd(chunk, name, v, car, file, prev),
     car_bad(car, "refused " ++ file ++ ": carrier: a top-level chunk does not have the name " ++ name ++ " (D2)"))
 
-# Chunk i is declaration i. A count mismatch is a refusal.
-def carry(chunks: List<&2, List<&2, String>>, decls: List<&2, Syntax.Decl>, +env: Et.Env, +file: String) -> Car:
+# Chunk i is declaration i. A count mismatch is a refusal. `prev`: the first
+# name of the nearest runtime declaration before chunk i, "" if there is none.
+def carry(chunks: List<&2, List<&2, String>>, decls: List<&2, Syntax.Decl>, +env: Et.Env, +file: String, +prev: String) -> Car:
   match chunks:
     case Nil{}:
       match decls:
@@ -458,14 +492,16 @@ def carry(chunks: List<&2, List<&2, String>>, decls: List<&2, Syntax.Decl>, +env
           Car{[],["refused " ++ file ++ ": carrier: more top-level chunks than declarations (D2)"]}
         case Con{d, rest}:
           +names = Elab.declared_names(d)
-          add_chunk(chunk, Et.first(names), names_vd(names, env), carry(more, rest, env, file), file)
+          +first = Et.first(names)
+          +v = names_vd(names, env)
+          add_chunk(chunk, first, v, carry(more, rest, env, file, Bool.pick(String, is_run(v), first, prev)), file, prev)
 
 def car_parsed(r: Result<&2, &2, Error.T, List<&2, Syntax.Decl>>, chunks: List<&2, List<&2, String>>, env: Et.Env, file: String) -> Car:
   match r:
     case Fail{e}:
       Car{[],["refused " ++ file ++ ": carrier: " ++ Error.to_string(e)]}
     case Done{decls}:
-      carry(chunks, decls, env, file)
+      carry(chunks, decls, env, file, "")
 
 def carried(env: Et.Env, file: String, +text: String) -> Car:
   car_parsed(Parser.program(text), chunks_of(text), env, file)
@@ -640,24 +676,33 @@ def nat_file(nat: Bool) -> List<&2, C.Pair<String, String>>:
 type Out is Data:
   Out{root: List<&2, C.Pair<String, String>>, src: List<&2, C.Pair<String, String>>}
 
-def crate_out(bad: List<&2, String>, +mods: List<&2, Mod>, carrier: List<&2, String>) -> Result<&2, &2, String, Out>:
+def crate_out(bad: List<&2, String>, +mods: List<&2, Mod>, carrier: List<&2, String>, files: List<&2, String>) -> Result<&2, &2, String, Out>:
   match bad:
     case Nil{}:
       +nat = any_nat(mods)
-      Done{Out{[C.Pair{"Cargo.toml", cargo_toml()}, C.Pair{"mech-carrier.mech", Et.join("\n", carrier_head() <> ("" <> carrier))}],
+      Done{Out{[C.Pair{"Cargo.toml", cargo_toml()}, C.Pair{"mech-carrier.mech", Et.join("\n", carrier_head() <> (("-- files " ++ Et.join(" ", files)) <> ("" <> carrier)))}],
         C.Pair{"lib.rs", lib_rs(List.append(&2, String, nat_mod(nat), mod_names(mods)))} <>
           List.append(&2, C.Pair<String, String>, nat_file(nat), src_files(mods))}}
     case Con{why, more}:
       Fail{Et.join("\n", why <> more) ++ "\n"}
 
-def finish(acc: Acc) -> Result<&2, &2, String, Out>:
+def finish(acc: Acc, files: List<&2, String>) -> Result<&2, &2, String, Out>:
   match acc:
     case Acc{env, +mods, carrier, bad}:
-      crate_out(List.append(&2, String, bad, dup_bad(mods)), List.reverse(&2, Mod, mods), carrier)
+      crate_out(List.append(&2, String, bad, dup_bad(mods)), List.reverse(&2, Mod, mods), carrier, files)
+
+# Rust dependencies omit proof-only edges. Keep every source file in order,
+# including files with only runtime declarations or only carried declarations.
+def source_files(srcs: List<&2, Src>) -> List<&2, String>:
+  match srcs:
+    case Nil{}:
+      []
+    case Con{Src{name, text}, rest}:
+      name <> source_files(rest)
 
 # The files of the crate, or the refusal lines.
-def crate_of(srcs: List<&2, Src>) -> Result<&2, &2, String, Out>:
-  finish(file_steps(srcs, Acc{Et.Env{Global.initial(), []}, [], [], []}))
+def crate_of(+srcs: List<&2, Src>) -> Result<&2, &2, String, Out>:
+  finish(file_steps(srcs, Acc{Et.Env{Global.initial(), []}, [], [], []}), source_files(srcs))
 
 # The command.
 

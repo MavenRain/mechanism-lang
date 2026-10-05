@@ -105,6 +105,8 @@ Terms:
 - The emitter splits the text of an input file into chunks. A chunk starts at a line with a lower-case letter in column 1. The `--` lines directly before that line go with the chunk.
 - Chunk `i` is declaration `i` of the parser. The emitter refuses a file if the counts are different, if a chunk does not contain the first name of its declaration, or if a declaration has runtime names and names that are not runtime names.
 - The carried classes are `prop`, `type` and `absurd`.
+- The second carrier line is `-- files <file> ...`, listing every source file in source order, including files with no carried declarations. Proof-only dependencies disappear from Rust, so this order is needed to check the merged program.
+- Each carried chunk has a key line first: `-- at <file> start` or `-- at <file> after <name>`. `<name>` is the first name of the nearest runtime declaration before the chunk in the same file. `start` shows that no runtime declaration is before the chunk. `rust-in` reads the key and puts the chunk back at that place (see `IMPORT.md`). The emitter is the only writer of key lines.
 
 For the two M0 inputs the carrier has 26 declarations (10 `prop`, 2 `type` and 1 `absurd` from `init.mech`, 13 `prop` from `second-price.mech`).
 
@@ -180,7 +182,7 @@ Emitter:
 - The use count for `_name` and `_` counts a shadowed name as a use. The result is safe: the name stays.
 - A local closure with the name of a function of an earlier module counts as a use of that module.
 - `mechFalseElim` is `absurd`: a runtime definition that calls it is refused.
-- The carrier is not a complete program. It refers to runtime names, and `mech` does not check it.
+- The carrier is not a complete program. It refers to runtime names, and `mech` does not check it directly. `rust-in` merges the carrier into the import, and the kernel checks the merged text.
 - A write failure can leave an `<out>.tmp-*` directory.
 
 Tests:

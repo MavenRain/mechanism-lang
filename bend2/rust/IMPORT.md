@@ -16,8 +16,10 @@ The importer accepts only the Rust text that the emitter writes (EMIT.md). It re
 
 `mech rust-in <crate dir> <out dir>` reads `src/lib.rs`, then `src/<m>.rs` for each `pub mod` line.
 It writes one `.mech` file for each module and the file `MANIFEST`. `MANIFEST` has one file name on each line, in dependency order.
-If the crate has a `mech-carrier.mech` file, the command copies it with no change.
+If the crate has a `mech-carrier.mech` file, the command merges it into the import. Each carried chunk starts with a key line: `-- at <file> start` or `-- at <file> after <name>` (see `EMIT.md`). The command puts the chunk in `<file>`: at the start, or after the declaration with the name `<name>`. Chunks with the same key keep the order of the carrier. The key line is not written. The kernel check runs on the merged text, so it checks each carried proof against the Rust text. The command refuses a chunk with no key line, and a key with no place in the import. The command also copies the carrier file with no change.
 The parent of the output directory must exist.
+
+The carrier's optional second line `-- files <file> ...` restores source-file order before the kernel check. It must name every imported file exactly once; unknown, repeated, or omitted files are refused. Without that line, the importer keeps the order derived from Rust dependencies. Current `rust-out` always writes it, because Rust dependencies alone omit proof-only edges. The kernel still checks the complete merged program in the selected order.
 
 | Exit code | Cause |
 | --- | --- |
@@ -59,7 +61,8 @@ A kernel failure is the line `MECH-CHECK-FAIL <error>`. It has no position.
 Run `zsh dev/rust-in-gate.sh`. The last line is `RUST-IN-OK` or `RUST-IN-FAIL`. The gate has these checks:
 
 - LIFT: the lift of each module file of the golden crate prints back byte for byte.
-- GOLDEN: the import of the golden crate is equal to `test/rust/import/expected/`, with a byte-equal carrier copy and no extra output files.
+- CARRIER: the import of the golden crate with its carrier fails with `MECH-CHECK-FAIL` and writes no file. The golden crate is not a canonical program, and a carried declaration does not agree with the imported text.
+- GOLDEN: the import of the golden crate with no carrier file is equal to `test/rust/import/expected/`, with no extra output files.
 - MECH-CHECK: the imported program passes the kernel check with no axiom.
 - RT-RUST: the emitter gives each file of the golden crate back from the imported program, with the same root and source file inventory. The carrier is not compared.
 - REFUSE: each fixture gives its row of `EXPECTED.tsv` and leaves no output path, including a dangling symlink.
@@ -74,6 +77,7 @@ Run `zsh dev/rust-in-gate.sh`. The last line is `RUST-IN-OK` or `RUST-IN-FAIL`. 
 - A name with two underscores in sequence is canonical by the D7 rule. `bad__name` imports as `bad_Name`.
 - `lower` removes one leading `_` from a local binder. A used binder `_x` becomes `x`.
 - No fixture has a match or an `if` with no expected type.
-- The command copies the carrier. It does not compare the carrier with the imported text.
+- The copy of the carrier in the output directory is a record only. The emitter writes a new carrier from the imported files.
+- The merge is for a canonical program. If a carried declaration does not agree with the imported text, the kernel check fails and the command refuses the crate. The golden crate of M0 is such a crate: in the import, `AuctionOrder` takes no argument, and a carried declaration gives it two arguments.
 - `dev/BEND2-BASELINE.json` has old hashes of `bend2/cli/mech.bend`.
 - RT-MECH and DIFF-EXEC on the imported program are not gates of this unit. RT-RUST gives the golden crate back, and `dev/rust-out-diff-exec.sh` runs that crate.

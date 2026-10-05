@@ -1,0 +1,2 @@
+-- Neither dependency survives as a Rust use declaration.
+def proofValueZero : ProofEq Nat proofValue 0 := proofRefl

@@ -4,8 +4,10 @@
 # RUST-IN-OK or RUST-IN-FAIL.
 #   LIFT        The lift of each module file of the golden crate prints back
 #               byte for byte.
-#   GOLDEN      The import of the golden crate is equal to
-#               test/rust/import/expected.
+#   CARRIER     The import of the golden crate with its carrier fails with
+#               MECH-CHECK-FAIL (the crate is not a canonical program).
+#   GOLDEN      The import of the golden crate with no carrier file is equal
+#               to test/rust/import/expected.
 #   MECH-CHECK  The imported program passes the kernel check with no axiom.
 #   RT-RUST     The emitter gives each file of the golden crate back from the
 #               imported program.  The carrier is not compared.
@@ -121,9 +123,24 @@ for m in ${mods:#nat}; do
   fi
 done
 
-# GOLDEN.
+# CARRIER.  The golden crate is not a canonical program: a carried
+# declaration does not agree with the imported text.  The import of the crate
+# with its carrier must fail with MECH-CHECK-FAIL and must write no file.
+rm -rf $WORK/out-carrier
+imp run $CRATE $WORK/out-carrier
+if (( rc == 65 )) && [[ "$(head -c 15 $WORK/e)" == MECH-CHECK-FAIL && ! -e $WORK/out-carrier ]]; then
+  ok "CARRIER golden crate with its carrier is refused (MECH-CHECK-FAIL)"
+else
+  bad "CARRIER: exit $rc: $(head -c 300 $WORK/e)"
+fi
+
+# GOLDEN.  The golden crate with no carrier file.
+BARE=$WORK/crate-bare
+rm -rf $BARE
+cp -R $CRATE $BARE
+rm -f $BARE/mech-carrier.mech
 O=$WORK/out
-imp run $CRATE $O
+imp run $BARE $O
 if (( rc != 0 )); then
   bad "import of the golden crate: exit $rc: $(head -c 300 $WORK/e)"
   finish
@@ -144,16 +161,9 @@ else
   bad "GOLDEN file count: ${#have} files, want $(( ${#files} + 1 ))"
 fi
 
-# Check the complete published directory, including the optional carrier.
+# Check the complete published directory. The crate has no carrier file, so
+# the output has no carrier copy (dev/rt-mech-gate.sh checks the copy).
 want=(MANIFEST $files)
-if [[ -f $CRATE/mech-carrier.mech ]]; then
-  want+=(mech-carrier.mech)
-  if cmp -s $CRATE/mech-carrier.mech $O/mech-carrier.mech; then
-    ok "GOLDEN carrier copy"
-  else
-    bad "GOLDEN carrier copy"
-  fi
-fi
 have=($O/*(DN:t))
 if [[ ${(j: :)${(o)have}} == ${(j: :)${(o)want}} ]]; then
   ok "GOLDEN output inventory"

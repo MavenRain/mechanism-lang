@@ -10,6 +10,14 @@
 #   GREEN  a copy of the seed with each binder renamed passes RT-MECH.
 #   RED    two branch bodies swapped in the imported text: RT-MECH fails.
 #   RED    two constructors swapped in the imported text: RT-RUST fails.
+# Controls of the carrier merge (D2), on the seed 05_proofs:
+#   KEYS   the carrier of E(S) has one key line for each carried chunk.
+#   COPY   the import has a byte-equal copy of the carrier.
+#   RED    the last carried proof dropped from the carrier: RT-MECH fails.
+#   RED    each Boolean of a fn body changed in the Rust text: a carried
+#          proof is false, and the import fails with MECH-CHECK-FAIL.
+#   REFUSE a key with no place in the import: exit code 65, no output.
+#   REFUSE a carried chunk with no key line: exit code 65, no output.
 # One PASS or FAIL line for each check, then ROUND-TRIP-OK (exit 0) or
 # ROUND-TRIP-FAIL (exit 1). All outputs stay in $RT_WORK.
 set -u
@@ -118,6 +126,80 @@ rc=$?
 diff -r $WORK/$c/e1 $WORK/red-ctor-e > $WORK/red-ctor.diff 2>&1
 [[ $rc == 0 && $? == 1 && "$(< $WORK/red-ctor/light.mech)" != $text ]]
 step $? "RED constructors swapped (RT-RUST)" "emit rc=$rc"
+
+# Controls of the carrier merge (D2).
+c=05_proofs
+src=$(joined $SEED/$c)
+car=$(< $WORK/$c/e1/mech-carrier.mech)
+lines=(${(f)car})
+keyl=(${(M)lines:#-- at *})
+keys=${#keyl}
+[[ $keys == 3 && $car == *$'\n-- at light.mech start\n'* && $car == *$'\n-- at light.mech after '* ]]
+step $? "KEYS $c" "keys=$keys"
+cmp -s $WORK/$c/e1/mech-carrier.mech $WORK/$c/i1/mech-carrier.mech
+step $? "COPY $c carrier copy is byte-equal"
+
+# File order must name the exact imported inventory once. The seed
+# 07_carrier_order exercises proof-only edges across three files.
+order=$'\n-- files light.mech\n'
+for kind in unknown duplicate missing; do
+  case $kind in
+    unknown) replacement=$'\n-- files missing.mech\n' ;;
+    duplicate) replacement=$'\n-- files light.mech light.mech\n' ;;
+    missing) replacement=$'\n-- files\n' ;;
+  esac
+  rm -rf $WORK/ref-order-$kind $WORK/ref-order-$kind-i
+  cp -R $WORK/$c/e1 $WORK/ref-order-$kind
+  bad=${car/$order/$replacement}
+  print -r -- $bad > $WORK/ref-order-$kind/mech-carrier.mech
+  imp $WORK/ref-order-$kind $WORK/ref-order-$kind-i
+  rc=$?
+  got="$(head -n 1 $WORK/imp.err)"
+  [[ $rc == 65 && $bad != $car && $got == "REFUSED carrier: "*"file"* && ! -e $WORK/ref-order-$kind-i && ! -L $WORK/ref-order-$kind-i ]]
+  step $? "REFUSE $kind file in carrier source order" "import rc=$rc $got"
+done
+
+rm -rf $WORK/red-drop $WORK/red-drop-i
+cp -R $WORK/$c/e1 $WORK/red-drop
+print -r -- ${car%$'\n-- at '*} > $WORK/red-drop/mech-carrier.mech
+imp $WORK/red-drop $WORK/red-drop-i
+rc=$?
+out=$(mode rt-mech $src "$(joined $WORK/red-drop-i)")
+rc2=$?
+[[ $rc == 0 && $rc2 == 0 && "$(< $WORK/red-drop/mech-carrier.mech)" != $car && $out == "RT-MECH-FAIL "* ]]
+step $? "RED carried proof dropped (RT-MECH)" "import rc=$rc $out"
+
+rm -rf $WORK/red-body $WORK/red-body-i
+cp -R $WORK/$c/e1 $WORK/red-body
+rs=$(< $WORK/$c/e1/src/light.rs)
+flip=${${${rs//true/@@}//false/true}//@@/false}
+print -r -- $flip > $WORK/red-body/src/light.rs
+imp $WORK/red-body $WORK/red-body-i
+rc=$?
+[[ $rc == 65 && $flip != $rs && "$(cat $WORK/imp.err $WORK/imp.out | head -c 15)" == "MECH-CHECK-FAIL" && ! -e $WORK/red-body-i ]]
+step $? "RED fn body changed (MECH-CHECK-FAIL)" "import rc=$rc $(head -c 200 $WORK/imp.err)"
+
+# Refusals of the merge. Each one has exit code 65 and writes no output.
+key=$'\n-- at light.mech start\n'
+rm -rf $WORK/ref-place $WORK/ref-place-i
+cp -R $WORK/$c/e1 $WORK/ref-place
+bad=${car/$key/$'\n-- at light.mech after noSuchName\n'}
+print -r -- $bad > $WORK/ref-place/mech-carrier.mech
+imp $WORK/ref-place $WORK/ref-place-i
+rc=$?
+got="$(head -n 1 $WORK/imp.err)"
+[[ $rc == 65 && $bad != $car && $got == "REFUSED carrier: the import has no place for the key line: "*noSuchName* && ! -e $WORK/ref-place-i ]]
+step $? "REFUSE key with no place in the import" "import rc=$rc $got"
+
+rm -rf $WORK/ref-key $WORK/ref-key-i
+cp -R $WORK/$c/e1 $WORK/ref-key
+bad=${car/$key/$'\n'}
+print -r -- $bad > $WORK/ref-key/mech-carrier.mech
+imp $WORK/ref-key $WORK/ref-key-i
+rc=$?
+got="$(head -n 1 $WORK/imp.err)"
+[[ $rc == 65 && $bad != $car && $got == "REFUSED carrier: the first line of a chunk is not a key line: "* && ! -e $WORK/ref-key-i ]]
+step $? "REFUSE carried chunk with no key line" "import rc=$rc $got"
 
 print -r -- "work=$WORK pass=$pass fail=$fail"
 if (( fail == 0 )); then

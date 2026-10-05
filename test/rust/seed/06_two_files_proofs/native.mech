@@ -1,0 +1,9 @@
+def tallyNative : (t : Tally) -> Nat :=
+  fun (t : Tally) => tallyFold Nat 0 (fun (seen : Tally) (total : Nat) => natAdd 1 total) t
+
+-- A proof in the second file about a name of the first file.
+def tallyNativeNone : TallyEq Nat (tallyNative tallyNone) 0 :=
+  tallyRefl
+
+def tallyBump : (n : Nat) -> Nat :=
+  fun (n : Nat) => natAdd 2 n
