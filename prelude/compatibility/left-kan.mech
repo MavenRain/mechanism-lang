@@ -1,0 +1,302 @@
+-- Five stored fields in the imported order, with relevant nested arguments.
+poly (u, v, w, z, p, q) group MechSignatureLeftKan where
+specialize MechSignatureComposition (u, v, w, z, p, q) as Base
+-- facAt is the factorization equation at one source object.
+def facAt : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (L : (Base_Second_Base_Functor D E d e)) ->
+    (unit : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L))) ->
+    (G : (Base_Second_Base_Functor D E d e)) ->
+    (alpha : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K G))) ->
+    (beta : (Base_Second_NatTrans D E d e L G)) ->
+    (Y : C) ->
+    Prop :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (L : (Base_Second_Base_Functor D E d e))
+      (unit : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L)))
+      (G : (Base_Second_Base_Functor D E d e))
+      (alpha : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K G)))
+      (beta : (Base_Second_NatTrans D E d e L G))
+      (Y : C) =>
+    (Base_Target_Eq (Base_Target_Hom E e (Base_Composite_Base_obj C E c e F Y) (Base_Composite_Base_obj C E c e (Base_comp C D E c d e K G) Y)) (Base_Target_comp E e (Base_Composite_Base_obj C E c e F Y) (Base_Composite_Base_obj C E c e (Base_comp C D E c d e K L) Y) (Base_Composite_Base_obj C E c e (Base_comp C D E c d e K G) Y) (Base_Composite_app C E c e F (Base_comp C D E c d e K L) unit Y) (Base_Composite_app C E c e (Base_comp C D E c d e K L) (Base_comp C D E c d e K G) (Base_whiskerRight D E C d e c L G beta K) Y)) (Base_Composite_app C E c e F (Base_comp C D E c d e K G) alpha Y))
+
+-- uniqAt compares two natural transformations at one object of D.
+def uniqAt : (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (L : (Base_Second_Base_Functor D E d e)) ->
+    (G : (Base_Second_Base_Functor D E d e)) ->
+    (beta : (Base_Second_NatTrans D E d e L G)) ->
+    (m : (Base_Second_NatTrans D E d e L G)) ->
+    (Y : D) ->
+    Prop :=
+  fun (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (L : (Base_Second_Base_Functor D E d e))
+      (G : (Base_Second_Base_Functor D E d e))
+      (beta : (Base_Second_NatTrans D E d e L G))
+      (m : (Base_Second_NatTrans D E d e L G))
+      (Y : D) =>
+    (Base_Target_Eq (Base_Target_Hom E e (Base_Second_Base_obj D E d e L Y) (Base_Second_Base_obj D E d e G Y)) (Base_Second_app D E d e L G beta Y) (Base_Second_app D E d e L G m Y))
+
+def LeftKanExtension : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (Sort (max (max (max (max (succ u) (succ w)) (succ p)) (succ z)) (succ q))) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e)) =>
+    (L : (Base_Second_Base_Functor D E d e)) *
+    (unit : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L))) *
+    (desc : ((b10 : (Base_Second_Base_Functor D E d e)) -> ((b11 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b10))) -> (Base_Second_NatTrans D E d e L b10)))) *
+    (fac : ((b11 : (Base_Second_Base_Functor D E d e)) -> ((b12 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b11))) -> ((b13 : C) -> (facAt C D E c d e K F L unit b11 b12 (desc b11 b12) b13))))) *
+    ((b12 : (Base_Second_Base_Functor D E d e)) -> ((b13 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b12))) -> ((b14 : (Base_Second_NatTrans D E d e L b12)) -> ((b15 : ((b15 : C) -> (facAt C D E c d e K F L unit b12 b13 b14 b15))) -> ((b16 : D) -> (uniqAt D E d e L b12 b14 (desc b12 b13) b16))))))
+
+def mk : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (L : (Base_Second_Base_Functor D E d e)) ->
+    (unit : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L))) ->
+    (desc : ((b10 : (Base_Second_Base_Functor D E d e)) -> ((b11 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b10))) -> (Base_Second_NatTrans D E d e L b10)))) ->
+    (fac : ((b11 : (Base_Second_Base_Functor D E d e)) -> ((b12 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b11))) -> ((b13 : C) -> (facAt C D E c d e K F L unit b11 b12 (desc b11 b12) b13))))) ->
+    (unique : ((b12 : (Base_Second_Base_Functor D E d e)) -> ((b13 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b12))) -> ((b14 : (Base_Second_NatTrans D E d e L b12)) -> ((b15 : ((b15 : C) -> (facAt C D E c d e K F L unit b12 b13 b14 b15))) -> ((b16 : D) -> (uniqAt D E d e L b12 b14 (desc b12 b13) b16))))))) ->
+    (LeftKanExtension C D E c d e K F) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (L : (Base_Second_Base_Functor D E d e))
+      (unit : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L)))
+      (desc : ((b10 : (Base_Second_Base_Functor D E d e)) -> ((b11 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b10))) -> (Base_Second_NatTrans D E d e L b10))))
+      (fac : ((b11 : (Base_Second_Base_Functor D E d e)) -> ((b12 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b11))) -> ((b13 : C) -> (facAt C D E c d e K F L unit b11 b12 (desc b11 b12) b13)))))
+      (unique : ((b12 : (Base_Second_Base_Functor D E d e)) -> ((b13 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b12))) -> ((b14 : (Base_Second_NatTrans D E d e L b12)) -> ((b15 : ((b15 : C) -> (facAt C D E c d e K F L unit b12 b13 b14 b15))) -> ((b16 : D) -> (uniqAt D E d e L b12 b14 (desc b12 b13) b16))))))) =>
+    (L, (unit, (desc, (fac, unique))))
+
+def functor : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (Base_Second_Base_Functor D E d e) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F)) =>
+    self.1
+
+def unit : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K (functor C D E c d e K F self))) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F)) =>
+    self.2.1
+
+def desc : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) ->
+    (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F))
+      (b9 : (Base_Second_Base_Functor D E d e))
+      (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) =>
+    self.2.2.1 b9 b10
+
+def fac : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) ->
+    (b11 : C) ->
+    (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 (desc C D E c d e K F self b9 b10) b11) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F))
+      (b9 : (Base_Second_Base_Functor D E d e))
+      (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9)))
+      (b11 : C) =>
+    self.2.2.2.1 b9 b10 b11
+
+def uniq : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) ->
+    (b11 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9)) ->
+    (b12 : ((b12 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b11 b12))) ->
+    (b13 : D) ->
+    (uniqAt D E d e (functor C D E c d e K F self) b9 b11 (desc C D E c d e K F self b9 b10) b13) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F))
+      (b9 : (Base_Second_Base_Functor D E d e))
+      (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9)))
+      (b11 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9))
+      (b12 : ((b12 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b11 b12)))
+      (b13 : D) =>
+    self.2.2.2.2 b9 b10 b11 b12 b13
+
+-- desc_unique_core states the derived lemma over plain variables.
+def desc_unique_core : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (L : (Base_Second_Base_Functor D E d e)) ->
+    (u : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L))) ->
+    (dsc : ((x10 : (Base_Second_Base_Functor D E d e)) -> ((x11 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K x10))) -> (Base_Second_NatTrans D E d e L x10)))) ->
+    (uq : ((x12 : (Base_Second_Base_Functor D E d e)) -> ((x13 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K x12))) -> ((x14 : (Base_Second_NatTrans D E d e L x12)) -> ((x15 : ((x15 : C) -> (facAt C D E c d e K F L u x12 x13 x14 x15))) -> ((x16 : D) -> (uniqAt D E d e L x12 x14 (dsc x12 x13) x16))))))) ->
+    (b9 : (Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) ->
+    (b11 : (Base_Second_NatTrans D E d e L b9)) ->
+    (b12 : (Base_Second_NatTrans D E d e L b9)) ->
+    (b13 : ((b13 : C) -> (facAt C D E c d e K F L u b9 b10 b11 b13))) ->
+    (b14 : ((b14 : C) -> (facAt C D E c d e K F L u b9 b10 b12 b14))) ->
+    (b15 : D) ->
+    (uniqAt D E d e L b9 b11 b12 b15) :=
+  fun (0 C : (Sort (succ u))) (0 D : (Sort (succ w))) (0 E : (Sort (succ p))) (c : (Base_Source_Category C)) (d : (Base_Middle_Category D)) (e : (Base_Target_Category E)) (K : (Base_First_Base_Functor C D c d)) (F : (Base_Composite_Base_Functor C E c e)) (L : (Base_Second_Base_Functor D E d e)) (u : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K L))) (dsc : ((x10 : (Base_Second_Base_Functor D E d e)) -> ((x11 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K x10))) -> (Base_Second_NatTrans D E d e L x10)))) (uq : ((x12 : (Base_Second_Base_Functor D E d e)) -> ((x13 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K x12))) -> ((x14 : (Base_Second_NatTrans D E d e L x12)) -> ((x15 : ((x15 : C) -> (facAt C D E c d e K F L u x12 x13 x14 x15))) -> ((x16 : D) -> (uniqAt D E d e L x12 x14 (dsc x12 x13) x16))))))) (b9 : (Base_Second_Base_Functor D E d e)) (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) (b11 : (Base_Second_NatTrans D E d e L b9)) (b12 : (Base_Second_NatTrans D E d e L b9)) (b13 : ((b13 : C) -> (facAt C D E c d e K F L u b9 b10 b11 b13))) (b14 : ((b14 : C) -> (facAt C D E c d e K F L u b9 b10 b12 b14))) (b15 : D) =>
+    Base_Target_Eq_trans (Base_Target_Hom E e (Base_Second_Base_obj D E d e L b15) (Base_Second_Base_obj D E d e b9 b15))
+      (Base_Second_app D E d e L b9 b11 b15)
+      (Base_Second_app D E d e L b9 (dsc b9 b10) b15)
+      (Base_Second_app D E d e L b9 b12 b15)
+      (uq b9 b10 b11 b13 b15)
+      (Base_Target_Eq_symm (Base_Target_Hom E e (Base_Second_Base_obj D E d e L b15) (Base_Second_Base_obj D E d e b9 b15))
+        (Base_Second_app D E d e L b9 b12 b15)
+        (Base_Second_app D E d e L b9 (dsc b9 b10) b15)
+        (uq b9 b10 b12 b14 b15))
+
+def desc_unique : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Source_Category C)) ->
+    (d : (Base_Middle_Category D)) ->
+    (e : (Base_Target_Category E)) ->
+    (K : (Base_First_Base_Functor C D c d)) ->
+    (F : (Base_Composite_Base_Functor C E c e)) ->
+    (self : (LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9))) ->
+    (b11 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9)) ->
+    (b12 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9)) ->
+    (b13 : ((b13 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b11 b13))) ->
+    (b14 : ((b14 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b12 b14))) ->
+    (b15 : D) ->
+    (uniqAt D E d e (functor C D E c d e K F self) b9 b11 b12 b15) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Source_Category C))
+      (d : (Base_Middle_Category D))
+      (e : (Base_Target_Category E))
+      (K : (Base_First_Base_Functor C D c d))
+      (F : (Base_Composite_Base_Functor C E c e))
+      (self : (LeftKanExtension C D E c d e K F))
+      (b9 : (Base_Second_Base_Functor D E d e))
+      (b10 : (Base_Composite_NatTrans C E c e F (Base_comp C D E c d e K b9)))
+      (b11 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9))
+      (b12 : (Base_Second_NatTrans D E d e (functor C D E c d e K F self) b9))
+      (b13 : ((b13 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b11 b13)))
+      (b14 : ((b14 : C) -> (facAt C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) b9 b10 b12 b14)))
+      (b15 : D) =>
+    desc_unique_core C D E c d e K F (functor C D E c d e K F self) (unit C D E c d e K F self) (desc C D E c d e K F self) (uniq C D E c d e K F self) b9 b10 b11 b12 b13 b14 b15
+
+end

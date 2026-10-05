@@ -49,9 +49,30 @@ Int, the five Extern globals, String literals, well-founded recursion
 and the runtime package at M1; Quot with SPar and Quot.sound at M2;
 SNu, macro, syntax, elab and Array literals NEVER through M3.
 
-## Position on 2026-10-02
+## Position on 2026-10-03
 
-The current increment on ba35171 adds a source-compatible NatTrans record.
+The current increment on 58bdc3b adds a source-compatible LeftKanExtension
+prototype at six independent symbolic universe levels. It encodes the five
+stored fields in source order: functor, unit, desc, fac and uniq. The member
+desc_unique is a lemma derived from uniq. The helpers facAt, uniqAt and
+desc_unique_core are not Lean members. The gate is designed to compare eight
+record members and seventeen support signatures, including source-compatible
+functor composition and right whiskering. Shared equality families keep the
+three category records consistent across both operations. The fixture is
+designed to check all five projections, the complete stored shape, eight
+bare-constant quantity pins and three hom universe pins, then to specialize at
+three closed universe tuples. The gate also includes Category, Functor and
+NatTrans projection regressions with the composition and whiskering fixtures,
+two axiom audits and 11 control tests. The recorded production run timed out
+after 600 seconds in the record-signature batch. The gate has not completed, so
+the record signatures, the two new support rows, the computations, the audits,
+the regression and the controls are unverified. Evidence is recorded in
+`dev/validation/prelude-left-kan-compatibility/`. Source-compatible recursors,
+whole-record equality, remaining operation and theorem bodies, runtime parity
+and conversion to the erased core record remain open. Complete the
+LeftKanExtension gate before starting the next compatibility slice.
+
+The preceding increment on ba35171 adds a source-compatible NatTrans record.
 Its record, constructor, component accessor and naturality accessor match four
 imported signatures at independent symbolic universe levels. Eleven support
 signatures discharge the Category, Functor and equality dependencies. Generic
@@ -68,8 +89,7 @@ adapter whose matching types conceal changed computation. The mapping and
 NEVER inventories remain unchanged. Source-compatible recursors, whole-record
 equality, operation and theorem bodies, runtime parity and conversion to the
 erased core record remain open. See `dev/M0-STAGE-C-COMPATIBILITY-PILOT.md` and
-`dev/validation/prelude-nattrans-compatibility/`. LeftKanExtension is the next
-source-compatible record slice.
+`dev/validation/prelude-nattrans-compatibility/`.
 
 The preceding increment on 252733d adds a source-compatible Functor record. The
 record, constructor, object and morphism maps, and both preservation laws match

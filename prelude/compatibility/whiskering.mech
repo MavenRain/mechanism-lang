@@ -1,0 +1,28 @@
+-- The universe and argument order follows imported NatTrans.whiskerRight.
+poly (u, v, w, z, p, q) group MechSignatureWhiskering where
+specialize MechSignatureComposition (p, q, u, v, w, z) as Base
+
+def whiskerRight : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Base_Middle_Category C)) ->
+    (d : (Base_Target_Category D)) ->
+    (e : (Base_Source_Category E)) ->
+    (F : (Base_Second_Base_Functor C D c d)) ->
+    (G : (Base_Second_Base_Functor C D c d)) ->
+    (alpha : (Base_Second_NatTrans C D c d F G)) ->
+    (K : (Base_First_Base_Functor E C e c)) ->
+    (Base_Composite_NatTrans E D e d (Base_comp E C D e c d K F) (Base_comp E C D e c d K G)) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Base_Middle_Category C))
+      (d : (Base_Target_Category D))
+      (e : (Base_Source_Category E))
+      (F : (Base_Second_Base_Functor C D c d))
+      (G : (Base_Second_Base_Functor C D c d))
+      (alpha : (Base_Second_NatTrans C D c d F G))
+      (K : (Base_First_Base_Functor E C e c)) =>
+    Base_whiskerRight C D E c d e F G alpha K
+
+end

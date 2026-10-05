@@ -795,3 +795,46 @@ Functor projection fixtures with this adapter. Evidence is in
 `dev/validation/prelude-nattrans-compatibility/`. Source-compatible recursors,
 whole-record equality, operation and theorem bodies, runtime parity and
 conversion to the erased core record remain open.
+
+## Source-compatible LeftKanExtension adapter
+
+This prototype remains unverified. The production record-signature batch
+exceeded its 600-second deadline. The gate has not completed, so the record
+signatures, the two new support rows, the computations, the audits, the
+regression and the controls are unverified. See the recorded validation
+evidence before you accept it.
+
+Load `compatibility/composition.mech`, `compatibility/whiskering.mech` and
+`compatibility/left-kan.mech` after the equality, Category, Functor and NatTrans
+adapters. `MechSignatureLeftKan (u, v, w, z, p, q)` preserves six independent
+object and morphism universe parameters. Its record stores five fields in
+source order: `functor`, `unit`, `desc`, `fac` and `uniq`. The member
+`desc_unique` is a lemma derived from `uniq` with transitivity and symmetry of
+equality. The helpers `facAt`, `uniqAt` and `desc_unique_core` are not Lean
+members. Object-type
+parameters are erased; category and functor values and nested arguments remain
+relevant. Composition derives both functor laws from the stored input laws,
+and right whiskering follows the imported universe and argument order.
+Equality-family reuse shares the three category instances across
+these operations.
+
+Run `make prelude-left-kan-compatibility-test` to compare eight imported record
+members and seventeen support signatures, including `Functor.comp` and
+`NatTrans.whiskerRight`. The gate can reuse fifteen support rows from the
+NatTrans receipt. Two support rows are new. The gate also compares 26 copied
+Functor and NatTrans definitions in `composition.mech` with the gated adapters
+as text. The generic fixture is designed to check all five stored-field
+projections, the complete record shape, eight outer quantity pins and three hom
+universe pins. The gate is designed to run three closed specializations and two
+axiom audits (`mech axioms` and `prelude --audit`) on the same adapter. The 11
+control tests cover dependency refusal, outer and nested erasure, constructor
+field order, hidden stored fields, hom universe changes and altered
+factorization and uniqueness computations. Three of these tests are bookkeeping
+tests and do not change the source. The regression file includes the Category,
+Functor and NatTrans projection fixtures and the composition and whiskering
+fixtures. Evidence is in
+`dev/validation/prelude-left-kan-compatibility/`.
+
+Source-compatible recursors, whole-record equality, remaining operations and
+theorem bodies, runtime parity and conversion to the erased core record remain
+open.

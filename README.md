@@ -175,6 +175,19 @@ limit.  Run `make prelude-compatibility-test` to produce a fresh report and
 run its kernel mutation controls.  The report retains blocked rows and their
 reasons and leaves the M0 inventory unchanged.
 
+The source-compatible Category, Functor and NatTrans record adapters preserve
+stored fields, projection computations and relevant nested arguments. The
+LeftKanExtension prototype follows the same conventions. Its recorded
+production gate timed out in the record-signature batch. The gate has not
+completed, so the record signatures, the two new support rows, the
+computations, the audits, the regression and the controls are unverified. Run
+`make prelude-left-kan-compatibility-test` to compare the eight
+LeftKanExtension members and their composition and right-whiskering
+dependencies, and to run the fixtures, two axiom audits, the regression file
+and the 11 control tests. Matching NatTrans support evidence can be reused when
+its sources, graph and checker hashes still match. See [the adapter
+guide](prelude/README.md#source-compatible-leftkanextension-adapter).
+
 `prelude/init.mech` declares the data foundation and its recursors.
 The PRELUDE and AXIOMS gates check it from an empty kernel environment,
 so it cannot silently use the driver's initial Nat axiom.  Parameterized

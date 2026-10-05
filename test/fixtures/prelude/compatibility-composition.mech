@@ -1,0 +1,49 @@
+-- Check object and morphism composition on arbitrary shared records.
+poly (u, v, w, z, p, q) group CompatibilityComposition where
+specialize MechSignatureComposition (u, v, w, z, p, q) as Candidate
+specialize MechSignatureEq ((succ p)) as ObjectEquality
+
+def objects : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Candidate_Source_Category C) ->
+    (d : Candidate_Middle_Category D) -> (e : Candidate_Target_Category E) ->
+    (F : Candidate_First_Base_Functor C D c d) ->
+    (G : Candidate_Second_Base_Functor D E d e) -> (x : C) ->
+    ObjectEquality E
+      (Candidate_Composite_Base_obj C E c e (Candidate_comp C D E c d e F G) x)
+      (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Candidate_Source_Category C) (d : Candidate_Middle_Category D)
+      (e : Candidate_Target_Category E) (F : Candidate_First_Base_Functor C D c d)
+      (G : Candidate_Second_Base_Functor D E d e) (x : C) =>
+    ObjectEquality_refl E
+      (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F x))
+
+def morphisms : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Candidate_Source_Category C) ->
+    (d : Candidate_Middle_Category D) -> (e : Candidate_Target_Category E) ->
+    (F : Candidate_First_Base_Functor C D c d) ->
+    (G : Candidate_Second_Base_Functor D E d e) -> (x : C) -> (y : C) ->
+    (f : Candidate_Source_Hom C c x y) ->
+    Candidate_Target_Eq
+      (Candidate_Target_Hom E e
+        (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F x))
+        (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F y)))
+      (Candidate_Composite_Base_map C E c e (Candidate_comp C D E c d e F G) x y f)
+      (Candidate_Second_Base_map D E d e G
+        (Candidate_First_Base_obj C D c d F x) (Candidate_First_Base_obj C D c d F y)
+        (Candidate_First_Base_map C D c d F x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Candidate_Source_Category C) (d : Candidate_Middle_Category D)
+      (e : Candidate_Target_Category E) (F : Candidate_First_Base_Functor C D c d)
+      (G : Candidate_Second_Base_Functor D E d e) (x : C) (y : C)
+      (f : Candidate_Source_Hom C c x y) =>
+    Candidate_Target_Eq_refl
+      (Candidate_Target_Hom E e
+        (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F x))
+        (Candidate_Second_Base_obj D E d e G (Candidate_First_Base_obj C D c d F y)))
+      (Candidate_Second_Base_map D E d e G
+        (Candidate_First_Base_obj C D c d F x) (Candidate_First_Base_obj C D c d F y)
+        (Candidate_First_Base_map C D c d F x y f))
+end
+
+specialize CompatibilityComposition (0, 1, 1, 2, 2, 3) as ClosedComposition

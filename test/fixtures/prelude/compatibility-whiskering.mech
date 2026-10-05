@@ -1,0 +1,52 @@
+-- Compare the complete stored pair, including the naturality computation.
+poly (u, v, w, z, p, q) group CompatibilityWhiskering where
+specialize MechSignatureWhiskering (u, v, w, z, p, q) as Candidate
+specialize MechSignatureEq ((max (succ p) (succ z))) as Equality
+
+def storedPair : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Middle_Category C)) ->
+    (d : (Candidate_Base_Target_Category D)) ->
+    (e : (Candidate_Base_Source_Category E)) ->
+    (F : (Candidate_Base_Second_Base_Functor C D c d)) ->
+    (G : (Candidate_Base_Second_Base_Functor C D c d)) ->
+    (alpha : (Candidate_Base_Second_NatTrans C D c d F G)) ->
+    (K : (Candidate_Base_First_Base_Functor E C e c)) ->
+    Equality (Candidate_Base_Composite_NatTrans E D e d (Candidate_Base_comp E C D e c d K F) (Candidate_Base_comp E C D e c d K G)) (Candidate_whiskerRight C D E c d e F G alpha K) (Candidate_Base_Composite_mk E D e d (Candidate_Base_comp E C D e c d K F) (Candidate_Base_comp E C D e c d K G)
+     (fun (x : E) => Candidate_Base_Second_app C D c d F G alpha (Candidate_Base_First_Base_obj E C e c K x))
+     (fun (x : E) (y : E) (f : Candidate_Base_Source_Hom E e x y) =>
+       Candidate_Base_Second_naturality C D c d F G alpha
+         (Candidate_Base_First_Base_obj E C e c K x) (Candidate_Base_First_Base_obj E C e c K y)
+         (Candidate_Base_First_Base_map E C e c K x y f))) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Middle_Category C))
+      (d : (Candidate_Base_Target_Category D))
+      (e : (Candidate_Base_Source_Category E))
+      (F : (Candidate_Base_Second_Base_Functor C D c d))
+      (G : (Candidate_Base_Second_Base_Functor C D c d))
+      (alpha : (Candidate_Base_Second_NatTrans C D c d F G))
+      (K : (Candidate_Base_First_Base_Functor E C e c)) =>
+    Equality_refl (Candidate_Base_Composite_NatTrans E D e d (Candidate_Base_comp E C D e c d K F) (Candidate_Base_comp E C D e c d K G)) ((fun (x : E) => Candidate_Base_Second_app C D c d F G alpha (Candidate_Base_First_Base_obj E C e c K x)),
+     (fun (x : E) (y : E) (f : Candidate_Base_Source_Hom E e x y) =>
+       Candidate_Base_Second_naturality C D c d F G alpha
+         (Candidate_Base_First_Base_obj E C e c K x) (Candidate_Base_First_Base_obj E C e c K y)
+         (Candidate_Base_First_Base_map E C e c K x y f)))
+
+def whiskerSourceHomLevel : (0 E : Sort (succ p)) ->
+    (category : Candidate_Base_Source_Category E) -> E -> E -> Sort (succ q) :=
+  Candidate_Base_Source_Hom
+
+def whiskerMiddleHomLevel : (0 C : Sort (succ u)) ->
+    (category : Candidate_Base_Middle_Category C) -> C -> C -> Sort (succ v) :=
+  Candidate_Base_Middle_Hom
+
+def whiskerTargetHomLevel : (0 D : Sort (succ w)) ->
+    (category : Candidate_Base_Target_Category D) -> D -> D -> Sort (succ z) :=
+  Candidate_Base_Target_Hom
+
+end
+
+specialize CompatibilityWhiskering (0, 1, 1, 2, 2, 3) as ClosedWhiskering

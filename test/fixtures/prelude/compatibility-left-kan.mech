@@ -1,0 +1,433 @@
+-- Generic stored-field computations and exact record and quantity pins.
+poly (u, v, w, z, p, q) group CompatibilityLeftKan where
+specialize MechSignatureLeftKan (u, v, w, z, p, q) as Candidate
+specialize MechSignatureEq ((max (max (max (succ w) (succ p)) (succ z)) (succ q))) as Equality_functor
+specialize MechSignatureEq ((max (succ u) (succ q))) as Equality_unit
+specialize MechSignatureEq ((max (succ w) (succ q))) as Equality_desc
+specialize MechSignatureEq (0) as Equality_fac
+specialize MechSignatureEq (0) as Equality_uniq
+
+def LField : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    Sort (max (max (max (succ w) (succ p)) (succ z)) (succ q)) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e)) =>
+    (Candidate_Base_Second_Base_Functor D E d e)
+
+def unitField : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    Sort (max (succ u) (succ q)) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F) =>
+    (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K L))
+
+def descField : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    Sort (max (max (max (max (succ u) (succ w)) (succ p)) (succ z)) (succ q)) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L) =>
+    ((b10 : (Candidate_Base_Second_Base_Functor D E d e)) -> ((b11 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b10))) -> (Candidate_Base_Second_NatTrans D E d e L b10)))
+
+def facField : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    Prop :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit) =>
+    ((b11 : (Candidate_Base_Second_Base_Functor D E d e)) -> ((b12 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b11))) -> ((b13 : C) -> (Candidate_facAt C D E c d e K F L unit b11 b12 (desc b11 b12) b13))))
+
+def uniqueField : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    Prop :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc) =>
+    ((b12 : (Candidate_Base_Second_Base_Functor D E d e)) -> ((b13 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b12))) -> ((b14 : (Candidate_Base_Second_NatTrans D E d e L b12)) -> ((b15 : ((b15 : C) -> (Candidate_facAt C D E c d e K F L unit b12 b13 b14 b15))) -> ((b16 : D) -> (Candidate_uniqAt D E d e L b12 b14 (desc b12 b13) b16))))))
+
+def functorProjection : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    Equality_functor (LField C D E c d e K F) (Candidate_functor C D E c d e K F (Candidate_mk C D E c d e K F L unit desc fac unique)) L :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc)
+      (unique : uniqueField C D E c d e K F L unit desc fac) =>
+    Equality_functor_refl (LField C D E c d e K F) L
+
+def unitProjection : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    Equality_unit (unitField C D E c d e K F L) (Candidate_unit C D E c d e K F (Candidate_mk C D E c d e K F L unit desc fac unique)) unit :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc)
+      (unique : uniqueField C D E c d e K F L unit desc fac) =>
+    Equality_unit_refl (unitField C D E c d e K F L) unit
+
+def descProjection : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    (G : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G))) ->
+    Equality_desc (Candidate_Base_Second_NatTrans D E d e L G) (Candidate_desc C D E c d e K F (Candidate_mk C D E c d e K F L unit desc fac unique) G alpha) (desc G alpha) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc)
+      (unique : uniqueField C D E c d e K F L unit desc fac)
+      (G : (Candidate_Base_Second_Base_Functor D E d e))
+      (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G))) =>
+    Equality_desc_refl (Candidate_Base_Second_NatTrans D E d e L G) (desc G alpha)
+
+def facProjection : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    (G : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G))) ->
+    (x : C) ->
+    Equality_fac (Candidate_facAt C D E c d e K F L unit G alpha (desc G alpha) x) (Candidate_fac C D E c d e K F (Candidate_mk C D E c d e K F L unit desc fac unique) G alpha x) (fac G alpha x) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc)
+      (unique : uniqueField C D E c d e K F L unit desc fac)
+      (G : (Candidate_Base_Second_Base_Functor D E d e))
+      (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G)))
+      (x : C) =>
+    Equality_fac_refl (Candidate_facAt C D E c d e K F L unit G alpha (desc G alpha) x) (fac G alpha x)
+
+def uniqProjection : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    (G : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G))) ->
+    (beta : (Candidate_Base_Second_NatTrans D E d e L G)) ->
+    (h : ((x : C) -> (Candidate_facAt C D E c d e K F L unit G alpha beta x))) ->
+    (y : D) ->
+    Equality_uniq (Candidate_uniqAt D E d e L G beta (desc G alpha) y) (Candidate_uniq C D E c d e K F (Candidate_mk C D E c d e K F L unit desc fac unique) G alpha beta h y) (unique G alpha beta h y) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e))
+      (L : LField C D E c d e K F)
+      (unit : unitField C D E c d e K F L)
+      (desc : descField C D E c d e K F L unit)
+      (fac : facField C D E c d e K F L unit desc)
+      (unique : uniqueField C D E c d e K F L unit desc fac)
+      (G : (Candidate_Base_Second_Base_Functor D E d e))
+      (alpha : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K G)))
+      (beta : (Candidate_Base_Second_NatTrans D E d e L G))
+      (h : ((x : C) -> (Candidate_facAt C D E c d e K F L unit G alpha beta x)))
+      (y : D) =>
+    Equality_uniq_refl (Candidate_uniqAt D E d e L G beta (desc G alpha) y) (unique G alpha beta h y)
+
+def storedShape : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    Candidate_LeftKanExtension C D E c d e K F ->
+    ((L : LField C D E c d e K F) *
+    (unit : unitField C D E c d e K F L) *
+    (desc : descField C D E c d e K F L unit) *
+    (fac : facField C D E c d e K F L unit desc) *
+    (uniqueField C D E c d e K F L unit desc fac)) :=
+  fun (0 C : (Sort (succ u)))
+      (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (c : (Candidate_Base_Source_Category C))
+      (d : (Candidate_Base_Middle_Category D))
+      (e : (Candidate_Base_Target_Category E))
+      (K : (Candidate_Base_First_Base_Functor C D c d))
+      (F : (Candidate_Base_Composite_Base_Functor C E c e)) (self : Candidate_LeftKanExtension C D E c d e K F) => self
+
+def LeftKanExtensionQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (Sort (max (max (max (max (succ u) (succ w)) (succ p)) (succ z)) (succ q))) := Candidate_LeftKanExtension
+
+def mkQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (L : LField C D E c d e K F) ->
+    (unit : unitField C D E c d e K F L) ->
+    (desc : descField C D E c d e K F L unit) ->
+    (fac : facField C D E c d e K F L unit desc) ->
+    (unique : uniqueField C D E c d e K F L unit desc fac) ->
+    (Candidate_LeftKanExtension C D E c d e K F) := Candidate_mk
+
+def functorQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (Candidate_Base_Second_Base_Functor D E d e) := Candidate_functor
+
+def unitQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self))) := Candidate_unit
+
+def descQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b9))) ->
+    (Candidate_Base_Second_NatTrans D E d e (Candidate_functor C D E c d e K F self) b9) := Candidate_desc
+
+def facQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b9))) ->
+    (b11 : C) ->
+    (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Composite_Base_obj C E c e F b11) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b11)) (Candidate_Base_Target_comp E e (Candidate_Base_Composite_Base_obj C E c e F b11) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) b11) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b11) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_unit C D E c d e K F self) b11) (Candidate_Base_Composite_app C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_Base_comp C D E c d e K b9) (Candidate_Base_whiskerRight D E C d e c (Candidate_functor C D E c d e K F self) b9 (Candidate_desc C D E c d e K F self b9 b10) K) b11)) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K b9) b10 b11)) := Candidate_fac
+
+def uniqQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b9))) ->
+    (b11 : (Candidate_Base_Second_NatTrans D E d e (Candidate_functor C D E c d e K F self) b9)) ->
+    (b12 : ((b12 : C) -> (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Composite_Base_obj C E c e F b12) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b12)) (Candidate_Base_Target_comp E e (Candidate_Base_Composite_Base_obj C E c e F b12) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) b12) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b12) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_unit C D E c d e K F self) b12) (Candidate_Base_Composite_app C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_Base_comp C D E c d e K b9) (Candidate_Base_whiskerRight D E C d e c (Candidate_functor C D E c d e K F self) b9 b11 K) b12)) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K b9) b10 b12)))) ->
+    (b13 : D) ->
+    (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Second_Base_obj D E d e (Candidate_functor C D E c d e K F self) b13) (Candidate_Base_Second_Base_obj D E d e b9 b13)) (Candidate_Base_Second_app D E d e (Candidate_functor C D E c d e K F self) b9 b11 b13) (Candidate_Base_Second_app D E d e (Candidate_functor C D E c d e K F self) b9 (Candidate_desc C D E c d e K F self b9 b10) b13)) := Candidate_uniq
+
+def desc_uniqueQuantity : (0 C : (Sort (succ u))) ->
+    (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (c : (Candidate_Base_Source_Category C)) ->
+    (d : (Candidate_Base_Middle_Category D)) ->
+    (e : (Candidate_Base_Target_Category E)) ->
+    (K : (Candidate_Base_First_Base_Functor C D c d)) ->
+    (F : (Candidate_Base_Composite_Base_Functor C E c e)) ->
+    (self : (Candidate_LeftKanExtension C D E c d e K F)) ->
+    (b9 : (Candidate_Base_Second_Base_Functor D E d e)) ->
+    (b10 : (Candidate_Base_Composite_NatTrans C E c e F (Candidate_Base_comp C D E c d e K b9))) ->
+    (b11 : (Candidate_Base_Second_NatTrans D E d e (Candidate_functor C D E c d e K F self) b9)) ->
+    (b12 : (Candidate_Base_Second_NatTrans D E d e (Candidate_functor C D E c d e K F self) b9)) ->
+    (b13 : ((b13 : C) -> (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Composite_Base_obj C E c e F b13) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b13)) (Candidate_Base_Target_comp E e (Candidate_Base_Composite_Base_obj C E c e F b13) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) b13) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b13) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_unit C D E c d e K F self) b13) (Candidate_Base_Composite_app C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_Base_comp C D E c d e K b9) (Candidate_Base_whiskerRight D E C d e c (Candidate_functor C D E c d e K F self) b9 b11 K) b13)) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K b9) b10 b13)))) ->
+    (b14 : ((b14 : C) -> (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Composite_Base_obj C E c e F b14) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b14)) (Candidate_Base_Target_comp E e (Candidate_Base_Composite_Base_obj C E c e F b14) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) b14) (Candidate_Base_Composite_Base_obj C E c e (Candidate_Base_comp C D E c d e K b9) b14) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_unit C D E c d e K F self) b14) (Candidate_Base_Composite_app C E c e (Candidate_Base_comp C D E c d e K (Candidate_functor C D E c d e K F self)) (Candidate_Base_comp C D E c d e K b9) (Candidate_Base_whiskerRight D E C d e c (Candidate_functor C D E c d e K F self) b9 b12 K) b14)) (Candidate_Base_Composite_app C E c e F (Candidate_Base_comp C D E c d e K b9) b10 b14)))) ->
+    (b15 : D) ->
+    (Candidate_Base_Target_Eq (Candidate_Base_Target_Hom E e (Candidate_Base_Second_Base_obj D E d e (Candidate_functor C D E c d e K F self) b15) (Candidate_Base_Second_Base_obj D E d e b9 b15)) (Candidate_Base_Second_app D E d e (Candidate_functor C D E c d e K F self) b9 b11 b15) (Candidate_Base_Second_app D E d e (Candidate_functor C D E c d e K F self) b9 b12 b15)) := Candidate_desc_unique
+
+def sourceHomLevel : (0 C : Sort (succ u)) ->
+    (category : Candidate_Base_Source_Category C) -> C -> C -> Sort (succ v) :=
+  Candidate_Base_Source_Hom
+
+def middleHomLevel : (0 D : Sort (succ w)) ->
+    (category : Candidate_Base_Middle_Category D) -> D -> D -> Sort (succ z) :=
+  Candidate_Base_Middle_Hom
+
+def targetHomLevel : (0 E : Sort (succ p)) ->
+    (category : Candidate_Base_Target_Category E) -> E -> E -> Sort (succ q) :=
+  Candidate_Base_Target_Hom
+
+end

@@ -5249,3 +5249,36 @@ bodies, runtime parity and conversion to the erased core record remain open.
 LeftKanExtension is the next source-compatible record slice. This gate does
 not close M0, Stage C or U1. All repository changes are staged; no commit is
 created.
+
+## Stage C / U1: source-compatible LeftKanExtension prototype (2026-10-03)
+
+Base: 58bdc3b. User request: "Continue building mechanism-lang. Stage all
+changes." This increment adds eight record members at six symbolic universe
+levels, preserves the five stored fields (functor, unit, desc, fac and uniq) in
+source order, and implements composition and right whiskering over shared
+category records. The member desc_unique is a lemma derived from uniq. The
+helpers facAt, uniqAt and desc_unique_core are not Lean members. The fixtures
+encode all five projections, exact stored shape, outer quantities, hom
+universes, three closed specializations and dependency computation regressions.
+The gate is designed to run two axiom audits, a regression file that includes
+the composition and whiskering fixtures, and 11 control tests. It can reuse
+fifteen unchanged NatTrans support rows after it verifies source, graph and
+checker hashes. Two support rows are new.
+
+Acceptance is incomplete. The combined record-signature fixture exceeded the
+600-second production checker deadline with `CHECK_TIMEOUT`. The gate has not
+completed, so the record signatures, the two new support rows, the
+computations, the audits, the regression and the controls are unverified. The
+two new support commands completed without diagnostics, but their individual
+result rows were not persisted before timeout. No passing record or control
+claim is made.
+Python compilation and staged and unstaged diff whitespace checks pass.
+
+The machine's load average was around 62. A redundant native rebuild was
+cancelled; checks used the unchanged production native checker and the completed
+JavaScript audit build. The full attempt logs are outside the repository. One
+full kernel check of the prelude takes more than 13 minutes on this machine.
+The failure record and reproduction instructions are in
+`dev/validation/prelude-left-kan-compatibility/`. This prototype does not close
+M0, Stage C or U1. Complete its gate before further compatibility work.
+Repository changes are staged; no commit is created.

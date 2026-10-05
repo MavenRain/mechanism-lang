@@ -1,0 +1,466 @@
+-- Composition preserves the imported records and all nested object quantities.
+poly (u, v, w, z, p, q) group MechSignatureComposition where
+specialize MechSignatureCategory (u, v) as Source
+specialize MechSignatureCategory (w, z) as Middle
+specialize MechSignatureCategory (p, q) as Target
+specialize MechSignatureCongruence ((succ z), (succ q)) as Congruence
+  with (Source := Middle_Eq, Target := Target_Eq)
+
+def mapCongr : (0 A : Sort (succ z)) -> (0 B : Sort (succ q)) ->
+    (f : A -> B) -> (0 x : A) -> (0 y : A) ->
+    Middle_Eq A x y -> Target_Eq B (f x) (f y) :=
+  fun (0 A : Sort (succ z)) (0 B : Sort (succ q))
+      (f : A -> B) (0 x : A) (0 y : A) (e : Middle_Eq A x y) =>
+    Congruence_congrArg A B x y f e
+
+def First_Base_Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    Source_Category C -> Middle_Category D ->
+    Sort (max (max (max (succ u) (succ w)) (succ v)) (succ z)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) =>
+    (objects : C -> D) *
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Middle_Hom D d (objects x) (objects y)) *
+    (identities : (x : C) -> Middle_Eq (Middle_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Middle_id D d (objects x))) *
+    ((x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Middle_Eq (Middle_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Middle_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g)))
+
+def First_Base_mk : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) ->
+    (objects : C -> D) ->
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Middle_Hom D d (objects x) (objects y)) ->
+    (identities : (x : C) -> Middle_Eq (Middle_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Middle_id D d (objects x))) ->
+    (composition : (x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Middle_Eq (Middle_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Middle_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g))) -> First_Base_Functor C D c d :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D)
+      (objects : C -> D)
+      (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+        Middle_Hom D d (objects x) (objects y))
+      (identities : (x : C) -> Middle_Eq (Middle_Hom D d (objects x) (objects x))
+        (morphisms x x (Source_id C c x)) (Middle_id D d (objects x)))
+      (composition : (x : C) -> (y : C) -> (a : C) ->
+        (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+        Middle_Eq (Middle_Hom D d (objects x) (objects a))
+          (morphisms x a (Source_comp C c x y a f g))
+          (Middle_comp D d (objects x) (objects y) (objects a)
+            (morphisms x y f) (morphisms y a g))) =>
+    (objects, (morphisms, (identities, composition)))
+
+def First_Base_obj : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> First_Base_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Base_Functor C D c d) => F.1
+
+def First_Base_map : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> Source_Hom C c x y ->
+    Middle_Hom D d (First_Base_obj C D c d F x) (First_Base_obj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Base_Functor C D c d) => F.2.1
+
+def First_Base_map_id : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Base_Functor C D c d) ->
+    (x : C) -> Middle_Eq (Middle_Hom D d (First_Base_obj C D c d F x) (First_Base_obj C D c d F x))
+      (First_Base_map C D c d F x x (Source_id C c x)) (Middle_id D d (First_Base_obj C D c d F x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Base_Functor C D c d) => F.2.2.1
+
+def First_Base_map_comp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (c : Source_Category C) -> (d : Middle_Category D) -> (F : First_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> (a : C) ->
+    (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+    Middle_Eq (Middle_Hom D d (First_Base_obj C D c d F x) (First_Base_obj C D c d F a))
+      (First_Base_map C D c d F x a (Source_comp C c x y a f g))
+      (Middle_comp D d (First_Base_obj C D c d F x) (First_Base_obj C D c d F y) (First_Base_obj C D c d F a)
+        (First_Base_map C D c d F x y f) (First_Base_map C D c d F y a g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w))
+      (c : Source_Category C) (d : Middle_Category D) (F : First_Base_Functor C D c d) => F.2.2.2
+
+def Second_Base_Functor : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    Middle_Category C -> Target_Category D ->
+    Sort (max (max (max (succ w) (succ p)) (succ z)) (succ q)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) =>
+    (objects : C -> D) *
+    (morphisms : (x : C) -> (y : C) -> Middle_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) *
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Middle_id C c x)) (Target_id D d (objects x))) *
+    ((x : C) -> (y : C) -> (a : C) ->
+      (f : Middle_Hom C c x y) -> (g : Middle_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Middle_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g)))
+
+def Second_Base_mk : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) ->
+    (objects : C -> D) ->
+    (morphisms : (x : C) -> (y : C) -> Middle_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) ->
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Middle_id C c x)) (Target_id D d (objects x))) ->
+    (composition : (x : C) -> (y : C) -> (a : C) ->
+      (f : Middle_Hom C c x y) -> (g : Middle_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Middle_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g))) -> Second_Base_Functor C D c d :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D)
+      (objects : C -> D)
+      (morphisms : (x : C) -> (y : C) -> Middle_Hom C c x y ->
+        Target_Hom D d (objects x) (objects y))
+      (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+        (morphisms x x (Middle_id C c x)) (Target_id D d (objects x)))
+      (composition : (x : C) -> (y : C) -> (a : C) ->
+        (f : Middle_Hom C c x y) -> (g : Middle_Hom C c y a) ->
+        Target_Eq (Target_Hom D d (objects x) (objects a))
+          (morphisms x a (Middle_comp C c x y a f g))
+          (Target_comp D d (objects x) (objects y) (objects a)
+            (morphisms x y f) (morphisms y a g))) =>
+    (objects, (morphisms, (identities, composition)))
+
+def Second_Base_obj : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> Second_Base_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Base_Functor C D c d) => F.1
+
+def Second_Base_map : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> Middle_Hom C c x y ->
+    Target_Hom D d (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Base_Functor C D c d) => F.2.1
+
+def Second_Base_map_id : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Base_Functor C D c d) ->
+    (x : C) -> Target_Eq (Target_Hom D d (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F x))
+      (Second_Base_map C D c d F x x (Middle_id C c x)) (Target_id D d (Second_Base_obj C D c d F x)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Base_Functor C D c d) => F.2.2.1
+
+def Second_Base_map_comp : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) -> (F : Second_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> (a : C) ->
+    (f : Middle_Hom C c x y) -> (g : Middle_Hom C c y a) ->
+    Target_Eq (Target_Hom D d (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F a))
+      (Second_Base_map C D c d F x a (Middle_comp C c x y a f g))
+      (Target_comp D d (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) (Second_Base_obj C D c d F a)
+        (Second_Base_map C D c d F x y f) (Second_Base_map C D c d F y a g)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D) (F : Second_Base_Functor C D c d) => F.2.2.2
+
+def Second_NatTrans : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) ->
+    (F : Second_Base_Functor C D c d) -> (G : Second_Base_Functor C D c d) ->
+    Sort (max (succ w) (succ q)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D)
+      (F : Second_Base_Functor C D c d) (G : Second_Base_Functor C D c d) =>
+    (components : (x : C) -> Target_Hom D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x)) *
+    ((x : C) -> (y : C) -> (f : Middle_Hom C c x y) ->
+      Target_Eq (Target_Hom D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G y))
+      (Target_comp D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) (Second_Base_obj C D c d G y)
+        (Second_Base_map C D c d F x y f) (components y))
+      (Target_comp D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x) (Second_Base_obj C D c d G y)
+        (components x) (Second_Base_map C D c d G x y f)))
+
+def Second_mk : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) ->
+    (F : Second_Base_Functor C D c d) -> (G : Second_Base_Functor C D c d) ->
+    (components : (x : C) -> Target_Hom D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x)) ->
+    ((x : C) -> (y : C) -> (f : Middle_Hom C c x y) ->
+      Target_Eq (Target_Hom D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G y))
+      (Target_comp D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) (Second_Base_obj C D c d G y)
+        (Second_Base_map C D c d F x y f) (components y))
+      (Target_comp D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x) (Second_Base_obj C D c d G y)
+        (components x) (Second_Base_map C D c d G x y f))) -> Second_NatTrans C D c d F G :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D)
+      (F : Second_Base_Functor C D c d) (G : Second_Base_Functor C D c d)
+      (components : (x : C) -> Target_Hom D d
+        (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x))
+      (Second_naturality : (x : C) -> (y : C) -> (f : Middle_Hom C c x y) ->
+        Target_Eq (Target_Hom D d
+          (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G y))
+        (Target_comp D d
+          (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) (Second_Base_obj C D c d G y)
+          (Second_Base_map C D c d F x y f) (components y))
+        (Target_comp D d
+          (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x) (Second_Base_obj C D c d G y)
+          (components x) (Second_Base_map C D c d G x y f))) =>
+    (components, Second_naturality)
+
+def Second_app : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) ->
+    (F : Second_Base_Functor C D c d) -> (G : Second_Base_Functor C D c d) ->
+    Second_NatTrans C D c d F G -> (x : C) -> Target_Hom D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D)
+      (F : Second_Base_Functor C D c d) (G : Second_Base_Functor C D c d)
+      (alpha : Second_NatTrans C D c d F G) => alpha.1
+
+def Second_naturality : (0 C : Sort (succ w)) -> (0 D : Sort (succ p)) ->
+    (c : Middle_Category C) -> (d : Target_Category D) ->
+    (F : Second_Base_Functor C D c d) -> (G : Second_Base_Functor C D c d) ->
+    (alpha : Second_NatTrans C D c d F G) ->
+    (x : C) -> (y : C) -> (f : Middle_Hom C c x y) ->
+    Target_Eq (Target_Hom D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G y))
+    (Target_comp D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d F y) (Second_Base_obj C D c d G y)
+      (Second_Base_map C D c d F x y f) (Second_app C D c d F G alpha y))
+    (Target_comp D d
+      (Second_Base_obj C D c d F x) (Second_Base_obj C D c d G x) (Second_Base_obj C D c d G y)
+      (Second_app C D c d F G alpha x) (Second_Base_map C D c d G x y f)) :=
+  fun (0 C : Sort (succ w)) (0 D : Sort (succ p))
+      (c : Middle_Category C) (d : Target_Category D)
+      (F : Second_Base_Functor C D c d) (G : Second_Base_Functor C D c d)
+      (alpha : Second_NatTrans C D c d F G) => alpha.2
+
+def Composite_Base_Functor : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    Source_Category C -> Target_Category D ->
+    Sort (max (max (max (succ u) (succ p)) (succ v)) (succ q)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) =>
+    (objects : C -> D) *
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) *
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Target_id D d (objects x))) *
+    ((x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g)))
+
+def Composite_Base_mk : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (objects : C -> D) ->
+    (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+      Target_Hom D d (objects x) (objects y)) ->
+    (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+      (morphisms x x (Source_id C c x)) (Target_id D d (objects x))) ->
+    (composition : (x : C) -> (y : C) -> (a : C) ->
+      (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+      Target_Eq (Target_Hom D d (objects x) (objects a))
+        (morphisms x a (Source_comp C c x y a f g))
+        (Target_comp D d (objects x) (objects y) (objects a)
+          (morphisms x y f) (morphisms y a g))) -> Composite_Base_Functor C D c d :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D)
+      (objects : C -> D)
+      (morphisms : (x : C) -> (y : C) -> Source_Hom C c x y ->
+        Target_Hom D d (objects x) (objects y))
+      (identities : (x : C) -> Target_Eq (Target_Hom D d (objects x) (objects x))
+        (morphisms x x (Source_id C c x)) (Target_id D d (objects x)))
+      (composition : (x : C) -> (y : C) -> (a : C) ->
+        (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+        Target_Eq (Target_Hom D d (objects x) (objects a))
+          (morphisms x a (Source_comp C c x y a f g))
+          (Target_comp D d (objects x) (objects y) (objects a)
+            (morphisms x y f) (morphisms y a g))) =>
+    (objects, (morphisms, (identities, composition)))
+
+def Composite_Base_obj : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> Composite_Base_Functor C D c d -> C -> D :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Base_Functor C D c d) => F.1
+
+def Composite_Base_map : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> Source_Hom C c x y ->
+    Target_Hom D d (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Base_Functor C D c d) => F.2.1
+
+def Composite_Base_map_id : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Base_Functor C D c d) ->
+    (x : C) -> Target_Eq (Target_Hom D d (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F x))
+      (Composite_Base_map C D c d F x x (Source_id C c x)) (Target_id D d (Composite_Base_obj C D c d F x)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Base_Functor C D c d) => F.2.2.1
+
+def Composite_Base_map_comp : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) -> (F : Composite_Base_Functor C D c d) ->
+    (x : C) -> (y : C) -> (a : C) ->
+    (f : Source_Hom C c x y) -> (g : Source_Hom C c y a) ->
+    Target_Eq (Target_Hom D d (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F a))
+      (Composite_Base_map C D c d F x a (Source_comp C c x y a f g))
+      (Target_comp D d (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) (Composite_Base_obj C D c d F a)
+        (Composite_Base_map C D c d F x y f) (Composite_Base_map C D c d F y a g)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D) (F : Composite_Base_Functor C D c d) => F.2.2.2
+
+def Composite_NatTrans : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Composite_Base_Functor C D c d) -> (G : Composite_Base_Functor C D c d) ->
+    Sort (max (succ u) (succ q)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Composite_Base_Functor C D c d) (G : Composite_Base_Functor C D c d) =>
+    (components : (x : C) -> Target_Hom D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x)) *
+    ((x : C) -> (y : C) -> (f : Source_Hom C c x y) ->
+      Target_Eq (Target_Hom D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G y))
+      (Target_comp D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) (Composite_Base_obj C D c d G y)
+        (Composite_Base_map C D c d F x y f) (components y))
+      (Target_comp D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x) (Composite_Base_obj C D c d G y)
+        (components x) (Composite_Base_map C D c d G x y f)))
+
+def Composite_mk : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Composite_Base_Functor C D c d) -> (G : Composite_Base_Functor C D c d) ->
+    (components : (x : C) -> Target_Hom D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x)) ->
+    ((x : C) -> (y : C) -> (f : Source_Hom C c x y) ->
+      Target_Eq (Target_Hom D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G y))
+      (Target_comp D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) (Composite_Base_obj C D c d G y)
+        (Composite_Base_map C D c d F x y f) (components y))
+      (Target_comp D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x) (Composite_Base_obj C D c d G y)
+        (components x) (Composite_Base_map C D c d G x y f))) -> Composite_NatTrans C D c d F G :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Composite_Base_Functor C D c d) (G : Composite_Base_Functor C D c d)
+      (components : (x : C) -> Target_Hom D d
+        (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x))
+      (Composite_naturality : (x : C) -> (y : C) -> (f : Source_Hom C c x y) ->
+        Target_Eq (Target_Hom D d
+          (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G y))
+        (Target_comp D d
+          (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) (Composite_Base_obj C D c d G y)
+          (Composite_Base_map C D c d F x y f) (components y))
+        (Target_comp D d
+          (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x) (Composite_Base_obj C D c d G y)
+          (components x) (Composite_Base_map C D c d G x y f))) =>
+    (components, Composite_naturality)
+
+def Composite_app : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Composite_Base_Functor C D c d) -> (G : Composite_Base_Functor C D c d) ->
+    Composite_NatTrans C D c d F G -> (x : C) -> Target_Hom D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Composite_Base_Functor C D c d) (G : Composite_Base_Functor C D c d)
+      (alpha : Composite_NatTrans C D c d F G) => alpha.1
+
+def Composite_naturality : (0 C : Sort (succ u)) -> (0 D : Sort (succ p)) ->
+    (c : Source_Category C) -> (d : Target_Category D) ->
+    (F : Composite_Base_Functor C D c d) -> (G : Composite_Base_Functor C D c d) ->
+    (alpha : Composite_NatTrans C D c d F G) ->
+    (x : C) -> (y : C) -> (f : Source_Hom C c x y) ->
+    Target_Eq (Target_Hom D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G y))
+    (Target_comp D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d F y) (Composite_Base_obj C D c d G y)
+      (Composite_Base_map C D c d F x y f) (Composite_app C D c d F G alpha y))
+    (Target_comp D d
+      (Composite_Base_obj C D c d F x) (Composite_Base_obj C D c d G x) (Composite_Base_obj C D c d G y)
+      (Composite_app C D c d F G alpha x) (Composite_Base_map C D c d G x y f)) :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ p))
+      (c : Source_Category C) (d : Target_Category D)
+      (F : Composite_Base_Functor C D c d) (G : Composite_Base_Functor C D c d)
+      (alpha : Composite_NatTrans C D c d F G) => alpha.2
+
+def comp : (0 C : Sort (succ u)) -> (0 D : Sort (succ w)) ->
+    (0 E : Sort (succ p)) -> (c : Source_Category C) -> (d : Middle_Category D) ->
+    (e : Target_Category E) -> First_Base_Functor C D c d -> Second_Base_Functor D E d e -> Composite_Base_Functor C E c e :=
+  fun (0 C : Sort (succ u)) (0 D : Sort (succ w)) (0 E : Sort (succ p))
+      (c : Source_Category C) (d : Middle_Category D) (e : Target_Category E)
+      (F : First_Base_Functor C D c d) (G : Second_Base_Functor D E d e) =>
+    ((fun (x : C) => G.1 (F.1 x)),
+     ((fun (x : C) (y : C) (f : Source_Hom C c x y) =>
+         Second_Base_map D E d e G (F.1 x) (F.1 y) (First_Base_map C D c d F x y f)),
+      ((fun (x : C) =>
+          Target_Eq_trans (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+            (Second_Base_map D E d e G (F.1 x) (F.1 x)
+              (First_Base_map C D c d F x x (Source_id C c x)))
+            (Second_Base_map D E d e G (F.1 x) (F.1 x) (Middle_id D d (F.1 x)))
+            (Target_id E e (G.1 (F.1 x)))
+            (mapCongr (Middle_Hom D d (F.1 x) (F.1 x))
+              (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 x)))
+              (fun (h : Middle_Hom D d (F.1 x) (F.1 x)) =>
+                Second_Base_map D E d e G (F.1 x) (F.1 x) h)
+              (First_Base_map C D c d F x x (Source_id C c x)) (Middle_id D d (F.1 x))
+              (First_Base_map_id C D c d F x))
+            (Second_Base_map_id D E d e G (F.1 x))),
+       (fun (x : C) (y : C) (z : C)
+            (f : Source_Hom C c x y) (g : Source_Hom C c y z) =>
+          Target_Eq_trans (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+            (Second_Base_map D E d e G (F.1 x) (F.1 z)
+              (First_Base_map C D c d F x z (Source_comp C c x y z f g)))
+            (Second_Base_map D E d e G (F.1 x) (F.1 z)
+              (Middle_comp D d (F.1 x) (F.1 y) (F.1 z)
+                (First_Base_map C D c d F x y f) (First_Base_map C D c d F y z g)))
+            (Target_comp E e (G.1 (F.1 x)) (G.1 (F.1 y)) (G.1 (F.1 z))
+              (Second_Base_map D E d e G (F.1 x) (F.1 y) (First_Base_map C D c d F x y f))
+              (Second_Base_map D E d e G (F.1 y) (F.1 z) (First_Base_map C D c d F y z g)))
+            (mapCongr (Middle_Hom D d (F.1 x) (F.1 z))
+              (Target_Hom E e (G.1 (F.1 x)) (G.1 (F.1 z)))
+              (fun (h : Middle_Hom D d (F.1 x) (F.1 z)) =>
+                Second_Base_map D E d e G (F.1 x) (F.1 z) h)
+              (First_Base_map C D c d F x z (Source_comp C c x y z f g))
+              (Middle_comp D d (F.1 x) (F.1 y) (F.1 z)
+                (First_Base_map C D c d F x y f) (First_Base_map C D c d F y z g))
+              (First_Base_map_comp C D c d F x y z f g))
+            (Second_Base_map_comp D E d e G (F.1 x) (F.1 y) (F.1 z)
+              (First_Base_map C D c d F x y f) (First_Base_map C D c d F y z g))))))
+
+def whiskerRight : (0 D : (Sort (succ w))) ->
+    (0 E : (Sort (succ p))) ->
+    (0 C : (Sort (succ u))) ->
+    (d : (Middle_Category D)) ->
+    (e : (Target_Category E)) ->
+    (c : (Source_Category C)) ->
+    (L : (Second_Base_Functor D E d e)) ->
+    (M : (Second_Base_Functor D E d e)) ->
+    (alpha : (Second_NatTrans D E d e L M)) ->
+    (K : (First_Base_Functor C D c d)) ->
+    (Composite_NatTrans C E c e (comp C D E c d e K L) (comp C D E c d e K M)) :=
+  fun (0 D : (Sort (succ w)))
+      (0 E : (Sort (succ p)))
+      (0 C : (Sort (succ u)))
+      (d : (Middle_Category D))
+      (e : (Target_Category E))
+      (c : (Source_Category C))
+      (L : (Second_Base_Functor D E d e))
+      (M : (Second_Base_Functor D E d e))
+      (alpha : (Second_NatTrans D E d e L M))
+      (K : (First_Base_Functor C D c d)) =>
+    ((fun (x : C) => Second_app D E d e L M alpha (First_Base_obj C D c d K x)),
+     (fun (x : C) (y : C) (f : Source_Hom C c x y) =>
+       Second_naturality D E d e L M alpha
+         (First_Base_obj C D c d K x) (First_Base_obj C D c d K y)
+         (First_Base_map C D c d K x y f)))
+
+end
