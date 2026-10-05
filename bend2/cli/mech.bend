@@ -1,6 +1,7 @@
 import Base
 import ./kanon.bend as Kanon
 import ./rust_out.bend as RustOut
+import ./rust_in.bend as RustIn
 import ../io.bend as Files
 import ../kernel/common.bend as Common
 import ../import/export.bend as Export
@@ -8,7 +9,7 @@ import ../import/report.bend as Report
 import ../import/mapping.bend as Mapping
 
 def usage() -> IO(Unit):
-  IO.die(Unit, 64, "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech rust-out FILE.mech... OUT_DIR\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)")
+  IO.die(Unit, 64, "usage: mech import FILE [--out DIR] | diff-parity --export FILE\n       mech map-inventory --export FILE [--never]\n       mech rust-out FILE.mech... OUT_DIR\n       mech rust-in CRATE_DIR OUT_DIR\n       mech check|axioms|circuit|emit|build|run|spec-count (inherited arguments)")
 
 def export_error(error: Export.Error, path: String) -> String:
   match error:
@@ -128,6 +129,8 @@ def dispatch(command: String, args: List<String>) -> IO(Unit):
           usage()
     case "rust-out":
       RustOut.run(args)
+    case "rust-in":
+      RustIn.run(args)
     case command:
       Kanon.dispatch(command, args)
 

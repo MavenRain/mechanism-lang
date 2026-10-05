@@ -11,6 +11,7 @@ import ../surface/elab.bend as Elab
 import ../kernel/global.bend as Global
 import ../kernel/budget.bend as Budget
 import ../kernel/error.bend as E
+import ../cli/rust_in.bend as Ri
 
 # Driver: `bend bend2/tests/rust_import.bend <mode> <source text>`.
 # Mode `lift`: parse, lift to the erased IR, print with the emitter. The
@@ -75,20 +76,9 @@ def inferred(r: Result<&2, &2, Rs.Bad, Rs.Out>) -> String:
 # joins the files in manifest order, runs the kernel check and prints
 # `MECH-CHECK-OK <n> rows axioms=<k>` or `MECH-CHECK-FAIL <error>`.
 # Regression gate: python3 dev/rust-lower-gate.py (optional --driver/--emitter).
-def lower_if(+o: Rs.Out, r: Result<&2, &2, Rs.Bad, List<&2, In.Typed>>) -> Result<&2, &2, Rs.Bad, List<&2, Lo.Low>>:
-  match r:
-    case Done{ts}:
-      Done{Lo.lower(o)}
-    case Fail{b}:
-      Fail{b}
-
-def lows_of(r: Result<&2, &2, Rs.Bad, Rs.Out>) -> Result<&2, &2, Rs.Bad, List<&2, Lo.Low>>:
-  match r:
-    case Done{+o}:
-      lower_if(o, In.infer(o))
-    case Fail{b}:
-      Fail{b}
-
+# Mode `run` (C5): `run <crate dir> <out dir>` calls the `run` of the
+# `rust-in` verb (bend2/cli/rust_in.bend), so it writes files and exits
+# with the codes of the verb.
 def lower_report(r: Result<&2, &2, Rs.Bad, List<&2, Lo.Low>>) -> String:
   match r:
     case Done{ls}:
@@ -141,9 +131,9 @@ def run_mode(m: Md, src: String, more: List<String>) -> String:
     case MTypes{}:
       inferred(Rs.resolve(src, srcs_of(more)))
     case MLower{}:
-      lower_report(lows_of(Rs.resolve(src, srcs_of(more))))
+      lower_report(Ri.lows_of(Rs.resolve(src, srcs_of(more))))
     case MCheck{}:
-      check_report(lows_of(Rs.resolve(src, srcs_of(more))))
+      check_report(Ri.lows_of(Rs.resolve(src, srcs_of(more))))
     case MNone{}:
       "unknown mode\n"
 
@@ -155,9 +145,17 @@ def run_args(args: List<String>) -> String:
     case Con{mode, Con{src, rest}}:
       dispatch(mode, src, rest)
     case other:
-      "usage: rust_import.bend lift <source text> | resolve <lib.rs text> (<module> <text>)*\n"
+      "usage: rust_import.bend lift <source text> | resolve|types|lower|check <lib.rs text> (<module> <text>)* | run <crate dir> <out dir>\n"
+
+# Mode `run` does IO; each other mode writes the text of `run_args`.
+def run_io(args: List<String>) -> IO(Unit):
+  match args:
+    case Con{"run", rest}:
+      Ri.run(rest)
+    case other:
+      IO.write(run_args(other))
 
 def main() -> IO(Unit):
   do IO<Unit>:
     args : List<String> <- IO.args()
-    IO.write(run_args(args))
+    run_io(args)
