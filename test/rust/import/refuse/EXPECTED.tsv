@@ -1,8 +1,11 @@
 01_let	65	REFUSED src/foo.rs:2:5: `let` statement
-02_struct_fields	65	REFUSED src/foo.rs:1:1: unit struct `Pair` without its constructor fn
+02_struct_fields	65	REFUSED src/foo.rs:1:1: struct `Pair` with fields
 03_method_call	65	REFUSED src/foo.rs:2:5: method call `.max`
 04_name_not_canonical	65	REFUSED src/foo.rs:1:1: name `badName` that is not canonical: D7 of `badName` is `bad_name` (CD5)
 05_changed_nat	65	REFUSED src/nat.rs:1:1: text other than the fixed `nat` module of the emitter (CD7)
-06_mutual_recursion	65	MECH-CHECK-FAIL pong
+06_mutual_recursion	65	REFUSED src/foo.rs:1:1: use of the function `pong` before its declaration (mutual recursion or a forward reference)
 07_module_cycle	65	REFUSED src/alpha.rs:1:1: `use crate::beta::*;` in a module cycle (CD3)
 08_ctor_no_expected_type	65	REFUSED src/foo.rs:7:1: constructor of a generic family with no expected type (CD9)
+09_unit_no_ctor	65	REFUSED src/foo.rs:1:1: unit struct `Solo` without its constructor fn
+10_tuple_struct	65	REFUSED src/foo.rs:1:1: struct `Wrap` with fields
+11_forward_reference	65	REFUSED src/foo.rs:1:1: use of the function `second` before its declaration (mutual recursion or a forward reference)

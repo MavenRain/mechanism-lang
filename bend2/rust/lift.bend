@@ -606,12 +606,22 @@ def fn_item(+meta: A.Meta, vis: A.Vis, sig: A.Sig, body: Maybe<&2, List<&2, A.St
 def unit_copy(pos: A.Pos, cp: Bool) -> Result<&2, &2, Refusal, Bool>:
   Bool.pick(Result<&2, &2, Refusal, Bool>, cp, Done{True{}}, Fail{Refusal{pos, "unit struct without `Copy` in its derive list"}})
 
-def unit_body(pos: A.Pos, gs: List<&2, A.GParam>, body: A.Body) -> Result<&2, &2, Refusal, Bool>:
-  match gs body:
-    case Nil{} A.BUnit{}:
+def body_ok(pos: A.Pos, +name: String, body: A.Body) -> Result<&2, &2, Refusal, Bool>:
+  match body:
+    case A.BUnit{}:
       Done{True{}}
-    case g b:
-      Fail{Refusal{pos, "struct with generics or fields"}}
+    case A.BTuple{fs}:
+      Fail{Refusal{pos, "struct `" ++ name ++ "` with fields"}}
+    case A.BNamed{fs}:
+      Fail{Refusal{pos, "struct `" ++ name ++ "` with fields"}}
+
+# A struct of this fragment is a unit struct: no generics and no fields.
+def unit_body(pos: A.Pos, +name: String, gs: List<&2, A.GParam>, body: A.Body) -> Result<&2, &2, Refusal, Bool>:
+  match gs:
+    case Nil{}:
+      body_ok(pos, name, body)
+    case Con{g, rest}:
+      Fail{Refusal{pos, "struct `" ++ name ++ "` with generics"}}
 
 # The constructor fn of the unit struct `name`: `fn <ctor>() -> name { name }`.
 def ctor_of(pos: A.Pos, +name: String, f: R.Item) -> Result<&2, &2, Refusal, String>:
@@ -643,16 +653,19 @@ def ctor_of(pos: A.Pos, +name: String, f: R.Item) -> Result<&2, &2, Refusal, Str
         return R.IEnum{name, gs, cp, rvs} <> more
     case Con{A.IStruct{+meta, vis, +name, gens, body}, Con{A.IFn{fm, fv, fs, fb}, rest}}:
       do Result<&2, &2, Refusal, List<&2, R.Item>>:
+        u : Bool <- unit_body(A.meta_pos(meta), name, gens, body)
         cp : Bool <- derived(meta)
         c : Bool <- unit_copy(A.meta_pos(meta), cp)
         v : Bool <- is_pub(A.meta_pos(meta), vis)
-        u : Bool <- unit_body(A.meta_pos(meta), gens, body)
         f : R.Item <- fn_item(fm, fv, fs, fb)
         ctor : String <- ctor_of(A.meta_pos(meta), name, f)
         more : List<&2, R.Item> <- items(rest)
         return R.IUnit{name, ctor} <> more
-    case Con{A.IStruct{meta, vis, name, gens, body}, rest}:
-      Fail{Refusal{A.meta_pos(meta), "unit struct `" ++ name ++ "` without its constructor fn"}}
+    case Con{A.IStruct{+meta, vis, +name, gens, body}, rest}:
+      do Result<&2, &2, Refusal, List<&2, R.Item>>:
+        u : Bool <- unit_body(A.meta_pos(meta), name, gens, body)
+        none : List<&2, R.Item> <- Fail{Refusal{A.meta_pos(meta), "unit struct `" ++ name ++ "` without its constructor fn"}}
+        return none
     case Con{A.IFn{meta, vis, sig, body}, rest}:
       do Result<&2, &2, Refusal, List<&2, R.Item>>:
         f : R.Item <- fn_item(meta, vis, sig, body)

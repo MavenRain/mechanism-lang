@@ -529,12 +529,35 @@ def problem_at(module: String, pos: A.Pos, m: Maybe<&2, String>, later: Result<&
     case None{}:
       later
 
-@unsafe def check_items(+module: String, +sc: Scope, ps: List<&2, Placed>) -> Result<&2, &2, Bad, Bool>:
+# The text of a name problem after its first word: "unknown function `f`"
+# gives "function `f`".
+def after_space(s: String) -> String:
+  match s:
+    case SNil{}:
+      SNil{}
+    case SCon{+c, +rest}:
+      Bool.pick(String, Ro.code_is(c, 32), rest, after_space(rest))
+
+# A name that the module has, but not at this item or before it. The mech
+# text keeps the item order, and a mech declaration sees only the earlier
+# declarations and itself.
+def early_at(module: String, pos: A.Pos, m: Maybe<&2, String>, later: Result<&2, &2, Bad, Bool>) -> Result<&2, &2, Bad, Bool>:
+  match m:
+    case Some{what}:
+      Fail{Bad{module, pos, "use of the " ++ after_space(what) ++ " before its declaration (mutual recursion or a forward reference)"}}
+    case None{}:
+      later
+
+# `sc`: the used modules and all items of the module. `seen`: the used
+# modules and the items before `ps`.
+@unsafe def check_items(+module: String, +sc: Scope, seen: Scope, ps: List<&2, Placed>) -> Result<&2, &2, Bad, Bool>:
   match ps:
     case Nil{}:
       Done{True{}}
     case Con{+p, rest}:
-      problem_at(module, place_pos(p), walk(sc, item_jobs(p)), check_items(module, sc, rest))
+      +now = item_scope(p, seen)
+      problem_at(module, place_pos(p), walk(sc, item_jobs(p)),
+        early_at(module, place_pos(p), walk(now, item_jobs(p)), check_items(module, sc, now, rest)))
 
 # ---- modules ----
 
@@ -596,7 +619,7 @@ def use_scope(+ms: List<&2, Mod>, us: List<&2, UseAt>, sc: Scope) -> Scope:
       Done{True{}}
     case Con{Mod{+name, file, +items}, rest}:
       do Result<&2, &2, Bad, Bool>:
-        ok : Bool <- check_items(name, use_scope(all, uses_of(items), items_scope(items, empty())), items)
+        ok : Bool <- check_items(name, use_scope(all, uses_of(items), items_scope(items, empty())), use_scope(all, uses_of(items), empty()), items)
         more : Bool <- check_mods(all, rest)
         return more
 
