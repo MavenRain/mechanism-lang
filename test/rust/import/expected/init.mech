@@ -1,0 +1,22 @@
+mu MechBool : Type 0 :=
+| mechFalse : MechBool
+| mechTrue : MechBool
+mu MechNat : Type 0 :=
+| mechZero : MechNat
+| mechSucc : ((_ : MechNat) -> MechNat)
+mu MechUnit : Type 0 :=
+| mechUnit : MechUnit
+mu MechEmpty : Type 0 :=
+mu MechSum (0 A : Type 0) (0 B : Type 0) : Type 0 :=
+| mechInl : ((_ : A) -> ((MechSum A) B))
+| mechInr : ((_ : B) -> ((MechSum A) B))
+mu MechDecidable : Type 0 :=
+| mechIsFalse : MechDecidable
+| mechIsTrue : MechDecidable
+def mechBoolRec : ((0 A : Type 0) -> ((no : A) -> ((yes : A) -> ((b : MechBool) -> A)))) := (fun (0 A : Type 0) (no : A) (yes : A) (b : MechBool) => (case b as self in MechBool return A with | mechFalse => no | mechTrue => yes))
+def mechEmptyElim : ((0 A : Type 0) -> ((e : MechEmpty) -> A)) := (fun (0 A : Type 0) (e : MechEmpty) => (case e as self in MechEmpty return A with))
+def mechSumRec : ((0 A : Type 0) -> ((0 B : Type 0) -> ((0 C : Type 0) -> ((left : ((_ : A) -> C)) -> ((right : ((_ : B) -> C)) -> ((s : ((MechSum A) B)) -> C)))))) := (fun (0 A : Type 0) (0 B : Type 0) (0 C : Type 0) (left : ((_ : A) -> C)) (right : ((_ : B) -> C)) (s : ((MechSum A) B)) => (case s as self in MechSum return C with | mechInl a => (left a) | mechInr b => (right b)))
+def rec mechNatRec : ((0 P : Type 0) -> ((zero : P) -> ((step : ((_ : MechNat) -> ((_ : P) -> P))) -> ((n : MechNat) -> P)))) := (fun (0 P : Type 0) (zero : P) (step : ((_ : MechNat) -> ((_ : P) -> P))) (n : MechNat) => (case n as self in MechNat return P with | mechZero => zero | mechSucc previous => ((step previous) ((((mechNatRec P) zero) step) previous))))
+def mechDecidableBool : ((d : MechDecidable) -> MechBool) := (fun (d : MechDecidable) => (case d as self in MechDecidable return MechBool with | mechIsFalse => mechFalse | mechIsTrue => mechTrue))
+def mechJ : ((0 P : Type 0) -> ((reflCase : P) -> P)) := (fun (0 P : Type 0) (reflCase : P) => reflCase)
+def mechTransport : ((0 B : Type 0) -> ((value : B) -> B)) := (fun (0 B : Type 0) (value : B) => ((mechJ B) value))

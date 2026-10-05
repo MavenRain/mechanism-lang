@@ -1,0 +1,3 @@
+pub fn good(x: bool) -> bool {
+    x
+}
