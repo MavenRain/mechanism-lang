@@ -193,7 +193,7 @@ def mty(+copies: List<&2, String>, t: R.Ty) -> Syntax.T:
   one_m(mtys(copies, [t]))
 
 def binder_name(+name: String) -> String:
-  Rs.camel(Rs.unkw(name))
+  Et.fn_back(name)
 
 @unsafe def params_tele(+copies: List<&2, String>, ps: List<&2, R.Param>, body: Syntax.T) -> Syntax.T:
   match ps:

@@ -96,6 +96,8 @@ Terms:
 - A definition `camelCase` becomes a function `snake_case`. A constructor becomes an `UpperCamel` variant. A Rust keyword gets `_` at the end.
 - The module name is the file stem with `-` changed to `_`. The stem must be a lower-case letter and then `[a-z0-9_-]*`. The module names `bin`, `lib`, `main` and `nat` are reserved.
 - The emitter checks the name map for each crate. The item names of all modules, together with `Nat`, `nat_small`, `nat_add` and `nat_decimal`, must be different: `refused: name collision (D7): <name>`. The module names must be different: `refused: module name collision (D7): <name>`.
+- The emitter checks that each item name comes back. The importer reads a Rust name with the inverse of this rule. If the result is not the mech name, the declaration is refused: ``refused <name>: a name that does not come back from the Rust name `<rust>`: the importer gives `<back>` (D7)``. The check applies to a function, to each constructor of an enum and to the constructor of a unit struct. For a constructor, `<name>` is the family. Examples: `bad__name` (the importer gives `bad_Name`), `type_` (`type`), `foo_bar` (`fooBar`), the constructor `Red` (`red`). A family name is kept, so it has no check.
+- Limit: the names of parameters and of local binders have no check. Two parameters `fooBar` and `foo_bar` get the same Rust name, and the Rust text has the name two times. No gate shows this.
 - A module gets `use crate::<module>::*;` only for a module before it that has an item that it mentions, and for `nat`. The lines are sorted.
 
 ## Carrier
@@ -118,6 +120,7 @@ A refusal line is `refused <name>: <why>`. The marks in a reason are: `(M0)` for
 | --- | --- |
 | Declarations | `a postulate in the runtime`, `a primitive`, `a function with no definition` |
 | Families | `a type parameter with no use in a field`, `a type-valued constructor field`, `a family with too few arguments`, `an unknown family: <name>` |
+| Names | ``a name that does not come back from the Rust name `<rust>`: the importer gives `<back>` (D7)`` |
 | Types | `a type-valued definition in a runtime type (D3): <name>`, `a value in a type`, `a polymorphic function type`, `a function type with erased arguments only`, `a Prop as a type argument`, `a proposition as a type argument`, `a type argument with a runtime quantity`, `an unknown name in a type: <name>`, `a type shape outside the M0 fragment` |
 | Calls | `a call of an absurd function (D4)`, `a partial application (M0)`, `more arguments than the telescope of the callee (M0)`, `a call of a name that is not a function`, `a call of a name with no entry`, `a call of a variable that is not a function`, `an application head outside the M0 fragment` |
 | Terms | `a case with no branch (D4)`, `a case on a family outside the M0 fragment`, `a constructor of an item that is not data`, `a constructor outside the M0 fragment: <name>`, `a let (M0)`, `a literal above u32 (M0)`, `a literal that is not an integer (M0)`, `a boxed field by value (M0)`, `an erased variable in a runtime position`, `a term shape outside the M0 fragment` |
@@ -145,7 +148,7 @@ node --stack-size=16384 re.js <mode> <arguments>
 - `test/rust/emit/generated-probes.mech`: the golden of the generated probes (218 probes of 13 functions).
 - `test/rust/emit/probes.mech`: 20 probes that are written by hand, for the generic functions, the higher-order functions, and the functions with an erased parameter or a dependent result.
 - `test/rust/emit/values.txt`: the golden of the kernel values (238 lines).
-- `test/rust/emit/neg_classify.mech`: a negative fixture with one postulate in the runtime and one name collision.
+- `test/rust/emit/neg_classify.mech`: a negative fixture with one postulate in the runtime and one name that does not come back. The name collision check stays in the code. Two fn definitions cannot reach it any more, because one of the two names does not come back and is refused first.
 - `test/rust/parse/15_empty_match.rs`: a frontend fixture for `match e {}`, which the printer now prints.
 
 A probe is a closed runtime definition. The DIFF-EXEC law: for each probe, the value from the kernel evaluator, printed in the Rust `{:?}` form, is equal to the line that the emitted Rust prints. A constructor value is the variant name and its kept fields (`MechSucc(MechSucc(MechZero))`), a `Nat` is decimal, a `MechBool` is `true` or `false`, and a unit struct is its name.
@@ -187,7 +190,7 @@ Emitter:
 
 Tests:
 
-- The gate checks the two M0 inputs only. The only refusals with a fixture are the postulate and the name collision of `neg_classify.mech`, and the gate does not run that fixture. The other reasons in the refusal table have no fixture.
+- The gate checks the two M0 inputs only. The only refusals with a fixture are the postulate and the name that does not come back of `neg_classify.mech` (the name collision check is not reachable with two fn definitions), and the gate does not run that fixture. The other reasons in the refusal table have no fixture.
 - `auctionCompare` (dependent result) and `auctionChoice` (erased parameters) get no generated probe. Their probes are in `probes.mech`. `mechEmptyElim` has no closed input and no probe.
 - A first-order function with an erased binder that the probe rule does not find gives probes that do not check. The gate then stops at `kernel values`.
 - The gate runs the driver, which calls the same `run` as the verb. It does not build `bend2/main.bend`, so it does not run the dispatch case of `mech rust-out`.

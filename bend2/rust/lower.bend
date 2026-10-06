@@ -2,6 +2,7 @@ import Base
 import ./ast.bend as A
 import ./rir.bend as R
 import ./resolve.bend as Rs
+import ./erase_typed.bend as Et
 import ./infer.bend as In
 import ../kernel/bignum.bend as Bignum
 import ../kernel/quantity.bend as Quantity
@@ -159,7 +160,7 @@ def arm_bodies(arms: List<&2, R.Arm<R.Ex>>) -> List<&2, R.Ex>:
 def branches(arms: List<&2, R.Arm<R.Ex>>, ts: List<&2, Syntax.T>, +ns: List<&2, Name>) -> List<&2, Syntax.Branch<Syntax.T>>:
   match arms ts:
     case Con{R.Arm{R.PCtor{family, ctor, bs}, body}, rest} Con{t, tr}:
-      Syntax.BrCtor{Rs.lower_first(ctor), fields_of(bs, ns), t} <> branches(rest, tr, ns)
+      Syntax.BrCtor{Et.lower_first(ctor), fields_of(bs, ns), t} <> branches(rest, tr, ns)
     case rest tr:
       []
 
@@ -291,7 +292,7 @@ def fun_of(bs: List<&2, Syntax.Binder<Syntax.T>>, body: Syntax.T) -> Syntax.T:
       head = Bool.pick(String, local, lookup(ns, func), head_name(func))
       call_t(func, head, In.mtys(copies, targs), lows(e, copies, ns, children(e, ls, R.XCall{func, targs, args}, w)), local) <> lows(e, copies, ns, rest)
     case Con{Job{ls, R.XCtor{+family, +ctor, +args}, +w}, rest}:
-      t = In.apps(lows(e, copies, ns, children(e, ls, R.XCtor{family, ctor, args}, w)), Syntax.SVar{Rs.lower_first(ctor)})
+      t = In.apps(lows(e, copies, ns, children(e, ls, R.XCtor{family, ctor, args}, w)), Syntax.SVar{Et.lower_first(ctor)})
       Syntax.SAnn{t, In.mty(copies, w)} <> lows(e, copies, ns, rest)
     case Con{Job{+ls, R.XMatch{+scrut, +arms}, +w}, rest}:
       +jobs = match_jobs(e, ls, scrut, arms, w, In.synth(e, ls, scrut))
@@ -397,7 +398,7 @@ def fam_ctors(vs: List<&2, R.Variant>, +copies: List<&2, String>, +res: Syntax.T
     case Nil{}:
       []
     case Con{R.Variant{name, fs}, rest}:
-      Syntax.FamCtor{Rs.lower_first(name), field_arrows(fs, copies, res)} <> fam_ctors(rest, copies, res)
+      Syntax.FamCtor{Et.lower_first(name), field_arrows(fs, copies, res)} <> fam_ctors(rest, copies, res)
 
 # IEnum: a `mu` family, the generics are quantity-0 type parameters.
 def enum_decl(+copies: List<&2, String>, +name: String, +gs: List<&2, String>, vs: List<&2, R.Variant>) -> Syntax.Decl:

@@ -1,6 +1,6 @@
 -- Negative fixture for the classify table. Check it after prelude/init.mech.
 -- Line 1 of the result: a postulate with a runtime type is refused.
--- Line 2 of the result: two definitions get the same Rust name (D7).
+-- Line 2 of the result: the name `neg_twin` does not come back from its Rust name, so it is refused (D7).
 axiom negPostulate : MechNat
 
 def negTwin : MechNat := mechZero

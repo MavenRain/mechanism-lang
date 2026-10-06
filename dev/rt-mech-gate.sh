@@ -18,6 +18,10 @@
 #          proof is false, and the import fails with MECH-CHECK-FAIL.
 #   REFUSE a key with no place in the import: exit code 65, no output.
 #   REFUSE a carried chunk with no key line: exit code 65, no output.
+# Controls of the name map (D3), on three programs of seed-control:
+#   REFUSE a name that does not come back from its Rust name (`bad__name`,
+#          `type_`, the constructor `Red`): `rust-out` has exit code 65 and
+#          writes no output. Each program passes the kernel check.
 # One PASS or FAIL line for each check, then ROUND-TRIP-OK (exit 0) or
 # ROUND-TRIP-FAIL (exit 1). All outputs stay in $RT_WORK.
 set -u
@@ -200,6 +204,28 @@ rc=$?
 got="$(head -n 1 $WORK/imp.err)"
 [[ $rc == 65 && $bad != $car && $got == "REFUSED carrier: the first line of a chunk is not a key line: "* && ! -e $WORK/ref-key-i ]]
 step $? "REFUSE carried chunk with no key line" "import rc=$rc $got"
+
+# Controls of the name map (D3). Each program has one name that does not
+# come back from its Rust name. The program passes the kernel check, and
+# `rust-out` refuses it: exit code 65, no output.
+typeset -A want
+want=(
+  names_double_underscore 'refused bad__name: a name that does not come back from the Rust name `bad__name`: the importer gives `bad_Name` (D7)'
+  names_keyword_tail 'refused type_: a name that does not come back from the Rust name `type_`: the importer gives `type` (D7)'
+  names_upper_ctor 'refused Light: a name that does not come back from the Rust name `Red`: the importer gives `red` (D7)'
+)
+for n in ${(ok)want}; do
+  out=$(mode seed-check "$(< $CTRL/$n.mech)")
+  rc=$?
+  [[ $rc == 0 && $out == "MECH-CHECK-OK "<1->" rows axioms=0" ]]
+  step $? "SEED-CHECK $n" $out
+  rm -rf $WORK/ref-$n
+  (cd -q $CTRL && node --stack-size=16384 $RE crate $n.mech $WORK/ref-$n > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
+  rc=$?
+  got="$(head -n 1 $WORK/emit.err)"
+  [[ $rc == 65 && $got == "$want[$n]" && ! -e $WORK/ref-$n && ! -L $WORK/ref-$n ]]
+  step $? "REFUSE $n name that does not come back (D7)" "emit rc=$rc $got"
+done
 
 print -r -- "work=$WORK pass=$pass fail=$fail"
 if (( fail == 0 )); then

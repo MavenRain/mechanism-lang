@@ -78,6 +78,64 @@ def rust_name(+s: String) -> String:
 def fn_name(s: String) -> String:
   rust_name(snake(s))
 
+# The inverse of the name map. The importer reads a Rust name with it. The
+# emitter refuses a mech name that does not come back from its Rust name.
+
+def is_under(+c: Char) -> Bool:
+  U32.is_ge(Char.to_u32(c), 95) && U32.is_le(Char.to_u32(c), 95)
+
+# `r` is the camelCase form of the text after `c`. Its first character is
+# lower case exactly when the first character after `c` is, so the test of a
+# `_` before a lower-case letter can use it.
+def camel_step(+c: Char, r: String) -> String:
+  match r:
+    case SNil{}:
+      SCon{c, SNil{}}
+    case SCon{+h, +t}:
+      Bool.pick(String, is_under(c) && is_lower(h), SCon{upper(h), t}, SCon{c, SCon{h, t}})
+
+def camel_rest(s: String) -> String:
+  match s:
+    case SNil{}:
+      SNil{}
+    case SCon{c, rest}:
+      camel_step(c, camel_rest(rest))
+
+# `snake_case` -> `camelCase`: a `_` before a lower-case letter goes, and the
+# letter becomes upper case. The first character stays.
+def camel(s: String) -> String:
+  match s:
+    case SNil{}:
+      SNil{}
+    case SCon{c, rest}:
+      SCon{c, camel_rest(rest)}
+
+def lower_first(s: String) -> String:
+  match s:
+    case SNil{}:
+      SNil{}
+    case SCon{c, rest}:
+      SCon{lower(c), rest}
+
+def drop_head(s: String) -> String:
+  match s:
+    case SNil{}:
+      SNil{}
+    case SCon{c, rest}:
+      rest
+
+# The inverse of `rust_name`: a keyword with `_` at its end loses the `_`.
+def unkw(+s: String) -> String:
+  +base = String.reverse(drop_head(String.reverse(s)))
+  Bool.pick(String, has(keywords(), base) && String.eq(base ++ "_", s), base, s)
+
+# The inverse of `fn_name`.
+def fn_back(rust: String) -> String:
+  camel(unkw(rust))
+
+def back_text(rust: String, back: String) -> String:
+  "a name that does not come back from the Rust name `" ++ rust ++ "`: the importer gives `" ++ back ++ "` (D7)"
+
 def first(xs: List<&2, String>) -> String:
   match xs:
     case Nil{}:
@@ -531,12 +589,19 @@ def push_variant(name: String, fs: Result<&2, &2, String, List<&2, R.Ty>>, vs: R
         case Done{v}:
           Done{R.Variant{name, f} <> v}
 
+# The fields of a constructor, if its name comes back from the variant name
+# (D7).
+def ctor_kept(+name: String, fs: Result<&2, &2, String, List<&2, R.Ty>>) -> Result<&2, &2, String, List<&2, R.Ty>>:
+  +rust = upper_first(name)
+  +back = lower_first(rust)
+  Bool.pick(Result<&2, &2, String, List<&2, R.Ty>>, String.eq(back, name), fs, Fail{back_text(rust, back)})
+
 def variants(+env: Env, +ctx: List<&2, Knd>, +own: String, ctors: List<&2, Pos.Ctor>) -> Result<&2, &2, String, List<&2, R.Variant>>:
   match ctors:
     case Nil{}:
       Done{[]}
-    case Con{Pos.Ctor{name, args, res_idx, full_arity, self_rec}, rest}:
-      push_variant(upper_first(name), fields(env, ctx, own, args), variants(env, ctx, own, rest))
+    case Con{Pos.Ctor{+name, args, res_idx, full_arity, self_rec}, rest}:
+      push_variant(upper_first(name), ctor_kept(name, fields(env, ctx, own, args)), variants(env, ctx, own, rest))
 
 def param_kinds(params: List<&2, Pos.Binder>, ctx: List<&2, Knd>) -> List<&2, Knd>:
   match params:
@@ -598,10 +663,27 @@ type Class is Data:
 
 # One constructor with no field and no generic is a unit struct. Each other
 # runtime family is an enum.
+# The class `c` of the mech name, if the name comes back from its Rust name
+# (D7).
+def name_kept(mech: String, +rust: String, +back: String, c: Class) -> Class:
+  Bool.pick(Class, String.eq(back, mech), c, CNo{back_text(rust, back)})
+
+# `ctor` is the variant name of the constructor. `variants` refuses a
+# constructor with an upper-case first letter, so the mech name is
+# `lower_first(ctor)`.
+def unit_kept(+name: String, ctor: String) -> Class:
+  +mech = lower_first(ctor)
+  +rust = fn_name(mech)
+  name_kept(mech, rust, fn_back(rust), CData{R.IUnit{name, rust}})
+
+def fn_class(+name: String, gens: List<&2, String>, params: List<&2, R.Param>, ret: R.Ty) -> Class:
+  +rust = fn_name(name)
+  name_kept(name, rust, fn_back(rust), CFn{rust, gens, params, ret})
+
 def unit_class(+name: String, +gens: List<&2, String>, +vars: List<&2, R.Variant>, u: Maybe<&2, String>) -> Class:
   match u:
-    case Some{ctor}:
-      Bool.pick(Class, no_names(gens), CData{R.IUnit{name, fn_name(ctor)}}, CNo{"a type parameter with no use in a field"})
+    case Some{+ctor}:
+      Bool.pick(Class, no_names(gens), unit_kept(name, ctor), CNo{"a type parameter with no use in a field"})
     case None{}:
       Bool.pick(Class, same_count(used(gens, variant_tys(vars)), gens),
         CData{R.IEnum{name, gens, all_unit(vars), vars}}, CNo{"a type parameter with no use in a field"})
@@ -646,7 +728,7 @@ def prop_family(fam: Maybe<&2, Pos.Family>) -> Bool:
 def head_class(name: String, h: Head) -> Class:
   match h:
     case HFn{gens, params, ret}:
-      CFn{fn_name(name), gens, params, ret}
+      fn_class(name, gens, params, ret)
     case HProp{}:
       CProp{}
     case HNo{why}:

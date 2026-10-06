@@ -205,53 +205,8 @@ def load_one(+name: String, t: Maybe<&2, String>) -> Result<&2, &2, Bad, Mod>:
 
 # ---- names (CD5) ----
 
-def is_under(+c: Char) -> Bool:
-  Ro.code_is(c, 95)
-
-# `r` is the camelCase form of the text after `c`. Its first character is
-# lower case exactly when the first character after `c` is, so the test of a
-# `_` before a lower-case letter can use it.
-def camel_step(+c: Char, r: String) -> String:
-  match r:
-    case SNil{}:
-      SCon{c, SNil{}}
-    case SCon{+h, +t}:
-      Bool.pick(String, is_under(c) && Et.is_lower(h), SCon{Et.upper(h), t}, SCon{c, SCon{h, t}})
-
-def camel_rest(s: String) -> String:
-  match s:
-    case SNil{}:
-      SNil{}
-    case SCon{c, rest}:
-      camel_step(c, camel_rest(rest))
-
-# `snake_case` -> `camelCase`: a `_` before a lower-case letter goes, and the
-# letter becomes upper case. The first character stays.
-def camel(s: String) -> String:
-  match s:
-    case SNil{}:
-      SNil{}
-    case SCon{c, rest}:
-      SCon{c, camel_rest(rest)}
-
-def lower_first(s: String) -> String:
-  match s:
-    case SNil{}:
-      SNil{}
-    case SCon{c, rest}:
-      SCon{Et.lower(c), rest}
-
-def drop_head(s: String) -> String:
-  match s:
-    case SNil{}:
-      SNil{}
-    case SCon{c, rest}:
-      rest
-
-# The inverse of `Et.rust_name`: a keyword with `_` at its end loses the `_`.
-def unkw(+s: String) -> String:
-  +base = String.reverse(drop_head(String.reverse(s)))
-  Bool.pick(String, Et.has(Et.keywords(), base) && String.eq(base ++ "_", s), base, s)
+# The inverse of rule D7 is in erase_typed.bend (`Et.fn_back`,
+# `Et.lower_first`): the emitter and the importer use one definition.
 
 # A row if the name is canonical: D7 of the mech name (`back`) is the Rust
 # name. `shown` is the Rust name in the table.
@@ -261,12 +216,12 @@ def named(+module: String, k: Rk, shown: String, +rust: String, +mech: String, +
 
 # A fn or the constructor fn of a unit struct: snake_case -> camelCase.
 def fn_row(+module: String, k: Rk, +rust: String, +pos: A.Pos) -> Result<&2, &2, Bad, Row>:
-  +mech = camel(unkw(rust))
+  +mech = Et.fn_back(rust)
   named(module, k, rust, rust, mech, Et.fn_name(mech), pos)
 
 # A variant: UpperCamel -> a constructor with a lower-case first letter.
 def variant_row(+module: String, +family: String, +v: String, +pos: A.Pos) -> Result<&2, &2, Bad, Row>:
-  +mech = lower_first(v)
+  +mech = Et.lower_first(v)
   named(module, RkVariant{}, family ++ "::" ++ v, v, mech, Et.upper_first(mech), pos)
 
 def variant_rows(+module: String, +family: String, +pos: A.Pos, vs: List<&2, R.Variant>) -> Result<&2, &2, Bad, List<&2, Row>>:
