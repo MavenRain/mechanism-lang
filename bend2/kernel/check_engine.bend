@@ -161,6 +161,12 @@ def eval(+ctx: C.Ctx, term: Term.T) -> B.Comp(Value.T):
 def whnf(ctx: C.Ctx, value: Value.T) -> B.Comp(Value.T):
   B.lift(Value.T, Eval.whnf(C.globals_of(ctx), value))
 
+def whnf_core(ctx: C.Ctx, value: Value.T) -> B.Comp(Value.T):
+  B.lift(Value.T, Eval.whnf_core(C.globals_of(ctx), value))
+
+def unfold_step(ctx: C.Ctx, value: Value.T) -> B.Comp(Maybe<&2, Value.T>):
+  B.lift(Maybe<&2, Value.T>, Eval.unfold_step(C.globals_of(ctx), value))
+
 def open(ctx: C.Ctx, clo: Value.Closure<Value.T>, args: List<&2, Value.T>) -> B.Comp(Value.T):
   B.lift(Value.T, Eval.open_closure(C.globals_of(ctx), clo, args))
 
@@ -1766,12 +1772,17 @@ def conv_spine_leg(+ctx:C.Ctx,lg:Maybe<&2,Value.VLeg<Value.T>>) -> B.Comp(ConvSt
         t : Value.T <- open(ctx,clo,[])
         return ConvStep{None{},t}
 
+def conv_head_dom(ws:Shape.T<Value.T>,dom:Value.T) -> Value.T:
+  match ws:
+    case Shape.SPi{q,n,d}: d
+    case _: dom
+
 def conv_spine_former(+ctx:C.Ctx,w:Value.T,s:Shape.T<Value.T>,addr:Value.VAddr<Value.T>) -> B.Comp(ConvStep):
   match w s addr:
     case Value.VRan{ws,d,u} Shape.SPi{q,n,dom} Value.VAPt{qa,arg}:
       do B.Comp<ConvStep>:
         cod : Value.T <- open(ctx,d,[arg])
-        return ConvStep{Some{dom},cod}
+        return ConvStep{Some{conv_head_dom(ws,dom)},cod}
     case Value.VRan{ws,d,u} Shape.SColl{n} Value.VALeg{k}:
       do B.Comp<ConvStep>:
         ls : List<&2,Value.VLeg<Value.T>> <- B.lift(List<&2,Value.VLeg<Value.T>>,R.coll_legs_of(ctx,d))
@@ -1787,12 +1798,17 @@ def conv_spine_step(+ctx:C.Ctx,hty:Value.T,s:Shape.T<Value.T>,a:Value.VAddr<Valu
     w : Value.T <- whnf(ctx,hty)
     conv_spine_former(ctx,w,s,a)
 
+@unsafe def conv_frame_shape(+ctx:C.Ctx,a:Shape.T<Value.T>,b:Shape.T<Value.T>) -> B.Comp(Bool):
+  match a b:
+    case Shape.SPi{q1,n1,d1} Shape.SPi{q2,n2,d2}: B.pure(Bool,Q.equal(q1,q2))
+    case _ _: conv_shape(ctx,a,b)
+
 @unsafe def conv_spines(+ctx:C.Ctx,hty:Value.T,xs:List<&2,Value.Spine<Value.T>>,ys:List<&2,Value.Spine<Value.T>>) -> B.Comp(Bool):
   match xs ys:
     case Nil{} Nil{}: B.pure(Bool,True{})
     case Con{Value.SOut{+s1,+a1},r1} Con{Value.SOut{s2,a2},r2}:
       do B.Comp<Bool>:
-        same : Bool <- conv_shape(ctx,s1,s2)
+        same : Bool <- conv_frame_shape(ctx,s1,s2)
         +step : ConvStep <- conv_spine_step(ctx,hty,s1,a1)
         addr : Bool <- conv_addr(ctx,conv_step_arg(step),a1,a2)
         conv_and(same && addr,conv_spines(ctx,conv_step_next(step),r1,r2))
@@ -1877,11 +1893,34 @@ def conv_structural_whnf(+ctx:C.Ctx,a:Value.T,b:Value.T) -> B.Comp(Bool):
     case Value.VNeutral{+h1,sp1} Value.VNeutral{h2,sp2}: conv_neutrals(Value.head_equal(h1,h2),ctx,h1,sp1,sp2)
     case _ _: B.pure(Bool,False{})
 
+def unfolded_or(step:Maybe<&2,Value.T>,fallback:Value.T) -> Value.T:
+  match step:
+    case None{}: fallback
+    case Some{unfolded}: unfolded
+
+@unsafe def conv_delta_unfold(+ctx:C.Ctx,ua:Maybe<&2,Value.T>,ub:Maybe<&2,Value.T>,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match ua ub:
+    case None{} None{}: B.pure(Bool,False{})
+    case ua ub:
+      do B.Comp<Bool>:
+        tick : Unit <- B.tick()
+        conv_type(ctx,unfolded_or(ua,a),unfolded_or(ub,b))
+
+def conv_delta_retry(same:Bool,+ctx:C.Ctx,+a:Value.T,+b:Value.T) -> B.Comp(Bool):
+  match same:
+    case True{}: B.pure(Bool,True{})
+    case False{}:
+      do B.Comp<Bool>:
+        ua : Maybe<&2,Value.T> <- unfold_step(ctx,a)
+        ub : Maybe<&2,Value.T> <- unfold_step(ctx,b)
+        conv_delta_unfold(ctx,ua,ub,a,b)
+
 def conv_structural(+ctx:C.Ctx,a:Value.T,b:Value.T) -> B.Comp(Bool):
   do B.Comp<Bool>:
-    wa : Value.T <- whnf(ctx,a)
-    wb : Value.T <- whnf(ctx,b)
-    conv_structural_whnf(ctx,wa,wb)
+    +wa : Value.T <- whnf_core(ctx,a)
+    +wb : Value.T <- whnf_core(ctx,b)
+    same : Bool <- conv_structural_whnf(ctx,wa,wb)
+    conv_delta_retry(same,ctx,wa,wb)
 
 @unsafe def conv_prop_probe(+ctx:C.Ctx,ty:Value.T) -> B.Comp(Bool):
   do B.Comp<Bool>:
@@ -2025,14 +2064,35 @@ def conv_after_prop(prop:Bool,+ctx:C.Ctx,ty:Value.T,a:Value.T,b:Value.T) -> B.Co
         sub : Bool <- conv_subsingleton(ctx,w)
         conv_after_sub(sub,ctx,w,a,b)
 
-@unsafe def conv(ctx,ty,a,b):
-  match ty:
+@unsafe def conv_quick(+ctx:C.Ctx,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  do B.Comp<Bool>:
+    wa : Value.T <- whnf_core(ctx,a)
+    wb : Value.T <- whnf_core(ctx,b)
+    conv_structural_whnf(ctx,wa,wb)
+
+@unsafe def conv_after_quick(quick:Bool,+ctx:C.Ctx,w:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match quick:
+    case True{}: B.pure(Bool,True{})
+    case False{}:
+      +w = w
+      do B.Comp<Bool>:
+        prop : Bool <- conv_is_prop(ctx,w)
+        conv_after_prop(prop,ctx,w,a,b)
+
+@unsafe def conv_whnf_ty(+ctx:C.Ctx,w:Value.T,a:Value.T,b:Value.T) -> B.Comp(Bool):
+  match w:
     case Value.VUniv{u}: conv_structural(ctx,a,b)
     case _:
-      +ty = ty
+      +a = a
+      +b = b
       do B.Comp<Bool>:
-        prop : Bool <- conv_is_prop(ctx,ty)
-        conv_after_prop(prop,ctx,ty,a,b)
+        quick : Bool <- conv_quick(ctx,a,b)
+        conv_after_quick(quick,ctx,w,a,b)
+
+@unsafe def conv(ctx,ty,a,b):
+  do B.Comp<Bool>:
+    w : Value.T <- whnf(ctx,ty)
+    conv_whnf_ty(ctx,w,a,b)
 
 @unsafe def conv_type(ctx,a,b):
   conv_structural(ctx,a,b)

@@ -143,12 +143,16 @@ law type_valued:
     value : Value.T <- Budget.lift(Value.T, Eval.whnf(globals, value))
     type_valued_node(globals, size, value)
 
+# The entry of a checked definition. Family scheme instances under an injective level renaming reuse it.
+def checked_entry(ty: Term.T, body: Term.T) -> Global.Entry:
+  Global.Def{Global.DefEntry{ty, body, True{}, None{}, False{}}}
+
 def check_definition(+ctx: Ctx, name: String, ty: Term.T, body: Maybe<&2, Term.T>, +tyv: Value.T) -> Budget.Comp(Global.Entry):
   do Budget.Comp<Global.Entry>:
     +body : Term.T <- Engine.optional(Term.T, body, Error.Cannot_infer{"the definition " ++ name ++ " has no body"})
     erased : Bool <- type_valued(globals_of(ctx), 0n, tyv)
     uses : Quantity.Usage <- Engine.check_uses(ctx, Bool.pick(Quantity.T, erased, Quantity.QZero{}, Quantity.QOne{}), body, tyv)
-    return Global.Def{Global.DefEntry{ty, body, True{}, None{}, False{}}}
+    return checked_entry(ty, body)
 
 def check_decl_kind(kind: DeclKind, ctx: Ctx, name: String, ty: Term.T, body: Maybe<&2, Term.T>, tyv: Value.T) -> Budget.Comp(Global.Entry):
   match kind:
@@ -185,12 +189,20 @@ def decl_name(decl: Decl) -> String:
     case Decl{name, kind, ty, body}:
       name
 
+def absent_entry(value: Maybe<&2, Global.Entry>) -> Bool:
+  match value:
+    case None{}:
+      True{}
+    case Some{entry}:
+      False{}
+
 @unsafe def check_decls_comp(+globals: Global.T, decls: List<&2, Decl>) -> Budget.Comp(List<&2, Common.Pair<String, Global.Entry>>):
   match decls:
     case Nil{}:
       Budget.pure(List<&2, Common.Pair<String, Global.Entry>>, [])
     case Con{+decl, rest}:
       do Budget.Comp<List<&2, Common.Pair<String, Global.Entry>>>:
+        absent : Unit <- Engine.require(absent_entry(Global.find(decl_name(decl), globals)), Error.Mismatch{"the name " ++ decl_name(decl) ++ " is already declared"})
         +entry : Global.Entry <- check_decl_comp(globals, 0n, decl)
         +name : String = decl_name(decl)
         rows : List<&2, Common.Pair<String, Global.Entry>> <- check_decls_comp(Global.add(name, entry, globals), rest)

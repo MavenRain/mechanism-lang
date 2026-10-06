@@ -30,6 +30,16 @@ def accepts(source: String) -> Result<&2, &2, Error.T, Unit>:
 def rejects(+source: String) -> Result<&2, &2, Error.T, Unit>:
   rejected(Elab.check_text(Global.initial(), Budget.unlimited(), source), source)
 
+def rejected_with(result: Result<&2, &2, Error.T, Elab.Rows>, +expected: String) -> Result<&2, &2, Error.T, Unit>:
+  match result:
+    case Done{rows}:
+      Fail{Error.Mismatch{"expected rejection: " ++ expected}}
+    case Fail{+error}:
+      ensure(String.eq(expected, Error.to_string(error)), "expected " ++ expected ++ "; actual " ++ Error.to_string(error))
+
+def rejects_with(source: String, message: String) -> Result<&2, &2, Error.T, Unit>:
+  rejected_with(Elab.check_text(Global.initial(), Budget.unlimited(), source), Error.to_string(Error.Mismatch{message}))
+
 def budget_error(result: Result<&2, &2, Error.T, Elab.Checked>) -> Bool:
   match result:
     case Fail{Error.Budget_exhausted{message}}:
@@ -75,7 +85,10 @@ def suite() -> Result<&2, &2, Error.T, Unit>:
     checked : Unit <- accepts(box() ++ "specialize Box (1) as Small export (unbox := get) def x : Nat := get Nat (box 37)")
     checked : Unit <- accepts(box() ++ "poly (u) group Bundle where specialize Box (u) as Inner end specialize Bundle (1) as Run def x : Nat := Run_Inner_unbox Nat (box 37)")
     checked : Unit <- accepts(box() ++ "specialize Box (1) as First specialize Box (1) as Second with (Box := First) def x : Nat := Second_unbox Nat (box 37)")
-    checked : Unit <- accepts("def x : Nat := 1 def x : Nat := 2")
+    checked : Unit <- rejects_with("def x : Nat := 1 def x : Nat := 2", "the name x is already declared")
+    checked : Unit <- accepts("def g : Nat := 1 poly (u) mu Box : Sort (succ u) with | box : Box where def m : Nat := g end specialize Box (0) as B")
+    checked : Unit <- rejects_with("def g : Nat := 1 poly (u) mu Box : Sort (succ u) with | box : Box where def m : Nat := g end def g : Nat := 2 specialize Box (0) as B", "the name g is already declared")
+    checked : Unit <- rejects_with("mu N : Type 0 with | z : N | s : N -> N def g : N := z def rec g : N -> N := fun (n : N) => match n as self in N return N with | z => z | s (p : N) => s (g p)", "the name g is already declared")
     checked : Unit <- accepts("mu N : Type 0 with | z : N | s : N -> N def rec id : N -> N := fun (n : N) => match n as self in N return N with | z => z | s (p : N) => s (id p) def result : N := id (s z)")
     checked : Unit <- rejects("def rec loop : Nat -> Nat := fun (n : Nat) => loop n")
     checked : Unit <- rejects("poly (u) def identity : (0 A : Sort u) -> A -> A := fun (0 A : Sort u) (x : A) => x specialize identity () as bad")

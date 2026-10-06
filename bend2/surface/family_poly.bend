@@ -92,7 +92,7 @@ def unique_ctors(ctors: List<&2, Check.CtorDecl>, +family: String, +seen: List<&
 
 type Scheme is Data:
   Scheme{arity: Nat, family: Check.FamilyDecl, ctors: List<&2, Check.CtorDecl>,
-    companions: List<&2, Common.Pair<Check.FamilyDecl, List<&2, Check.CtorDecl>>>, members: List<&2, Check.Decl>}
+    companions: List<&2, Common.Pair<Check.FamilyDecl, List<&2, Check.CtorDecl>>>, members: List<&2, Check.Decl>, origin: Global.T}
 
 def T() -> Data:
   List<&2, Common.Pair<String, Scheme>>
@@ -111,7 +111,7 @@ def scheme_arity(scheme: Maybe<&2, Scheme>) -> Maybe<&2, Nat>:
   match scheme:
     case None{}:
       None{}
-    case Some{Scheme{arity, family, ctors, companions, members}}:
+    case Some{Scheme{arity, family, ctors, companions, members, origin}}:
       Some{arity}
 
 def arity(catalog: T, name: String) -> Maybe<&2, Nat>:
@@ -154,7 +154,7 @@ def scheme_members(scheme: Maybe<&2, Scheme>) -> Maybe<&2, List<&2, String>>:
   match scheme:
     case None{}:
       None{}
-    case Some{Scheme{arity, family, ctors, companions, members}}:
+    case Some{Scheme{arity, family, ctors, companions, members, origin}}:
       Some{member_names(members)}
 
 def members(catalog: T, name: String) -> Maybe<&2, List<&2, String>>:
@@ -164,7 +164,7 @@ def scheme_companions(scheme: Maybe<&2, Scheme>) -> Maybe<&2, List<&2, String>>:
   match scheme:
     case None{}:
       None{}
-    case Some{Scheme{arity, family, ctors, companions, members}}:
+    case Some{Scheme{arity, family, ctors, companions, members, origin}}:
       Some{companion_names(companions)}
 
 def companions(catalog: T, name: String) -> Maybe<&2, List<&2, String>>:
@@ -174,7 +174,7 @@ def scheme_constructors(scheme: Maybe<&2, Scheme>) -> Maybe<&2, List<&2, String>
   match scheme:
     case None{}:
       None{}
-    case Some{Scheme{arity, family, ctors, companions, members}}:
+    case Some{Scheme{arity, family, ctors, companions, members, origin}}:
       Some{List.append(&2, String, ctor_names(ctors), companion_ctors(companions))}
 
 def constructors(catalog: T, name: String) -> Maybe<&2, List<&2, String>>:
@@ -182,7 +182,7 @@ def constructors(catalog: T, name: String) -> Maybe<&2, List<&2, String>>:
 
 def rename_instance(scheme: Scheme, +name: String, +as_name: String, +value: String) -> String:
   match scheme:
-    case Scheme{arity, family, ctors, companions, members}:
+    case Scheme{arity, family, ctors, companions, members, origin}:
       Bool.pick(String, String.eq(value, name), as_name,
         Bool.pick(String, String.eq(value, family_name(family)) || Poly.member(companion_names(companions), value) || Poly.member(member_names(members), value),
           as_name ++ "_" ++ value, value))
@@ -236,9 +236,9 @@ def check_exports(scheme: Scheme, name: String, +as_name: String, reuse: List<&2
   match scheme exports:
     case scheme None{}:
       Budget.pure(List<&2, Common.Pair<String, String>>, [])
-    case Scheme{+arity, +family, +ctors, +companions, +members} Some{+bindings}:
+    case Scheme{+arity, +family, +ctors, +companions, +members, +origin} Some{+bindings}:
       do Budget.Comp<List<&2, Common.Pair<String, String>>>:
-        families : List<&2, String> = planned_families(family_name(family) <> companion_names(companions), Scheme{arity, family, ctors, companions, members}, name, as_name, reuse)
+        families : List<&2, String> = planned_families(family_name(family) <> companion_names(companions), Scheme{arity, family, ctors, companions, members, origin}, name, as_name, reuse)
         labels : List<&2, String> = List.append(&2, String, ctor_names(ctors), companion_ctors(companions))
         checked : Unit <- export_loop(bindings, member_names(members), as_name <> List.append(&2, String, families, labels), [], [])
         return bindings
@@ -269,8 +269,8 @@ def instance_names_result(result: Result<&2, &2, Error.T, List<&2, Common.Pair<S
   match result scheme:
     case Fail{error} scheme:
       None{}
-    case Done{+exports} Scheme{+arity, +family, +ctors, +companions, +members}:
-      +scheme = {Scheme{arity, family, ctors, companions, members} : Scheme}
+    case Done{+exports} Scheme{+arity, +family, +ctors, +companions, +members, +origin}:
+      +scheme = {Scheme{arity, family, ctors, companions, members, origin} : Scheme}
       Some{Common.Pair{
         fresh_family_names(family_name(family) <> companion_names(companions), scheme, name, as_name, reuse, exports),
         exported_member_names(member_names(members), scheme, name, as_name, exports)}}
@@ -349,6 +349,33 @@ def check_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat, +glob
         entry : Global.Entry <- Check.check_decl_comp(globals, arity, decl)
         check_members(tail, catalog, arity, Global.add(name, entry, globals))
 
+def trusted_entry(decl: Check.Decl) -> Budget.Comp(Global.Entry):
+  match decl:
+    case Check.Decl{name, kind, ty, body}:
+      do Budget.Comp<Global.Entry>:
+        checked : Unit <- Budget.lift(Unit, member_kind(kind))
+        body : Term.T <- Budget.lift(Term.T, member_body(body, name))
+        return Check.checked_entry(ty, body)
+
+# Composition only. Kernel-checked source members, mapped by an injective level renaming (Level.distinct_vars),
+# keep their derivations up to renaming when the table of the scheme is unchanged (Global.extended_by).
+# They enter the symbolic table without a kernel re-check; freshness is still checked.
+# A closed instance (instantiate_comp) checks each member in the kernel, so no unchecked entry reaches a result table.
+def add_members(members: List<&2, Check.Decl>, +catalog: T, +globals: Global.T) -> Budget.Comp(Global.T):
+  match members:
+    case Nil{}:
+      Budget.pure(Global.T, globals)
+    case Con{+decl, tail}:
+      do Budget.Comp<Global.T>:
+        tick : Unit <- Budget.tick()
+        +name : String = Poly.decl_name(decl)
+        checked : Unit <- require_fresh(occupied(globals, catalog, name), name)
+        entry : Global.Entry <- trusted_entry(decl)
+        add_members(tail, catalog, Global.add(name, entry, globals))
+
+def scope_members(members: List<&2, Check.Decl>, +catalog: T, +arity: Nat) -> Budget.Comp(List<&2, Check.Decl>):
+  map_members(members, Poly.Action{Poly.ScopeLevels{arity}, [], catalog_names(catalog)})
+
 def reserve_members(members: List<&2, Check.Decl>, +catalog: T) -> Budget.Comp(Unit):
   match members:
     case Nil{}:
@@ -377,7 +404,7 @@ def declared_family(raw: RawFamily, +globals: Global.T, +catalog: T, +arity: Nat
         reserved : Unit <- reserve_members(members, catalog)
         +members : List<&2, Check.Decl> <- map_members(members, action)
         checked : Unit <- family_members(members, globals, catalog, arity, family, ctors)
-        return Common.Pair{family_name(family), Scheme{arity, family, ctors, [], members}} <> catalog
+        return Common.Pair{family_name(family), Scheme{arity, family, ctors, [], members, globals}} <> catalog
 
 def declare_comp(+globals: Global.T, +catalog: T, +arity: Nat, +family: Check.FamilyDecl, +ctors: List<&2, Check.CtorDecl>, members: List<&2, Check.Decl>) -> Budget.Comp(T):
   do Budget.Comp<T>:
@@ -458,18 +485,24 @@ def check_bindings(reuse: Bindings, +families: List<&2, String>, +available: Lis
 
 def raw_families(scheme: Scheme) -> List<&2, RawFamily>:
   match scheme:
-    case Scheme{arity, family, ctors, companions, members}:
+    case Scheme{arity, family, ctors, companions, members, origin}:
       Common.Pair{family, ctors} <> companions
 
 def schema_members(scheme: Scheme) -> List<&2, Check.Decl>:
   match scheme:
-    case Scheme{arity, family, ctors, companions, members}:
+    case Scheme{arity, family, ctors, companions, members, origin}:
       members
 
 def schema_arity(scheme: Scheme) -> Nat:
   match scheme:
-    case Scheme{arity, family, ctors, companions, members}:
+    case Scheme{arity, family, ctors, companions, members, origin}:
       arity
+
+# The table in which the members of the scheme were checked.
+def schema_table(scheme: Scheme) -> Global.T:
+  match scheme:
+    case Scheme{arity, family, ctors, companions, members, origin}:
+      origin
 
 def require_schema(scheme: Maybe<&2, Scheme>, name: String) -> Budget.Comp(Scheme):
   match scheme:
@@ -529,18 +562,20 @@ def elaborate_members(members: List<&1, MemberElaborator>, +globals: Global.T, +
         globals : Global.T <- check_members([member], catalog, arity, globals)
         elaborate_members(tail, globals, catalog, arity, member <> reversed)
 
-def declare_nonempty(families: List<&2, RawFamily>, imports: List<&2, Imported>, members: List<&1, MemberElaborator>, globals: Global.T, +catalog: T, +arity: Nat) -> Budget.Comp(T):
+def declare_nonempty(families: List<&2, RawFamily>, imports: List<&2, Imported>, trusted: List<&2, Check.Decl>, members: List<&1, MemberElaborator>, +globals: Global.T, +catalog: T, +arity: Nat) -> Budget.Comp(T):
   match families:
     case Nil{}:
       Budget.failed(T, Error.Mismatch{"a family schema group must be nonempty"})
     case Con{Common.Pair{+family, ctors}, companions}:
       do Budget.Comp<T>:
         symbolic : Global.T <- install_symbolic(imports, globals, catalog, arity)
-        members : List<&2, Check.Decl> <- elaborate_members(members, symbolic, catalog, arity, [])
-        return Common.Pair{family_name(family), Scheme{arity, family, ctors, companions, members}} <> catalog
+        +trusted : List<&2, Check.Decl> <- scope_members(trusted, catalog, arity)
+        symbolic : Global.T <- add_members(trusted, catalog, symbolic)
+        members : List<&2, Check.Decl> <- elaborate_members(members, symbolic, catalog, arity, List.reverse(&2, Check.Decl, trusted))
+        return Common.Pair{family_name(family), Scheme{arity, family, ctors, companions, members, globals}} <> catalog
 
-def declare_group_with_reuse(globals: Global.T, catalog: T, arity: Nat, +imports: List<&2, Imported>, members: List<&1, MemberElaborator>) -> Budget.Comp(T):
-  declare_nonempty(fresh_imports(imports), imports, members, globals, catalog, arity)
+def declare_group_with_reuse(globals: Global.T, catalog: T, arity: Nat, +imports: List<&2, Imported>, trusted: List<&2, Check.Decl>, members: List<&1, MemberElaborator>) -> Budget.Comp(T):
+  declare_nonempty(fresh_imports(imports), imports, trusted, members, globals, catalog, arity)
 
 def fresh_raw(families: List<&2, RawFamily>) -> List<&2, Imported>:
   match families:
@@ -557,7 +592,7 @@ def raw_callbacks(members: List<&2, Check.Decl>) -> List<&1, MemberElaborator>:
       (globals => Budget.pure(Check.Decl, head)) <> raw_callbacks(tail)
 
 def declare_group_elaborated_comp(globals: Global.T, catalog: T, arity: Nat, families: List<&2, RawFamily>, members: List<&1, MemberElaborator>) -> Budget.Comp(T):
-  declare_group_with_reuse(globals, catalog, arity, fresh_raw(families), members)
+  declare_group_with_reuse(globals, catalog, arity, fresh_raw(families), [], members)
 
 def declare_group_elaborated(globals: Global.T, catalog: T, budget: Budget.T, arity: Nat, families: List<&2, RawFamily>, members: List<&1, MemberElaborator>) -> Result<&2, &2, Error.T, T>:
   Budget.run(T, declare_group_elaborated_comp(globals, catalog, arity, families, members), budget)
@@ -591,6 +626,16 @@ def map_imports(families: List<&2, RawFamily>, +action: Poly.Action, +reuse: Bin
         tail : List<&2, Imported> <- map_imports(tail, action, reuse)
         return mapped_import(raw, Poly.is_some(String, mapping_find(reuse, family_name(family)))) <> tail
 
+# Scheme is public, so its origin table does not certify its declarations.
+def check_schema(+scheme: Scheme) -> Budget.Comp(Unit):
+  do Budget.Comp<Unit>:
+    +arity : Nat = schema_arity(scheme)
+    imports : List<&2, Imported> <- map_imports(raw_families(scheme), Poly.Action{Poly.ScopeLevels{arity}, [], []}, [])
+    symbolic : Global.T <- install_symbolic(imports, schema_table(scheme), [], arity)
+    members : List<&2, Check.Decl> <- scope_members(schema_members(scheme), [], arity)
+    checked : Global.T <- check_members(members, [], arity, symbolic)
+    return Unit{}
+
 def scopes(+arity: Nat, levels: List<&2, Level.T>) -> Bool:
   match levels:
     case Nil{}:
@@ -608,7 +653,7 @@ def check_levels(+levels: List<&2, Level.T>, +want: Nat, source: String, arity: 
       Fail{Error.Universe{Bool.pick(String, closed, "universe arguments must be closed", "universe level is outside the global parameter scope")}})))
 
 type Composed is Data:
-  Composed{aliases: List<&2, String>, available: List<&2, String>, imports: List<&2, Imported>, members: List<&2, Check.Decl>}
+  Composed{aliases: List<&2, String>, available: List<&2, String>, imports: List<&2, Imported>, members: List<&2, Check.Decl>, trusted: List<&2, Check.Decl>}
 
 def collision_list(names: List<&2, String>, +occupied: List<&2, String>) -> Budget.Comp(Unit):
   match names:
@@ -621,7 +666,7 @@ def collision_list(names: List<&2, String>, +occupied: List<&2, String>) -> Budg
 
 def compose_dependency(dependency: Dependency, state: Composed, +globals: Global.T, +catalog: T, arity: Nat, +root: String) -> Budget.Comp(Composed):
   match dependency state:
-    case Dependency{+source, +levels, +alias, +reuse, exports} Composed{+aliases, +available, imports, members}:
+    case Dependency{+source, +levels, +alias, +reuse, exports} Composed{+aliases, +available, imports, +members, +trusted}:
       do Budget.Comp<Composed>:
         tick : Unit <- Budget.tick()
         +scheme : Scheme <- require_schema(lookup(catalog, source), source)
@@ -635,8 +680,12 @@ def compose_dependency(dependency: Dependency, state: Composed, +globals: Global
         +fresh : List<&2, String> = companion_names(fresh_imports(families))
         +generated : List<&2, String> = List.append(&2, String, fresh, member_names(definitions))
         checked : Unit <- collision_list(generated, aliases)
+        +renamed : Bool = Level.distinct_vars(levels) && Global.extended_by(schema_table(scheme), globals)
+        checked : Unit <- Bool.pick(Budget.Comp(Unit), renamed, check_schema(scheme), Budget.pure(Unit, Unit{}))
         return Composed{alias <> List.append(&2, String, generated, aliases), List.append(&2, String, fresh, available),
-          List.append(&2, Imported, imports, families), List.append(&2, Check.Decl, members, definitions)}
+          List.append(&2, Imported, imports, families),
+          Bool.pick(List<&2, Check.Decl>, renamed, members, List.append(&2, Check.Decl, members, definitions)),
+          Bool.pick(List<&2, Check.Decl>, renamed, List.append(&2, Check.Decl, trusted, definitions), trusted)}
 
 def compose_dependencies(dependencies: List<&2, Dependency>, state: Composed, +globals: Global.T, +catalog: T, +arity: Nat, +root: String) -> Budget.Comp(Composed):
   match dependencies:
@@ -657,6 +706,15 @@ def guarded_callback(elaborate: MemberElaborator, +root: String) -> MemberElabor
     declaration : Check.Decl <- elaborate(symbolic)
     check_root_member(declaration, root)
 
+def guard_trusted(members: List<&2, Check.Decl>, +root: String) -> Budget.Comp(Unit):
+  match members:
+    case Nil{}:
+      Budget.pure(Unit, Unit{})
+    case Con{head, tail}:
+      do Budget.Comp<Unit>:
+        checked : Check.Decl <- check_root_member(head, root)
+        guard_trusted(tail, root)
+
 def guard_callbacks(members: List<&1, MemberElaborator>, +root: String) -> List<&1, MemberElaborator>:
   match members:
     case Nil{}:
@@ -671,13 +729,13 @@ def composition_schema(scheme: Maybe<&2, Scheme>, name: String, catalog: T) -> B
     case Some{scheme}:
       Budget.pure(T, Common.Pair{name, scheme} <> catalog)
 
-def finish_composition(fresh: List<&2, RawFamily>, imports: List<&2, Imported>, members: List<&1, MemberElaborator>, globals: Global.T, +catalog: T, arity: Nat, name: String) -> Budget.Comp(T):
+def finish_composition(fresh: List<&2, RawFamily>, imports: List<&2, Imported>, trusted: List<&2, Check.Decl>, members: List<&1, MemberElaborator>, globals: Global.T, +catalog: T, arity: Nat, name: String) -> Budget.Comp(T):
   match fresh:
     case Nil{}:
       Budget.failed(T, Error.Mismatch{"a family schema group must be nonempty"})
     case Con{Common.Pair{family, ctors}, tail}:
       do Budget.Comp<T>:
-        checked : T <- declare_group_with_reuse(globals, catalog, arity, imports, members)
+        checked : T <- declare_group_with_reuse(globals, catalog, arity, imports, trusted, members)
         composition_schema(lookup(checked, family_name(family)), name, catalog)
 
 def import_families(imports: List<&2, Imported>) -> List<&2, RawFamily>:
@@ -689,17 +747,18 @@ def import_families(imports: List<&2, Imported>) -> List<&2, RawFamily>:
 
 def composed_group(state: Composed, supplied: List<&1, MemberElaborator>, globals: Global.T, catalog: T, arity: Nat, +root: String) -> Budget.Comp(T):
   match state:
-    case Composed{aliases, available, +imports, members}:
+    case Composed{aliases, available, +imports, members, +trusted}:
       do Budget.Comp<T>:
         checked : Unit <- collision_list(companion_names(import_families(imports)), [root])
+        checked : Unit <- guard_trusted(trusted, root)
         members : List<&1, MemberElaborator> = List.append(&1, MemberElaborator, raw_callbacks(members), supplied)
-        finish_composition(fresh_imports(imports), imports, guard_callbacks(members, root), globals, catalog, arity, root)
+        finish_composition(fresh_imports(imports), imports, trusted, guard_callbacks(members, root), globals, catalog, arity, root)
 
 def compose_comp(+globals: Global.T, +catalog: T, +arity: Nat, +name: String, dependencies: List<&2, Dependency>, members: List<&1, MemberElaborator>) -> Budget.Comp(T):
   do Budget.Comp<T>:
     tick : Unit <- Budget.tick()
     checked : Unit <- require_fresh(occupied(globals, catalog, name), name)
-    state : Composed <- compose_dependencies(dependencies, Composed{[], [], [], []}, globals, catalog, arity, name)
+    state : Composed <- compose_dependencies(dependencies, Composed{[], [], [], [], []}, globals, catalog, arity, name)
     composed_group(state, members, globals, catalog, arity, name)
 
 def compose(globals: Global.T, catalog: T, budget: Budget.T, arity: Nat, name: String, dependencies: List<&2, Dependency>, members: List<&1, MemberElaborator>) -> Result<&2, &2, Error.T, T>:

@@ -145,3 +145,60 @@ def without_family(+name: String, globals: T) -> T:
   match globals:
     case Globals{entries, families, entry_index, family_index}:
       Globals{entries, remove_family(families, name), entry_index, Map.del(&2, Maybe<&2, Positivity.Family>, family_index, name)}
+
+def same_rec_arg(a: Maybe<&2, Nat>, b: Maybe<&2, Nat>) -> Bool:
+  match a b:
+    case None{} None{}:
+      True{}
+    case Some{x} Some{y}:
+      Nat.is_eq(x, y)
+    case _ _:
+      False{}
+
+def same_entry(a: Entry, b: Entry) -> Bool:
+  match a b:
+    case Def{DefEntry{ty, body, reducible, rec_arg, partial}} Def{DefEntry{ty2, body2, reducible2, rec_arg2, partial2}}:
+      Bool.and(Term.equal(ty, ty2), Bool.and(Term.equal(body, body2), Bool.and(Positivity.same_bool(reducible, reducible2), Bool.and(same_rec_arg(rec_arg, rec_arg2), Positivity.same_bool(partial, partial2)))))
+    case Axiom{ty} Axiom{ty2}:
+      Term.equal(ty, ty2)
+    case Prim{ty, prim} Prim{ty2, prim2}:
+      Bool.and(Term.equal(ty, ty2), String.eq(Prim.name(prim), Prim.name(prim2)))
+    case _ _:
+      False{}
+
+def entry_kept(entry: Entry, found: Maybe<&2, Entry>) -> Bool:
+  match found:
+    case None{}:
+      False{}
+    case Some{other}:
+      same_entry(entry, other)
+
+def entries_kept(entries: List<&2, Common.Pair<String, Entry>>, +later: T) -> Bool:
+  match entries:
+    case Nil{}:
+      True{}
+    case Con{Common.Pair{name, entry}, rest}:
+      selected = Bool.pick(Unit -> Bool, entry_kept(entry, find(name, later)), unit => entries_kept(rest, later), unit => False{})
+      selected(Unit{})
+
+def family_kept(family: Positivity.Family, found: Maybe<&2, Positivity.Family>) -> Bool:
+  match found:
+    case None{}:
+      False{}
+    case Some{other}:
+      Positivity.same_family(family, other)
+
+def families_kept(families: List<&2, Common.Pair<String, Positivity.Family>>, +later: T) -> Bool:
+  match families:
+    case Nil{}:
+      True{}
+    case Con{Common.Pair{name, family}, rest}:
+      selected = Bool.pick(Unit -> Bool, family_kept(family, find_family(name, later)), unit => families_kept(rest, later), unit => False{})
+      selected(Unit{})
+
+# True when `later` has each entry and each family of `earlier` with an equal value: `later` only adds names.
+def extended_by(earlier: T, +later: T) -> Bool:
+  match earlier:
+    case Globals{entries, families, entry_index, family_index}:
+      selected = Bool.pick(Unit -> Bool, entries_kept(entries, later), unit => families_kept(families, later), unit => False{})
+      selected(Unit{})

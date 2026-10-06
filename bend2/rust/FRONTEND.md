@@ -23,11 +23,13 @@ This directory holds the Rust frontend of the mech-rust transpiler. The frontend
 3. `Parser.from_tokens(tokens)` gives the tree, or `PARSE-FAIL <line>:<col> expected ..., found ...`.
 4. `Pr.file(tree)` gives the text.
 
-The driver modes are `lex`, `parse`, `print` and `check`. Only `check` runs the fragment pass.
+The driver modes are `lex`, `parse`, `print`, `check` and `pos`. Only `check` runs the fragment pass.
 
 ```sh
 bend bend2/tests/rust_frontend.bend check "$(cat file.rs)"
 ```
+
+Each `Meta` of the tree has a position `pos` (`A.Pos`, one-based `line:col`, the same text as a token position). It is the position of the first token of the construct after its outer docs and attributes. The constructs with a `Meta` are items, fields, variants, statements and match arms. Expressions, types and patterns have no position of their own. The printer does not read `pos`, so the round-trip law does not change. A tree from `emit.bend` has the position `0:0` in each `Meta`. The mode `pos` prints one `<line>:<col> <kind> <name>` line for each top-level item.
 
 ## Round-trip law
 

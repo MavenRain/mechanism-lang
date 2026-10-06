@@ -1,0 +1,16 @@
+-- Equality in Prop. No runtime declaration is before it, so its key is `start`.
+mu TallyEq (0 A : Type 0) (0 x : A) : (0 y : A) -> Prop with
+| tallyRefl : TallyEq A x x
+
+mu Tally : Type 0 with
+| tallyNone : Tally
+| tallyMore : (_ : Tally) -> Tally
+
+-- A proof between two runtime declarations.
+def tallyNoneSelf : TallyEq Tally tallyNone tallyNone :=
+  tallyRefl
+
+def rec tallyFold : (0 P : Type 0) -> (base : P) -> (step : (_ : Tally) -> (_ : P) -> P) -> (t : Tally) -> P :=
+  fun (0 P : Type 0) (base : P) (step : (_ : Tally) -> (_ : P) -> P) (t : Tally) => case t as which in Tally return P with
+  | tallyNone => base
+  | tallyMore rest => step rest (tallyFold P base step rest)

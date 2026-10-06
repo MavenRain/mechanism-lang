@@ -59,12 +59,20 @@
       "lines": 406
     },
     "bend2/cli/mech.bend": {
-      "sha256": "88700342bc83c9103c9bfa2f210dd0e0077b22bdc2066102504044d984b1be17",
-      "lines": 136
+      "sha256": "26324f357fc932b70f5604b1e55cec4a22af726f3061fc8a3713a6e950756bd8",
+      "lines": 142
     },
     "bend2/cli/output.bend": {
       "sha256": "5181bc7af4d1216cb05d802b4b83e157c3154a76fbc9de2119dbb5d9df3a13d5",
       "lines": 6
+    },
+    "bend2/cli/rust_in.bend": {
+      "sha256": "6da569d5e791133d2c505f79e1a4dc64e4cc6d68d47de4b6e9f2dcd01b90ac36",
+      "lines": 402
+    },
+    "bend2/cli/rust_out.bend": {
+      "sha256": "51ef5ad9af6d47c86e8e515194f77c18b19482d145b500894f846b4dcac864d3",
+      "lines": 817
     },
     "bend2/effects/fs.c": {
       "sha256": "23be09780ff74f03fff8fecf71c043fb4d35983bc5fce675d7183a177cd900fb",
@@ -139,12 +147,12 @@
       "lines": 233
     },
     "bend2/kernel/check.bend": {
-      "sha256": "5cd5a9c1128ebf7af5a8c3d919e25f3a5ee714b62dcfee856ac0033f04173246",
-      "lines": 369
+      "sha256": "04adcf1b244598698a6490637c4cd7a2d3a6ad6ed0b6bc0d451e07488e981499",
+      "lines": 381
     },
     "bend2/kernel/check_engine.bend": {
-      "sha256": "5f5afd014f90183cb9a9aba147a34e59a0c70a70e310a8141e614937b3101ea9",
-      "lines": 2033
+      "sha256": "e449247f82239eb6594686b841d507a83972e5917dcf86a9f0fe94c97756214e",
+      "lines": 2098
     },
     "bend2/kernel/circuit.bend": {
       "sha256": "fef952ac8adbfcb42d853634ede4d4181d01d9b9d6aaa44de2996e905d048570",
@@ -183,16 +191,16 @@
       "lines": 162
     },
     "bend2/kernel/eval.bend": {
-      "sha256": "2a3746746d251ba7b54fdf8e71402c6d1e8f2b63939b79843686e719a4f26bf1",
-      "lines": 589
+      "sha256": "06148369c86c35faada6f2409fe886d758b95160e7ade30743debfea148bab70",
+      "lines": 657
     },
     "bend2/kernel/global.bend": {
-      "sha256": "028d3cd242c53b82692a2cc2cfa64d6a3c3b96cdcdc31b747150d46802aa3194",
-      "lines": 147
+      "sha256": "0cd3579c2e9c798326e771116b1844879db89978de1734d9e1d80f33ecc60001",
+      "lines": 204
     },
     "bend2/kernel/level.bend": {
-      "sha256": "716d28e2f0b9b4b5d56e5cf6e2c5af8d14b6713b7f3e397c1d15a8ecd92b522b",
-      "lines": 77
+      "sha256": "6171542726a55d1e3ad364e0f9dbdbf8cb96835adf45963c614fa5fd46636ecf",
+      "lines": 103
     },
     "bend2/kernel/level_eq.bend": {
       "sha256": "bbe0e66e6a386954d1f2bf506df8a733e667015b430ee7bb4b4fbc16f5f505c8",
@@ -282,6 +290,62 @@
       "sha256": "6d3abb7898a0212ca959d477172d83397f3527a6cd0d82f11c00ac20d98327b9",
       "lines": 34
     },
+    "bend2/rust/ast.bend": {
+      "sha256": "b0b8e926b4a6309eceaff005339133697db2c989651992616411b7444e541ade",
+      "lines": 192
+    },
+    "bend2/rust/emit.bend": {
+      "sha256": "6d0bab38e3281f88804d3290047ddf3d9ab580911a434b9c1b16e38fa863f84b",
+      "lines": 224
+    },
+    "bend2/rust/erase_typed.bend": {
+      "sha256": "7d055cf19ac62a96aa0821c079be670eb85a92c081226cea80413780ee571abf",
+      "lines": 2051
+    },
+    "bend2/rust/fragment.bend": {
+      "sha256": "eb7065a74375e0672a73509815023c01204d23baec3087e1d96854426ef392bb",
+      "lines": 229
+    },
+    "bend2/rust/infer.bend": {
+      "sha256": "5520661424b75eca646ce2247bc65005cef2687a3c321a69b66258785149cb70",
+      "lines": 741
+    },
+    "bend2/rust/lexer.bend": {
+      "sha256": "030f5d0f529f5597472b592467c608e8aa9617ed2eca5d3abf4a9db1d88ec5f7",
+      "lines": 209
+    },
+    "bend2/rust/lift.bend": {
+      "sha256": "bcf16e68f67626ea3bd211b43708cdf8558ed648ce9126f5e19e91e98cf3c015",
+      "lines": 776
+    },
+    "bend2/rust/lower.bend": {
+      "sha256": "10e8a082676e520ab08c400bdff468dc88d81b1d24a2b164889cfdaed072b506",
+      "lines": 492
+    },
+    "bend2/rust/parser.bend": {
+      "sha256": "941e1f38a08eead40343d9ae37c3e376045a392b3ef3e63e18e213a3cc50e23a",
+      "lines": 1365
+    },
+    "bend2/rust/print.bend": {
+      "sha256": "24a2b0b1167bf6ab1163439085107bc1ccbacb438e21ca18ac674ff92cf9958e",
+      "lines": 837
+    },
+    "bend2/rust/resolve.bend": {
+      "sha256": "978c4d1afb19cfed97f21848e63c5d64c94594ffbe15d0fc25e45a6fa5bf8cf2",
+      "lines": 762
+    },
+    "bend2/rust/rir.bend": {
+      "sha256": "2216a0bc3f3c93fe33e305b3617723f5cefdb633934fd9f3018934255efc41cd",
+      "lines": 62
+    },
+    "bend2/rust/roundtrip.bend": {
+      "sha256": "4df901f114902d10ea1e5bd0e337b8429cba778695ce8d35510d4187305abf4a",
+      "lines": 179
+    },
+    "bend2/rust/token.bend": {
+      "sha256": "0902ac9ccd8dfab586d554cb891affcbd8bdcc200f7db8329e8fb9966ffe9d9d",
+      "lines": 79
+    },
     "bend2/surface/elab.bend": {
       "sha256": "ac616f19236a917f6b0eb2e5b7d6a12f73fc6e9d2581d4f1829dea2c417c1014",
       "lines": 777
@@ -291,8 +355,8 @@
       "lines": 1366
     },
     "bend2/surface/family_poly.bend": {
-      "sha256": "8b5082a51f43d1e5426f47170f1615fc6abd452111954f937d782caeaddc15a0",
-      "lines": 760
+      "sha256": "22eb65400532d8473b196733858d97bb7d509813349cf531b0e55c5dd86b4f91",
+      "lines": 819
     },
     "bend2/surface/lexer.bend": {
       "sha256": "c7ab5a6365c7f710dbc48063b5fb9827b40a673adbb3faf2c39d0f09c09890ec",

@@ -3,6 +3,7 @@ import ../surface/family_poly.bend as Family
 import ../surface/poly.bend as Poly
 import ../kernel/check.bend as Check
 import ../kernel/common.bend as Common
+import ../kernel/global.bend as Global
 import ../kernel/term.bend as Term
 import ../kernel/level.bend as Level
 import ../kernel/budget.bend as Budget
@@ -12,7 +13,7 @@ def scheme() -> Family.Scheme:
   Family.Scheme{1n, Check.FamilyDecl{"Box", [], [], Level.var(0n)},
     [Check.CtorDecl{"box", [], [], []}],
     [Common.Pair{Check.FamilyDecl{"Tag", [], [], Level.var(0n)}, []}],
-    [Check.Decl{"unwrap", Check.Definition{}, Term.Univ{Level.var(0n)}, Some{Term.Auto{}}}]}
+    [Check.Decl{"unwrap", Check.Definition{}, Term.Univ{Level.var(0n)}, Some{Term.Auto{}}}], Global.empty()}
 
 def expected_names(result: Maybe<&2, Common.Pair<List<&2, String>, List<&2, String>>>, family: String, companion: String, member: String) -> Bool:
   match result:

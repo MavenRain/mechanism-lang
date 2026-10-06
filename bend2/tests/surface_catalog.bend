@@ -58,7 +58,7 @@ def budget_refused(-A: Data, result: Result<&2, &2, Error.T, A>) -> Bool:
       False{}
 
 def forged(members: List<&2, Check.Decl>) -> Family.T:
-  [Common.Pair{"Marker", Family.Scheme{0n, marker(), ctors(), [], members}}]
+  [Common.Pair{"Marker", Family.Scheme{0n, marker(), ctors(), [], members, Global.empty()}}]
 
 def first_callback(globals: Global.T) -> Budget.Comp(Check.Decl):
   do Budget.Comp<Check.Decl>:
@@ -94,10 +94,14 @@ def suite() -> Result<&2, &2, Error.T, Unit>:
     checked : Unit <- ensure(Poly.is_some(Global.Entry, Global.find("get", exported)), "export target missing")
     reused : Global.T <- Family.instantiate(globals, catalog, Budget.unlimited(), "Marker", [Level.one()], "Reused", [Common.Pair{"Marker", "Small"}], None{})
     checked : Unit <- ensure(Bool.not(Poly.is_some(Global.Entry, Global.find("Marker", reused))), "reused symbolic family escaped")
+    +composed : Family.T <- Family.compose(Global.empty(), catalog, Budget.unlimited(), 1n, "Pack", [Family.Dependency{"Marker", [Level.var(0n)], "Inner", [], None{}}], [])
+    packed : Global.T <- Family.instantiate(Global.empty(), composed, Budget.unlimited(), "Pack", [Level.one()], "Packed", [], None{})
+    checked : Unit <- ensure(Poly.is_some(Global.Entry, Global.find("Packed_Inner_alias", packed)), "composed member did not survive specialization")
     checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.empty(), catalog, Budget.unlimited(), "Marker", [Level.one()], "Bad", [], Some{[]})), "incomplete export accepted")
     checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.empty(), forged([Check.Decl{"postulate", Check.Postulate{}, marker_ty("Marker"), None{}}]), Budget.unlimited(), "Marker", [], "Bad", [], None{})), "forged postulate member accepted")
     checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.empty(), forged([Check.Decl{"missing", Check.Definition{}, marker_ty("Marker"), None{}}]), Budget.unlimited(), "Marker", [], "Bad", [], None{})), "forged missing member body accepted")
     checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.empty(), forged([Check.Decl{"wrong", Check.Definition{}, marker_ty("Marker"), Some{Term.Univ{Level.one()}}}]), Budget.unlimited(), "Marker", [], "Bad", [], None{})), "forged ill-typed member accepted")
+    checked : Unit <- ensure(refused(Family.T, Family.compose(Global.empty(), forged([Check.Decl{"wrong", Check.Definition{}, marker_ty("Marker"), Some{Term.Univ{Level.one()}}}]), Budget.unlimited(), 0n, "Pack", [Family.Dependency{"Marker", [], "Inner", [], None{}}], [])), "composition accepted forged ill-typed member")
     checked : Unit <- ensure(scope_refused(Family.T, Family.declare(Global.empty(), [], Budget.unlimited(), 0n, marker(), ctors(), [Check.Decl{"hidden", Check.Definition{}, marker_ty("Marker"), Some{Term.Ann{Term.Auto{}, Term.Univ{Level.var(0n)}}}}])), "hidden annotation escaped universe scope")
     checked : Unit <- ensure(refused(Family.T, Family.declare(Global.empty(), [], Budget.unlimited(), 0n, marker(), List.append(&2, Check.CtorDecl, ctors(), ctors()), [])), "duplicate constructor accepted")
     checked : Unit <- ensure(budget_refused(Family.T, Family.declare(Global.empty(), [], Budget.of_polls(0n), 0n, marker(), ctors(), [])), "declaration ignored exhausted budget")

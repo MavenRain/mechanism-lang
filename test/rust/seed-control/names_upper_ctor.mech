@@ -1,0 +1,8 @@
+mu Light : Type 0 with
+| Red : Light
+| green : Light
+
+def flip : (l : Light) -> Light :=
+  fun (l : Light) => case l as flag in Light return Light with
+  | Red => green
+  | green => Red

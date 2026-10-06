@@ -29,6 +29,32 @@ def of_u32(value: U32) -> T:
 def var(index: Nat) -> T:
   V.LVar{index}
 
+def seen_var(seen: List<&2, Nat>, +index: Nat) -> Bool:
+  match seen:
+    case Nil{}:
+      False{}
+    case Con{head, tail}:
+      Nat.is_eq(head, index) || seen_var(tail, index)
+
+def distinct_vars_from(levels: List<&2, T>, +seen: List<&2, Nat>) -> Bool:
+  match levels:
+    case Nil{}:
+      True{}
+    case Con{V.LVar{+index}, tail}:
+      Bool.not(seen_var(seen, index)) && distinct_vars_from(tail, index <> seen)
+    case Con{V.LZero{}, tail}:
+      False{}
+    case Con{V.LSucc{amount, base}, tail}:
+      False{}
+    case Con{V.LMax{left, right}, tail}:
+      False{}
+    case Con{V.LIMax{left, right}, tail}:
+      False{}
+
+# True when every level is a variable and no variable repeats: the substitution only renames variables.
+def distinct_vars(levels: List<&2, T>) -> Bool:
+  distinct_vars_from(levels, [])
+
 def in_scope(arity: Nat, level: T) -> Bool:
   V.in_scope(level, arity)
 

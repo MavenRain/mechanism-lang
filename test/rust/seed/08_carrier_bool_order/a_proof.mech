@@ -1,0 +1,4 @@
+-- This dependency is erased, so Rust's module order puts this file first.
+def countSafe : Safe := safe
+
+def otherBool : MechBool := mechFalse

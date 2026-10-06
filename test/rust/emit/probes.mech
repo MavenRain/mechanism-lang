@@ -1,0 +1,68 @@
+-- Hand-written DIFF-EXEC probes. Each probe is a closed runtime definition.
+-- The gate puts the generated probes of the first-order functions before
+-- this file. These probes are for the generic functions, the higher-order
+-- functions and the functions with an erased parameter or a dependent result.
+
+def probeUnit : MechUnit := mechUnit
+
+def probeSumInl : MechSum MechNat MechBool := mechInl (mechSucc mechZero)
+
+def probeSumInr : MechSum MechNat MechBool := mechInr mechTrue
+
+def probeIsTrue : MechDecidable MechTrue := mechIsTrue mechTrivial
+
+def probeBoolRecFalse : MechNat :=
+  mechBoolRec MechNat mechZero (mechSucc mechZero) mechFalse
+
+def probeBoolRecTrue : MechNat :=
+  mechBoolRec MechNat mechZero (mechSucc mechZero) mechTrue
+
+def probeSumRecInl : MechNat :=
+  mechSumRec MechNat MechBool MechNat (fun (a : MechNat) => mechSucc a)
+    (fun (b : MechBool) => mechZero) (mechInl mechZero)
+
+def probeSumRecInr : MechNat :=
+  mechSumRec MechNat MechBool MechNat (fun (a : MechNat) => mechSucc a)
+    (fun (b : MechBool) => mechZero) (mechInr mechTrue)
+
+def probeNatRecZero : MechNat :=
+  mechNatRec (fun (value : MechNat) => MechNat) (mechSucc mechZero)
+    (fun (value : MechNat) (previous : MechNat) => mechSucc (mechSucc previous)) mechZero
+
+def probeNatRecTwo : MechNat :=
+  mechNatRec (fun (value : MechNat) => MechNat) (mechSucc mechZero)
+    (fun (value : MechNat) (previous : MechNat) => mechSucc (mechSucc previous))
+    (mechSucc (mechSucc mechZero))
+
+def probeDecidableBoolTrue : MechBool :=
+  mechDecidableBool MechTrue (mechIsTrue mechTrivial)
+
+def probeDecidableBoolFalse : MechBool :=
+  mechDecidableBool MechFalse (mechIsFalse (fun (e : MechFalse) => e))
+
+def probeJ : MechNat :=
+  mechJ MechNat mechZero
+    (fun (0 y : MechNat) (0 e : MechEq MechNat mechZero y) => MechNat)
+    (mechSucc mechZero) mechZero (mechRefl MechNat mechZero)
+
+def probeTransport : MechBool :=
+  mechTransport MechNat (fun (n : MechNat) => MechBool) mechZero mechZero
+    (mechRefl MechNat mechZero) mechTrue
+
+def probeCompareTieAbove : AuctionOrder mechZero mechZero :=
+  auctionCompare mechTrue mechZero mechZero
+
+def probeCompareTieBelow : AuctionOrder (mechSucc mechZero) (mechSucc mechZero) :=
+  auctionCompare mechFalse (mechSucc mechZero) (mechSucc mechZero)
+
+def probeCompareBelow : AuctionOrder mechZero (mechSucc mechZero) :=
+  auctionCompare mechTrue mechZero (mechSucc mechZero)
+
+def probeChoiceAbove : AuctionChoice :=
+  auctionChoice (mechSucc mechZero) mechZero (auctionCompare mechFalse (mechSucc mechZero) mechZero)
+
+def probeChoiceBelow : AuctionChoice :=
+  auctionChoice mechZero mechZero (auctionCompare mechFalse mechZero mechZero)
+
+def probeToNativeThree : Nat :=
+  auctionToNative (mechSucc (mechSucc (mechSucc mechZero)))

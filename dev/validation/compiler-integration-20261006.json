@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-06",
+  "base": "4e1c9bce1180c134377942112fbb6f9c73af9e56",
+  "merged_branch_tip": "2323e4474893673092ef16b46377b9507da53587",
+  "integration": [
+    "13 Rust frontend commits after the already merged M0 emitter",
+    "Staged specialization and universe substitution changes from kernel/specialize-reuse",
+    "Staged let-import extension from mech-rust/m1"
+  ],
+  "excluded": "The refactor/bend2 index predates compiler and prelude changes already on main. Its remaining additions are retired reference files, so it was not merged.",
+  "review_fixes": [
+    "Check source schema members before trusting composition renaming",
+    "Accept emitted let blocks in Rust match arms while retaining statement and pattern refusals",
+    "Reconcile all production source hashes and five CLI usage expectations",
+    "Correct the new round-trip fixture annotations, mutation target and refusal/capture expectations"
+  ],
+  "toolchain": "Bend 2.0.27",
+  "validation": {
+    "focused_kernel_surface": {
+      "status": "passed",
+      "suites": [
+        "kernel-eval",
+        "kernel-conversion",
+        "kernel-declarations",
+        "surface-program",
+        "surface-catalog",
+        "surface-trust",
+        "surface-universes",
+        "surface-family"
+      ]
+    },
+    "catalog_regression": {
+      "status": "passed",
+      "before": "Forged composition accepted; regression failed",
+      "after": "Forged composition refused and valid composition specialized"
+    },
+    "lifter_regression": {
+      "status": "passed",
+      "cases": 10,
+      "before": "Emitted match-arm let refused",
+      "after": "LIFT-OK; unsupported blocks remain refused"
+    },
+    "rust_roundtrip": {
+      "status": "passed",
+      "passed": 99,
+      "failed": 0
+    },
+    "rust_import": {
+      "status": "passed",
+      "passed": 32,
+      "failed": 0
+    },
+    "rust_lower": {
+      "status": "passed",
+      "cases": 51,
+      "failed": 0
+    },
+    "rust_infer": {
+      "status": "passed"
+    },
+    "rust_diff_exec": {
+      "status": "passed",
+      "values": 238,
+      "notes": "RUSTC_WRAPPER was empty because sandbox access to sccache was denied; Rust compilation and mutation checks ran normally."
+    },
+    "pin_delta": {
+      "status": "passed",
+      "sources": 95
+    },
+    "trusted_lines": {
+      "status": "passed",
+      "kernel": 8896,
+      "kernel_limit": 9000,
+      "encoder": 289,
+      "encoder_limit": 900
+    },
+    "native_production": {
+      "status": "incomplete",
+      "attempts": 2,
+      "reason": "Compiler terminated by SIGKILL. The isolated attempt printed that all source terms checked, but produced no native executable. Native CLI checks remain unverified."
+    },
+    "javascript_production": {
+      "status": "passed",
+      "backend": "javascript",
+      "command": "BEND=<Bend-2.0.27> python3 -P dev/bend2-build.py --target production --backend javascript"
+    },
+    "cli_golden": {
+      "status": "passed",
+      "cases": 37,
+      "failed": 0,
+      "backend": "javascript"
+    },
+    "production_rust_smoke": {
+      "status": "passed",
+      "publication_refusal_cases": 14,
+      "roundtrip_seeds": [
+        "01_enum_match",
+        "10_let"
+      ],
+      "backend": "javascript"
+    },
+    "r0_audit": {
+      "status": "passed"
+    }
+  },
+  "scope_note": "Validation covers the integration changes; the full acceptance ladder and native release validation remain unverified."
+}

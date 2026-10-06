@@ -35,6 +35,11 @@ law whnf:
   for value: Value.T
   Result<&2, &2, Error.T, Value.T>
 
+law whnf_core:
+  for +globals: Global.T
+  for value: Value.T
+  Result<&2, &2, Error.T, Value.T>
+
 law replay:
   for +globals: Global.T
   for value: Value.T
@@ -111,12 +116,10 @@ def close_legs(legs: List<&2, Term.Leg<Term.T>>, +env: List<&2, Value.T>) -> Lis
     case Value.Closure{env, body}:
       eval(globals, List.append(&2, Value.T, List.reverse(&2, Value.T, args), env), body)
 
-@unsafe def eval_global_entry(entry: Maybe<&2, Global.Entry>, globals: Global.T, name: String) -> Result<&2, &2, Error.T, Value.T>:
+def eval_global_entry(entry: Maybe<&2, Global.Entry>, name: String) -> Result<&2, &2, Error.T, Value.T>:
   match entry:
     case None{}:
       Fail{Error.Unbound{name}}
-    case Some{Global.Def{Global.DefEntry{ty, body, True{}, None{}, partial}}}:
-      eval(globals, [], body)
     case Some{entry}:
       Done{Value.VNeutral{Value.HGlobal{name}, []}}
 
@@ -127,12 +130,17 @@ def annotation_level(result: Result<&2, &2, Error.T, Value.T>) -> Maybe<&2, Leve
     case Fail{error}:
       None{}
 
+@unsafe def eval_whnf(+globals: Global.T, env: List<&2, Value.T>, term: Term.T) -> Result<&2, &2, Error.T, Value.T>:
+  do Result<&2, &2, Error.T, Value.T>:
+    value : Value.T <- eval(globals, env, term)
+    whnf(globals, value)
+
 @unsafe def fill_level(level: Maybe<&2, Level.T>, globals: Global.T, env: List<&2, Value.T>, ty: Term.T) -> Maybe<&2, Level.T>:
   match level:
     case Some{x}:
       Some{x}
     case None{}:
-      annotation_level(eval(globals, env, ty))
+      annotation_level(eval_whnf(globals, env, ty))
 
 @unsafe def annotate(value: Value.T, globals: Global.T, env: List<&2, Value.T>, ty: Term.T) -> Value.T:
   match value:
@@ -175,7 +183,7 @@ def annotation_level(result: Result<&2, &2, Error.T, Value.T>) -> Maybe<&2, Leve
         addr : Value.VAddr<Value.T> <- eval_addr(globals, env, a)
         value : Value.T <- eval(globals, env, head)
         applied : Value.T <- out_value(globals, shape, addr, value)
-        whnf(globals, applied)
+        whnf_core(globals, applied)
     case Term.Elim{Term.ElimData{s, scrut, q, motive, branches}}:
       do Result<&2, &2, Error.T, Value.T>:
         shape : Shape.T<Value.T> <- eval_shape(s, globals, env)
@@ -190,7 +198,7 @@ def annotation_level(result: Result<&2, &2, Error.T, Value.T>) -> Maybe<&2, Leve
         v : Value.T <- eval(globals, env, body)
         return annotate(v, globals, env, ty)
     case Term.Global{+name}:
-      eval_global_entry(Global.find(name, globals), globals, name)
+      eval_global_entry(Global.find(name, globals), name)
     case Term.Auto{}:
       Fail{Error.Not_yet{"instances arrive at M2"}}
 
@@ -327,28 +335,55 @@ def canonical_ctor(value: Value.T) -> Bool:
     case _:
       False{}
 
-def guarded_frame(frames: List<&2, Value.Spine<Value.T>>, index: Nat) -> Bool:
+def prepend_frame(frame: Value.Spine<Value.T>, tail: Maybe<&2, List<&2, Value.Spine<Value.T>>>) -> Maybe<&2, List<&2, Value.Spine<Value.T>>>:
+  match tail:
+    case None{}:
+      None{}
+    case Some{frames}:
+      Some{frame <> frames}
+
+@unsafe def guarded_frames(frames: List<&2, Value.Spine<Value.T>>, index: Nat, +globals: Global.T) -> Result<&2, &2, Error.T, Maybe<&2, List<&2, Value.Spine<Value.T>>>>:
   match frames index:
     case Con{Value.SOut{s, Value.VAPt{q, value}}, rest} 0n:
-      canonical_ctor(value)
+      do Result<&2, &2, Error.T, Maybe<&2, List<&2, Value.Spine<Value.T>>>>:
+        +forced : Value.T <- whnf(globals, value)
+        return Bool.pick(Maybe<&2, List<&2, Value.Spine<Value.T>>>, canonical_ctor(forced), Some{Value.SOut{s, Value.VAPt{q, forced}} <> rest}, None{})
     case Con{Value.SOut{s, Value.VAPt{q, value}}, rest} 1n+p:
-      guarded_frame(rest, p)
+      do Result<&2, &2, Error.T, Maybe<&2, List<&2, Value.Spine<Value.T>>>>:
+        tail : Maybe<&2, List<&2, Value.Spine<Value.T>>> <- guarded_frames(rest, p, globals)
+        return prepend_frame(Value.SOut{s, Value.VAPt{q, value}}, tail)
     case _ _:
-      False{}
+      Done{None{}}
 
-@unsafe def unfold_guarded(ready: Bool, +globals: Global.T, body: Term.T, frames: List<&2, Value.Spine<Value.T>>, value: Value.T) -> Result<&2, &2, Error.T, Value.T>:
+@unsafe def force_frames(frames: List<&2, Value.Spine<Value.T>>, +globals: Global.T) -> Result<&2, &2, Error.T, List<&2, Value.Spine<Value.T>>>:
+  match frames:
+    case Nil{}:
+      Done{[]}
+    case Con{Value.SOut{s, Value.VAPt{q, value}}, rest}:
+      do Result<&2, &2, Error.T, List<&2, Value.Spine<Value.T>>>:
+        forced : Value.T <- whnf(globals, value)
+        others : List<&2, Value.Spine<Value.T>> <- force_frames(rest, globals)
+        return Value.SOut{s, Value.VAPt{q, forced}} <> others
+    case Con{frame, rest}:
+      do Result<&2, &2, Error.T, List<&2, Value.Spine<Value.T>>>:
+        others : List<&2, Value.Spine<Value.T>> <- force_frames(rest, globals)
+        return frame <> others
+
+@unsafe def unfold_guarded(ready: Maybe<&2, List<&2, Value.Spine<Value.T>>>, +globals: Global.T, body: Term.T, value: Value.T) -> Result<&2, &2, Error.T, Value.T>:
   match ready:
-    case False{}:
+    case None{}:
       Done{value}
-    case True{}:
+    case Some{frames}:
       do Result<&2, &2, Error.T, Value.T>:
         head : Value.T <- eval(globals, [], body)
         replay(globals, head, frames)
 
-@unsafe def unfold_entry(entry: Maybe<&2, Global.DefEntry>, +globals: Global.T, +frames: List<&2, Value.Spine<Value.T>>, value: Value.T) -> Result<&2, &2, Error.T, Value.T>:
+@unsafe def unfold_entry(entry: Maybe<&2, Global.DefEntry>, +globals: Global.T, frames: List<&2, Value.Spine<Value.T>>, value: Value.T) -> Result<&2, &2, Error.T, Value.T>:
   match entry:
     case Some{Global.DefEntry{ty, body, True{}, Some{index}, partial}}:
-      unfold_guarded(guarded_frame(frames, index), globals, body, frames, value)
+      do Result<&2, &2, Error.T, Value.T>:
+        ready : Maybe<&2, List<&2, Value.Spine<Value.T>>> <- guarded_frames(frames, index, globals)
+        unfold_guarded(ready, globals, body, value)
     case _:
       Done{value}
 
@@ -376,14 +411,17 @@ def guarded_frame(frames: List<&2, Value.Spine<Value.T>>, index: Nat) -> Bool:
 @unsafe def whnf_global(entry: Maybe<&2, Global.Entry>, +globals: Global.T, name: String, +spine: List<&2, Value.Spine<Value.T>>) -> Result<&2, &2, Error.T, Value.T>:
   match entry:
     case Some{Global.Prim{ty, p}}:
-      prim_args(spine_literals(spine, []), p, globals, Value.VNeutral{Value.HGlobal{name}, spine})
+      do Result<&2, &2, Error.T, Value.T>:
+        forced : List<&2, Value.Spine<Value.T>> <- force_frames(spine, globals)
+        prim_args(spine_literals(forced, []), p, globals, Value.VNeutral{Value.HGlobal{name}, spine})
     case Some{Global.Def{Global.DefEntry{ty, body, True{}, Some{index}, partial}}}:
-      +frames = List.reverse(&2, Value.Spine<Value.T>, spine)
-      unfold_guarded(guarded_frame(frames, index), globals, body, frames, Value.VNeutral{Value.HGlobal{name}, spine})
+      do Result<&2, &2, Error.T, Value.T>:
+        ready : Maybe<&2, List<&2, Value.Spine<Value.T>>> <- guarded_frames(List.reverse(&2, Value.Spine<Value.T>, spine), index, globals)
+        unfold_guarded(ready, globals, body, Value.VNeutral{Value.HGlobal{name}, spine})
     case _:
       Done{Value.VNeutral{Value.HGlobal{name}, spine}}
 
-@unsafe def whnf(globals, value):
+@unsafe def whnf_core(globals, value):
   match value:
     case Value.VNeutral{Value.HGlobal{+name}, spine}:
       whnf_global(Global.find(name, globals), globals, name, spine)
@@ -397,12 +435,42 @@ def guarded_frame(frames: List<&2, Value.Spine<Value.T>>, index: Nat) -> Bool:
     case Con{Value.SOut{shape, addr}, rest}:
       do Result<&2, &2, Error.T, Value.T>:
         applied : Value.T <- out_value(globals, shape, addr, value)
-        reduced : Value.T <- whnf(globals, applied)
+        reduced : Value.T <- whnf_core(globals, applied)
         replay(globals, reduced, rest)
     case Con{Value.SElim{data}, rest}:
       do Result<&2, &2, Error.T, Value.T>:
         reduced : Value.T <- elim_value(globals, data, value)
         replay(globals, reduced, rest)
+
+@unsafe def unfold_step_entry(entry: Maybe<&2, Global.DefEntry>, +globals: Global.T, spine: List<&2, Value.Spine<Value.T>>) -> Result<&2, &2, Error.T, Maybe<&2, Value.T>>:
+  match entry:
+    case Some{Global.DefEntry{ty, body, True{}, None{}, partial}}:
+      do Result<&2, &2, Error.T, Maybe<&2, Value.T>>:
+        head : Value.T <- eval(globals, [], body)
+        unfolded : Value.T <- replay(globals, head, List.reverse(&2, Value.Spine<Value.T>, spine))
+        return Some{unfolded}
+    case _:
+      Done{None{}}
+
+@unsafe def unfold_step(+globals: Global.T, value: Value.T) -> Result<&2, &2, Error.T, Maybe<&2, Value.T>>:
+  match value:
+    case Value.VNeutral{Value.HGlobal{name}, spine}:
+      unfold_step_entry(Global.find_def(name, globals), globals, spine)
+    case _:
+      Done{None{}}
+
+@unsafe def whnf_unfolded(step: Maybe<&2, Value.T>, +globals: Global.T, core: Value.T) -> Result<&2, &2, Error.T, Value.T>:
+  match step:
+    case None{}:
+      Done{core}
+    case Some{unfolded}:
+      whnf(globals, unfolded)
+
+@unsafe def whnf(globals, value):
+  do Result<&2, &2, Error.T, Value.T>:
+    +core : Value.T <- whnf_core(globals, value)
+    step : Maybe<&2, Value.T> <- unfold_step(globals, core)
+    whnf_unfolded(step, globals, core)
 
 law quote:
   for +globals: Global.T

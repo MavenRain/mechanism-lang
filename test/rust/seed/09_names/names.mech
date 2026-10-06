@@ -1,0 +1,13 @@
+mu MechBool : Type 0 with
+| mechFalse : MechBool
+| mechTrue : MechBool
+
+def bad_Name : (b : MechBool) -> MechBool :=
+  fun (b : MechBool) => case b as flag in MechBool return MechBool with
+  | mechFalse => mechTrue
+  | mechTrue => mechFalse
+
+def good_ : (b : MechBool) -> MechBool :=
+  fun (b : MechBool) => case b as flag in MechBool return MechBool with
+  | mechFalse => mechTrue
+  | mechTrue => mechFalse

@@ -101,6 +101,31 @@ def ambient() -> Result<&2, &2, Error.T, Unit>:
     checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.initial(), catalog, Budget.unlimited(), "Box", [], "Missing", [], None{})), "missing ambient global bypassed rechecking")
     ensure(refused(Global.T, Family.instantiate(Global.add("Ambient", Global.Axiom{Term.Global{"Nat"}}, globals), catalog, Budget.unlimited(), "Box", [], "Changed", [], None{})), "changed ambient global bypassed rechecking")
 
+def ambient_member() -> Result<&2, &2, Error.T, Unit>:
+  +globals = Global.add("Ambient", Global.Axiom{Term.Univ{Level.one()}}, Global.initial())
+  family : Check.FamilyDecl = Check.FamilyDecl{"Box", [], [], Level.one()}
+  ctor : Check.CtorDecl = Check.CtorDecl{"box", [], [], []}
+  member : Check.Decl = Check.Decl{"m", Check.Definition{}, Term.Univ{Level.one()}, Some{Term.Global{"Ambient"}}}
+  do Result<&2, &2, Error.T, Unit>:
+    +catalog : Family.T <- Family.declare(globals, [], Budget.unlimited(), 0n, family, [ctor], [member])
+    control : Global.T <- Family.instantiate(globals, catalog, Budget.unlimited(), "Box", [], "Good", [], None{})
+    checked : Unit <- ensure(refused(Global.T, Family.instantiate(Global.initial(), catalog, Budget.unlimited(), "Box", [], "Missing", [], None{})), "missing ambient global bypassed member rechecking")
+    ensure(refused(Global.T, Family.instantiate(Global.add("Ambient", Global.Axiom{Term.Global{"Nat"}}, globals), catalog, Budget.unlimited(), "Box", [], "Changed", [], None{})), "changed ambient global bypassed member rechecking")
+
+def box_dependency() -> Family.Dependency:
+  Family.Dependency{"Box", [], "Inner", [], None{}}
+
+def ambient_composed() -> Result<&2, &2, Error.T, Unit>:
+  +globals = Global.add("Ambient", Global.Axiom{Term.Univ{Level.one()}}, Global.initial())
+  family : Check.FamilyDecl = Check.FamilyDecl{"Box", [], [], Level.one()}
+  ctor : Check.CtorDecl = Check.CtorDecl{"box", [], [], []}
+  member : Check.Decl = Check.Decl{"m", Check.Definition{}, Term.Univ{Level.one()}, Some{Term.Global{"Ambient"}}}
+  do Result<&2, &2, Error.T, Unit>:
+    +catalog : Family.T <- Family.declare(globals, [], Budget.unlimited(), 0n, family, [ctor], [member])
+    control : Family.T <- Family.compose(globals, catalog, Budget.unlimited(), 0n, "Good", [box_dependency()], [])
+    checked : Unit <- ensure(refused(Family.T, Family.compose(Global.initial(), catalog, Budget.unlimited(), 0n, "Missing", [box_dependency()], [])), "missing ambient global bypassed composed member rechecking")
+    ensure(refused(Family.T, Family.compose(Global.add("Ambient", Global.Axiom{Term.Global{"Nat"}}, globals), catalog, Budget.unlimited(), 0n, "Changed", [box_dependency()], [])), "changed ambient global bypassed composed member rechecking")
+
 def mutual() -> Result<&2, &2, Error.T, Unit>:
   source : String = "poly (u) mu P : Sort (succ u) with | pp : P and Q : Sort (succ u) with | qq : P -> Q where def mkp : P := pp end mu A : Sort (succ 0) with | pp : A and B : Sort (succ 0) with | qq : A -> B specialize P (0) as X with (P := A, Q := B)"
   ensure(exact(Elab.Checked, Error.to_string(Error.Mismatch{"the reused family B is a member of a mutual group, which family reuse does not support"}), Elab.check_in(Global.empty(), Budget.unlimited(), source)), "mutual group member reuse refusal changed")
@@ -111,6 +136,8 @@ def suite() -> Result<&2, &2, Error.T, Unit>:
     checked : Unit <- permutation()
     checked : Unit <- reuse()
     checked : Unit <- ambient()
+    checked : Unit <- ambient_member()
+    checked : Unit <- ambient_composed()
     mutual()
 
 def report(result: Result<&2, &2, Error.T, Unit>) -> IO(Unit):

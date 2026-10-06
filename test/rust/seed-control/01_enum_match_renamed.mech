@@ -1,0 +1,25 @@
+mu MechBool : Type 0 with
+| mechFalse : MechBool
+| mechTrue : MechBool
+
+mu Light : Type 0 with
+| lightRed : Light
+| lightAmber : Light
+| lightGreen : Light
+
+def lightNext : (signal : Light) -> Light :=
+  fun (signal : Light) => case signal as shape in Light return Light with
+  | lightRed => (lightGreen : Light)
+  | lightAmber => (lightRed : Light)
+  | lightGreen => (lightAmber : Light)
+
+def lightGo : (signal : Light) -> MechBool :=
+  fun (signal : Light) => case signal as shape in Light return MechBool with
+  | lightRed => mechFalse
+  | lightAmber => mechFalse
+  | lightGreen => mechTrue
+
+def lightPick : (choose : MechBool) -> (first : Light) -> (second : Light) -> Light :=
+  fun (choose : MechBool) (first : Light) (second : Light) => case choose as pick in MechBool return Light with
+  | mechFalse => second
+  | mechTrue => first

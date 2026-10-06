@@ -1,0 +1,37 @@
+-- A proposition with one proof. It has no Rust form, so the emitter carries it.
+mu LightSafe : Prop with
+| lightSafe : LightSafe
+
+mu MechBool : Type 0 with
+| mechFalse : MechBool
+| mechTrue : MechBool
+
+mu Light : Type 0 with
+| lightRed : Light
+| lightAmber : Light
+| lightGreen : Light
+
+def lightNext : (l : Light) -> Light :=
+  fun (l : Light) => case l as which in Light return Light with
+  | lightRed => (lightGreen : Light)
+  | lightAmber => (lightRed : Light)
+  | lightGreen => (lightAmber : Light)
+
+def lightGo : (l : Light) -> MechBool :=
+  fun (l : Light) => case l as which in Light return MechBool with
+  | lightRed => mechFalse
+  | lightAmber => mechFalse
+  | lightGreen => mechTrue
+
+def lightPick : (go : MechBool) -> (a : Light) -> (b : Light) -> Light :=
+  fun (go : MechBool) (a : Light) (b : Light) => case go as flag in MechBool return Light with
+  | mechFalse => b
+  | mechTrue => a
+
+-- Equality in Prop, in the form of the prelude.
+mu MechEq (0 A : Type 0) (0 x : A) : (0 y : A) -> Prop with
+| mechReflCtor : MechEq A x x
+
+-- The kernel checks this proof against the body of `lightGo`.
+def lightGoGreen : MechEq MechBool (lightGo lightGreen) mechTrue :=
+  mechReflCtor

@@ -1,0 +1,21 @@
+mu AuctionChoice : Type 0 :=
+| auctionLose : AuctionChoice
+| auctionWin : AuctionChoice
+mu AuctionOrder : Type 0 :=
+| auctionAbove : AuctionOrder
+| auctionBelow : AuctionOrder
+def rec auctionCompare : ((tieWins : MechBool) -> ((bid : MechNat) -> ((price : MechNat) -> AuctionOrder))) := (fun (tieWins : MechBool) (bid : MechNat) (price : MechNat) => (case bid as self in MechNat return AuctionOrder with | mechZero => (case price as self in MechNat return AuctionOrder with | mechZero => (case tieWins as self in MechBool return AuctionOrder with | mechFalse => (auctionBelow : AuctionOrder) | mechTrue => (auctionAbove : AuctionOrder)) | mechSucc _ => (auctionBelow : AuctionOrder)) | mechSucc previous => (case price as self in MechNat return AuctionOrder with | mechZero => (auctionAbove : AuctionOrder) | mechSucc other => (((auctionCompare tieWins) previous) other))))
+def auctionChoice : ((order : AuctionOrder) -> AuctionChoice) := (fun (order : AuctionOrder) => (case order as self in AuctionOrder return AuctionChoice with | auctionAbove => (auctionWin : AuctionChoice) | auctionBelow => (auctionLose : AuctionChoice)))
+def auctionAllocate : ((tieWins : MechBool) -> ((bid : MechNat) -> ((price : MechNat) -> AuctionChoice))) := (fun (tieWins : MechBool) (bid : MechNat) (price : MechNat) => (auctionChoice (((auctionCompare tieWins) bid) price)))
+def auctionPayment : ((price : MechNat) -> ((choice : AuctionChoice) -> MechNat)) := (fun (price : MechNat) (choice : AuctionChoice) => (case choice as self in AuctionChoice return MechNat with | auctionLose => (mechZero : MechNat) | auctionWin => price))
+def auctionMax : ((left : MechNat) -> ((right : MechNat) -> MechNat)) := (fun (left : MechNat) (right : MechNat) => (case (((auctionAllocate mechTrue) left) right) as self in AuctionChoice return MechNat with | auctionLose => right | auctionWin => left))
+def auctionPriorityB : ((a : MechNat) -> ((c : MechNat) -> MechBool)) := (fun (a : MechNat) (c : MechNat) => (case (((auctionAllocate mechTrue) a) c) as self in AuctionChoice return MechBool with | auctionLose => mechTrue | auctionWin => mechFalse))
+def auctionChoiceA : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> AuctionChoice))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => (((auctionAllocate mechTrue) a) ((auctionMax b) c)))
+def auctionChoiceB : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> AuctionChoice))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => (((auctionAllocate ((auctionPriorityB a) c)) b) ((auctionMax a) c)))
+def auctionChoiceC : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> AuctionChoice))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => (((auctionAllocate mechFalse) c) ((auctionMax a) b)))
+def auctionPaymentA : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> MechNat))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => ((auctionPayment ((auctionMax b) c)) (((auctionChoiceA a) b) c)))
+def auctionPaymentB : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> MechNat))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => ((auctionPayment ((auctionMax a) c)) (((auctionChoiceB a) b) c)))
+def auctionPaymentC : ((a : MechNat) -> ((b : MechNat) -> ((c : MechNat) -> MechNat))) := (fun (a : MechNat) (b : MechNat) (c : MechNat) => ((auctionPayment ((auctionMax a) b)) (((auctionChoiceC a) b) c)))
+def rec auctionAdd : ((left : MechNat) -> ((right : MechNat) -> MechNat)) := (fun (left : MechNat) (right : MechNat) => (case left as self in MechNat return MechNat with | mechZero => right | mechSucc previous => ((mechSucc ((auctionAdd previous) right)) : MechNat)))
+def auctionToNative : ((n : MechNat) -> Nat) := (fun (n : MechNat) => ((((mechNatRec Nat) 0) (fun (value : MechNat) (previous : Nat) => ((natAdd 1) previous))) n))
+def auctionBit : ((choice : AuctionChoice) -> Nat) := (fun (choice : AuctionChoice) => (case choice as self in AuctionChoice return Nat with | auctionLose => 0 | auctionWin => 1))

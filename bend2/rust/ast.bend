@@ -13,9 +13,14 @@ type Vis is Data:
 type Attr is Data:
   Attr{name: String, args: Maybe<&2, List<&2, String>>}
 
+# One-based `line:col` source position. `0:0`: no source text (emit.bend).
+type Pos is Data:
+  Pos{line: Nat, col: Nat}
+
 # `gap`: a blank line precedes the construct. `docs`: outer `///` lines.
+# `pos`: the first token of the construct after its outer docs and attributes.
 type Meta is Data:
-  Meta{gap: Bool, docs: List<&2, String>, attrs: List<&2, Attr>}
+  Meta{gap: Bool, docs: List<&2, String>, attrs: List<&2, Attr>, pos: Pos}
 
 # One path segment; `args` are its generic arguments (`::<..>` in expressions).
 type Seg<-T: Data> is Data:
@@ -124,6 +129,44 @@ type Node is Data:
 # `inner`: the file's leading `//!` lines.
 type SrcFile is Data:
   SrcFile{inner: List<&2, String>, items: List<&2, Node>}
+
+def no_pos() -> Pos:
+  Pos{0n, 0n}
+
+# The text of a position, as `Tk.show_loc` prints a token position.
+def show_pos(p: Pos) -> String:
+  match p:
+    case Pos{line, col}:
+      Nat.show(line) ++ ":" ++ Nat.show(col)
+
+def meta_pos(m: Meta) -> Pos:
+  match m:
+    case Meta{gap, docs, attrs, pos}:
+      pos
+
+# The position of an item; `0:0` for an expression (it has no `Meta`).
+def item_pos(n: Node) -> Pos:
+  match n:
+    case IFn{meta, vis, sig, body}:
+      meta_pos(meta)
+    case IStruct{meta, vis, name, generics, body}:
+      meta_pos(meta)
+    case IEnum{meta, vis, name, generics, variants}:
+      meta_pos(meta)
+    case IUse{meta, vis, tree}:
+      meta_pos(meta)
+    case IMod{meta, vis, name, inline, inner, items}:
+      meta_pos(meta)
+    case IImpl{meta, generics, tr, self_ty, items}:
+      meta_pos(meta)
+    case ITrait{meta, vis, name, generics, supers, items}:
+      meta_pos(meta)
+    case IConst{meta, vis, name, ty, value}:
+      meta_pos(meta)
+    case IType{meta, vis, name, generics, ty}:
+      meta_pos(meta)
+    case other:
+      no_pos()
 
 def item_line(n: Node) -> String:
   match n:
