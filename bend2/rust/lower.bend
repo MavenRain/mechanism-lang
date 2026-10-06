@@ -275,6 +275,15 @@ def fun_of(bs: List<&2, Syntax.Binder<Syntax.T>>, body: Syntax.T) -> Syntax.T:
     case Con{b, rest}:
       Syntax.SFun{b <> rest, body}
 
+# A let: the first child job is the initializer with its (given or
+# synthesized) type, the second is the body (E1).
+def let_t(+name: String, ty: Syntax.T, ts: List<&2, Syntax.T>) -> Syntax.T:
+  match ts:
+    case Con{v, Con{b, rest}}:
+      Syntax.SLet{name, ty, v, b}
+    case other:
+      one_t(other)
+
 # Reuse inference's child jobs so calls, constructors and closures retain
 # their expected types. A constructor is annotated even in synthesis position.
 @unsafe def lows(+e: In.Env, +copies: List<&2, String>, +ns: List<&2, Name>, js: List<&2, Job>) -> List<&2, Syntax.T>:
@@ -307,6 +316,9 @@ def fun_of(bs: List<&2, Syntax.Binder<Syntax.T>>, body: Syntax.T) -> Syntax.T:
       lows(e, copies, ns, Job{ls, i, w} <> rest)
     case Con{Job{ls, R.XBox{i}, w}, rest}:
       lows(e, copies, ns, Job{ls, i, w} <> rest)
+    case Con{Job{ls, R.XLet{+name, t, value, body}, +w}, rest}:
+      +js = children(e, ls, R.XLet{name, t, value, body}, w)
+      let_t(lookup(ns, name), In.mty(copies, scrut_type(js)), lows(e, copies, ns, js)) <> lows(e, copies, ns, rest)
 
 # CD10: a fn that calls itself is a `def rec`.
 @unsafe def calls(+name: String, es: List<&2, R.Ex>) -> Bool:
@@ -335,6 +347,8 @@ def fun_of(bs: List<&2, Syntax.Binder<Syntax.T>>, body: Syntax.T) -> Syntax.T:
       calls(name, i <> rest)
     case Con{R.XBox{i}, rest}:
       calls(name, i <> rest)
+    case Con{R.XLet{x, t, v, b}, rest}:
+      calls(name, List.append(&2, R.Ex, [v, b], rest))
 
 def rec_or_def(r: Bool, +name: String, +tele: Syntax.T, +body: Syntax.T) -> Syntax.Decl:
   Bool.pick(Syntax.Decl, r, Syntax.DRec{[Syntax.RecDef{name, tele, body}]}, Syntax.DDef{name, tele, body})
@@ -365,6 +379,8 @@ def rec_or_def(r: Bool, +name: String, +tele: Syntax.T, +body: Syntax.T) -> Synt
       all_names(i <> rest)
     case Con{R.XBox{i}, rest}:
       all_names(i <> rest)
+    case Con{R.XLet{x, t, v, b}, rest}:
+      x <> all_names(List.append(&2, R.Ex, [v, b], rest))
 
 def arrows(bs: List<&2, Syntax.Binder<Syntax.T>>, body: Syntax.T) -> Syntax.T:
   match bs:

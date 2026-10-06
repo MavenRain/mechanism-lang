@@ -1007,6 +1007,7 @@ type Build is Data:
   BMatch{pats: List<&2, R.Pat>, want: Want}
   BIf{true_first: Bool, want: Want}
   BClosure{params: List<&2, R.Param>, want: Want}
+  BLet{name: String, ty: R.Ty, want: Want}
 
 type Plan is Data:
   Plan{jobs: List<&2, Job>, build: Build}
@@ -1552,6 +1553,85 @@ def lit_rx(want: Want, lit: Literal.T) -> Rx:
     case other:
       XNo{"a literal that is not an integer (M0)"}
 
+# A let (E1). The binder enters `vs` as an owned `Param{rn, t}`: `var_use`
+# moves it on an owned use and borrows it on a `WRef` use. Two owned uses of
+# a non-Copy binder do not compile (rustc E0382), so E1 accepts a binder of
+# a Copy type only; a non-Copy, function, type or Prop-sorted binder is a
+# located refusal. A proof binder (an `EProp` type) is erased like a proof
+# parameter. ED2: the Rust name of the binder must not collide with a slot
+# of `vs` or with the Rust name of a global after the name map.
+def let_tys(t: Maybe<&2, R.Ty>) -> List<&2, R.Ty>:
+  match t:
+    case None{}:
+      []
+    case Some{x}:
+      [x]
+
+def has_slot(vs: List<&2, Maybe<&2, R.Param>>, +name: String) -> Bool:
+  match vs:
+    case Nil{}:
+      False{}
+    case Con{Some{R.Param{n, t}}, rest}:
+      String.eq(n, name) || has_slot(rest, name)
+    case Con{None{}, rest}:
+      has_slot(rest, name)
+
+def global_clash(entries: List<&2, C.Pair<String, Global.Entry>>, +rn: String) -> Bool:
+  match entries:
+    case Nil{}:
+      False{}
+    case Con{C.Pair{g, e}, rest}:
+      String.eq(fn_name(g), rn) || global_clash(rest, rn)
+
+def entries_of(g: Global.T) -> List<&2, C.Pair<String, Global.Entry>>:
+  match g:
+    case Global.Globals{entries, families, entry_index, family_index}:
+      entries
+
+def let_clash(env: Env, vs: List<&2, Maybe<&2, R.Param>>, +rn: String) -> Bool:
+  has_slot(vs, rn) || global_clash(entries_of(globals_of(env)), rn)
+
+def let_copy(copies: List<&2, String>, t: R.Ty) -> Bool:
+  match t:
+    case R.TBool{}:
+      True{}
+    case R.TCon{+name, args}:
+      has(copies, name)
+    case other:
+      False{}
+
+def let_typed(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, +rn: String, +t: R.Ty, value: Term.T, body: Term.T) -> Plan:
+  match t:
+    case R.TFn{args, ret}:
+      no_plan("a let of a function type (E1)")
+    case other:
+      Bool.pick(Plan, let_copy(copies_of(env), t),
+        Plan{[Job{ks, vs, WOwn{}, value}, Job{KVal{} <> ks, Some{R.Param{rn, t}} <> vs, WOwn{}, body}], BLet{rn, t, want}},
+        no_plan("a let of a non-Copy type (E1)"))
+
+def let_er(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, +rn: String, er: Er, value: Term.T, body: Term.T) -> Plan:
+  match er:
+    case EData{t}:
+      let_typed(env, ks, vs, want, rn, t, value, body)
+    case EProp{}:
+      Plan{[Job{KProp{} <> ks, None{} <> vs, want, body}], BSame{}}
+    case ENo{why}:
+      no_plan(why)
+
+def let_kind(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, +rn: String, k: Knd, ty: Term.T, value: Term.T, body: Term.T) -> Plan:
+  match k:
+    case KGen{g}:
+      no_plan("a let of a type (E1)")
+    case KProp{}:
+      no_plan("a let of a type (E1)")
+    case KVal{}:
+      Bool.pick(Plan, let_clash(env, vs, rn),
+        no_plan("the let binder `" ++ rn ++ "` collides with a name in scope after the name map (E1)"),
+        let_er(env, ks, vs, want, rn, one_er(ers(env, ks, [ty])), value, body))
+
+def let_plan(+env: Env, ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, +name: String, +ty: Term.T, value: Term.T, body: Term.T) -> Plan:
+  let_kind(env, ks, vs, want, fn_name(name), kind_of(end_of(ty), name), ty, value, body)
+
 # The plan of one term: its top node or its application spine only.
 def plan_term(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, term: Term.T) -> Plan:
   match term:
@@ -1572,7 +1652,7 @@ def plan_term(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, 
     case Term.Lit{value}:
       leaf(lit_rx(want, value))
     case Term.Let{name, ty, value, body}:
-      no_plan("a let (M0)")
+      let_plan(env, ks, vs, want, name, ty, value, body)
     case other:
       no_plan("a term shape outside the M0 fragment")
 
@@ -1637,6 +1717,8 @@ def arm_bodies(arms: List<&2, R.Arm<R.Ex>>) -> List<&2, R.Ex>:
           uses(name, inner <> rest)
         case R.XBox{inner}:
           uses(name, inner <> rest)
+        case R.XLet{n, t, value, body}:
+          uses(name, value <> (body <> rest))
 
 # R2: a parameter with no use in the body gets `_` in front of its name.
 def under(params: List<&2, R.Param>, +body: R.Ex) -> List<&2, R.Param>:
@@ -1737,6 +1819,13 @@ def if_rx(+true_first: Bool, want: Want, xs: List<&2, R.Ex>) -> Rx:
     case other:
       XNo{"internal: an if without two arms"}
 
+def let_rx(+name: String, ty: R.Ty, want: Want, xs: List<&2, R.Ex>) -> Rx:
+  match xs:
+    case Con{v, Con{b, rest}}:
+      wanted(want, R.XLet{name, Some{ty}, v, b})
+    case other:
+      XNo{"internal: a let without two parts"}
+
 def closure_rx(want: Want, params: List<&2, R.Param>, xs: List<&2, R.Ex>) -> Rx:
   match xs:
     case Nil{}:
@@ -1782,6 +1871,8 @@ def built(r: Result<&2, &2, String, List<&2, R.Ex>>, b: Build) -> Rx:
           if_rx(true_first, want, xs)
         case BClosure{params, want}:
           closure_rx(want, params, xs)
+        case BLet{name, ty, want}:
+          let_rx(name, ty, want, xs)
 
 def jobs_of(p: Plan) -> List<&2, Job>:
   match p:

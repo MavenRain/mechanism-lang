@@ -412,6 +412,14 @@ def arm_jobs(+gens: List<&2, String>, +locals: List<&2, String>, arms: List<&2, 
     case Con{a, rest}:
       JArm{gens, locals, a} <> arm_jobs(gens, locals, rest)
 
+# The type of a let binder, when the Rust text gives one (E1).
+def let_tys(t: Maybe<&2, R.Ty>) -> List<&2, R.Ty>:
+  match t:
+    case None{}:
+      []
+    case Some{x}:
+      [x]
+
 # The first name that does not resolve, as the text of a refusal.
 @unsafe def walk(+sc: Scope, js: List<&2, Job>) -> Maybe<&2, String>:
   match js:
@@ -456,6 +464,8 @@ def arm_jobs(+gens: List<&2, String>, +locals: List<&2, String>, arms: List<&2, 
       walk(sc, JEx{gens, locals, inner} <> rest)
     case Con{JEx{gens, locals, R.XBox{inner}}, rest}:
       walk(sc, JEx{gens, locals, inner} <> rest)
+    case Con{JEx{+gens, +locals, R.XLet{+name, t, value, body}}, rest}:
+      walk(sc, List.append(&2, Job, tjobs(gens, let_tys(t)), JEx{gens, locals, value} <> (JEx{gens, name <> locals, body} <> rest)))
     case Con{JArm{gens, locals, R.Arm{R.PCtor{+family, +ctor, binds}, body}}, rest}:
       Bool.pick(Maybe<&2, String>, has_ctor(fams_of(sc), family, ctor),
         walk(sc, JEx{gens, List.append(&2, String, bind_names(binds), locals), body} <> rest),

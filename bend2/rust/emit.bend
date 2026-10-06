@@ -100,9 +100,21 @@ def arm_bodies(xs: List<&2, R.Arm<R.Ex>>) -> List<&2, R.Ex>:
     case Con{R.Arm{p, body}, rest}:
       body <> arm_bodies(rest)
 
-# A block with `e` as its tail expression.
+# A block with `e` as its tail expression. A let in tail position gives its
+# statements, so `fn f() -> T { let x: T = v; x }` has no inner block (E1).
 def tail(e: A.Node) -> List<&2, A.Stmt<A.Node>>:
-  [A.SExpr{m0(), e, False{}}]
+  match e:
+    case A.EBlock{stmts}:
+      stmts
+    case other:
+      [A.SExpr{m0(), other, False{}}]
+
+def let_ty(t: Maybe<&2, R.Ty>) -> Maybe<&2, A.Ty>:
+  match t:
+    case None{}:
+      None{}
+    case Some{x}:
+      Some{ty(x)}
 
 # rustfmt puts an `if` that is an arm body in a block.
 def arm_body(e: A.Node) -> A.Node:
@@ -151,6 +163,8 @@ type Two is Data:
       A.EMethod{one(nodes([i])), "clone", [], []} <> nodes(rest)
     case Con{R.XBox{i}, rest}:
       A.ECall{A.EPath{path2("Box", "new")}, nodes([i])} <> nodes(rest)
+    case Con{R.XLet{name, t, value, body}, rest}:
+      A.EBlock{A.SLet{m0(), name_pat(name), let_ty(t), Some{one(nodes([value]))}} <> tail(one(nodes([body])))} <> nodes(rest)
 
 def ex(e: R.Ex) -> A.Node:
   one(nodes([e]))

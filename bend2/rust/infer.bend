@@ -590,6 +590,17 @@ def arm_step(+ls: List<&2, Loc>, +gs: List<&2, String>, +args: List<&2, R.Ty>, b
     case None{}:
       Fail{"unknown constructor (CD9)"}
 
+# A let with no type takes the type of its initializer (E1, U13); an
+# initializer with no synthesized type is a refusal.
+def let_syn(+ls: List<&2, Loc>, +name: String, value: R.Ex, body: R.Ex, +want: R.Ty, r: Result<&2, &2, String, Syn>, +st: St) -> Result<&2, &2, String, St>:
+  match r:
+    case Done{Syn{+t, js}}:
+      # Lowering consumes these roots as the two parts of Syntax.SLet.
+      # Checking the initializer again also visits its synthesized child jobs.
+      ok(True{}, [JChk{ls, value, t}, JChk{Loc{name, t} <> ls, body, want}], [], st)
+    case Fail{m}:
+      Fail{"let `" ++ name ++ "` with no type (E1)"}
+
 def step(+e: Env, j: Job, +st: St) -> Result<&2, &2, String, St>:
   match j:
     case JArm{+ls, Fam{fam_name, +gs, vs}, +args, R.Arm{R.PCtor{pf, +pc, bs}, body}, +want}:
@@ -616,6 +627,10 @@ def step(+e: Env, j: Job, +st: St) -> Result<&2, &2, String, St>:
       ok(True{}, [JChk{ls, i, want}], [], st)
     case JChk{+ls, R.XBox{i}, +want}:
       ok(True{}, [JChk{ls, i, want}], [], st)
+    case JChk{+ls, R.XLet{+name, Some{+t}, value, body}, +want}:
+      ok(True{}, [JChk{ls, value, t}, JChk{Loc{name, t} <> ls, body, want}], [], st)
+    case JChk{+ls, R.XLet{+name, None{}, +value, body}, +want}:
+      let_syn(ls, name, value, body, want, synth(e, ls, value), st)
     case other:
       Fail{mismatch()}
 

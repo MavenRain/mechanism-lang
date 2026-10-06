@@ -147,6 +147,8 @@ def arm_fams(arms: List<&2, R.Arm<R.Ex>>) -> List<&2, String>:
       List.append(&2, String, arm_fams(arms), exs_refs(scrut <> List.append(&2, R.Ex, Em.arm_bodies(arms), rest)))
     case Con{R.XIf{cond, yes, no}, rest}:
       exs_refs(cond <> (yes <> (no <> rest)))
+    case Con{R.XLet{name, ty, value, body}, rest}:
+      List.append(&2, String, tys_refs(Et.let_tys(ty)), exs_refs(value <> (body <> rest)))
     case Con{R.XClosure{params, body}, rest}:
       List.append(&2, String, tys_refs(Et.param_tys(params)), exs_refs(body <> rest))
     case Con{R.XBorrow{inner}, rest}:

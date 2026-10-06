@@ -1,0 +1,13 @@
+-- E1 emit fixture. Check it after prelude/init.mech.
+-- letTwice: two lets in tail position, the inner initializer reads the outer binder.
+-- letArg: a let in an argument position stays a block.
+def letTwice : (a : MechBool) -> MechBool :=
+  fun (a : MechBool) => let x : MechBool := a in let y : MechBool := x in y
+
+def letNot : (b : MechBool) -> MechBool :=
+  fun (b : MechBool) => case b as w in MechBool return MechBool with
+  | mechFalse => mechTrue
+  | mechTrue => mechFalse
+
+def letArg : (a : MechBool) -> MechBool :=
+  fun (a : MechBool) => letNot (let z : MechBool := a in z)
