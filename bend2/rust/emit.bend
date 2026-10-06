@@ -79,12 +79,34 @@ def binds(xs: List<&2, R.Bind>) -> List<&2, A.Pat>:
     case Con{R.BSkip{}, rest}:
       A.PWild{} <> binds(rest)
 
+# The field names of a struct pattern beside its binds.
+type FB is Data:
+  FB{names: List<&2, String>, binds: List<&2, R.Bind>}
+
+# `a` when the bind is the field name, else `a: x` or `a: _` (E2).
+def field_pat(+n: String, +x: String) -> A.FieldPat<A.Pat>:
+  A.FieldPat{n, Bool.pick(Maybe<&2, A.Pat>, String.eq(n, x), None{}, Some{name_pat(x)})}
+
+@unsafe def field_pats(t: FB) -> List<&2, A.FieldPat<A.Pat>>:
+  match t:
+    case FB{Con{n, ns}, Con{R.BVar{x}, bs}}:
+      field_pat(n, x) <> field_pats(FB{ns, bs})
+    case FB{Con{n, ns}, Con{R.BSkip{}, bs}}:
+      A.FieldPat{n, Some{A.PWild{}}} <> field_pats(FB{ns, bs})
+    case other:
+      []
+
+def struct_pat(+family: String, named: Bool, fs: List<&2, String>, +bs: List<&2, R.Bind>) -> A.Pat:
+  Bool.pick(A.Pat, named, A.PStruct{path1(family), field_pats(FB{fs, bs}), False{}}, A.PTupleStruct{path1(family), binds(bs)})
+
 def pat(p: R.Pat) -> A.Pat:
   match p:
     case R.PCtor{family, ctor, Nil{}}:
       A.PPath{path2(family, ctor)}
     case R.PCtor{family, ctor, bs}:
       A.PTupleStruct{path2(family, ctor), binds(bs)}
+    case R.PStruct{family, named, fs, bs}:
+      struct_pat(family, named, fs, bs)
 
 def arm_pats(xs: List<&2, R.Arm<R.Ex>>) -> List<&2, A.Pat>:
   match xs:
@@ -199,6 +221,69 @@ def variants(xs: List<&2, R.Variant>) -> List<&2, A.Variant>:
 def fn_item(name: String, gs: List<&2, String>, ps: List<&2, R.Param>, ret: A.Ty, body: A.Node) -> A.Node:
   A.IFn{gap([]), A.Pub{}, A.Sig{name, bounds(gs, [A.TPath{path1("Clone")}]), params(ps), Some{ret}}, Some{tail(body)}}
 
+def nfields(xs: List<&2, R.Param>) -> List<&2, A.Field>:
+  match xs:
+    case Nil{}:
+      []
+    case Con{R.Param{name, t}, rest}:
+      A.NField{m0(), A.Priv{}, name, ty(t)} <> nfields(rest)
+
+def param_tys(xs: List<&2, R.Param>) -> List<&2, R.Ty>:
+  match xs:
+    case Nil{}:
+      []
+    case Con{R.Param{name, t}, rest}:
+      t <> param_tys(rest)
+
+def inits(xs: List<&2, R.Param>) -> List<&2, A.FieldInit<A.Node>>:
+  match xs:
+    case Nil{}:
+      []
+    case Con{R.Param{name, t}, rest}:
+      A.FieldInit{name, None{}} <> inits(rest)
+
+def args(xs: List<&2, R.Param>) -> List<&2, A.Node>:
+  match xs:
+    case Nil{}:
+      []
+    case Con{R.Param{name, t}, rest}:
+      A.EPath{path1(name)} <> args(rest)
+
+# `pub struct S { a: A }` or `pub struct N(A);`, private fields (E2).
+def struct_body(named: Bool, +fs: List<&2, R.Param>) -> A.Body:
+  Bool.pick(A.Body, named, A.BNamed{nfields(fs)}, A.BTuple{fields(tys(param_tys(fs)))})
+
+# `S { a, b }` or `N(x0, x1)`.
+def struct_new(+name: String, named: Bool, +fs: List<&2, R.Param>) -> A.Node:
+  Bool.pick(A.Node, named, A.EStruct{path1(name), inits(fs), None{}}, A.ECall{A.EPath{path1(name)}, args(fs)})
+
+def getter_body(+name: String, t: R.Ty) -> A.Node:
+  match t:
+    case R.TRef{i}:
+      A.EUnary{"&", A.EField{A.EPath{path1("self")}, name}}
+    case other:
+      A.EField{A.EPath{path1("self")}, name}
+
+# `pub fn a(&self) -> &A { &self.a }`, or `-> A { self.a }` for a Copy field.
+def getter(m: A.Meta, +name: String, +t: R.Ty) -> A.Node:
+  A.IFn{m, A.Pub{}, A.Sig{name, [], [A.PSelf{True{}}], Some{ty(t)}}, Some{tail(getter_body(name, t))}}
+
+# No blank line before the first accessor of the `impl` block.
+def getters(xs: List<&2, R.Param>, b: Bool) -> List<&2, A.Node>:
+  match xs:
+    case Nil{}:
+      []
+    case Con{R.Param{name, t}, rest}:
+      getter(A.Meta{b, [], [], A.no_pos()}, name, t) <> getters(rest, True{})
+
+# One `impl` block with the accessors, before `tl`; a tuple struct has none.
+def impl_block(name: String, gs: List<&2, R.Param>, tl: List<&2, A.Node>) -> List<&2, A.Node>:
+  match gs:
+    case Nil{}:
+      tl
+    case Con{g, rest}:
+      A.IImpl{gap([]), [], None{}, A.TPath{path1(name)}, getters(g <> rest, False{})} <> tl
+
 # `use_gap`: a blank line goes before the next `use` (not between two of them).
 def items(xs: List<&2, R.Item>, use_gap: Bool) -> List<&2, A.Node>:
   match xs:
@@ -211,6 +296,9 @@ def items(xs: List<&2, R.Item>, use_gap: Bool) -> List<&2, A.Node>:
     case Con{R.IUnit{+name, ctor}, rest}:
       A.IStruct{gap(derive(True{})), A.Pub{}, name, [], A.BUnit{}} <>
         (fn_item(ctor, [], [], A.TPath{path1(name)}, A.EPath{path1(name)}) <> items(rest, True{}))
+    case Con{R.IStruct{+name, ctor, +named, +fs, gs}, rest}:
+      A.IStruct{gap(derive(False{})), A.Pub{}, name, [], struct_body(named, fs)} <>
+        (fn_item(ctor, [], fs, A.TPath{path1(name)}, struct_new(name, named, fs)) <> impl_block(name, gs, items(rest, True{})))
     case Con{R.IFn{name, gs, ps, ret, body}, rest}:
       fn_item(name, gs, ps, ty(ret), ex(body)) <> items(rest, True{})
 

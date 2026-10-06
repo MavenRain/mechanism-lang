@@ -133,6 +133,8 @@ def arm_names(arms: List<&2, R.Arm<R.Ex>>) -> List<&2, String>:
       []
     case Con{R.Arm{R.PCtor{f, c, bs}, body}, rest}:
       List.append(&2, String, bind_names(bs), arm_names(rest))
+    case Con{R.Arm{R.PStruct{f, named, fields, bs}, body}, rest}:
+      List.append(&2, String, bind_names(bs), arm_names(rest))
 
 # A BSkip is a binder with no use.
 def field_of(b: R.Bind, +ns: List<&2, Name>) -> Syntax.Field<Syntax.T>:
@@ -438,6 +440,9 @@ def item_decls(ps: List<&2, Rs.Placed>, +copies: List<&2, String>, +e: In.Env, +
       enum_decl(copies, name, gs, vs) <> item_decls(rest, copies, e, globals)
     case Con{Rs.Placed{pos, R.IUnit{name, ctor}}, rest}:
       unit_decl(name, ctor) <> item_decls(rest, copies, e, globals)
+    case Con{Rs.Placed{pos, R.IStruct{name, ctor, named, fields, getters}}, rest}:
+      # Resolution and inference refuse struct imports before lowering.
+      item_decls(rest, copies, e, globals)
     case Con{Rs.Placed{pos, R.IUse{m}}, rest}:
       item_decls(rest, copies, e, globals)
 

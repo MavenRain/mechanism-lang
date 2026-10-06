@@ -860,6 +860,8 @@ def show_item(item: R.Item) -> String:
       Bool.pick(String, copy, "copy ", "") ++ "enum " ++ name ++ wrap("<", ">", gens) ++ " { " ++ join(", ", show_variants(vars)) ++ " }"
     case R.IUnit{name, ctor}:
       "struct " ++ name ++ "; fn " ++ ctor
+    case R.IStruct{name, ctor, named, +fields, getters}:
+      "struct " ++ name ++ Bool.pick(String, named, " { " ++ join(", ", show_params(fields)) ++ " }", "(" ++ join(", ", show_tys(param_tys(fields))) ++ ")") ++ "; fn " ++ ctor
     case R.IFn{name, gens, params, ret, body}:
       "fn " ++ name
 
@@ -890,6 +892,8 @@ def item_names(c: Class) -> List<&2, String>:
     case CData{R.IEnum{name, gens, copy, vars}}:
       [name]
     case CData{R.IUnit{name, ctor}}:
+      [name, ctor]
+    case CData{R.IStruct{name, ctor, named, fields, getters}}:
       [name, ctor]
     case other:
       []
@@ -1746,6 +1750,8 @@ def skip_pat(p: R.Pat, body: R.Ex) -> R.Pat:
   match p:
     case R.PCtor{family, ctor, binds}:
       R.PCtor{family, ctor, skip_binds(binds, body)}
+    case R.PStruct{family, named, fields, binds}:
+      R.PStruct{family, named, fields, skip_binds(binds, body)}
 
 def zip_arms(pats: List<&2, R.Pat>, bodies: List<&2, R.Ex>) -> List<&2, R.Arm<R.Ex>>:
   match pats:
@@ -1776,6 +1782,8 @@ def all_same(arms: List<&2, R.Arm<R.Ex>>) -> Bool:
       True{}
     case Con{R.Arm{R.PCtor{family, ctor, binds}, body}, rest}:
       same_arm(ctor, binds, body) && all_same(rest)
+    case Con{R.Arm{R.PStruct{family, named, fields, binds}, body}, rest}:
+      False{}
 
 def any_arm(arms: List<&2, R.Arm<R.Ex>>) -> Bool:
   match arms:

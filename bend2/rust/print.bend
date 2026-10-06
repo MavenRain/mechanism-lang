@@ -19,6 +19,16 @@ def slen(s: String) -> Nat:
     case SCon{c, tail}:
       Nat.add(1n, slen(tail))
 
+# Width of the last line, including its indentation.
+def last_width(s: String, n: Nat) -> Nat:
+  match s:
+    case SNil{}:
+      n
+    case SCon{'\n', tail}:
+      last_width(tail, 0n)
+    case SCon{c, tail}:
+      last_width(tail, Nat.add(n, 1n))
+
 # Width of the first line.
 def flen(s: String) -> Nat:
   match s:
@@ -69,6 +79,10 @@ def sp(n: Nat) -> String:
 # Columns left on a line indented by `ind` that already holds `used` more.
 def room(ind: Nat, used: Nat) -> Nat:
   sub(100n, Nat.add(ind, used))
+
+# A multiline pattern already includes indentation on its final line.
+def arm_room(+head: String, ind: Nat) -> Nat:
+  Bool.pick(Nat, one_line(head), room(ind, Nat.add(slen(head), 2n)), room(0n, Nat.add(last_width(head, 0n), 2n)))
 
 def fit(+s: String, avail: Nat) -> Maybe<&2, String>:
   Bool.pick(Maybe<&2, String>, one_line(s) && le(slen(s), avail), Some{s}, None{})
@@ -315,9 +329,12 @@ type Job is Data:
   JTurbo{ts: List<&2, A.Ty>}
   JSegs{segs: List<&2, A.Seg<A.Ty>>, turbo: Bool, first: Bool}
   JPat{p: A.Pat}
+  JPatAt{p: A.Pat, ind: Nat}
   JPats{ps: List<&2, A.Pat>, sep: String, first: Bool}
   JFPats{fs: List<&2, A.FieldPat<A.Pat>>, first: Bool}
   JPStruct{fs: List<&2, A.FieldPat<A.Pat>>, rest: Bool}
+  JPStructLines{segs: List<&2, A.Seg<A.Ty>>, fs: List<&2, A.FieldPat<A.Pat>>, rest: Bool, ind: Nat}
+  JFPatLines{fs: List<&2, A.FieldPat<A.Pat>>, ind: Nat}
   JGens{gs: List<&2, A.GParam>}
   JGList{gs: List<&2, A.GParam>, first: Bool}
   JParam{p: A.Param}
@@ -442,6 +459,23 @@ def pp(j: Job) -> String:
       sep(first, "::") ++ name ++ Bool.pick(String, turbo, "::<", "<") ++ pp(JTys{args, ", ", True{}}) ++ ">" ++
         pp(JSegs{rest, turbo, False{}})
     # ---- patterns ----
+    case JPatAt{A.PStruct{segs, Nil{}, rest}, ind}:
+      pp(JPat{A.PStruct{segs, [], rest}})
+    case JPatAt{A.PStruct{+segs, +fs, +rest}, +ind}:
+      pp(JPick{fit(pp(JSegs{segs, True{}, True{}}) ++ " { " ++
+        capped(pp(JFPats{fs, True{}}) ++ Bool.pick(String, rest, ", ..", ""), 18n) ++ " }", room(ind, 0n)),
+        JPStructLines{segs, fs, rest, ind}})
+    case JPatAt{other, ind}:
+      pp(JPat{other})
+    case JPStructLines{segs, fs, rest, +ind}:
+      pp(JSegs{segs, True{}, True{}}) ++ " {\n" ++ pp(JFPatLines{fs, ind4(ind)}) ++
+        Bool.pick(String, rest, sp(ind4(ind)) ++ "..\n", "") ++ sp(ind) ++ "}"
+    case JFPatLines{Nil{}, ind}:
+      ""
+    case JFPatLines{Con{A.FieldPat{name, None{}}, rest}, +ind}:
+      sp(ind) ++ name ++ ",\n" ++ pp(JFPatLines{rest, ind})
+    case JFPatLines{Con{A.FieldPat{name, Some{p}}, rest}, +ind}:
+      sp(ind) ++ name ++ ": " ++ pp(JPat{p}) ++ ",\n" ++ pp(JFPatLines{rest, ind})
     case JPat{A.PWild{}}:
       "_"
     case JPat{A.PPath{segs}}:
@@ -723,11 +757,11 @@ def pp(j: Job) -> String:
     case JArms{Nil{}, ind}:
       ""
     case JArms{Con{A.Arm{m, p, g, b}, rest}, +ind}:
-      meta(m, ind) ++ sp(ind) ++ pp(JArm{pp(JPat{p}) ++ pp(JGuard{g}) ++ " =>", b, ind}) ++ "\n" ++ pp(JArms{rest, ind})
+      meta(m, ind) ++ sp(ind) ++ pp(JArm{pp(JPatAt{p, ind}) ++ pp(JGuard{g}) ++ " =>", b, ind}) ++ "\n" ++ pp(JArms{rest, ind})
     case JArm{h, A.EBlock{ss}, ind}:
       h ++ " " ++ pp(JBlock{ss, ind})
     case JArm{+h, b, +ind}:
-      h ++ " " ++ pp(JEx{b, ind, room(ind, Nat.add(slen(h), 2n))}) ++ ","
+      h ++ " " ++ pp(JEx{b, ind, arm_room(h, ind)}) ++ ","
     case JGuard{None{}}:
       ""
     case JGuard{Some{g}}:

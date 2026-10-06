@@ -549,6 +549,8 @@ def covers(arms: List<&2, R.Arm<R.Ex>>, vs: List<&2, R.Variant>, +name: String) 
       False{}
     case Con{R.Arm{R.PCtor{pf, +pc, bs}, body}, rest} +remaining:
       String.eq(pf, name) && found_fields(find_fields(remaining, pc)) && covers(rest, remove_variant(remaining, pc), name)
+    case Con{R.Arm{R.PStruct{pf, named, fields, bs}, body}, rest} remaining:
+      False{}
 
 def match_jobs(+ls: List<&2, Loc>, +arms: List<&2, R.Arm<R.Ex>>, +want: R.Ty, f: Maybe<&2, Fam>, args: List<&2, R.Ty>, js: List<&2, Job>, +st: St) -> Result<&2, &2, String, St>:
   match f:
@@ -623,6 +625,8 @@ def let_syn(+ls: List<&2, Loc>, +name: String, value: R.Ex, body: R.Ex, +want: R
 
 def step(+e: Env, j: Job, +st: St) -> Result<&2, &2, String, St>:
   match j:
+    case JArm{ls, fam, args, R.Arm{R.PStruct{pf, named, fields, bs}, body}, want}:
+      Fail{"struct patterns are outside the import subset"}
     case JArm{+ls, Fam{fam_name, +gs, vs}, +args, R.Arm{R.PCtor{pf, +pc, bs}, body}, +want}:
       arm_step(ls, gs, args, body, want, bs, find_fields(vs, pc), st)
     case JChk{+ls, R.XVar{+name}, +want}:
@@ -695,6 +699,8 @@ def item_typed(+e: Env, +copies: List<&2, String>, +module: String, p: Rs.Placed
       Bool.pick(Result<&2, &2, Rs.Bad, Maybe<&2, Typed>>, valid_tys(e, gs, rt <> param_tys(ps)), fn_typed(e, copies, module, pos, name, gs, ps, rt, body), Fail{Rs.Bad{module, pos, type_arity()}})
     case Rs.Placed{+pos, R.IEnum{name, gs, cp, vs}}:
       Bool.pick(Result<&2, &2, Rs.Bad, Maybe<&2, Typed>>, valid_tys(e, gs, variant_tys(vs)), Done{None{}}, Fail{Rs.Bad{module, pos, type_arity()}})
+    case Rs.Placed{pos, R.IStruct{name, ctor, named, fields, getters}}:
+      Fail{Rs.Bad{module, pos, "struct import is not supported"}}
     case other:
       Done{None{}}
 

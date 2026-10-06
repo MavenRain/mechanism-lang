@@ -5,6 +5,7 @@ import ../rust/erase_typed.bend as Et
 import ../io.bend as F
 import ../cli/rust_out.bend as Ro
 import ./rust_emit_oracle.bend as Or
+import ./rust_struct_emit.bend as St
 
 # Driver: `bend bend2/tests/rust_emit.bend sample <init|second>` or
 # `classify <file.mech> [<file.mech>]`.
@@ -95,6 +96,7 @@ def sample_second() -> R.Module:
 type Md is Data:
   MInit{}
   MSecond{}
+  MStruct{}
   MClassify{}
   MEmit{}
   MCrate{}
@@ -104,13 +106,13 @@ type Md is Data:
   MNone{}
 
 def usage() -> String:
-  "usage: rust_emit.bend sample <init|second> | classify <file.mech> [<file.mech>] | emit <file.mech> [<file.mech>] | crate <file.mech>... <out dir> | values <file.mech>... | probes <file.mech>... | bin <file.mech>...\n"
+  "usage: rust_emit.bend sample <init|second|struct> | classify <file.mech> [<file.mech>] | emit <file.mech> [<file.mech>] | crate <file.mech>... <out dir> | values <file.mech>... | probes <file.mech>... | bin <file.mech>...\n"
 
 def oracle_of(+mode: String) -> Md:
   Bool.pick(Md, String.eq(mode, "values"), MValues{}, Bool.pick(Md, String.eq(mode, "probes"), MProbes{}, Bool.pick(Md, String.eq(mode, "bin"), MBin{}, MNone{})))
 
 def which_of(+which: String) -> Md:
-  Bool.pick(Md, String.eq(which, "init"), MInit{}, Bool.pick(Md, String.eq(which, "second"), MSecond{}, MNone{}))
+  Bool.pick(Md, String.eq(which, "init"), MInit{}, Bool.pick(Md, String.eq(which, "second"), MSecond{}, Bool.pick(Md, String.eq(which, "struct"), MStruct{}, MNone{})))
 
 def mode_of(+mode: String, which: String) -> Md:
   Bool.pick(Md, String.eq(mode, "sample"), which_of(which), Bool.pick(Md, String.eq(mode, "classify"), MClassify{}, Bool.pick(Md, String.eq(mode, "emit"), MEmit{}, Bool.pick(Md, String.eq(mode, "crate"), MCrate{}, oracle_of(mode)))))
@@ -176,6 +178,8 @@ def run_md(m: Md, which: String, rest: List<String>) -> IO(Unit):
       IO.write(Em.text(sample_init()))
     case MSecond{}:
       IO.write(Em.text(sample_second()))
+    case MStruct{}:
+      IO.write(Em.text(St.sample()))
     case MClassify{}:
       classify_io(which, rest)
     case MEmit{}:

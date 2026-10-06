@@ -247,6 +247,8 @@ def item_rows(+module: String, p: Placed) -> Result<&2, &2, Bad, List<&2, Row>>:
       do Result<&2, &2, Bad, List<&2, Row>>:
         c : Row <- fn_row(module, RkCtor{}, ctor, pos)
         return [Row{module, RkStruct{}, name, name, pos}, c]
+    case Placed{pos, R.IStruct{name, ctor, named, fields, getters}}:
+      Fail{Bad{module, pos, "struct import is not supported"}}
     case Placed{pos, R.IFn{name, gs, ps, rt, body}}:
       do Result<&2, &2, Bad, List<&2, Row>>:
         f : Row <- fn_row(module, RkFn{}, name, pos)
@@ -365,6 +367,8 @@ def item_scope(p: Placed, sc: Scope) -> Scope:
       Scope{name <> tys, fns, Fam{name, variant_names(vs)} <> fams}
     case Placed{pos, R.IUnit{name, ctor}} Scope{tys, fns, fams}:
       Scope{name <> tys, ctor <> fns, fams}
+    case Placed{pos, R.IStruct{name, ctor, named, fields, getters}} s:
+      s
     case Placed{pos, R.IFn{name, gs, ps, rt, body}} Scope{tys, fns, fams}:
       Scope{tys, name <> fns, fams}
 
@@ -470,6 +474,8 @@ def let_tys(t: Maybe<&2, R.Ty>) -> List<&2, R.Ty>:
       Bool.pick(Maybe<&2, String>, has_ctor(fams_of(sc), family, ctor),
         walk(sc, JEx{gens, List.append(&2, String, bind_names(binds), locals), body} <> rest),
         Some{"unknown constructor `" ++ family ++ "::" ++ ctor ++ "`"})
+    case Con{JArm{gens, locals, R.Arm{R.PStruct{family, named, fields, binds}, body}}, rest}:
+      Some{"struct patterns are outside the import subset"}
 
 def item_jobs(p: Placed) -> List<&2, Job>:
   match p:
@@ -478,6 +484,8 @@ def item_jobs(p: Placed) -> List<&2, Job>:
     case Placed{pos, R.IEnum{name, +gs, cp, vs}}:
       tjobs(gs, Ro.variant_tys(vs))
     case Placed{pos, R.IUnit{name, ctor}}:
+      []
+    case Placed{pos, R.IStruct{name, ctor, named, fields, getters}}:
       []
     case Placed{pos, R.IFn{name, +gs, +ps, ret, body}}:
       List.append(&2, Job, tjobs(gs, ret <> Et.param_tys(ps)), [JEx{gs, param_names(ps), body}])

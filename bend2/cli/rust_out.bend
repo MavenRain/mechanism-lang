@@ -128,6 +128,8 @@ def arm_fams(arms: List<&2, R.Arm<R.Ex>>) -> List<&2, String>:
       []
     case Con{R.Arm{R.PCtor{family, ctor, binds}, body}, rest}:
       family <> arm_fams(rest)
+    case Con{R.Arm{R.PStruct{family, named, fields, binds}, body}, rest}:
+      family <> arm_fams(rest)
 
 @unsafe def exs_refs(es: List<&2, R.Ex>) -> List<&2, String>:
   match es:
@@ -173,6 +175,8 @@ def item_refs(item: R.Item) -> List<&2, String>:
       tys_refs(variant_tys(variants))
     case R.IUnit{name, ctor}:
       []
+    case R.IStruct{name, ctor, named, fields, getters}:
+      tys_refs(List.append(&2, R.Ty, Et.param_tys(fields), Et.param_tys(getters)))
     case R.IFn{name, generics, params, ret, body}:
       List.append(&2, String, tys_refs(ret <> Et.param_tys(params)), exs_refs([body]))
 
@@ -191,6 +195,8 @@ def item_names(item: R.Item) -> List<&2, String>:
     case R.IEnum{name, generics, copy, variants}:
       [name]
     case R.IUnit{name, ctor}:
+      [name, ctor]
+    case R.IStruct{name, ctor, named, fields, getters}:
       [name, ctor]
     case R.IFn{name, generics, params, ret, body}:
       [name]

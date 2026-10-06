@@ -18,8 +18,11 @@ type Bind is Data:
   BVar{name: String}
   BSkip{}
 
+# `PStruct`: `S { a: x, b: _ }` when `named`, else `S(x, _)`. `fields` are
+# the field names of a named struct (empty for a tuple struct) (E2).
 type Pat is Data:
   PCtor{family: String, ctor: String, binds: List<&2, Bind>}
+  PStruct{family: String, named: Bool, fields: List<&2, String>, binds: List<&2, Bind>}
 
 type Param is Data:
   Param{name: String, ty: Ty}
@@ -51,10 +54,16 @@ type Variant is Data:
 # `IUse`: `use crate::<module>::*;`. `IEnum.copy`: the enum derives `Copy`.
 # `IUnit`: a unit struct and its constructor function. Each generic of an
 # `IFn` gets a `Clone` bound.
+# `IStruct`: a struct with private fields, its constructor function and one
+# accessor per getter (E2). `named` false is a tuple struct: the field names
+# are then the constructor parameter names and `getters` is empty. A getter
+# type `TRef` means the accessor borrows (`&self.a`), any other type means it
+# copies (`self.a`).
 type Item is Data:
   IUse{module: String}
   IEnum{name: String, generics: List<&2, String>, copy: Bool, variants: List<&2, Variant>}
   IUnit{name: String, ctor: String}
+  IStruct{name: String, ctor: String, named: Bool, fields: List<&2, Param>, getters: List<&2, Param>}
   IFn{name: String, generics: List<&2, String>, params: List<&2, Param>, ret: Ty, body: Ex}
 
 # `source`: the name of the input file, for the `//!` line.
