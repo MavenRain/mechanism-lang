@@ -2,6 +2,7 @@
 
 `mech rust-in <crate dir> <out dir>` reads a Rust crate and writes a mechanism-lang program.
 The importer accepts only the Rust text that the emitter writes (EMIT.md). It refuses all other text.
+The round-trip laws tested on the seed corpus, their scope and their limits are in ROUNDTRIP.md.
 
 ## Files
 
@@ -80,4 +81,4 @@ Run `zsh dev/rust-in-gate.sh`. The last line is `RUST-IN-OK` or `RUST-IN-FAIL`. 
 - The copy of the carrier in the output directory is a record only. The emitter writes a new carrier from the imported files.
 - The merge is for a canonical program. If a carried declaration does not agree with the imported text, the kernel check fails and the command refuses the crate. The golden crate of M0 is such a crate: in the import, `AuctionOrder` takes no argument, and a carried declaration gives it two arguments.
 - `dev/BEND2-BASELINE.json` has old hashes of `bend2/cli/mech.bend`.
-- RT-MECH and DIFF-EXEC on the imported program are not gates of this unit. RT-RUST gives the golden crate back, and `dev/rust-out-diff-exec.sh` runs that crate.
+- The ROUND-TRIP gate (`dev/rt-mech-gate.sh`, `ROUNDTRIP.md`) checks RT-MECH, FIXPOINT and RT-RUST on the nine programs in `test/rust/seed`. It does not establish these laws for every program in the M0 fragment. DIFF-EXEC (`dev/rust-out-diff-exec.sh`) runs the golden crate only.

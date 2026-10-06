@@ -1,6 +1,6 @@
 # Rust emitter (mech-rust M0, unit B)
 
-This directory also holds the Rust emitter of the mech-rust transpiler, the `mech rust-out` verb. The emitter is written in Bend 2. It checks `.mech` files with the kernel, erases the checked terms to a small Rust IR, and writes a Cargo crate with no dependency. A declaration with no Rust form goes verbatim to `mech-carrier.mech`. The M0 inputs are `prelude/init.mech` and `prelude/mechanism/second-price.mech`.
+This directory also holds the Rust emitter of the mech-rust transpiler, the `mech rust-out` verb. The emitter is written in Bend 2. It checks `.mech` files with the kernel, erases the checked terms to a small Rust IR, and writes a Cargo crate with no dependency. A declaration with no Rust form goes verbatim to `mech-carrier.mech`. The M0 inputs are `prelude/init.mech` and `prelude/mechanism/second-price.mech`. The round-trip laws tested with the importer (IMPORT.md) on the seed corpus, their scope and their limits are in ROUNDTRIP.md.
 
 ## Files
 
@@ -191,6 +191,7 @@ Emitter:
 Tests:
 
 - The gate checks the two M0 inputs only. The only refusals with a fixture are the postulate and the name that does not come back of `neg_classify.mech` (the name collision check is not reachable with two fn definitions), and the gate does not run that fixture. The other reasons in the refusal table have no fixture.
+- The ROUND-TRIP gate (`dev/rt-mech-gate.sh`, `ROUNDTRIP.md`) runs the emitter on the seed corpus `test/rust/seed` and on the control programs of `test/rust/seed-control`. The three `names_*` controls are the fixtures of the name that does not come back.
 - `auctionCompare` (dependent result) and `auctionChoice` (erased parameters) get no generated probe. Their probes are in `probes.mech`. `mechEmptyElim` has no closed input and no probe.
 - A first-order function with an erased binder that the probe rule does not find gives probes that do not check. The gate then stops at `kernel values`.
 - The gate runs the driver, which calls the same `run` as the verb. It does not build `bend2/main.bend`, so it does not run the dispatch case of `mech rust-out`.
