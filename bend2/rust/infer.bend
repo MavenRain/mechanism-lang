@@ -446,6 +446,17 @@ def var_syn(+name: String, l: Maybe<&2, R.Ty>) -> Result<&2, &2, String, Syn>:
       Fail{"unknown local `" ++ name ++ "` (CD9)"}
 
 # The type of `e` in a synthesis position (a scrutinee).
+def syn_type(s: Syn) -> R.Ty:
+  match s:
+    case Syn{t, js}:
+      t
+
+# Keep the whole let as a checking job so synthesis cannot skip its initializer.
+def syn_let(ls: List<&2, Loc>, x: R.Ex, s: Syn) -> Syn:
+  match s:
+    case Syn{+t, js}:
+      Syn{t, [JChk{ls, x, t}]}
+
 @unsafe def synth(+e: Env, +ls: List<&2, Loc>, x: R.Ex) -> Result<&2, &2, String, Syn>:
   match x:
     case R.XVar{+name}:
@@ -462,6 +473,15 @@ def var_syn(+name: String, l: Maybe<&2, R.Ty>) -> Result<&2, &2, String, Syn>:
       synth(e, ls, i)
     case R.XBox{i}:
       synth(e, ls, i)
+    case R.XLet{+name, Some{+t}, value, +body}:
+      do Result<&2, &2, String, Syn>:
+        s : Syn <- synth(e, Loc{name, t} <> ls, body)
+        return syn_let(ls, R.XLet{name, Some{t}, value, body}, s)
+    case R.XLet{+name, None{}, +value, +body}:
+      do Result<&2, &2, String, Syn>:
+        v : Syn <- synth(e, ls, value)
+        s : Syn <- synth(e, Loc{name, syn_type(v)} <> ls, body)
+        return syn_let(ls, R.XLet{name, None{}, value, body}, s)
     case other:
       Fail{no_want()}
 

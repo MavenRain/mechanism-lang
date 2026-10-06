@@ -615,9 +615,9 @@ def pp(j: Job) -> String:
     case JBrk{A.EIf{c, b, x}, ind, avail}:
       pp(JIf{c, b, x, ind})
     case JBrk{A.EMatch{s, Nil{}}, ind, avail}:
-      "match " ++ pp(JFl{s}) ++ " {}"
+      "match " ++ pp(JEx{s, ind, sub(avail, 9n)}) ++ " {}"
     case JBrk{A.EMatch{s, arms}, +ind, avail}:
-      "match " ++ pp(JFl{s}) ++ " {\n" ++ pp(JArms{arms, ind4(ind)}) ++ sp(ind) ++ "}"
+      "match " ++ pp(JEx{s, ind, sub(avail, 8n)}) ++ " {\n" ++ pp(JArms{arms, ind4(ind)}) ++ sp(ind) ++ "}"
     case JBrk{A.EClosure{mv, ps, r, b}, ind, avail}:
       pp(JCat{Bool.pick(String, mv, "move ", "") ++ "|" ++ pp(JCParams{ps, True{}}) ++ "|" ++ pp(JRet{r}) ++ " ", b, ind, avail})
     case JBrk{A.EBinary{op, l, r}, ind, avail}:
@@ -711,7 +711,7 @@ def pp(j: Job) -> String:
     case JLet{+h, Some{v}, +ind}:
       h ++ " = " ++ pp(JEx{v, ind, room(ind, Nat.add(slen(h), 4n))}) ++ ";"
     case JIf{c, b, x, +ind}:
-      "if " ++ pp(JFl{c}) ++ " " ++ pp(JBlock{b, ind}) ++ pp(JElse{x, ind})
+      "if " ++ pp(JEx{c, ind, room(ind, 5n)}) ++ " " ++ pp(JBlock{b, ind}) ++ pp(JElse{x, ind})
     case JElse{None{}, ind}:
       ""
     case JElse{Some{A.EIf{c, b, x}}, ind}:

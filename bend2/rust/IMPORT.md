@@ -71,6 +71,16 @@ Run `zsh dev/rust-in-gate.sh`. The last line is `RUST-IN-OK` or `RUST-IN-FAIL`. 
 
 `dev/rust-infer-gate.py`, `dev/rust-lower-gate.py` and `dev/rust-in-cli-gate.py` have more cases for inference, lowering and the command.
 
+## Let (E1)
+
+- `lift` accepts a `let` statement before the tail of a block: `let name: T = v;` or `let name = v;`, then the tail. The binder is a plain name. A `let` with a pattern, with no initializer or with no tail after it is refused: `` `let` with a pattern ``, `` `let` without an initializer ``, `` `let` with no tail expression ``. The parser of the importer does not accept `let mut`: the refusal is a parse error at the binder (`parse: 2:13 expected `;`, found `y``, fixture `12_let_mut`), not the `mut binding` text of the emitter's parse gate.
+- A block in an expression position is accepted when its first statement is a `let`, including arguments, conditions and match scrutinees. Other blocks are refused (`block`).
+- `infer` checks the initializer against the given type. With no type, it synthesizes the type of the initializer, or refuses: `` let `<name>` with no type (E1) ``.
+- In a synthesis position, a let gets the type of its body with the binder in scope. Its initializer is still checked in the outer scope. The inference and lowering gates cover typed and untyped let scrutinees, a nested initializer, and rejection of an invalid initializer.
+- `lower` gives `let name : T := v in b`. The imported text has the type, so the emitter gives `let name: T = v;` back.
+- Any failure of the synthesis of an untyped initializer gives the let refusal, also when the failure has its own text. For example, a constructor of a generic family with no expected type gives `` let `y` with no type (E1) ``, not the CD9 text (fixture `14_let_no_type`).
+- Fixtures: `12_let_mut`, `13_let_pattern`, `14_let_no_type` in `test/rust/import/refuse`; seed `10_let` in `test/rust/seed`; the `let` cases of `dev/rust-infer-gate.py` and `dev/rust-lower-gate.py`.
+
 ## Known limits
 
 - An item sees the items of the used modules, the earlier items of its module, and itself. `resolve` refuses a use of a later item: `use of the function `<name>` before its declaration (mutual recursion or a forward reference)`. The position is the position of the item that has the use, not of the use (fixtures `06_mutual_recursion`, `11_forward_reference`). No fixture has a use of a later type or of a later constructor.
@@ -81,4 +91,4 @@ Run `zsh dev/rust-in-gate.sh`. The last line is `RUST-IN-OK` or `RUST-IN-FAIL`. 
 - The copy of the carrier in the output directory is a record only. The emitter writes a new carrier from the imported files.
 - The merge is for a canonical program. If a carried declaration does not agree with the imported text, the kernel check fails and the command refuses the crate. The golden crate of M0 is such a crate: in the import, `AuctionOrder` takes no argument, and a carried declaration gives it two arguments.
 - `dev/BEND2-BASELINE.json` has old hashes of `bend2/cli/mech.bend`.
-- The ROUND-TRIP gate (`dev/rt-mech-gate.sh`, `ROUNDTRIP.md`) checks RT-MECH, FIXPOINT and RT-RUST on the nine programs in `test/rust/seed`. It does not establish these laws for every program in the M0 fragment. DIFF-EXEC (`dev/rust-out-diff-exec.sh`) runs the golden crate only.
+- The ROUND-TRIP gate (`dev/rt-mech-gate.sh`, `ROUNDTRIP.md`) checks RT-MECH, FIXPOINT and RT-RUST on the ten programs in `test/rust/seed`. It does not establish these laws for every program in the M0 fragment. DIFF-EXEC (`dev/rust-out-diff-exec.sh`) runs the golden crate only.

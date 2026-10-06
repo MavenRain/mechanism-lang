@@ -271,6 +271,8 @@ type K is Data:
   KBorrow{inner: A.Node}
   KClone{inner: A.Node}
   KBox{inner: A.Node}
+  KLet{name: String, ty: Maybe<&2, A.Ty>, init: A.Node, rest: List<&2, A.Stmt<A.Node>>}
+  KBlock{stmts: List<&2, A.Stmt<A.Node>>}
   KBad{what: String}
 
 def box_kind(args: List<&2, A.Node>) -> K:
@@ -336,6 +338,8 @@ def kind(n: A.Node) -> K:
       KBad{"`?` operator"}
     case A.EBinary{op, lhs, rhs}:
       KBad{"binary operator `" ++ op ++ "`"}
+    case A.EBlock{Con{A.SLet{meta, p, t, init}, rest}}:
+      KBlock{Con{A.SLet{meta, p, t, init}, rest}}
     case A.EBlock{stmts}:
       KBad{"block"}
     case A.ELet{p, init}:
@@ -371,7 +375,36 @@ def stmt_refusal(s: A.Stmt<A.Node>) -> Refusal:
     case A.SItem{item}:
       Refusal{A.item_pos(item), "item in a block"}
 
-# The inverse of `Em.tail`: a block that is one tail expression.
+# A `let` statement before the tail (E1): `let name: T = init; rest` with a
+# plain name, an initializer and a tail after it.  Lifted to `KLet`.
+def let_rest(at: A.Pos, meta: A.Meta, name: String, t: Maybe<&2, A.Ty>, v: A.Node,
+    rest: List<&2, A.Stmt<A.Node>>) -> Result<&2, &2, Refusal, Job>:
+  match rest:
+    case Nil{}:
+      Fail{Refusal{at, "`let` with no tail expression"}}
+    case Con{s, more}:
+      do Result<&2, &2, Refusal, Job>:
+        ok : Bool <- plain(meta)
+        return Job{at, KLet{name, t, v, Con{s, more}}}
+
+def let_init(at: A.Pos, meta: A.Meta, name: String, t: Maybe<&2, A.Ty>, init: Maybe<&2, A.Node>,
+    rest: List<&2, A.Stmt<A.Node>>) -> Result<&2, &2, Refusal, Job>:
+  match init:
+    case None{}:
+      Fail{Refusal{at, "`let` without an initializer"}}
+    case Some{v}:
+      let_rest(at, meta, name, t, v, rest)
+
+def let_job(at: A.Pos, meta: A.Meta, p: A.Pat, t: Maybe<&2, A.Ty>, init: Maybe<&2, A.Node>,
+    rest: List<&2, A.Stmt<A.Node>>) -> Result<&2, &2, Refusal, Job>:
+  match p:
+    case A.PPath{Con{A.Seg{name, Nil{}}, Nil{}}}:
+      let_init(at, meta, name, t, init, rest)
+    case other:
+      Fail{Refusal{at, "`let` with a pattern"}}
+
+# The inverse of `Em.tail`: a block that is one tail expression, or lets
+# before it.
 def tail_job(pos: A.Pos, stmts: List<&2, A.Stmt<A.Node>>) -> Result<&2, &2, Refusal, Job>:
   match stmts:
     case Con{A.SExpr{+meta, e, semi}, Nil{}}:
@@ -379,6 +412,8 @@ def tail_job(pos: A.Pos, stmts: List<&2, A.Stmt<A.Node>>) -> Result<&2, &2, Refu
         ok : Bool <- plain(meta)
         Bool.pick(Result<&2, &2, Refusal, Job>, semi, Fail{Refusal{A.meta_pos(meta), "expression statement"}},
           Done{Job{A.meta_pos(meta), kind(e)}})
+    case Con{A.SLet{+meta, p, t, init}, rest}:
+      let_job(A.meta_pos(meta), meta, p, t, init, rest)
     case Con{s, rest}:
       Fail{stmt_refusal(s)}
     case Nil{}:
@@ -417,6 +452,16 @@ def one(xs: List<&2, R.Ex>) -> R.Ex:
       R.XBool{False{}}
     case Con{x, rest}:
       x
+
+# The type of a let binder: `None` when the Rust text gives none (E1).
+def let_ty(pos: A.Pos, t: Maybe<&2, A.Ty>) -> Result<&2, &2, Refusal, Maybe<&2, R.Ty>>:
+  match t:
+    case None{}:
+      Done{None{}}
+    case Some{a}:
+      do Result<&2, &2, Refusal, Maybe<&2, R.Ty>>:
+        r : R.Ty <- ty(pos, a)
+        return Some{r}
 
 def if_of(xs: List<&2, R.Ex>) -> R.Ex:
   match xs:
@@ -498,6 +543,18 @@ type Zip is Data:
         ys : List<&2, R.Ex> <- walk([Job{at, kind(inner)}])
         more : List<&2, R.Ex> <- walk(rest)
         return R.XBox{one(ys)} <> more
+    case Con{Job{+at, KLet{name, t, init, stmts}}, rest}:
+      do Result<&2, &2, Refusal, List<&2, R.Ex>>:
+        rt : Maybe<&2, R.Ty> <- let_ty(at, t)
+        vs : List<&2, R.Ex> <- walk([Job{at, kind(init)}])
+        bj : Job <- tail_job(at, stmts)
+        bs : List<&2, R.Ex> <- walk([bj])
+        more : List<&2, R.Ex> <- walk(rest)
+        return R.XLet{name, rt, one(vs), one(bs)} <> more
+    case Con{Job{+at, KBlock{stmts}}, rest}:
+      do Result<&2, &2, Refusal, List<&2, R.Ex>>:
+        j : Job <- tail_job(at, stmts)
+        walk(j <> rest)
     case Con{Job{at, KBad{what}}, rest}:
       Fail{Refusal{at, what}}
 

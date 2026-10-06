@@ -40,6 +40,9 @@ NEGATIVES = [
 
 
 # Existing refusals must keep their diagnostics.
+NEGATIVES.append(("let with no type", GEN + "pub fn bad<A: Clone>(x: &A) -> bool { let y = Foo::Bar(x.clone()); true }", "let `y` with no type (E1)"))
+NEGATIVES.append(("let scrutinee checks initializer", TWO + "pub fn bad(x: bool) -> bool { match { let y: Foo = x; y } { Foo::Bar => true, Foo::Baz => false, } }", "type mismatch (CD9)"))
+
 EXISTING_NEGATIVES = [
     ("generic constructor scrutinee", GEN + "pub fn bad<A: Clone>(x: &A) -> bool { match Foo::Bar(x.clone()) { Foo::Bar(_) => true, } }", "constructor of a generic family with no expected type (CD9)"),
     ("wrong function argument count", "pub fn id(x: bool) -> bool { x }\npub fn bad() -> bool { id() }", "argument count (CD9)"),
@@ -51,6 +54,11 @@ EXISTING_NEGATIVES = [
 # Positive cases cover erased wrappers, nested annotations and generic scopes.
 POSITIVES = [
     ("identity", "pub fn id(x: bool) -> bool { x }", [("id", 0)]),
+    ("let with annotation", "pub fn good(x: bool) -> bool { let y: bool = x; y }", [("good", 0)]),
+    ("let without annotation", "pub fn good(x: bool) -> bool { let y = x; y }", [("good", 0)]),
+    ("typed let scrutinee", TWO + "pub fn good(x: Foo) -> bool { match { let y: Foo = x; y } { Foo::Bar => true, Foo::Baz => false, } }", [("good", 1)]),
+    ("untyped let scrutinee", TWO + "pub fn good(x: Foo) -> bool { match { let y = x; y } { Foo::Bar => true, Foo::Baz => false, } }", [("good", 1)]),
+    ("nested let initializer", "pub fn good(x: bool) -> bool { let z = { let y: bool = x; y }; z }", [("good", 0)]),
     ("unit signature", UNIT + "pub fn id(x: Unit) -> Unit { x }", [("id", 0)]),
     ("generic constructor", GEN + "pub fn good<A: Clone>(x: &A) -> Foo<A> { Foo::Bar(x.clone()) }", [("good", 1)]),
     ("nested generic constructors", GEN + "pub fn good<A: Clone>(x: &A) -> Foo<Foo<A>> { Foo::Bar(Foo::Bar(x.clone())) }", [("good", 2)]),

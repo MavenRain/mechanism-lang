@@ -131,6 +131,19 @@ diff -r $WORK/$c/e1 $WORK/red-ctor-e > $WORK/red-ctor.diff 2>&1
 [[ $rc == 0 && $? == 1 && "$(< $WORK/red-ctor/light.mech)" != $text ]]
 step $? "RED constructors swapped (RT-RUST)" "emit rc=$rc"
 
+# Control of the let (E1): the initializer of the imported `lightTwice`
+# changed, so the round trip must fail on that def.
+c=10_let
+src=$(joined $SEED/$c)
+imported=$(joined $WORK/$c/i1)
+from='let n : Light := (lightNext l) in'
+to='let n : Light := l in'
+mutant=${imported/$from/$to}
+out=$(mode rt-mech $src $mutant)
+rc=$?
+[[ $rc == 0 && $mutant != $imported && $out == "RT-MECH-FAIL lightTwice" ]]
+step $? "RED let initializer changed (RT-MECH)" $out
+
 # Controls of the carrier merge (D2).
 c=05_proofs
 src=$(joined $SEED/$c)

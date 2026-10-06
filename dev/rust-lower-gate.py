@@ -27,12 +27,18 @@ CONTEXTS = [
     ("local underscore callback", "pub fn good(_f: &impl Fn(bool) -> bool, b: bool) -> bool { _f(b) }"),
     ("local mechanism keyword", "pub fn good(fun: bool) -> bool { fun }"),
     ("local Rust keyword escape", "pub fn good(match_: bool) -> bool { match_ }"),
+    ("let in tail", "pub fn good(b: bool) -> bool { let y: bool = b; y }"),
+    ("let in argument", "pub fn id(x: bool) -> bool { x } pub fn good(b: bool) -> bool { id({ let y: bool = b; y }) }"),
 ]
 
 # Each closed result is evaluated by the kernel through the existing oracle.
 SEMANTICS = [
     ("parameter capture", "pub fn first(x: bool, _x: bool) -> bool { x } pub fn result() -> bool { first(true, false) }", "true"),
     ("second parameter", "pub fn second(x: bool, _x: bool) -> bool { _x } pub fn result() -> bool { second(true, false) }", "false"),
+    ("let value", "pub fn result() -> bool { let x: bool = true; let y: bool = x; y }", "true"),
+    ("let shadows nothing", "pub fn first(x: bool) -> bool { let y: bool = false; x } pub fn result() -> bool { first(true) }", "true"),
+    ("let scrutinee", INFER.TWO + "pub fn first(x: Foo) -> bool { match { let y: Foo = x; y } { Foo::Bar => true, Foo::Baz => false, } } pub fn result() -> bool { first(Foo::Bar) }", "true"),
+    ("nested let initializer", "pub fn first(x: bool) -> bool { let z = { let y: bool = x; y }; z } pub fn result() -> bool { first(true) }", "true"),
     ("pattern capture", INFER.ONE + "pub fn first(x: bool, f: Foo) -> bool { match f { Foo::Bar(_x) => x, } } pub fn result() -> bool { first(true, Foo::Bar(false)) }", "true"),
     ("closure capture", "pub fn apply(f: &impl Fn(bool) -> bool) -> bool { f(false) } pub fn first(x: bool) -> bool { apply(&|_x: bool| x) } pub fn result() -> bool { first(true) }", "true"),
     ("local shadows nat_small", "pub fn apply(nat_small: &impl Fn(bool) -> bool) -> bool { nat_small(false) } pub fn result() -> bool { apply(&|x: bool| true) }", "true"),

@@ -123,7 +123,7 @@ A refusal line is `refused <name>: <why>`. The marks in a reason are: `(M0)` for
 | Names | ``a name that does not come back from the Rust name `<rust>`: the importer gives `<back>` (D7)`` |
 | Types | `a type-valued definition in a runtime type (D3): <name>`, `a value in a type`, `a polymorphic function type`, `a function type with erased arguments only`, `a Prop as a type argument`, `a proposition as a type argument`, `a type argument with a runtime quantity`, `an unknown name in a type: <name>`, `a type shape outside the M0 fragment` |
 | Calls | `a call of an absurd function (D4)`, `a partial application (M0)`, `more arguments than the telescope of the callee (M0)`, `a call of a name that is not a function`, `a call of a name with no entry`, `a call of a variable that is not a function`, `an application head outside the M0 fragment` |
-| Terms | `a case with no branch (D4)`, `a case on a family outside the M0 fragment`, `a constructor of an item that is not data`, `a constructor outside the M0 fragment: <name>`, `a let (M0)`, `a literal above u32 (M0)`, `a literal that is not an integer (M0)`, `a boxed field by value (M0)`, `an erased variable in a runtime position`, `a term shape outside the M0 fragment` |
+| Terms | `a case with no branch (D4)`, `a case on a family outside the M0 fragment`, `a constructor of an item that is not data`, `a constructor outside the M0 fragment: <name>`, `a let of a function type (E1)`, `a let of a non-Copy type (E1)`, `a let of a type (E1)`, `the let binder `<name>` collides with a name in scope after the name map (E1)`, `a literal above u32 (M0)`, `a literal that is not an integer (M0)`, `a boxed field by value (M0)`, `an erased variable in a runtime position`, `a term shape outside the M0 fragment` |
 
 ## Driver
 
@@ -173,12 +173,19 @@ Each crate is below `$TMPDIR`, outside the tracked tree. The argument `emit` sto
 
 Stack rule: the gate sets `ulimit -s` to the hard limit and runs `node --stack-size=16384`, as `dev/BEND2-BASELINE.json` does. With the default stack, the JavaScript build of the driver stops with `memory fault` when it writes the probe crate.
 
+## Let (E1)
+
+- A `let x : T := v in b` with a runtime binder gives `let x: T = v;` and then the statements of `b`. A let in the tail position of a fn body is one statement of the fn block. A let in an argument position is a block `{ let x: T = v; b }`.
+- The binder must have a Copy type (`bool` or a Copy family). A binder of a function type, of a non-Copy type or of a type is refused. A binder of a proof type is erased, as a proof parameter is.
+- The Rust name of the binder must not be equal to the Rust name of a parameter, of an outer binder or of a fn of the module (rule ED2). The emitter refuses the let, it does not rename the binder.
+- Fixture: `test/rust/emit/let_probe.mech` (two lets in the tail, one let in an argument). The refusals are lines 3 to 6 of `test/rust/emit/neg_classify.mech`: three name collisions and one binder of the non-Copy type `MechNat`.
+
 ## Known limits
 
 Emitter:
 
 - The only struct form is the unit struct. A struct with private fields and accessors is not in M0.
-- There is no `let`, no string literal, no integer literal above `u32`, and no primitive other than `natAdd`.
+- There is no string literal, no integer literal above `u32`, and no primitive other than `natAdd`. A `let` binds a value of a Copy type only (E1).
 - `if c { false } else { true }` does not become `!c`. The IR has no node for it.
 - A field of a type in the Copy set below a borrow pattern has no dereference node.
 - A closure parameter adapts only to a borrow (a declared `&T` and a binder type in the Copy set). If the body uses such a binder by value, the emitter gives `.clone()`. No probe has this case.

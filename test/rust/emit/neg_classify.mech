@@ -1,8 +1,25 @@
 -- Negative fixture for the classify table. Check it after prelude/init.mech.
 -- Line 1 of the result: a postulate with a runtime type is refused.
 -- Line 2 of the result: the name `neg_twin` does not come back from its Rust name, so it is refused (D7).
+-- Line 3 of the result: the let binder `foo_bar` collides with the parameter `fooBar` after the name map (ED2).
+-- Line 4 of the result: the inner let binder `x` collides with the outer let binder `x` (ED2).
+-- Line 5 of the result: the let binder `foo_bar` collides with the global `fooBar` after the name map (ED2).
+-- Line 6 of the result: a let binder of the non-Copy type `MechNat` is refused, so no emitted fn moves it twice (E1).
 axiom negPostulate : MechNat
 
 def negTwin : MechNat := mechZero
 
 def neg_twin : MechNat := mechZero
+
+def negLetParam : (fooBar : MechBool) -> MechBool :=
+  fun (fooBar : MechBool) => let foo_bar : MechBool := mechTrue in fooBar
+
+def negLetShadow : (a : MechBool) -> MechBool :=
+  fun (a : MechBool) => let x : MechBool := a in let x : MechBool := mechFalse in x
+
+def fooBar : MechBool := mechTrue
+
+def negLetGlobal : MechBool := let foo_bar : MechBool := mechFalse in fooBar
+
+def negLetNat : (n : MechNat) -> MechNat :=
+  fun (n : MechNat) => let m : MechNat := n in m

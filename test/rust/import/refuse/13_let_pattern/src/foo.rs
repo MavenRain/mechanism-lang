@@ -1,4 +1,4 @@
 pub fn good(x: bool) -> bool {
-    let y = x;
-    y
+    let _ = x;
+    x
 }

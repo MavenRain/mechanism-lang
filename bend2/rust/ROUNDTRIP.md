@@ -93,13 +93,13 @@ Controls of the carrier merge, on seed `05_proofs`:
 
 Controls of the name map, on the three `names_*` programs: SEED-CHECK passes, and `rust-out` gives exit code 65, the refusal line of rule D7, and no output.
 
-The last two lines are `work=<dir> pass=<n> fail=<n>` and `ROUND-TRIP-OK` (exit code 0) or `ROUND-TRIP-FAIL` (exit code 1). The present count is `pass=90 fail=0`.
+The last two lines are `work=<dir> pass=<n> fail=<n>` and `ROUND-TRIP-OK` (exit code 0) or `ROUND-TRIP-FAIL` (exit code 1). The present count is `pass=99 fail=0`.
 
 ## Known limits
 
 - The compare is strict on ascriptions. A seed program has the ascriptions that the importer writes, or RT-MECH fails on it.
 - The names of parameters and local binders have no come-back check. Two parameters `fooBar` and `foo_bar` get the same Rust name (EMIT.md, rule D7).
-- The seed corpus covers examples from the M0 fragment, not every program in that fragment. A struct with fields, `let`, `RsOption`, `RsResult`, `RsVec` and integers are not in the seed corpus.
+- The seed corpus covers examples from the M0 fragment and the E1 `let`, not every program in those fragments. A struct with fields, `RsOption`, `RsResult`, `RsVec` and integers are not in the seed corpus. Seed `10_let` has lets in a tail, a match scrutinee and an `if` condition; a `let` in an argument position and a `let` with no type have no seed.
 - The gate runs the seed corpus and the control programs only. The two M0 inputs are not canonical, and the DIFF-EXEC gate (`dev/rust-out-diff-exec.sh`) runs the golden crate.
 - The copy of the carrier in the import is a record only. The emitter writes a new carrier from the imported files, and RT-RUST compares it.
 - A refusal of a use before its declaration (mutual recursion or a forward reference) has the position of the item, not of the use. No seed has a use of a later type or constructor.
