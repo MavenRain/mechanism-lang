@@ -329,8 +329,7 @@ def function_domain(shape: Shape.T<Value.T>) -> Comp(FunctionDomain):
       do Comp<Term.T>:
         +argument : Term.T <- lower(U32.add(depth, 1), initial, ctx, table, params, argument)
         Unit <- check(ctx, argument, value)
-        domain : Term.T <- quote(ctx, value)
-        pure(Term.T, Term.Out{Shape.SPi{q, name, domain}, Term.APt{q, argument}, head})
+        pure(Term.T, Term.Out{Shape.SArg{q, name}, Term.APt{q, argument}, head})
 
 def bound_index(value: Maybe<&2, U32>) -> Comp(Term.T):
   match value:

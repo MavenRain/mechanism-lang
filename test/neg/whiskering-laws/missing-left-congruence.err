@@ -1,1 +1,1 @@
-mismatch: the term has type (Ran SPi w proof (Ran SPi 0 x Nat (Lan SMu Run_Middle [(Sec SPi w n Nat [n => (Out SPi w b Nat (APt w x) (Out SPi w a Nat (APt w (Out SPi w b Nat (APt w 2) (Out SPi w a Nat (APt w n) natMul))) natAdd))])] (Sec SC
+mismatch: the term has type (Ran SPi w proof (Ran SPi 0 x Nat (Lan SMu Run_Middle [(Sec SPi w n Nat [n => (Out SArg w b (APt w x) (Out SArg w a (APt w (Out SArg w b (APt w 2) (Out SArg w a (APt w n) natMul))) natAdd))])] (Sec SC

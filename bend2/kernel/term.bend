@@ -223,6 +223,8 @@ def equal_binders(a: List<&2, Common.Pair<Quantity.T, String>>, b: List<&2, Comm
   match a b:
     case Shape.SPi{q, x, p} Shape.SPi{r, y, t}:
       Bool.and(Quantity.equal(q, r), Bool.and(String.eq(x, y), equal(p, t)))
+    case Shape.SArg{q, x} Shape.SArg{r, y}:
+      Bool.and(Quantity.equal(q, r), String.eq(x, y))
     case Shape.SZk{q, x, p} Shape.SZk{r, y, t}:
       Bool.and(Quantity.equal(q, r), Bool.and(String.eq(x, y), equal(p, t)))
     case Shape.SColl{x} Shape.SColl{y}:

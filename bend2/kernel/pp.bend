@@ -66,6 +66,8 @@ def push(names: List<&2, String>, added: List<&2, String>) -> List<&2, String>:
   match s:
     case Shape.SPi{q, x, dom}:
       "SPi " ++ Quantity.to_string(q) ++ " " ++ x ++ " " ++ term(names, dom)
+    case Shape.SArg{q, x}:
+      "SArg " ++ Quantity.to_string(q) ++ " " ++ x
     case Shape.SColl{count}:
       "SColl " ++ Bignum.to_string(count)
     case Shape.SPar{a, b}:

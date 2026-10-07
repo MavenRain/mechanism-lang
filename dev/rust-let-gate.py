@@ -20,12 +20,13 @@ EXPECTED = [
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--driver", type=Path)
+    parser.add_argument("--bend", type=Path, default=Path.home() / ".bend/bin/bend")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="rust-let-") as directory:
         driver = args.driver or Path(directory) / "rust-let.js"
         if args.driver is None:
             subprocess.run(
-                [str(Path.home() / ".bend/bin/bend"),
+                [str(args.bend),
                  str(ROOT / "bend2/tests/rust_let.bend"), "-o", str(driver)],
                 check=True, capture_output=True, text=True,
             )

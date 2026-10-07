@@ -4,6 +4,7 @@ import ./bignum.bend as Bignum
 
 type T<-A: Data> is Data:
   SPi{quantity: Quantity.T, name: String, domain: A}
+  SArg{quantity: Quantity.T, name: String}
   SColl{count: Bignum.T}
   SPar{left: A, right: A}
   SMu{name: String, args: List<&2, A>}
@@ -19,6 +20,8 @@ def payload(-A: Data, s: T<A>) -> List<&2, A>:
   match s:
     case SPi{q, name, dom}:
       [dom]
+    case SArg{q, name}:
+      []
     case SColl{count}:
       []
     case SPar{left, right}:
@@ -41,6 +44,8 @@ def family(-A: Data, s: T<A>) -> Maybe<&2, String>:
     case SNu{name, args}:
       Some{name}
     case SPi{q, name, dom}:
+      None{}
+    case SArg{q, name}:
       None{}
     case SColl{count}:
       None{}
@@ -72,6 +77,7 @@ def is_pi(-A: Data, s: T<A>) -> Bool:
 def name(-A: Data, shape: T<A>) -> String:
   match shape:
     case SPi{q,x,dom}: "SPi"
+    case SArg{q,x}: "SArg"
     case SColl{n}: "SColl"
     case SPar{a,b}: "SPar"
     case SMu{n,args}: "SMu"
@@ -81,4 +87,4 @@ def name(-A: Data, shape: T<A>) -> String:
     case SMpc{p,a}: "SMpc"
 
 def declared() -> List<&2,String>:
-  ["SPi","SColl","SPar","SMu","SNu","SZk","SFhc","SMpc"]
+  ["SPi","SArg","SColl","SPar","SMu","SNu","SZk","SFhc","SMpc"]

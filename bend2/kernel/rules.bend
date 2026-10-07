@@ -177,6 +177,7 @@ type EtaRow is Data:
 def eta_of(-A: Data, shape: Shape.T<A>) -> Maybe<&2,EtaRow>:
   match shape:
     case Shape.SPi{q,x,dom}: Some{EtaRow{True{},True{}}}
+    case Shape.SArg{q,x}: None{}
     case Shape.SColl{n}: Some{EtaRow{True{},False{}}}
     case Shape.SPar{a,b}: None{}
     case Shape.SNu{name,args}: None{}

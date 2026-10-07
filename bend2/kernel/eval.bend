@@ -69,6 +69,8 @@ def local_value(value: Maybe<&2, Value.T>, index: Nat) -> Result<&2, &2, Error.T
       do Result<&2, &2, Error.T, Shape.T<Value.T>>:
         value : Value.T <- eval(globals, env, dom)
         return Shape.SPi{q, name, value}
+    case Shape.SArg{q, name}:
+      Done{Shape.SArg{q, name}}
     case Shape.SColl{count}:
       Done{Shape.SColl{count}}
     case Shape.SPar{a, b}:
@@ -234,6 +236,8 @@ def stuck_out(value: Value.T, shape: Shape.T<Value.T>, addr: Value.VAddr<Value.T
   match shape:
     case Shape.SPi{q, name, dom}:
       out_point(value, globals, Shape.SPi{q, name, dom}, addr)
+    case Shape.SArg{q, name}:
+      out_point(value, globals, Shape.SArg{q, name}, addr)
     case Shape.SColl{count}:
       out_coll(value, globals, Shape.SColl{count}, addr)
     case Shape.SPar{a, b}:
@@ -499,6 +503,8 @@ law read_back:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
         value : Term.T <- read_back(mode, globals, size, dom)
         return Shape.SPi{q, name, value}
+    case Shape.SArg{q, name}:
+      Done{Shape.SArg{q, name}}
     case Shape.SColl{count}:
       Done{Shape.SColl{count}}
     case Shape.SPar{a, b}:

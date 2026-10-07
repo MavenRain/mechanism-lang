@@ -70,6 +70,7 @@ def push(n: Nat, +v: Value, env: List<&2,Value>) -> List<&2,Value>:
 def shape_error(s: S.T<T.T>) -> Maybe<&2,String>:
   match s:
     case S.SPi{q,n,d}: None{}
+    case S.SArg{q,n}: None{}
     case S.SColl{n}: None{}
     case S.SMu{n,args}: None{}
     case S.SPar{a,b}: Some{"SPar"}
@@ -196,11 +197,14 @@ def spine(t:T.T, args:List<&2,T.T>) -> C.Pair<T.T,List<&2,T.T>>:
   match t:
     case T.Out{S.SPi{q,n,d},T.APt{aq,arg},head}: spine(head,arg <> args)
     case T.Out{S.SPi{q,n,d},a,head}: spine(head,args)
+    case T.Out{S.SArg{q,n},T.APt{aq,arg},head}: spine(head,arg <> args)
+    case T.Out{S.SArg{q,n},a,head}: spine(head,args)
     case _: C.Pair{t,args}
 
 def shape_terms(s:S.T<T.T>, rest:List<&2,T.T>) -> List<&2,T.T>:
   match s:
     case S.SPi{q,n,d}: d <> rest
+    case S.SArg{q,n}: rest
     case S.SColl{n}: rest
     case S.SPar{a,b}: a <> b <> rest
     case S.SMu{n,args}: T.Global{n} <> List.append(&2,T.T,args,rest)
@@ -307,6 +311,7 @@ def mu_depth(read:Bool, n:B.T, best:B.T) -> B.T:
         case T.Out{+s,+a,+head}:
           match s:
             case S.SPi{q,n,d}: eval(CApp{spine(T.Out{S.SPi{q,n,d},a,head},[]),env,seen},globals)
+            case S.SArg{q,n}: eval(CApp{spine(T.Out{S.SArg{q,n},a,head},[]),env,seen},globals)
             case S.SColl{n}:
               do Result<&2,&2,String,Value>:
                 v : Value <- eval(Eval{head,env,seen},globals)

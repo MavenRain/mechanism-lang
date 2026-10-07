@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replay frozen reference observations without a reference compiler."""
+"""Replay reference observations with explicit current-format expectations."""
 from __future__ import annotations
 
 import argparse
@@ -31,7 +31,8 @@ def main() -> int:
             actual = dict(code=result.returncode, stdout=result.stdout, stderr=result.stderr)
         except subprocess.TimeoutExpired:
             actual = dict(code='timeout', stdout='', stderr='exceeded replay timeout')
-        expected = {key: case[key] for key in actual}
+        # Keep the historical observation when the current printer differs.
+        expected = case.get('current_expected', {key: case[key] for key in actual})
         if actual != expected:
             failures.append(dict(index=index, mode=case['mode'], expected=expected, actual=actual))
     BUILD.mkdir(parents=True, exist_ok=True)

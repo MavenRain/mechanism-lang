@@ -496,8 +496,7 @@ def elab_app_point(+ctx: Check.Ctx, head: Syntax.T, arg: Syntax.T) -> Budget.Com
     shape : Former <- former(False{}, ty, "the head of an application is not a function")
     +point : Point <- require(Point, point_of(former_shape(shape)), Error.Mismatch{"the head of an application is not a function"})
     arg : Term.T <- elab(ctx, Some{point_domain(point)}, arg)
-    domain : Term.T <- quote_in(ctx, point_domain(point))
-    return Term.Out{Shape.SPi{point_q(point), point_name(point), domain}, Term.APt{point_q(point), arg}, head}
+    return Term.Out{Shape.SArg{point_q(point), point_name(point)}, Term.APt{point_q(point), arg}, head}
 
 def fhc_expect(+ctx: Check.Ctx, expected: Maybe<&2, Value.T>, +word: String) -> Budget.Comp(Common.Pair<Value.T, Value.T>):
   do Budget.Comp<Common.Pair<Value.T, Value.T>>:

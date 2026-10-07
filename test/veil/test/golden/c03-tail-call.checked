@@ -1,2 +1,2 @@
-def g : (Ran SPi w _ Nat Nat) := (Sec SPi w n Nat [n => (Out SPi w b Nat (APt w 1) (Out SPi w a Nat (APt w n) natAdd))])
-def h : (Ran SPi w _ Nat Nat) := (Sec SPi w n Nat [n => (Out SPi w _ Nat (APt w (Out SPi w _ Nat (APt w n) g)) g)])
+def g : (Ran SPi w _ Nat Nat) := (Sec SPi w n Nat [n => (Out SArg w b (APt w 1) (Out SArg w a (APt w n) natAdd))])
+def h : (Ran SPi w _ Nat Nat) := (Sec SPi w n Nat [n => (Out SArg w _ (APt w (Out SArg w _ (APt w n) g)) g)])

@@ -642,6 +642,8 @@ def disclosure_of_shape(-A: Data, shape: Shape.T<A>) -> Maybe<&2, String>:
       Some{"mpc-simulatability"}
     case Shape.SPi{q, name, domain}:
       None{}
+    case Shape.SArg{q, name}:
+      None{}
     case Shape.SColl{count}:
       None{}
     case Shape.SPar{left, right}:

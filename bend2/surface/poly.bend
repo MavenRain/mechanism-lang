@@ -87,6 +87,9 @@ def shape_body(shape: Shape.T<Term.T>, +action: Action) -> Budget.Comp(Shape.T<T
       do Budget.Comp<Shape.T<Term.T>>:
         domain : Term.T <- map_term(action, domain)
         return Shape.SZk{q, name, domain}
+    case Shape.SArg{q, name}:
+      do Budget.Comp<Shape.T<Term.T>>:
+        return Shape.SArg{q, name}
     case Shape.SColl{count}:
       do Budget.Comp<Shape.T<Term.T>>:
         return Shape.SColl{count}

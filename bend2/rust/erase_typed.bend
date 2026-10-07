@@ -169,6 +169,7 @@ type Knd is Data:
   KGen{name: String}
   KProp{}
   KVal{}
+  KLam{bds: List<&2, Bd>}
 
 # The end of a telescope: `Prop`, `Type n`, or no universe.
 type End is Data:
@@ -334,6 +335,8 @@ def var_ty(k: Knd) -> Er:
       EProp{}
     case KVal{}:
       ENo{"a value in a type"}
+    case KLam{bds}:
+      ENo{"a value in a type"}
 
 def own_or_ref(by_value: Bool, +t: R.Ty) -> R.Ty:
   Bool.pick(R.Ty, by_value, t, R.TRef{t})
@@ -404,6 +407,8 @@ def fn_er(copies: List<&2, String>, +q: Quantity.T, b: Er, e: End, a: Er) -> Er:
             one_er(ers(env, ctx, [dom]))) <> ers(env, ctx, rest)
         case Term.Out{Shape.SPi{q, x, dom}, addr, head}:
           ers(env, ctx, head <> rest)
+        case Term.Out{Shape.SArg{q, x}, addr, head}:
+          ers(env, ctx, head <> rest)
         case Term.Global{+name}:
           global_ty(name, Global.find(name, globals_of(env))) <> ers(env, ctx, rest)
         case Term.Ann{body, ty}:
@@ -441,6 +446,26 @@ def binder_er(q: Quantity.T, e: End, a: Er) -> Bd:
           Bool.pick(Bd, is_zero(q), BDrop{}, BNo{why})
         case EData{t}:
           Bool.pick(Bd, is_zero(q), BDrop{}, BParam{t})
+
+# The binders of a function type, in step, as fn_er decides them: a binder
+# keeps its argument only as BParam.
+@unsafe def tele_bds(+env: Env, +ctx: List<&2, Knd>, ty: Term.T) -> List<&2, Bd>:
+  match ty:
+    case Term.Ran{Shape.SPi{q, x, +dom}, body}:
+      binder_er(q, end_of(dom), one_er(ers(env, ctx, [dom]))) <> tele_bds(env, kind_of(end_of(dom), x) <> ctx, body)
+    case other:
+      []
+
+# The kind of a lambda binder. A value keeps the binders of its type: a call
+# of it with SArg frames takes the decision for each argument from there.
+def bind_kind(env: Env, ks: List<&2, Knd>, e: End, x: String, dom: Term.T) -> Knd:
+  match e:
+    case EndProp{}:
+      KProp{}
+    case EndType{}:
+      KGen{x}
+    case EndNone{}:
+      KLam{tele_bds(env, ks, dom)}
 
 # The name of the lambda binder at the head of a body, and the body below it.
 @unsafe def peel_name(body: Term.T, fallback: String) -> String:
@@ -622,6 +647,8 @@ def gen_names(ks: List<&2, Knd>, acc: List<&2, String>) -> List<&2, String>:
         case KProp{}:
           gen_names(rest, acc)
         case KVal{}:
+          gen_names(rest, acc)
+        case KLam{bds}:
           gen_names(rest, acc)
 
 def all_unit(vs: List<&2, R.Variant>) -> Bool:
@@ -1170,7 +1197,7 @@ def ctor_plan(env: Env, ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, wan
 # Applications.
 
 type Sarg is Data:
-  Sarg{q: Quantity.T, dom: Term.T, arg: Term.T}
+  Sarg{q: Quantity.T, dom: Maybe<&2, Term.T>, arg: Term.T}
 
 type Spine is Data:
   Spine{head: Term.T, args: List<&2, Sarg>}
@@ -1178,7 +1205,9 @@ type Spine is Data:
 @unsafe def spine(t: Term.T, acc: List<&2, Sarg>) -> Spine:
   match t:
     case Term.Out{Shape.SPi{q, x, dom}, Term.APt{aq, arg}, head}:
-      spine(head, Sarg{q, dom, arg} <> acc)
+      spine(head, Sarg{q, Some{dom}, arg} <> acc)
+    case Term.Out{Shape.SArg{q, x}, Term.APt{aq, arg}, head}:
+      spine(head, Sarg{q, None{}, arg} <> acc)
     case other:
       Spine{other, acc}
 
@@ -1196,13 +1225,56 @@ def keep_term(bd: Bd, arg: Term.T, tail: List<&2, Term.T>) -> List<&2, Term.T>:
     case other:
       tail
 
-# The runtime arguments of a call of a local function.
-@unsafe def kept_args(+env: Env, +ks: List<&2, Knd>, args: List<&2, Sarg>) -> List<&2, Term.T>:
-  match args:
+# The runtime arguments of a call of a local function, or why there are none.
+type Kept is Data:
+  Kept{args: List<&2, Term.T>}
+  KeptNo{why: String}
+
+def kept_cons(bd: Bd, arg: Term.T, rest: Kept) -> Kept:
+  match rest:
+    case Kept{args}:
+      Kept{keep_term(bd, arg, args)}
+    case KeptNo{why}:
+      KeptNo{why}
+
+def head_bds(k: Knd) -> List<&2, Bd>:
+  match k:
+    case KLam{bds}:
+      bds
+    case KGen{name}:
+      []
+    case KProp{}:
+      []
+    case KVal{}:
+      []
+
+def bds_tail(bds: List<&2, Bd>) -> List<&2, Bd>:
+  match bds:
     case Nil{}:
       []
-    case Con{Sarg{q, +dom, arg}, more}:
-      keep_term(binder_er(q, end_of(dom), one_er(ers(env, ks, [dom]))), arg, kept_args(env, ks, more))
+    case Con{bd, rest}:
+      rest
+
+# The runtime arguments of a call of a local function, in step with `bds`, the
+# binders of its type (as fn_er gives the parameters of the function). An SPi
+# frame decides with its own domain. An SArg frame has no domain: the binder of
+# the type decides. An SArg frame past the known binders is refused.
+@unsafe def kept_args(+env: Env, +ks: List<&2, Knd>, bds: List<&2, Bd>, args: List<&2, Sarg>) -> Kept:
+  match args:
+    case Nil{}:
+      Kept{[]}
+    case Con{Sarg{q, Some{+dom}, arg}, more}:
+      kept_cons(binder_er(q, end_of(dom), one_er(ers(env, ks, [dom]))), arg, kept_args(env, ks, bds_tail(bds), more))
+    case Con{Sarg{q, None{}, arg}, more}:
+      sarg_kept(env, ks, bds, arg, more)
+
+# An SArg argument: the next binder of the type of the local function decides.
+@unsafe def sarg_kept(+env: Env, +ks: List<&2, Knd>, bds: List<&2, Bd>, arg: Term.T, more: List<&2, Sarg>) -> Kept:
+  match bds:
+    case Nil{}:
+      KeptNo{"an SArg argument of a local function with no known binder for it"}
+    case Con{bd, rest}:
+      kept_cons(bd, arg, kept_args(env, ks, rest, more))
 
 def zip_jobs(+ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, tys: List<&2, R.Ty>, args: List<&2, Term.T>) -> List<&2, Job>:
   match tys:
@@ -1214,6 +1286,13 @@ def zip_jobs(+ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, tys: List<&2
           []
         case Con{a, rest}:
           Job{ks, vs, want_of(t), a} <> zip_jobs(ks, vs, more, rest)
+
+def local_call(ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, name: String, tys: List<&2, R.Ty>, kept: Kept) -> Plan:
+  match kept:
+    case Kept{args}:
+      Plan{zip_jobs(ks, vs, tys, args), BCall{name, [], want}}
+    case KeptNo{why}:
+      no_plan(why)
 
 # The erasure of a type argument: the type below its lambdas.
 @unsafe def targ_er(+env: Env, ks: List<&2, Knd>, arg: Term.T) -> Er:
@@ -1313,21 +1392,21 @@ def call_plan(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, 
   Bool.pick(Plan, String.eq(name, "natAdd"), Plan{ref_jobs(ks, vs, args), BCall{"nat_add", [], want}},
     fn_plan(env, ks, vs, want, name_class(env, name), Global.find(name, globals_of(env)), args))
 
-def local_plan(env: Env, +ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, slot: Maybe<&2, R.Param>, args: List<&2, Sarg>) -> Plan:
+def local_plan(env: Env, +ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, slot: Maybe<&2, R.Param>, k: Knd, args: List<&2, Sarg>) -> Plan:
   match slot:
     case Some{R.Param{name, R.TRef{R.TFn{tys, ret}}}}:
-      Plan{zip_jobs(ks, vs, tys, kept_args(env, ks, args)), BCall{name, [], want}}
+      local_call(ks, vs, want, name, tys, kept_args(env, ks, head_bds(k), args))
     case other:
       no_plan("a call of a variable that is not a function")
 
-def app_plan(+env: Env, ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, sp: Spine) -> Plan:
+def app_plan(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, sp: Spine) -> Plan:
   match sp:
     case Spine{head, args}:
       match head:
         case Term.Global{name}:
           call_plan(env, ks, vs, want, name, args)
-        case Term.Var{index}:
-          local_plan(env, ks, vs, want, slot_at(vs, index), args)
+        case Term.Var{+index}:
+          local_plan(env, ks, vs, want, slot_at(vs, index), kind_at(ks, index), args)
         case other:
           no_plan("an application head outside the M0 fragment")
 
@@ -1401,7 +1480,7 @@ def decl_rest(slot: Maybe<&2, R.Param>, decl: List<&2, R.Ty>) -> List<&2, R.Ty>:
     case Term.Sec{Shape.SPi{+q, +x, +dom}, Con{Term.Leg{binders, inner}, rest}}:
       +own = slot_of(copies_of(env), q, x, binder_er(q, end_of(dom), one_er(ers(env, ks, [dom]))))
       +slot = decl_slot(own, decl)
-      lams(env, kind_of(end_of(dom), x) <> ks, slot <> vs, push_slot(slot, params), decl_rest(own, decl), inner)
+      lams(env, bind_kind(env, ks, end_of(dom), x, dom) <> ks, slot <> vs, push_slot(slot, params), decl_rest(own, decl), inner)
     case other:
       Lam{ks, vs, List.reverse(&2, R.Param, params), other}
 
@@ -1628,6 +1707,10 @@ def let_kind(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, w
       Bool.pick(Plan, let_clash(env, vs, rn),
         no_plan("the let binder `" ++ rn ++ "` collides with a name in scope after the name map (E1)"),
         let_er(env, ks, vs, want, rn, one_er(ers(env, ks, [ty])), value, body))
+    case KLam{bds}:
+      Bool.pick(Plan, let_clash(env, vs, rn),
+        no_plan("the let binder `" ++ rn ++ "` collides with a name in scope after the name map (E1)"),
+        let_er(env, ks, vs, want, rn, one_er(ers(env, ks, [ty])), value, body))
 
 def let_plan(+env: Env, ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, +name: String, +ty: Term.T, value: Term.T, body: Term.T) -> Plan:
   let_kind(env, ks, vs, want, fn_name(name), kind_of(end_of(ty), name), ty, value, body)
@@ -1642,7 +1725,9 @@ def plan_term(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, 
     case Term.Elim{Term.ElimData{Shape.SMu{+fam, idx}, scrut, sq, motive, branches}}:
       elim_plan(env, ks, vs, want, fam, scrut, branches, name_class(env, fam))
     case Term.Out{Shape.SPi{q, x, dom}, Term.APt{aq, arg}, head}:
-      app_plan(env, ks, vs, want, spine(head, [Sarg{q, dom, arg}]))
+      app_plan(env, ks, vs, want, spine(head, [Sarg{q, Some{dom}, arg}]))
+    case Term.Out{Shape.SArg{q, x}, Term.APt{aq, arg}, head}:
+      app_plan(env, ks, vs, want, spine(head, [Sarg{q, None{}, arg}]))
     case Term.Global{name}:
       call_plan(env, ks, vs, want, name, [])
     case Term.Sec{Shape.SPi{q, x, dom}, legs}:
@@ -1910,7 +1995,7 @@ type Fctx is Data:
 @unsafe def fctx(+env: Env, +ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, ty: Term.T, +body: Term.T) -> Fctx:
   match ty:
     case Term.Ran{Shape.SPi{+q, +x, +dom}, rest}:
-      fctx(env, kind_of(end_of(dom), x) <> ks,
+      fctx(env, bind_kind(env, ks, end_of(dom), x, dom) <> ks,
         slot_of(copies_of(env), q, peel_name(body, x), binder_er(q, end_of(dom), one_er(ers(env, ks, [dom])))) <> vs,
         rest, peel_body(body))
     case other:

@@ -1,1 +1,1 @@
-mismatch: the term has type (Lan SPi w app (Ran SPi w x Cmid (Out SPi 0 y Dmid (APt 0 (Out SPi w _ Cmid (APt w x) (Elim
+mismatch: the term has type (Lan SPi w app (Ran SPi w x Cmid (Out SArg 0 y (APt 0 (Out SArg w _ (APt w x) (Elim

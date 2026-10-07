@@ -56,6 +56,8 @@ def point_dom(s: Shape.T<Term.T>) -> Maybe<&2, Term.T>:
       Some{dom}
     case Shape.SZk{q, name, dom}:
       Some{dom}
+    case Shape.SArg{q, name}:
+      None{}
     case Shape.SColl{count}:
       None{}
     case Shape.SPar{left, right}:

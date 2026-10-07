@@ -549,6 +549,7 @@ def mu_intro(+ec: R.Ctx, ac: Acc, ty: V.T, addr: T.Addr<T.T>, args: List<&2,T.T>
 def spine(t: T.T, args: List<&2,T.T>) -> P.Pair<T.T,List<&2,T.T>>:
   match t:
     case T.Out{S.SPi{q,x,dom},T.APt{qa,arg},head}: spine(head,arg <> args)
+    case T.Out{S.SArg{q,x},T.APt{qa,arg},head}: spine(head,arg <> args)
     case _: P.Pair{t,args}
 
 law app_jobs:
@@ -848,6 +849,7 @@ def mu_elim(+ec: R.Ctx, ac: Acc, tail: Bool, +data: T.ElimData<T.T>) -> B.Comp(O
 def sec_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, ty: V.T, legs: List<&2,T.Leg<T.T>>, t: T.T) -> B.Comp(Out):
   match shape:
     case S.SPi{q,x,dom}: lift_arm(ec,ac,ty,t)
+    case S.SArg{q,x}: B.failed(Out,Error.Mismatch{"an application frame shape has no introduction"})
     case S.SColl{n}: tuple_arm(ec,ac,ty,n,legs)
     case S.SPar{a,b}: B.failed(Out,Error.Not_yet{"SPar arrives at M1"})
     case S.SMu{n,args}: B.failed(Out,Error.Not_yet{"a right former at a mu shape arrives at M2"})
@@ -859,6 +861,7 @@ def sec_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, ty: V.T, legs: List<&2,T.Leg<T.
 def in_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, ty: V.T, addr: T.Addr<T.T>, args: List<&2,T.T>) -> B.Comp(Out):
   match shape:
     case S.SPi{q,x,dom}: in_typed(ec,ac,ty,addr,args)
+    case S.SArg{q,x}: B.failed(Out,Error.Mismatch{"an application frame shape has no introduction"})
     case S.SColl{n}: in_typed(ec,ac,ty,addr,args)
     case S.SPar{a,b}: B.failed(Out,Error.Not_yet{"SPar arrives at M1"})
     case S.SMu{n,ix}: mu_intro(ec,ac,ty,addr,args)
@@ -870,6 +873,7 @@ def in_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, ty: V.T, addr: T.Addr<T.T>, args
 def out_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, tail: Bool, ty: V.T, addr: T.Addr<T.T>, head: T.T, t: T.T) -> B.Comp(Out):
   match shape:
     case S.SPi{q,x,dom}: app_arm(ec,ac,tail,ty,t)
+    case S.SArg{q,x}: app_arm(ec,ac,tail,ty,t)
     case S.SColl{n}: proj_arm(ec,ac,n,addr,head)
     case S.SPar{a,b}: B.failed(Out,Error.Not_yet{"SPar arrives at M1"})
     case S.SMu{n,ix}: B.failed(Out,Error.Not_yet{"a right former at a mu shape arrives at M2"})
@@ -881,6 +885,7 @@ def out_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, tail: Bool, ty: V.T, addr: T.Ad
 def elim_arm(shape: S.T<T.T>, ec: R.Ctx, ac: Acc, tail: Bool, ty: V.T, data: T.ElimData<T.T>) -> B.Comp(Out):
   match shape:
     case S.SPi{q,x,dom}: elim_typed(ec,ac,tail,ty,data)
+    case S.SArg{q,x}: B.failed(Out,Error.Mismatch{"an application frame shape has no eliminator"})
     case S.SColl{n}: elim_typed(ec,ac,tail,ty,data)
     case S.SPar{a,b}: B.failed(Out,Error.Not_yet{"SPar arrives at M1"})
     case S.SMu{n,ix}: mu_elim(ec,ac,tail,data)

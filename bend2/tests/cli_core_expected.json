@@ -21,7 +21,7 @@
     },
     "spec-count": {
       "code": 0,
-      "stdout": "formers 2: Lan Ran\nschema constructors 4: In Elim Sec Out\nshapes declared 8: SPi SColl SPar SMu SNu SZk SFhc SMpc\nshapes admitted 6: SPi SColl SMu SZk SFhc SMpc\nnamed rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc\nnamed rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path\neta rows 3: Ran-SPi Lan-SPi Ran-SColl\nno eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc Lan-SMpc\n",
+      "stdout": "formers 2: Lan Ran\nschema constructors 4: In Elim Sec Out\nshapes declared 9: SPi SArg SColl SPar SMu SNu SZk SFhc SMpc\nshapes admitted 6: SPi SColl SMu SZk SFhc SMpc\nnamed rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc\nnamed rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path\neta rows 3: Ran-SPi Lan-SPi Ran-SColl\nno eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc Lan-SMpc\n",
       "stderr": "",
       "bytes": null
     },

@@ -1529,6 +1529,8 @@ def mpc_address(point: Term.T) -> B.Comp(Pair.Pair<Term.T, Term.T>):
   match shape left:
     case Shape.SPi{q, name, dom} left:
       point_form(ctx, left, q, name, dom, diagram)
+    case Shape.SArg{q, name} left:
+      B.failed(Level.T, Error.Mismatch{"an application frame shape is not a type former"})
     case Shape.SColl{count} left:
       coll_form(ctx, count, diagram, expected)
     case Shape.SPar{a, b} left:
@@ -1559,6 +1561,8 @@ def mpc_address(point: Term.T) -> B.Comp(Pair.Pair<Term.T, Term.T>):
   match shape:
     case Shape.SPi{q, name, dom}:
       point_intro_sec(ctx, mode, legs, expected)
+    case Shape.SArg{q, name}:
+      B.failed(Q.Usage, Error.Mismatch{"an application frame shape has no introduction"})
     case Shape.SColl{count}:
       coll_intro_sec(ctx, mode, count, legs, expected)
     case Shape.SPar{a, b}:
@@ -1578,6 +1582,8 @@ def mpc_address(point: Term.T) -> B.Comp(Pair.Pair<Term.T, Term.T>):
   match shape:
     case Shape.SPi{q, name, dom}:
       point_intro_in(ctx, mode, addr, args, expected)
+    case Shape.SArg{q, name}:
+      B.failed(Q.Usage, Error.Mismatch{"an application frame shape has no introduction"})
     case Shape.SColl{count}:
       coll_intro_in(ctx, mode, addr, args, expected)
     case Shape.SPar{a, b}:
@@ -1596,6 +1602,8 @@ def mpc_address(point: Term.T) -> B.Comp(Pair.Pair<Term.T, Term.T>):
 @unsafe def elim_out(ctx, mode, shape, addr, head):
   match shape:
     case Shape.SPi{q, name, dom}:
+      point_elim_out(ctx, mode, addr, head)
+    case Shape.SArg{q, name}:
       point_elim_out(ctx, mode, addr, head)
     case Shape.SColl{count}:
       coll_elim_out(ctx, mode, addr, head)
@@ -1616,6 +1624,8 @@ def mpc_address(point: Term.T) -> B.Comp(Pair.Pair<Term.T, Term.T>):
   match data:
     case Term.ElimData{Shape.SPi{q, name, dom}, scrut, sq, motive, branches}:
       point_elim_elim(ctx, mode, Term.ElimData{Shape.SPi{q, name, dom}, scrut, sq, motive, branches}, expected)
+    case Term.ElimData{Shape.SArg{q, name}, scrut, sq, motive, branches}:
+      B.failed(Inferred, Error.Mismatch{"an application frame shape has no eliminator"})
     case Term.ElimData{Shape.SColl{count}, scrut, sq, motive, branches}:
       coll_elim_elim(ctx, mode, Term.ElimData{Shape.SColl{count}, scrut, sq, motive, branches}, expected)
     case Term.ElimData{Shape.SPar{a, b}, scrut, sq, motive, branches}:
@@ -1783,6 +1793,10 @@ def conv_spine_former(+ctx:C.Ctx,w:Value.T,s:Shape.T<Value.T>,addr:Value.VAddr<V
       do B.Comp<ConvStep>:
         cod : Value.T <- open(ctx,d,[arg])
         return ConvStep{Some{conv_head_dom(ws,dom)},cod}
+    case Value.VRan{ws,d,u} Shape.SArg{q,n} Value.VAPt{qa,arg}:
+      do B.Comp<ConvStep>:
+        cod : Value.T <- open(ctx,d,[arg])
+        return ConvStep{Shape.point_dom(Value.T,ws),cod}
     case Value.VRan{ws,d,u} Shape.SColl{n} Value.VALeg{k}:
       do B.Comp<ConvStep>:
         ls : List<&2,Value.VLeg<Value.T>> <- B.lift(List<&2,Value.VLeg<Value.T>>,R.coll_legs_of(ctx,d))
@@ -1801,6 +1815,9 @@ def conv_spine_step(+ctx:C.Ctx,hty:Value.T,s:Shape.T<Value.T>,a:Value.VAddr<Valu
 @unsafe def conv_frame_shape(+ctx:C.Ctx,a:Shape.T<Value.T>,b:Shape.T<Value.T>) -> B.Comp(Bool):
   match a b:
     case Shape.SPi{q1,n1,d1} Shape.SPi{q2,n2,d2}: B.pure(Bool,Q.equal(q1,q2))
+    case Shape.SArg{q1,n1} Shape.SArg{q2,n2}: B.pure(Bool,Q.equal(q1,q2))
+    case Shape.SPi{q1,n1,d1} Shape.SArg{q2,n2}: B.pure(Bool,Q.equal(q1,q2))
+    case Shape.SArg{q1,n1} Shape.SPi{q2,n2,d2}: B.pure(Bool,Q.equal(q1,q2))
     case _ _: conv_shape(ctx,a,b)
 
 @unsafe def conv_spines(+ctx:C.Ctx,hty:Value.T,xs:List<&2,Value.Spine<Value.T>>,ys:List<&2,Value.Spine<Value.T>>) -> B.Comp(Bool):
