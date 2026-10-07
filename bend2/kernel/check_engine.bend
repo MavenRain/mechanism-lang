@@ -181,7 +181,7 @@ def pp_result(result: Result<&2, &2, Error.T, Term.T>, names: List<&2, String>) 
       Pp.term(names, term)
 
 def pp_value(+ctx: C.Ctx, value: Value.T) -> String:
-  pp_result(Eval.quote(C.globals_of(ctx), C.size_of(ctx), value), C.names_of(ctx))
+  pp_result(Eval.normalize(C.globals_of(ctx), C.size_of(ctx), value), C.names_of(ctx))
 
 def check_scope_node(term: Term.T, arity: Nat) -> B.Comp(Unit):
   match term:

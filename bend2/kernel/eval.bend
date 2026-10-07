@@ -472,27 +472,32 @@ def prepend_frame(frame: Value.Spine<Value.T>, tail: Maybe<&2, List<&2, Value.Sp
     step : Maybe<&2, Value.T> <- unfold_step(globals, core)
     whnf_unfolded(step, globals, core)
 
-law quote:
+type Readback is Data:
+  ReadQuote{}
+  ReadNormal{}
+
+law read_back:
+  for +mode: Readback
   for +globals: Global.T
   for +size: Nat
   for value: Value.T
   Result<&2, &2, Error.T, Term.T>
 
-@unsafe def quote_list(values: List<&2, Value.T>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Term.T>>:
+@unsafe def quote_list(+mode: Readback, values: List<&2, Value.T>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Term.T>>:
   match values:
     case Nil{}:
       Done{[]}
     case Con{value, rest}:
       do Result<&2, &2, Error.T, List<&2, Term.T>>:
-        term : Term.T <- quote(globals, size, value)
-        terms : List<&2, Term.T> <- quote_list(rest, globals, size)
+        term : Term.T <- read_back(mode, globals, size, value)
+        terms : List<&2, Term.T> <- quote_list(mode, rest, globals, size)
         return term <> terms
 
-@unsafe def quote_shape(shape: Shape.T<Value.T>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, Shape.T<Term.T>>:
+@unsafe def quote_shape(+mode: Readback, shape: Shape.T<Value.T>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, Shape.T<Term.T>>:
   match shape:
     case Shape.SPi{q, name, dom}:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
-        value : Term.T <- quote(globals, size, dom)
+        value : Term.T <- read_back(mode, globals, size, dom)
         return Shape.SPi{q, name, value}
     case Shape.SColl{count}:
       Done{Shape.SColl{count}}
@@ -500,22 +505,22 @@ law quote:
       Fail{Error.Not_yet{"SPar arrives at M1"}}
     case Shape.SMu{name, args}:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
-        values : List<&2, Term.T> <- quote_list(args, globals, size)
+        values : List<&2, Term.T> <- quote_list(mode, args, globals, size)
         return Shape.SMu{name, values}
     case Shape.SNu{name, args}:
       Fail{Error.Not_yet{"SNu arrives at M2"}}
     case Shape.SZk{q, name, dom}:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
-        value : Term.T <- quote(globals, size, dom)
+        value : Term.T <- read_back(mode, globals, size, dom)
         return Shape.SZk{q, name, value}
     case Shape.SFhc{level}:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
-        value : Term.T <- quote(globals, size, level)
+        value : Term.T <- read_back(mode, globals, size, level)
         return Shape.SFhc{value}
     case Shape.SMpc{parties, access}:
       do Result<&2, &2, Error.T, Shape.T<Term.T>>:
-        p : Term.T <- quote(globals, size, parties)
-        a : Term.T <- quote(globals, size, access)
+        p : Term.T <- read_back(mode, globals, size, parties)
+        a : Term.T <- read_back(mode, globals, size, access)
         return Shape.SMpc{p, a}
 
 def fresh_vars(count: Nat, +size: Nat) -> List<&2, Value.T>:
@@ -525,34 +530,34 @@ def fresh_vars(count: Nat, +size: Nat) -> List<&2, Value.T>:
     case 1n+p:
       Value.var(size) <> fresh_vars(p, 1n+size)
 
-@unsafe def quote_addr(globals: Global.T, size: Nat, addr: Value.VAddr<Value.T>) -> Result<&2, &2, Error.T, Term.Addr<Term.T>>:
+@unsafe def quote_addr(+mode: Readback, globals: Global.T, size: Nat, addr: Value.VAddr<Value.T>) -> Result<&2, &2, Error.T, Term.Addr<Term.T>>:
   match addr:
     case Value.VAPt{q, value}:
       do Result<&2, &2, Error.T, Term.Addr<Term.T>>:
-        term : Term.T <- quote(globals, size, value)
+        term : Term.T <- read_back(mode, globals, size, value)
         return Term.APt{q, term}
     case Value.VALeg{index}:
       Done{Term.ALeg{index}}
     case Value.VACtor{name}:
       Done{Term.ACtor{name}}
 
-@unsafe def quote_leg(+globals: Global.T, +size: Nat, leg: Value.VLeg<Value.T>) -> Result<&2, &2, Error.T, Term.Leg<Term.T>>:
+@unsafe def quote_leg(+mode: Readback, +globals: Global.T, +size: Nat, leg: Value.VLeg<Value.T>) -> Result<&2, &2, Error.T, Term.Leg<Term.T>>:
   match leg:
     case Value.VLeg{+binders, clo}:
       +arity = List.length(&2, Common.Pair<Quantity.T, String>, binders)
       do Result<&2, &2, Error.T, Term.Leg<Term.T>>:
         value : Value.T <- open_closure(globals, clo, fresh_vars(arity, size))
-        body : Term.T <- quote(globals, Nat.add(size, arity), value)
+        body : Term.T <- read_back(mode, globals, Nat.add(size, arity), value)
         return Term.Leg{binders, body}
 
-@unsafe def quote_legs(legs: List<&2, Value.VLeg<Value.T>>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Term.Leg<Term.T>>>:
+@unsafe def quote_legs(+mode: Readback, legs: List<&2, Value.VLeg<Value.T>>, +globals: Global.T, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Term.Leg<Term.T>>>:
   match legs:
     case Nil{}:
       Done{[]}
     case Con{leg, rest}:
       do Result<&2, &2, Error.T, List<&2, Term.Leg<Term.T>>>:
-        item : Term.Leg<Term.T> <- quote_leg(globals, size, leg)
-        items : List<&2, Term.Leg<Term.T>> <- quote_legs(rest, globals, size)
+        item : Term.Leg<Term.T> <- quote_leg(mode, globals, size, leg)
+        items : List<&2, Term.Leg<Term.T>> <- quote_legs(mode, rest, globals, size)
         return item <> items
 
 def diagram_arity(shape: Shape.T<Value.T>) -> Nat:
@@ -578,15 +583,15 @@ def build_former(lan: Bool, shape: Shape.T<Term.T>, body: Term.T) -> Term.T:
     case False{}:
       Term.Ran{shape, body}
 
-@unsafe def quote_former(+globals: Global.T, +size: Nat, +shape: Shape.T<Value.T>, clo: Value.Closure<Value.T>, level: Maybe<&2, Level.T>, lan: Bool) -> Result<&2, &2, Error.T, Term.T>:
+@unsafe def quote_former(+mode: Readback, +globals: Global.T, +size: Nat, +shape: Shape.T<Value.T>, clo: Value.Closure<Value.T>, level: Maybe<&2, Level.T>, lan: Bool) -> Result<&2, &2, Error.T, Term.T>:
   +arity = diagram_arity(shape)
   do Result<&2, &2, Error.T, Term.T>:
-    s : Shape.T<Term.T> <- quote_shape(shape, globals, size)
+    s : Shape.T<Term.T> <- quote_shape(mode, shape, globals, size)
     value : Value.T <- open_closure(globals, clo, fresh_vars(arity, size))
-    body : Term.T <- quote(globals, Nat.add(size, arity), value)
+    body : Term.T <- read_back(mode, globals, Nat.add(size, arity), value)
     return quote_annotate(level, build_former(lan, s, body))
 
-@unsafe def quote_motive(motive: Maybe<&2, Term.Motive<Term.T>>, +globals: Global.T, env: List<&2, Value.T>, +size: Nat) -> Result<&2, &2, Error.T, Maybe<&2, Term.Motive<Term.T>>>:
+@unsafe def quote_motive(+mode: Readback, motive: Maybe<&2, Term.Motive<Term.T>>, +globals: Global.T, env: List<&2, Value.T>, +size: Nat) -> Result<&2, &2, Error.T, Maybe<&2, Term.Motive<Term.T>>>:
   match motive:
     case None{}:
       Done{None{}}
@@ -594,36 +599,36 @@ def build_former(lan: Bool, shape: Shape.T<Term.T>, body: Term.T) -> Term.T:
       +arity = Nat.add(1n, List.length(&2, String, indices))
       do Result<&2, &2, Error.T, Maybe<&2, Term.Motive<Term.T>>>:
         value : Value.T <- open_closure(globals, Value.close(env, body), fresh_vars(arity, size))
-        term : Term.T <- quote(globals, Nat.add(size, arity), value)
+        term : Term.T <- read_back(mode, globals, Nat.add(size, arity), value)
         return Some{Term.Motive{ind, indices, self, term}}
 
-@unsafe def quote_branches(branches: List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>, +globals: Global.T, +env: List<&2, Value.T>, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>>:
+@unsafe def quote_branches(+mode: Readback, branches: List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>, +globals: Global.T, +env: List<&2, Value.T>, +size: Nat) -> Result<&2, &2, Error.T, List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>>:
   match branches:
     case Nil{}:
       Done{[]}
     case Con{Common.Pair{addr, Term.Leg{binders, body}}, rest}:
       do Result<&2, &2, Error.T, List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>>:
         va : Value.VAddr<Value.T> <- eval_addr(globals, env, addr)
-        a : Term.Addr<Term.T> <- quote_addr(globals, size, va)
-        leg : Term.Leg<Term.T> <- quote_leg(globals, size, Value.VLeg{binders, Value.close(env, body)})
-        items : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- quote_branches(rest, globals, env, size)
+        a : Term.Addr<Term.T> <- quote_addr(mode, globals, size, va)
+        leg : Term.Leg<Term.T> <- quote_leg(mode, globals, size, Value.VLeg{binders, Value.close(env, body)})
+        items : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- quote_branches(mode, rest, globals, env, size)
         return Common.Pair{a, leg} <> items
 
-@unsafe def quote_frames(frames: List<&2, Value.Spine<Value.T>>, +globals: Global.T, +size: Nat, head: Term.T) -> Result<&2, &2, Error.T, Term.T>:
+@unsafe def quote_frames(+mode: Readback, frames: List<&2, Value.Spine<Value.T>>, +globals: Global.T, +size: Nat, head: Term.T) -> Result<&2, &2, Error.T, Term.T>:
   match frames:
     case Nil{}:
       Done{head}
     case Con{Value.SOut{shape, addr}, rest}:
       do Result<&2, &2, Error.T, Term.T>:
-        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)
-        a : Term.Addr<Term.T> <- quote_addr(globals, size, addr)
-        quote_frames(rest, globals, size, Term.Out{s, a, head})
+        s : Shape.T<Term.T> <- quote_shape(mode, shape, globals, size)
+        a : Term.Addr<Term.T> <- quote_addr(mode, globals, size, addr)
+        quote_frames(mode, rest, globals, size, Term.Out{s, a, head})
     case Con{Value.SElim{Value.StuckElim{shape, q, motive, branches, +env}}, rest}:
       do Result<&2, &2, Error.T, Term.T>:
-        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)
-        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(motive, globals, env, size)
-        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- quote_branches(branches, globals, env, size)
-        quote_frames(rest, globals, size, Term.Elim{Term.ElimData{s, head, q, mo, bs}})
+        s : Shape.T<Term.T> <- quote_shape(mode, shape, globals, size)
+        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(mode, motive, globals, env, size)
+        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- quote_branches(mode, branches, globals, env, size)
+        quote_frames(mode, rest, globals, size, Term.Elim{Term.ElimData{s, head, q, mo, bs}})
 
 def quote_head(head: Value.Head, size: Nat) -> Term.T:
   match head:
@@ -632,26 +637,44 @@ def quote_head(head: Value.Head, size: Nat) -> Term.T:
     case Value.HGlobal{name}:
       Term.Global{name}
 
-@unsafe def quote(globals, size, value):
+@unsafe def read_back(mode, globals, size, value):
+  do Result<&2, &2, Error.T, Term.T>:
+    reduced : Value.T <- read_back_reduce(mode, globals, value)
+    read_back_value(mode, globals, size, reduced)
+
+@unsafe def read_back_reduce(mode: Readback, +globals: Global.T, value: Value.T) -> Result<&2, &2, Error.T, Value.T>:
+  match mode:
+    case ReadQuote{}:
+      Done{value}
+    case ReadNormal{}:
+      whnf(globals, value)
+
+@unsafe def read_back_value(+mode: Readback, +globals: Global.T, +size: Nat, value: Value.T) -> Result<&2, &2, Error.T, Term.T>:
   match value:
     case Value.VUniv{level}:
       Done{Term.Univ{level}}
     case Value.VLit{lit}:
       Done{Term.Lit{lit}}
     case Value.VLan{shape, clo, level}:
-      quote_former(globals, size, shape, clo, level, True{})
+      quote_former(mode, globals, size, shape, clo, level, True{})
     case Value.VRan{shape, clo, level}:
-      quote_former(globals, size, shape, clo, level, False{})
+      quote_former(mode, globals, size, shape, clo, level, False{})
     case Value.VIn{shape, addr, args}:
       do Result<&2, &2, Error.T, Term.T>:
-        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)
-        a : Term.Addr<Term.T> <- quote_addr(globals, size, addr)
-        xs : List<&2, Term.T> <- quote_list(args, globals, size)
+        s : Shape.T<Term.T> <- quote_shape(mode, shape, globals, size)
+        a : Term.Addr<Term.T> <- quote_addr(mode, globals, size, addr)
+        xs : List<&2, Term.T> <- quote_list(mode, args, globals, size)
         return Term.In{s, a, xs}
     case Value.VSec{shape, legs}:
       do Result<&2, &2, Error.T, Term.T>:
-        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)
-        ls : List<&2, Term.Leg<Term.T>> <- quote_legs(legs, globals, size)
+        s : Shape.T<Term.T> <- quote_shape(mode, shape, globals, size)
+        ls : List<&2, Term.Leg<Term.T>> <- quote_legs(mode, legs, globals, size)
         return Term.Sec{s, ls}
     case Value.VNeutral{head, spine}:
-      quote_frames(List.reverse(&2, Value.Spine<Value.T>, spine), globals, size, quote_head(head, size))
+      quote_frames(mode, List.reverse(&2, Value.Spine<Value.T>, spine), globals, size, quote_head(head, size))
+
+@unsafe def quote(+globals: Global.T, +size: Nat, value: Value.T) -> Result<&2, &2, Error.T, Term.T>:
+  read_back(ReadQuote{}, globals, size, value)
+
+@unsafe def normalize(+globals: Global.T, +size: Nat, value: Value.T) -> Result<&2, &2, Error.T, Term.T>:
+  read_back(ReadNormal{}, globals, size, value)

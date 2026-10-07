@@ -50,7 +50,7 @@ def literal_nat(term: Term.T, expected: String) -> Result<&2, &2, Error.T, Unit>
 def evaluates(+globals: Global.T, name: String, expected: String) -> Result<&2, &2, Error.T, Unit>:
   do Result<&2, &2, Error.T, Unit>:
     value : Value.T <- Eval.eval(globals, [], Term.Global{name})
-    term : Term.T <- Eval.quote(globals, 0n, value)
+    term : Term.T <- Eval.normalize(globals, 0n, value)
     literal_nat(term, expected)
 
 def dependent() -> Result<&2, &2, Error.T, Unit>:

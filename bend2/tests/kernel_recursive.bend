@@ -28,7 +28,7 @@ def optional(-A: Data, value: Maybe<&2,A>, message: String) -> Result<&2,&2,E.T,
 def normal(+globals: G.T, name: String) -> Result<&2,&2,E.T,String>:
   do Result<&2,&2,E.T,String>:
     value : V.T <- Eval.eval(globals,[],T.Global{name})
-    term : T.T <- Eval.quote(globals,0n,value)
+    term : T.T <- Eval.normalize(globals,0n,value)
     return Pp.term([],term)
 
 def compare_pairs(pairs: List<&2,P.Pair<String,String>>, +globals: G.T) -> Result<&2,&2,E.T,Unit>:
@@ -41,6 +41,11 @@ def compare_pairs(pairs: List<&2,P.Pair<String,String>>, +globals: G.T) -> Resul
         ok : Unit <- require(String.eq(got,want),actual ++ " did not compute")
         compare_pairs(rest,globals)
 
+def unfolded(+globals: G.T, name: String) -> Result<&2,&2,E.T,V.T>:
+  do Result<&2,&2,E.T,V.T>:
+    value : V.T <- Eval.eval(globals,[],T.Global{name})
+    Eval.whnf(globals,value)
+
 def is_neutral(value: V.T) -> Bool:
   match value:
     case V.VNeutral{head,spine}: True{}
@@ -51,7 +56,7 @@ def neutrals(names: List<&2,String>, +globals: G.T) -> Result<&2,&2,E.T,Unit>:
     case Nil{}: Done{Unit{}}
     case Con{+name,rest}:
       do Result<&2,&2,E.T,Unit>:
-        value : V.T <- Eval.eval(globals,[],T.Global{name})
+        value : V.T <- unfolded(globals,name)
         ok : Unit <- require(is_neutral(value),name ++ " unfolded before its guarded argument")
         neutrals(rest,globals)
 
@@ -73,11 +78,11 @@ def validate(checked: Elab.Checked) -> Result<&2,&2,E.T,Unit>:
       do Result<&2,&2,E.T,Unit>:
         ok : Unit <- compare_pairs([P.Pair{"doubled","four"},P.Pair{"mutualValue","two"},P.Pair{"helper","z"},P.Pair{"helperDirect","z"},P.Pair{"spare","z"},P.Pair{"kept","seven"},P.Pair{"chosen","seven"},P.Pair{"indexed","one"}],globals)
         ok : Unit <- neutrals(["double","keep","partial"],globals)
-        value : V.T <- Eval.eval(globals,[],T.Global{"neutral"})
+        value : V.T <- unfolded(globals,"neutral")
         ok : Unit <- neutral_lambda(value,globals)
         entry : G.DefEntry <- optional(G.DefEntry,G.find_def("double",globals),"double definition")
         opaque : G.T = G.add("double",opaque_def(entry),globals)
-        value : V.T <- Eval.eval(opaque,[],T.Global{"doubled"})
+        value : V.T <- unfolded(opaque,"doubled")
         require(is_neutral(value),"an explicitly opaque recursive definition unfolded")
 
 def mu_negative(result: Result<&2,&2,E.T,V.T>) -> Bool:

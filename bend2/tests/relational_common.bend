@@ -190,7 +190,7 @@ def inventories(+initial: G.T, globals: G.T, +rows: Elab.Rows, expected_entries:
 def normalize(+globals: G.T, name: String) -> Result<&2, &2, String, T.T>:
   do Result<&2, &2, String, T.T>:
     value : V.T <- kernel(V.T, Eval.eval(globals, [], T.Global{name}))
-    kernel(T.T, Eval.quote(globals, 0n, value))
+    kernel(T.T, Eval.normalize(globals, 0n, value))
 
 def computations(rows: List<&2, C.Pair<String, T.T>>, +globals: G.T) -> Result<&2, &2, String, Unit>:
   match rows:
