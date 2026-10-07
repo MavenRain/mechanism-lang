@@ -698,12 +698,195 @@ def family_class(+name: String, gens: List<&2, String>, vs: Result<&2, &2, Strin
     case Done{vars}:
       Bool.pick(Class, String.eq(name, "MechBool"), CBool{}, data_class(name, gens, vars))
 
-def classify_family(env: Env, fam: Pos.Family) -> Class:
+# Structs (E2). A family with one constructor, a kept field, no index and no
+# generic is a struct. The fields keep their mech binder names.
+
+def push_param(p: R.Param, r: Result<&2, &2, String, List<&2, R.Param>>) -> Result<&2, &2, String, List<&2, R.Param>>:
+  match r:
+    case Done{ps}:
+      Done{p <> ps}
+    case Fail{why}:
+      Fail{why}
+
+def named_step(own: String, x: String, bd: Bd, tail: Result<&2, &2, String, List<&2, R.Param>>) -> Result<&2, &2, String, List<&2, R.Param>>:
+  match bd:
+    case BGen{}:
+      Fail{"a type-valued constructor field"}
+    case BDrop{}:
+      tail
+    case BParam{t}:
+      push_param(R.Param{x, boxed(own, t)}, tail)
+    case BNo{why}:
+      Fail{why}
+
+@unsafe def named_fields(+env: Env, +ctx: List<&2, Knd>, +own: String, args: List<&2, Pos.Binder>) -> Result<&2, &2, String, List<&2, R.Param>>:
+  match args:
+    case Nil{}:
+      Done{[]}
+    case Con{Pos.Binder{q, +x, +ty}, rest}:
+      named_step(own, x, binder_er(q, end_of(ty), one_er(ers(env, ctx, [ty]))),
+        named_fields(env, kind_of(end_of(ty), x) <> ctx, own, rest))
+
+def all_skip(ps: List<&2, R.Param>) -> Bool:
+  match ps:
+    case Nil{}:
+      True{}
+    case Con{R.Param{x, t}, rest}:
+      Bool.pick(Bool, String.eq(x, "_"), all_skip(rest), False{})
+
+def no_skip(ps: List<&2, R.Param>) -> Bool:
+  match ps:
+    case Nil{}:
+      True{}
+    case Con{R.Param{x, t}, rest}:
+      Bool.pick(Bool, String.eq(x, "_"), False{}, no_skip(rest))
+
+def rust_fields(ps: List<&2, R.Param>) -> List<&2, R.Param>:
+  match ps:
+    case Nil{}:
+      []
+    case Con{R.Param{x, t}, rest}:
+      R.Param{fn_name(x), t} <> rust_fields(rest)
+
+# An accessor copies a `bool` or a `Copy` family, and borrows each other type.
+def getter_ty(copies: List<&2, String>, t: R.Ty) -> R.Ty:
+  match t:
+    case R.TBool{}:
+      R.TBool{}
+    case R.TCon{+name, +args}:
+      Bool.pick(R.Ty, has(copies, name), R.TCon{name, args}, R.TRef{R.TCon{name, args}})
+    case other:
+      R.TRef{other}
+
+def getters_of(+copies: List<&2, String>, ps: List<&2, R.Param>) -> List<&2, R.Param>:
+  match ps:
+    case Nil{}:
+      []
+    case Con{R.Param{x, t}, rest}:
+      R.Param{x, getter_ty(copies, t)} <> getters_of(copies, rest)
+
+def tuple_names() -> List<&2, String>:
+  ["x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15"]
+
+def tuple_fields(ps: List<&2, R.Param>, pool: List<&2, String>) -> Result<&2, &2, String, List<&2, R.Param>>:
+  match ps:
+    case Nil{}:
+      Done{[]}
+    case Con{R.Param{x, t}, rest}:
+      match pool:
+        case Nil{}:
+          Fail{"a tuple struct with more than 16 fields (E2)"}
+        case Con{n, more}:
+          push_param(R.Param{n, t}, tuple_fields(rest, more))
+
+def or_maybe(a: Maybe<&2, String>, b: Maybe<&2, String>) -> Maybe<&2, String>:
+  match a:
+    case Some{why}:
+      Some{why}
+    case None{}:
+      b
+
+# Two kept fields with one Rust name.
+def clash_in(+x: String, +r: String, ps: List<&2, R.Param>) -> Maybe<&2, String>:
+  match ps:
+    case Nil{}:
+      None{}
+    case Con{R.Param{+y, t}, rest}:
+      Bool.pick(Maybe<&2, String>, String.eq(fn_name(y), r),
+        Some{"constructor fields `" ++ x ++ "` and `" ++ y ++ "` both map to `" ++ r ++ "` (E2)"}, clash_in(x, r, rest))
+
+@unsafe def clash(ps: List<&2, R.Param>) -> Maybe<&2, String>:
+  match ps:
+    case Nil{}:
+      None{}
+    case Con{R.Param{+x, t}, +rest}:
+      or_maybe(clash_in(x, fn_name(x), rest), clash(rest))
+
+# U15: an inherent accessor with one of these names shadows a derived method.
+def reserved() -> List<&2, String>:
+  ["clone", "clone_from", "eq", "ne", "fmt"]
+
+def shadow(ps: List<&2, R.Param>) -> Maybe<&2, String>:
+  match ps:
+    case Nil{}:
+      None{}
+    case Con{R.Param{+r, t}, rest}:
+      Bool.pick(Maybe<&2, String>, has(reserved(), r),
+        Some{"a field named `" ++ r ++ "` shadows a derived trait method (E2)"}, shadow(rest))
+
+def checked(why: Maybe<&2, String>, c: Class) -> Class:
+  match why:
+    case Some{w}:
+      CNo{w}
+    case None{}:
+      c
+
+# `cname` is the mech constructor name. Its Rust function name comes back
+# from it as for `IUnit` (D7).
+def struct_item(name: String, +cname: String, named: Bool, fs: List<&2, R.Param>, gs: List<&2, R.Param>) -> Class:
+  +rust = fn_name(cname)
+  name_kept(cname, rust, fn_back(rust), CData{R.IStruct{name, rust, named, fs, gs}})
+
+def named_class(copies: List<&2, String>, name: String, cname: String, +ps: List<&2, R.Param>) -> Class:
+  +fs = rust_fields(ps)
+  checked(or_maybe(clash(ps), shadow(fs)), struct_item(name, cname, True{}, fs, getters_of(copies, fs)))
+
+def tuple_item(name: String, cname: String, r: Result<&2, &2, String, List<&2, R.Param>>) -> Class:
+  match r:
+    case Fail{why}:
+      CNo{why}
+    case Done{fs}:
+      struct_item(name, cname, False{}, fs, [])
+
+def struct_of(+copies: List<&2, String>, +name: String, +cname: String, +ps: List<&2, R.Param>) -> Class:
+  Bool.pick(Class, no_skip(ps), named_class(copies, name, cname, ps),
+    Bool.pick(Class, all_skip(ps), tuple_item(name, cname, tuple_fields(ps, tuple_names())),
+      CNo{"a constructor with named and `_` fields (E2)"}))
+
+def struct_res(+copies: List<&2, String>, +name: String, +cname: String, r: Result<&2, &2, String, List<&2, R.Param>>) -> Class:
+  match r:
+    case Fail{why}:
+      CNo{why}
+    case Done{ps}:
+      struct_of(copies, name, cname, ps)
+
+def one_ctor(ctors: List<&2, Pos.Ctor>) -> Maybe<&2, Pos.Ctor>:
+  match ctors:
+    case Con{c, Nil{}}:
+      Some{c}
+    case other:
+      None{}
+
+def no_index(xs: List<&2, Pos.Binder>) -> Bool:
+  match xs:
+    case Nil{}:
+      True{}
+    case Con{x, rest}:
+      False{}
+
+# A one-variant enum with no generic and at least one field.
+def enum_one(c: Class) -> Bool:
+  match c:
+    case CData{R.IEnum{name, Nil{}, copy, Con{R.Variant{v, Con{f, more}}, Nil{}}}}:
+      True{}
+    case other:
+      False{}
+
+# U12: such a family is a struct, not a one-variant enum.
+def struct_or(+env: Env, ctx: List<&2, Knd>, +name: String, flat: Bool, ctor: Maybe<&2, Pos.Ctor>, +c: Class) -> Class:
+  match ctor:
+    case None{}:
+      c
+    case Some{Pos.Ctor{+cname, args, res_idx, full_arity, self_rec}}:
+      Bool.pick(Class, flat && enum_one(c), struct_res(copies_of(env), name, cname, named_fields(env, ctx, name, args)), c)
+
+def classify_family(+env: Env, fam: Pos.Family) -> Class:
   match fam:
-    case Pos.Family{+name, params, indices, level, status, ctors, positive}:
+    case Pos.Family{+name, params, indices, level, status, +ctors, positive}:
       +ctx = param_kinds(params, [])
       Bool.pick(Class, Level.always_zero(level), CProp{},
-        family_class(name, gen_names(ctx, []), variants(env, ctx, name, ctors)))
+        struct_or(env, ctx, name, no_index(indices), one_ctor(ctors),
+          family_class(name, gen_names(ctx, []), variants(env, ctx, name, ctors))))
 
 def prop_family(fam: Maybe<&2, Pos.Family>) -> Bool:
   match fam:
@@ -1008,6 +1191,7 @@ type Build is Data:
   BSame{}
   BCall{func: String, targs: List<&2, R.Ty>, want: Want}
   BCtor{family: String, ctor: String, boxes: List<&2, Bool>, want: Want}
+  BNew{func: String, boxes: List<&2, Bool>, want: Want}
   BMatch{pats: List<&2, R.Pat>, want: Want}
   BIf{true_first: Bool, want: Want}
   BClosure{params: List<&2, R.Param>, want: Want}
@@ -1153,12 +1337,18 @@ def box_flags(tys: List<&2, Maybe<&2, R.Ty>>) -> List<&2, Bool>:
 def enum_plan(ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, family: String, ctor: String, fs: List<&2, Term.T>, +tys: List<&2, Maybe<&2, R.Ty>>) -> Plan:
   Plan{kept_jobs(ks, vs, tys, fs), BCtor{family, ctor, box_flags(tys), want}}
 
+# A struct value is a call of its constructor function (E2).
+def new_plan(ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, func: String, fs: List<&2, Term.T>, +tys: List<&2, Maybe<&2, R.Ty>>) -> Plan:
+  Plan{kept_jobs(ks, vs, tys, fs), BNew{func, box_flags(tys), want}}
+
 def item_plan(+env: Env, ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, fam: String, +c: String, fs: List<&2, Term.T>, item: R.Item) -> Plan:
   match item:
     case R.IUnit{name, ctor}:
       leaf(wanted(want, R.XCall{ctor, [], []}))
     case R.IEnum{name, generics, copy, variants}:
       enum_plan(ks, vs, want, name, upper_first(c), fs, ctor_tys(env, Global.find_family(fam, globals_of(env)), c))
+    case R.IStruct{name, ctor, named, fields, getters}:
+      new_plan(ks, vs, want, ctor, fs, ctor_tys(env, Global.find_family(fam, globals_of(env)), c))
     case other:
       no_plan("a constructor of an item that is not data")
 
@@ -1536,6 +1726,36 @@ def bool_plan(+ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want,
 def match_plan(ks: List<&2, Knd>, vs: List<&2, Maybe<&2, R.Param>>, want: Want, by_value: Bool, scrut: Term.T, +bs: List<&2, Br>) -> Plan:
   Plan{Job{ks, vs, Bool.pick(Want, by_value, WOwn{}, WRef{}), scrut} <> br_jobs(bs), BMatch{br_pats(bs), want}}
 
+# A case on a struct matches `S { a: x, b: _ }`, or `N(x, _)` for a tuple
+# struct (E2).
+def struct_field_names(ps: List<&2, R.Param>) -> List<&2, String>:
+  match ps:
+    case Nil{}:
+      []
+    case Con{R.Param{n, t}, rest}:
+      n <> struct_field_names(rest)
+
+def struct_br(named: Bool, names: List<&2, String>, b: Br) -> Br:
+  match b:
+    case Br{R.PCtor{fam, c, binds}, job}:
+      Br{R.PStruct{fam, named, names, binds}, job}
+    case Br{R.PStruct{fam, n, fs, binds}, job}:
+      Br{R.PStruct{fam, n, fs, binds}, job}
+
+@unsafe def struct_arms(+named: Bool, +names: List<&2, String>, bs: List<&2, Br>) -> List<&2, Br>:
+  match bs:
+    case Nil{}:
+      []
+    case Con{b, rest}:
+      struct_br(named, names, b) <> struct_arms(named, names, rest)
+
+def struct_brs(item: R.Item, bs: List<&2, Br>) -> List<&2, Br>:
+  match item:
+    case R.IStruct{name, ctor, +named, fields, getters}:
+      struct_arms(named, Bool.pick(List<&2, String>, named, struct_field_names(fields), []), bs)
+    case other:
+      bs
+
 def elim_plan(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, want: Want, +fam: String, scrut: Term.T, branches: List<&2, C.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>>, cls: Class) -> Plan:
   match cls:
     case CProp{}:
@@ -1544,7 +1764,7 @@ def elim_plan(+env: Env, +ks: List<&2, Knd>, +vs: List<&2, Maybe<&2, R.Param>>, 
       bool_plan(ks, vs, want, scrut, branches)
     case CData{item}:
       match_plan(ks, vs, want, has(copies_of(env), fam), scrut,
-        brs(env, ks, vs, fam, Global.find_family(fam, globals_of(env)), branches))
+        struct_brs(item, brs(env, ks, vs, fam, Global.find_family(fam, globals_of(env)), branches)))
     case other:
       no_plan("a case on a family outside the M0 fragment")
 
@@ -1873,6 +2093,8 @@ def built(r: Result<&2, &2, String, List<&2, R.Ex>>, b: Build) -> Rx:
           wanted(want, R.XCall{func, targs, xs})
         case BCtor{family, ctor, boxes, want}:
           wanted(want, R.XCtor{family, ctor, box_args(boxes, xs)})
+        case BNew{func, boxes, want}:
+          wanted(want, R.XCall{func, [], box_args(boxes, xs)})
         case BMatch{pats, want}:
           match_rx(want, pats, xs)
         case BIf{true_first, want}:

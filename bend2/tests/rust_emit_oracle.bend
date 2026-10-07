@@ -61,8 +61,40 @@ def field_items(vals: List<&2, V.T>, rest: List<&2, Item>) -> List<&2, Item>:
     case Con{v, more}:
       IText{"("} <> (IVal{v} <> more_items(more, rest))
 
+# `{:?}` of a named struct: `S { a: 1, b: true }` (E2).
+def named_more(names: List<&2, R.Param>, vals: List<&2, V.T>, rest: List<&2, Item>) -> List<&2, Item>:
+  match names:
+    case Nil{}:
+      IText{" }"} <> rest
+    case Con{R.Param{n, t}, more}:
+      match vals:
+        case Nil{}:
+          IText{" }"} <> rest
+        case Con{v, vs}:
+          IText{", " ++ n ++ ": "} <> (IVal{v} <> named_more(more, vs, rest))
+
+def named_items(names: List<&2, R.Param>, vals: List<&2, V.T>, rest: List<&2, Item>) -> List<&2, Item>:
+  match names:
+    case Nil{}:
+      rest
+    case Con{R.Param{n, t}, more}:
+      match vals:
+        case Nil{}:
+          rest
+        case Con{v, vs}:
+          IText{" { " ++ n ++ ": "} <> (IVal{v} <> named_more(more, vs, rest))
+
+def struct_items(name: String, named: Bool, fields: List<&2, R.Param>, vals: List<&2, V.T>, rest: List<&2, Item>) -> List<&2, Item>:
+  match named:
+    case True{}:
+      IText{name} <> named_items(fields, vals, rest)
+    case False{}:
+      IText{name} <> field_items(vals, rest)
+
 def ctor_items(c: String, args: List<&2, V.T>, tys: List<&2, Maybe<&2, R.Ty>>, cls: Et.Class, rest: List<&2, Item>) -> Result<&2, &2, String, List<&2, Item>>:
   match cls:
+    case Et.CData{R.IStruct{name, ctor, named, fields, getters}}:
+      Done{struct_items(name, named, fields, kept(tys, args), rest)}
     case Et.CBool{}:
       Done{IText{Bool.pick(String, String.eq(c, "mechTrue"), "true", "false")} <> rest}
     case Et.CData{R.IUnit{name, ctor}}:
