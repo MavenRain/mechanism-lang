@@ -1,0 +1,65 @@
+-- Check this file after prelude/init.mech and O1.mech.
+-- Hold must participate in the same aggregation laws as Release and Refund.
+def holdRule : (n : MechNat) -> Tally n -> Decision :=
+  fun (n : MechNat) (t : Tally n) => dhold
+
+def holdAgg : (n : MechNat) ->
+    Agg n (fun (x : Config n) => holdRule n (orbit n x)) :=
+  fun (n : MechNat) => mkConst n (holdRule n)
+
+def holdSelf : (n : MechNat) ->
+    Self n (fun (x : Config n) => holdRule n (orbit n x)) :=
+  fun (n : MechNat) =>
+    fact2bwd n (fun (x : Config n) => holdRule n (orbit n x)) (holdAgg n)
+
+def holdSelfRule : (n : MechNat) -> (t : Tally n) ->
+    MechEq Decision
+      (aggL n (fun (x : Config n) => holdRule n (orbit n x))
+        (fact2fwd n (fun (x : Config n) => holdRule n (orbit n x)) (holdSelf n)) t)
+      dhold :=
+  fun (n : MechNat) (t : Tally n) => mechRefl Decision dhold
+
+def notHold : Decision -> Type 0 :=
+  fun (d : Decision) =>
+    case d as self in Decision return Type 0 with
+    | dyes => MechUnit
+    | dno => MechUnit
+    | dhold => MechEmpty
+
+def releaseHoldClash : MechEq Decision dyes dhold -> MechEmpty :=
+  fun (e : MechEq Decision dyes dhold) =>
+    mechTransport Decision notHold dyes dhold e mechUnit
+
+def refundHoldClash : MechEq Decision dno dhold -> MechEmpty :=
+  fun (e : MechEq Decision dno dhold) =>
+    mechTransport Decision notHold dno dhold e mechUnit
+
+-- The Kan round trip describes the returned Kan, before projection to Agg.
+def checkKanRule : (n : MechNat) -> (0 F : Config n -> Decision) -> (k : Kan n F) ->
+    (t : Tally n) ->
+    MechEq Decision ((toKan n F (fromKan n F k)).1 t) (k.1 t) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) (t : Tally n) =>
+    tripK n F k t
+
+def checkKanUnit : (n : MechNat) -> (0 F : Config n -> Decision) -> (k : Kan n F) ->
+    (x : Config n) -> (0 P : MechEq Decision (F x) (k.1 (orbit n x)) -> Type 0) ->
+    P ((toKan n F (fromKan n F k)).2.1 x) -> P (k.2.1 x) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) (x : Config n)
+    (0 P : MechEq Decision (F x) (k.1 (orbit n x)) -> Type 0)
+    (v : P ((toKan n F (fromKan n F k)).2.1 x)) => tripKUnit n F k x P v
+
+-- Swapping member positions preserves the tally and the governed Hold result.
+def twoVoters : MechNat := mechSucc (mechSucc mechZero)
+
+def yesNo : Config twoVoters := (byes, (bno, mechUnit))
+
+def noYes : Config twoVoters := (bno, (byes, mechUnit))
+
+def swapOrbit : MechEq (Tally twoVoters) (orbit twoVoters yesNo) (orbit twoVoters noYes) :=
+  mechRefl (Tally twoVoters) (orbit twoVoters yesNo)
+
+def holdSwap : MechEq Decision
+    (holdRule twoVoters (orbit twoVoters yesNo))
+    (holdRule twoVoters (orbit twoVoters noYes)) :=
+  fact3fwd twoVoters (fun (x : Config twoVoters) => holdRule twoVoters (orbit twoVoters x))
+    (holdAgg twoVoters) yesNo noYes swapOrbit

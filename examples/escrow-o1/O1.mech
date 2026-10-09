@@ -1,0 +1,323 @@
+-- Escrow vote aggregation (O1), ported from escrow-lang.
+-- Check: join prelude/init.mech and this file with a newline, then run
+-- `mech.exe check` on the result (see README.md in this directory).
+-- A decision F on configurations factors through the tally (orbit). Agg n F
+-- is the aggregation, Kan n F is the local Kan record, and toKan and fromKan
+-- go between them. Facts 1, 2 and 3 hold in both directions. Each law has a
+-- definition. The file has no hole and no axiom.
+
+-- O1 rung 3, section 1: ballots, configurations, tallies, insert, orbit, section.
+mu Ballot : Type 0 with
+| byes : Ballot
+| bno : Ballot
+| babs : Ballot
+
+def rec Config : MechNat -> Type 0 :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Type 0 with
+    | mechZero => MechUnit
+    | mechSucc p => (v : Ballot) * Config p
+
+def rec TB : MechNat -> Type 0 :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Type 0 with
+    | mechZero => MechUnit
+    | mechSucc p => MechSum MechUnit (TB p)
+
+def rec Tally : MechNat -> Type 0 :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Type 0 with
+    | mechZero => MechUnit
+    | mechSucc p => MechSum (TB (mechSucc p)) (Tally p)
+
+def rec insB : (n : MechNat) -> TB n -> TB (mechSucc n) :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return TB self -> TB (mechSucc self) with
+    | mechZero => fun (b : TB mechZero) => mechInl mechUnit
+    | mechSucc p => fun (b : TB (mechSucc p)) =>
+        case b as self in MechSum return TB (mechSucc (mechSucc p)) with
+        | mechInl u => mechInl mechUnit
+        | mechInr c => mechInr (insB p c)
+
+def rec insNo : (n : MechNat) -> Tally n -> Tally (mechSucc n) :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Tally self -> Tally (mechSucc self) with
+    | mechZero => fun (t : Tally mechZero) => mechInl (mechInr t)
+    | mechSucc p => fun (t : Tally (mechSucc p)) =>
+        case t as self in MechSum return Tally (mechSucc (mechSucc p)) with
+        | mechInl b => mechInl (mechInr b)
+        | mechInr s => mechInr (insNo p s)
+
+def rec insAbs : (n : MechNat) -> Tally n -> Tally (mechSucc n) :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Tally self -> Tally (mechSucc self) with
+    | mechZero => fun (t : Tally mechZero) => mechInl (mechInl mechUnit)
+    | mechSucc p => fun (t : Tally (mechSucc p)) =>
+        case t as self in MechSum return Tally (mechSucc (mechSucc p)) with
+        | mechInl b => mechInl (insB (mechSucc p) b)
+        | mechInr s => mechInr (insAbs p s)
+
+def ins : Ballot -> (n : MechNat) -> Tally n -> Tally (mechSucc n) :=
+  fun (v : Ballot) (n : MechNat) (t : Tally n) =>
+    case v as self in Ballot return Tally (mechSucc n) with
+    | byes => mechInr t
+    | bno => insNo n t
+    | babs => insAbs n t
+
+def rec rep : (n : MechNat) -> Config n :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Config self with
+    | mechZero => mechUnit
+    | mechSucc p => (babs, rep p)
+
+def rec orbit : (n : MechNat) -> Config n -> Tally n :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Config self -> Tally self with
+    | mechZero => fun (x : Config mechZero) => mechUnit
+    | mechSucc p => fun (x : Config (mechSucc p)) => ins x.1 p (orbit p x.2)
+
+def rec secB : (n : MechNat) -> TB n -> Config n :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return TB self -> Config self with
+    | mechZero => fun (b : TB mechZero) => mechUnit
+    | mechSucc p => fun (b : TB (mechSucc p)) =>
+        case b as self in MechSum return Config (mechSucc p) with
+        | mechInl u => rep (mechSucc p)
+        | mechInr c => (bno, secB p c)
+
+def rec sec : (n : MechNat) -> Tally n -> Config n :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return Tally self -> Config self with
+    | mechZero => fun (t : Tally mechZero) => mechUnit
+    | mechSucc p => fun (t : Tally (mechSucc p)) =>
+        case t as self in MechSum return Config (mechSucc p) with
+        | mechInl b => secB (mechSucc p) b
+        | mechInr s => (byes, sec p s)
+
+def liftB : (n : MechNat) -> TB n -> Tally n :=
+  fun (n : MechNat) =>
+    case n as self in MechNat return TB self -> Tally self with
+    | mechZero => fun (b : TB mechZero) => b
+    | mechSucc p => fun (b : TB (mechSucc p)) => mechInl b
+
+-- Section 2: the orbit of the section is the identity on tallies.
+def stop : (n : MechNat) -> Tally (mechSucc n) :=
+  fun (n : MechNat) => mechInl (mechInl mechUnit)
+
+def noB : (p : MechNat) -> TB p -> Tally (mechSucc p) :=
+  fun (p : MechNat) (b : TB p) => mechInl (mechInr b)
+
+def insAbsStop : (p : MechNat) ->
+    MechEq (Tally (mechSucc (mechSucc p))) (stop (mechSucc p)) (insAbs (mechSucc p) (stop p)) :=
+  fun (p : MechNat) => mechRefl (Tally (mechSucc (mechSucc p))) (stop (mechSucc p))
+
+def rec repOrbit : (p : MechNat) ->
+    MechEq (Tally (mechSucc p)) (stop p) (orbit (mechSucc p) (rep (mechSucc p))) :=
+  fun (p : MechNat) =>
+    case p as self in MechNat
+      return MechEq (Tally (mechSucc self)) (stop self) (orbit (mechSucc self) (rep (mechSucc self))) with
+    | mechZero => mechRefl (Tally (mechSucc mechZero)) (stop mechZero)
+    | mechSucc q =>
+        mechTrans (Tally (mechSucc (mechSucc q))) (stop (mechSucc q))
+          (insAbs (mechSucc q) (stop q))
+          (insAbs (mechSucc q) (orbit (mechSucc q) (rep (mechSucc q))))
+          (insAbsStop q)
+          (mechCongr (Tally (mechSucc q)) (Tally (mechSucc (mechSucc q))) (insAbs (mechSucc q))
+            (stop q) (orbit (mechSucc q) (rep (mechSucc q))) (repOrbit q))
+
+def insNoLift : (p : MechNat) -> (b : TB p) ->
+    MechEq (Tally (mechSucc p)) (noB p b) (insNo p (liftB p b)) :=
+  fun (p : MechNat) =>
+    case p as self in MechNat
+      return (b : TB self) -> MechEq (Tally (mechSucc self)) (noB self b) (insNo self (liftB self b)) with
+    | mechZero => fun (b : TB mechZero) => mechRefl (Tally (mechSucc mechZero)) (noB mechZero b)
+    | mechSucc q => fun (b : TB (mechSucc q)) =>
+        mechRefl (Tally (mechSucc (mechSucc q))) (noB (mechSucc q) b)
+
+def rec secBOrbit : (n : MechNat) -> (b : TB n) ->
+    MechEq (Tally n) (liftB n b) (orbit n (secB n b)) :=
+  fun (n : MechNat) =>
+    case n as self in MechNat
+      return (b : TB self) -> MechEq (Tally self) (liftB self b) (orbit self (secB self b)) with
+    | mechZero => fun (b : TB mechZero) =>
+        (case b as self in MechUnit
+          return MechEq (Tally mechZero) (liftB mechZero self) (orbit mechZero (secB mechZero self)) with
+        | mechUnit => mechRefl (Tally mechZero) mechUnit)
+    | mechSucc p => fun (b : TB (mechSucc p)) =>
+        case b as self in MechSum
+          return MechEq (Tally (mechSucc p)) (liftB (mechSucc p) self)
+            (orbit (mechSucc p) (secB (mechSucc p) self)) with
+        | mechInl u =>
+            (case u as self in MechUnit
+              return MechEq (Tally (mechSucc p)) (liftB (mechSucc p) (mechInl self))
+                (orbit (mechSucc p) (secB (mechSucc p) (mechInl self))) with
+            | mechUnit => repOrbit p)
+        | mechInr c =>
+            mechTrans (Tally (mechSucc p)) (noB p c) (insNo p (liftB p c))
+              (insNo p (orbit p (secB p c)))
+              (insNoLift p c)
+              (mechCongr (Tally p) (Tally (mechSucc p)) (insNo p)
+                (liftB p c) (orbit p (secB p c)) (secBOrbit p c))
+
+def rec secOrbit : (n : MechNat) -> (t : Tally n) -> MechEq (Tally n) t (orbit n (sec n t)) :=
+  fun (n : MechNat) =>
+    case n as self in MechNat
+      return (t : Tally self) -> MechEq (Tally self) t (orbit self (sec self t)) with
+    | mechZero => fun (t : Tally mechZero) =>
+        (case t as self in MechUnit
+          return MechEq (Tally mechZero) self (orbit mechZero (sec mechZero self)) with
+        | mechUnit => mechRefl (Tally mechZero) mechUnit)
+    | mechSucc p => fun (t : Tally (mechSucc p)) =>
+        case t as self in MechSum
+          return MechEq (Tally (mechSucc p)) self (orbit (mechSucc p) (sec (mechSucc p) self)) with
+        | mechInl b => secBOrbit (mechSucc p) b
+        | mechInr s =>
+            mechCongr (Tally p) (Tally (mechSucc p)) (ins byes p) s (orbit p (sec p s)) (secOrbit p s)
+
+def orbitSec : (n : MechNat) -> (t : Tally n) -> MechEq (Tally n) (orbit n (sec n t)) t :=
+  fun (n : MechNat) (t : Tally n) => mechSymm (Tally n) t (orbit n (sec n t)) (secOrbit n t)
+
+-- Section 3: Release, Refund and Hold decisions, the clash, and proof uniqueness.
+-- dyes denotes Release, dno denotes Refund, and dhold denotes Hold.
+mu Decision : Type 0 with
+| dyes : Decision
+| dno : Decision
+| dhold : Decision
+
+def disc : Decision -> Type 0 :=
+  fun (d : Decision) =>
+    case d as self in Decision return Type 0 with
+    | dyes => MechUnit
+    | dno => MechEmpty
+    | dhold => MechEmpty
+
+def clashYN : MechEq Decision dyes dno -> MechEmpty :=
+  fun (e : MechEq Decision dyes dno) => mechTransport Decision disc dyes dno e mechUnit
+
+def uip : (a : Decision) -> (b : Decision) -> (0 P : MechEq Decision a b -> Type 0) ->
+    (0 q1 : MechEq Decision a b) -> (0 q2 : MechEq Decision a b) -> P q1 -> P q2 :=
+  fun (a : Decision) (b : Decision) (0 P : MechEq Decision a b -> Type 0)
+    (0 q1 : MechEq Decision a b) (0 q2 : MechEq Decision a b) (v : P q1) => v
+
+-- Section 4: aggregations, the local Kan record, toKan and fromKan.
+def Agg : (n : MechNat) -> (0 F : Config n -> Decision) -> Type 0 :=
+  fun (n : MechNat) (0 F : Config n -> Decision) =>
+    (L : Tally n -> Decision) * ((x : Config n) -> MechEq Decision (F x) (L (orbit n x)))
+
+def aggL : (n : MechNat) -> (0 F : Config n -> Decision) -> Agg n F -> Tally n -> Decision :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) => a.1
+
+def descAt : (n : MechNat) -> (0 F : Config n -> Decision) -> (0 L : Tally n -> Decision) ->
+    (t : Tally n) -> MechEq Decision (F (sec n t)) (L (orbit n (sec n t))) ->
+    MechEq Decision (L t) (F (sec n t)) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (0 L : Tally n -> Decision) (t : Tally n)
+    (e : MechEq Decision (F (sec n t)) (L (orbit n (sec n t)))) =>
+      mechTrans Decision (L t) (L (orbit n (sec n t))) (F (sec n t))
+        (mechCongr (Tally n) Decision L t (orbit n (sec n t)) (secOrbit n t))
+        (mechSymm Decision (F (sec n t)) (L (orbit n (sec n t))) e)
+
+def facAt : (n : MechNat) -> (0 F : Config n -> Decision) -> (0 L : Tally n -> Decision) ->
+    (0 G : Tally n -> Decision) -> (t : Tally n) ->
+    MechEq Decision (F (sec n t)) (L (orbit n (sec n t))) ->
+    MechEq Decision (F (sec n t)) (G (orbit n (sec n t))) ->
+    MechEq Decision (L t) (G t) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (0 L : Tally n -> Decision)
+    (0 G : Tally n -> Decision) (t : Tally n)
+    (u : MechEq Decision (F (sec n t)) (L (orbit n (sec n t))))
+    (w : MechEq Decision (F (sec n t)) (G (orbit n (sec n t)))) =>
+      mechTrans Decision (L t) (L (orbit n (sec n t))) (G t)
+        (mechCongr (Tally n) Decision L t (orbit n (sec n t)) (secOrbit n t))
+        (mechTrans Decision (L (orbit n (sec n t))) (F (sec n t)) (G t)
+          (mechSymm Decision (F (sec n t)) (L (orbit n (sec n t))) u)
+          (mechTrans Decision (F (sec n t)) (G (orbit n (sec n t))) (G t) w
+            (mechCongr (Tally n) Decision G (orbit n (sec n t)) t (orbitSec n t))))
+
+def Kan : (n : MechNat) -> (0 F : Config n -> Decision) -> Type 1 :=
+  fun (n : MechNat) (0 F : Config n -> Decision) =>
+    (L : Tally n -> Decision) *
+    ((u : (x : Config n) -> MechEq Decision (F x) (L (orbit n x))) *
+    ((d : (t : Tally n) -> MechEq Decision (F (sec n t)) (L (orbit n (sec n t))) ->
+          MechEq Decision (L t) (F (sec n t))) *
+    ((f : (0 G : Tally n -> Decision) -> (t : Tally n) ->
+          MechEq Decision (F (sec n t)) (L (orbit n (sec n t))) ->
+          MechEq Decision (F (sec n t)) (G (orbit n (sec n t))) ->
+          MechEq Decision (L t) (G t)) *
+     ((a : Decision) -> (b : Decision) -> (0 P : MechEq Decision a b -> Type 0) ->
+          (0 q1 : MechEq Decision a b) -> (0 q2 : MechEq Decision a b) -> P q1 -> P q2))))
+
+def toKan : (n : MechNat) -> (0 F : Config n -> Decision) -> Agg n F -> Kan n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) =>
+    (a.1, (a.2, (descAt n F a.1, (facAt n F a.1, uip))))
+
+def fromKan : (n : MechNat) -> (0 F : Config n -> Decision) -> Kan n F -> Agg n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) => (k.1, k.2.1)
+
+-- Section 5: the round trips on L and on the unit. The checker has no pair eta.
+-- tripA reconstructs the pair; tripK and tripKUnit describe the returned Kan.
+def mkAgg : (n : MechNat) -> (0 F : Config n -> Decision) -> (L : Tally n -> Decision) ->
+    ((x : Config n) -> MechEq Decision (F x) (L (orbit n x))) -> Agg n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (L : Tally n -> Decision)
+    (u : (x : Config n) -> MechEq Decision (F x) (L (orbit n x))) => (L, u)
+
+def tripA : (n : MechNat) -> (0 F : Config n -> Decision) -> (a : Agg n F) ->
+    MechEq (Agg n F) (fromKan n F (toKan n F a)) (mkAgg n F a.1 a.2) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) =>
+    mechRefl (Agg n F) (mkAgg n F a.1 a.2)
+
+def tripK : (n : MechNat) -> (0 F : Config n -> Decision) -> (k : Kan n F) ->
+    (t : Tally n) -> MechEq Decision ((toKan n F (fromKan n F k)).1 t) (k.1 t) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) (t : Tally n) =>
+    mechRefl Decision (k.1 t)
+
+def tripKUnit : (n : MechNat) -> (0 F : Config n -> Decision) -> (k : Kan n F) ->
+    (x : Config n) -> (0 P : MechEq Decision (F x) (k.1 (orbit n x)) -> Type 0) ->
+    P ((toKan n F (fromKan n F k)).2.1 x) -> P (k.2.1 x) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) (x : Config n)
+    (0 P : MechEq Decision (F x) (k.1 (orbit n x)) -> Type 0)
+    (v : P ((toKan n F (fromKan n F k)).2.1 x)) => v
+
+-- Section 6: constants, fact 1, the governed decision, fact 2 forward, fact 3 backward.
+def mkConst : (n : MechNat) -> (H : Tally n -> Decision) ->
+    Agg n (fun (x : Config n) => H (orbit n x)) :=
+  fun (n : MechNat) (H : Tally n -> Decision) =>
+    (H, (fun (x : Config n) => mechRefl Decision (H (orbit n x))))
+
+def fact1 : (n : MechNat) -> (0 F : Config n -> Decision) -> (a1 : Agg n F) -> (a2 : Agg n F) ->
+    (t : Tally n) -> MechEq Decision (aggL n F a1 t) (aggL n F a2 t) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a1 : Agg n F) (a2 : Agg n F) (t : Tally n) =>
+    facAt n F a1.1 a2.1 t (a1.2 (sec n t)) (a2.2 (sec n t))
+
+def gov : (n : MechNat) -> (0 F : Config n -> Decision) -> Agg n F -> Config n -> Decision :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) (x : Config n) => a.1 (orbit n x)
+
+def Self : (n : MechNat) -> (0 F : Config n -> Decision) -> Type 0 :=
+  fun (n : MechNat) (0 F : Config n -> Decision) =>
+    (A : Agg n F) * ((x : Config n) -> MechEq Decision (gov n F A x) (F x))
+
+def fact2fwd : (n : MechNat) -> (0 F : Config n -> Decision) -> Self n F -> Agg n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (s : Self n F) => s.1
+
+def fact3bwd : (n : MechNat) -> (F : Config n -> Decision) ->
+    ((x : Config n) -> (y : Config n) -> MechEq (Tally n) (orbit n x) (orbit n y) ->
+      MechEq Decision (F x) (F y)) ->
+    Agg n F :=
+  fun (n : MechNat) (F : Config n -> Decision)
+    (c : (x : Config n) -> (y : Config n) -> MechEq (Tally n) (orbit n x) (orbit n y) ->
+      MechEq Decision (F x) (F y)) =>
+      ((fun (t : Tally n) => F (sec n t)),
+       (fun (x : Config n) => c x (sec n (orbit n x)) (secOrbit n (orbit n x))))
+
+-- Section 7: fact 2 backward and fact 3 forward (the two directions added in this port).
+def fact2bwd : (n : MechNat) -> (0 F : Config n -> Decision) -> Agg n F -> Self n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) =>
+    (a, (fun (x : Config n) => mechSymm Decision (F x) (a.1 (orbit n x)) (a.2 x)))
+
+def fact3fwd : (n : MechNat) -> (0 F : Config n -> Decision) -> (a : Agg n F) ->
+    (x : Config n) -> (y : Config n) -> MechEq (Tally n) (orbit n x) (orbit n y) ->
+    MechEq Decision (F x) (F y) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) (x : Config n) (y : Config n)
+    (h : MechEq (Tally n) (orbit n x) (orbit n y)) =>
+      mechTrans Decision (F x) (a.1 (orbit n x)) (F y) (a.2 x)
+        (mechTrans Decision (a.1 (orbit n x)) (a.1 (orbit n y)) (F y)
+          (mechCongr (Tally n) Decision a.1 (orbit n x) (orbit n y) h)
+          (mechSymm Decision (F y) (a.1 (orbit n y)) (a.2 y)))
