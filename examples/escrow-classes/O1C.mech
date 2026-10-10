@@ -1,0 +1,259 @@
+-- Escrow member classes (M8, rung 2): the O1 facts at member classes.
+-- Check: join prelude/init.mech, examples/escrow-o1/O1.mech,
+-- examples/escrow-o14/O14.mech, examples/escrow-classes/Classes.mech and
+-- this file with a newline, then run `mech.exe check` on the result.
+-- Sections 1 to 4 state O1.mech sections 4 to 7 one time, over a
+-- configuration type X, a tally type Y, a map o : X -> Y, a map s : Y -> X
+-- and a round trip r t : t = o (s t). These names end in X. Each form takes
+-- only the parameters that it uses. orbitSecX gives the other round trip
+-- (o (s t) = t) from r by mechSymm. Section 5 applies the forms at Config n:
+-- the types are the O1 types (cAggTo, cAggFrom, cKanTo, cKanFrom). Section 6
+-- applies the forms at CConfig m cs with corbit, csec and csecOrbit, thus the
+-- O1 facts are true at each class list. The instance names start with c,
+-- because the join includes O1 and O14. The file has no hole and no axiom.
+
+-- Section 1 (O1 section 4): aggregations, the local Kan record, toKanX and
+-- fromKanX.
+def AggX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) -> Type 0 :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) =>
+    (L : Y -> Decision) * ((x : X) -> MechEq Decision (F x) (L (o x)))
+
+def aggLX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) ->
+    AggX X Y o F -> Y -> Decision :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) (a : AggX X Y o F) => a.1
+
+def orbitSecX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (t : Y) -> MechEq Y (o (s t)) t :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (t : Y) =>
+      mechSymm Y t (o (s t)) (r t)
+
+def descAtX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) ->
+    (0 F : X -> Decision) -> (0 L : Y -> Decision) ->
+    (t : Y) -> MechEq Decision (F (s t)) (L (o (s t))) ->
+    MechEq Decision (L t) (F (s t)) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t)))
+    (0 F : X -> Decision) (0 L : Y -> Decision) (t : Y)
+    (e : MechEq Decision (F (s t)) (L (o (s t)))) =>
+      mechTrans Decision (L t) (L (o (s t))) (F (s t))
+        (mechCongr Y Decision L t (o (s t)) (r t))
+        (mechSymm Decision (F (s t)) (L (o (s t))) e)
+
+def facAtX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) ->
+    (0 F : X -> Decision) -> (0 L : Y -> Decision) -> (0 G : Y -> Decision) -> (t : Y) ->
+    MechEq Decision (F (s t)) (L (o (s t))) ->
+    MechEq Decision (F (s t)) (G (o (s t))) ->
+    MechEq Decision (L t) (G t) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t)))
+    (0 F : X -> Decision) (0 L : Y -> Decision) (0 G : Y -> Decision) (t : Y)
+    (u : MechEq Decision (F (s t)) (L (o (s t))))
+    (w : MechEq Decision (F (s t)) (G (o (s t)))) =>
+      mechTrans Decision (L t) (L (o (s t))) (G t)
+        (mechCongr Y Decision L t (o (s t)) (r t))
+        (mechTrans Decision (L (o (s t))) (F (s t)) (G t)
+          (mechSymm Decision (F (s t)) (L (o (s t))) u)
+          (mechTrans Decision (F (s t)) (G (o (s t))) (G t) w
+            (mechCongr Y Decision G (o (s t)) t (orbitSecX X Y o s r t))))
+
+def KanX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (0 F : X -> Decision) -> Type 1 :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X) (0 F : X -> Decision) =>
+    (L : Y -> Decision) *
+    ((u : (x : X) -> MechEq Decision (F x) (L (o x))) *
+    ((d : (t : Y) -> MechEq Decision (F (s t)) (L (o (s t))) ->
+          MechEq Decision (L t) (F (s t))) *
+    ((f : (0 G : Y -> Decision) -> (t : Y) ->
+          MechEq Decision (F (s t)) (L (o (s t))) ->
+          MechEq Decision (F (s t)) (G (o (s t))) ->
+          MechEq Decision (L t) (G t)) *
+     ((a : Decision) -> (b : Decision) -> (0 P : MechEq Decision a b -> Type 0) ->
+          (0 q1 : MechEq Decision a b) -> (0 q2 : MechEq Decision a b) -> P q1 -> P q2))))
+
+def toKanX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) ->
+    (0 F : X -> Decision) -> AggX X Y o F -> KanX X Y o s F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (0 F : X -> Decision) (a : AggX X Y o F) =>
+      (a.1, (a.2, (descAtX X Y o s r F a.1, (facAtX X Y o s r F a.1, uip))))
+
+def fromKanX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (0 F : X -> Decision) -> KanX X Y o s F -> AggX X Y o F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X) (0 F : X -> Decision)
+    (k : KanX X Y o s F) => (k.1, k.2.1)
+
+-- Section 2 (O1 section 5): the round trips on L and on the unit. The checker
+-- has no pair eta. tripAX makes the pair again; tripKX and tripKUnitX give the
+-- returned Kan record.
+def mkAggX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) ->
+    (L : Y -> Decision) -> ((x : X) -> MechEq Decision (F x) (L (o x))) -> AggX X Y o F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) (L : Y -> Decision)
+    (u : (x : X) -> MechEq Decision (F x) (L (o x))) => (L, u)
+
+def tripAX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (0 F : X -> Decision) -> (a : AggX X Y o F) ->
+    MechEq (AggX X Y o F) (fromKanX X Y o s F (toKanX X Y o s r F a)) (mkAggX X Y o F a.1 a.2) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (0 F : X -> Decision) (a : AggX X Y o F) =>
+      mechRefl (AggX X Y o F) (mkAggX X Y o F a.1 a.2)
+
+def tripKX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (0 F : X -> Decision) -> (k : KanX X Y o s F) ->
+    (t : Y) -> MechEq Decision ((toKanX X Y o s r F (fromKanX X Y o s F k)).1 t) (k.1 t) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (0 F : X -> Decision) (k : KanX X Y o s F) (t : Y) =>
+      mechRefl Decision (k.1 t)
+
+def tripKUnitX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (0 F : X -> Decision) -> (k : KanX X Y o s F) ->
+    (x : X) -> (0 P : MechEq Decision (F x) (k.1 (o x)) -> Type 0) ->
+    P ((toKanX X Y o s r F (fromKanX X Y o s F k)).2.1 x) -> P (k.2.1 x) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (0 F : X -> Decision) (k : KanX X Y o s F) (x : X)
+    (0 P : MechEq Decision (F x) (k.1 (o x)) -> Type 0)
+    (v : P ((toKanX X Y o s r F (fromKanX X Y o s F k)).2.1 x)) => v
+
+-- Section 3 (O1 section 6): constants, fact 1, the governed decision, fact 2
+-- forward, fact 3 backward. fact1X uses s, govX uses o, and fact3bwdX uses o,
+-- s and F in the term, thus these parameters are not erased there.
+def mkConstX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (H : Y -> Decision) ->
+    AggX X Y o (fun (x : X) => H (o x)) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (H : Y -> Decision) =>
+    (H, (fun (x : X) => mechRefl Decision (H (o x))))
+
+def fact1X : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (0 F : X -> Decision) ->
+    (a1 : AggX X Y o F) -> (a2 : AggX X Y o F) -> (t : Y) ->
+    MechEq Decision (aggLX X Y o F a1 t) (aggLX X Y o F a2 t) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (0 F : X -> Decision)
+    (a1 : AggX X Y o F) (a2 : AggX X Y o F) (t : Y) =>
+      facAtX X Y o s r F a1.1 a2.1 t (a1.2 (s t)) (a2.2 (s t))
+
+def govX : (0 X : Type 0) -> (0 Y : Type 0) -> (o : X -> Y) -> (0 F : X -> Decision) ->
+    AggX X Y o F -> X -> Decision :=
+  fun (0 X : Type 0) (0 Y : Type 0) (o : X -> Y) (0 F : X -> Decision) (a : AggX X Y o F)
+    (x : X) => a.1 (o x)
+
+def SelfX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) -> Type 0 :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) =>
+    (A : AggX X Y o F) * ((x : X) -> MechEq Decision (govX X Y o F A x) (F x))
+
+def fact2fwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) ->
+    SelfX X Y o F -> AggX X Y o F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) (p : SelfX X Y o F) => p.1
+
+def fact3bwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (o : X -> Y) -> (s : Y -> X) ->
+    (r : (t : Y) -> MechEq Y t (o (s t))) -> (F : X -> Decision) ->
+    ((x : X) -> (y : X) -> MechEq Y (o x) (o y) -> MechEq Decision (F x) (F y)) ->
+    AggX X Y o F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (o : X -> Y) (s : Y -> X)
+    (r : (t : Y) -> MechEq Y t (o (s t))) (F : X -> Decision)
+    (c : (x : X) -> (y : X) -> MechEq Y (o x) (o y) -> MechEq Decision (F x) (F y)) =>
+      ((fun (t : Y) => F (s t)),
+       (fun (x : X) => c x (s (o x)) (r (o x))))
+
+-- Section 4 (O1 section 7): fact 2 backward and fact 3 forward.
+def fact2bwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) ->
+    AggX X Y o F -> SelfX X Y o F :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) (a : AggX X Y o F) =>
+    (a, (fun (x : X) => mechSymm Decision (F x) (a.1 (o x)) (a.2 x)))
+
+def fact3fwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) -> (0 F : X -> Decision) ->
+    (a : AggX X Y o F) -> (x : X) -> (y : X) -> MechEq Y (o x) (o y) ->
+    MechEq Decision (F x) (F y) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (0 F : X -> Decision) (a : AggX X Y o F)
+    (x : X) (y : X) (h : MechEq Y (o x) (o y)) =>
+      mechTrans Decision (F x) (a.1 (o x)) (F y) (a.2 x)
+        (mechTrans Decision (a.1 (o x)) (a.1 (o y)) (F y)
+          (mechCongr Y Decision a.1 (o x) (o y) h)
+          (mechSymm Decision (F y) (a.1 (o y)) (a.2 y)))
+
+-- Section 5: the forms at Config n. AggX and KanX at Config n, Tally n,
+-- orbit n and sec n are the O1 types Agg n F and Kan n F, thus each map is
+-- the identity. cDescAtN is descAtX at secOrbit n.
+def cAggTo : (n : MechNat) -> (0 F : Config n -> Decision) ->
+    Agg n F -> AggX (Config n) (Tally n) (orbit n) F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) => a
+
+def cAggFrom : (n : MechNat) -> (0 F : Config n -> Decision) ->
+    AggX (Config n) (Tally n) (orbit n) F -> Agg n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : AggX (Config n) (Tally n) (orbit n) F) => a
+
+def cKanTo : (n : MechNat) -> (0 F : Config n -> Decision) ->
+    Kan n F -> KanX (Config n) (Tally n) (orbit n) (sec n) F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : Kan n F) => k
+
+def cKanFrom : (n : MechNat) -> (0 F : Config n -> Decision) ->
+    KanX (Config n) (Tally n) (orbit n) (sec n) F -> Kan n F :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (k : KanX (Config n) (Tally n) (orbit n) (sec n) F) => k
+
+def cDescAtN : (n : MechNat) -> (0 F : Config n -> Decision) -> (0 L : Tally n -> Decision) ->
+    (t : Tally n) -> MechEq Decision (F (sec n t)) (L (orbit n (sec n t))) ->
+    MechEq Decision (L t) (F (sec n t)) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (0 L : Tally n -> Decision) (t : Tally n)
+    (e : MechEq Decision (F (sec n t)) (L (orbit n (sec n t)))) =>
+      descAtX (Config n) (Tally n) (orbit n) (sec n) (secOrbit n) F L t e
+
+-- Section 6: the forms at CConfig m cs, CTally m cs, corbit m cs and
+-- csec m cs, with the round trip csecOrbit m cs (Classes.mech section 2).
+def cDescAtC : (m : MechNat) -> (cs : CSizes m) ->
+    (0 F : CConfig m cs -> Decision) -> (0 L : CTally m cs -> Decision) ->
+    (t : CTally m cs) -> MechEq Decision (F (csec m cs t)) (L (corbit m cs (csec m cs t))) ->
+    MechEq Decision (L t) (F (csec m cs t)) :=
+  fun (m : MechNat) (cs : CSizes m)
+    (0 F : CConfig m cs -> Decision) (0 L : CTally m cs -> Decision) (t : CTally m cs)
+    (e : MechEq Decision (F (csec m cs t)) (L (corbit m cs (csec m cs t)))) =>
+      descAtX (CConfig m cs) (CTally m cs) (corbit m cs) (csec m cs) (csecOrbit m cs) F L t e
+
+def cToKanC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    AggX (CConfig m cs) (CTally m cs) (corbit m cs) F ->
+    KanX (CConfig m cs) (CTally m cs) (corbit m cs) (csec m cs) F :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) =>
+      toKanX (CConfig m cs) (CTally m cs) (corbit m cs) (csec m cs) (csecOrbit m cs) F a
+
+def cFact1C : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    (a1 : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) ->
+    (a2 : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) -> (t : CTally m cs) ->
+    MechEq Decision (a1.1 t) (a2.1 t) :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a1 : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F)
+    (a2 : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) (t : CTally m cs) =>
+      fact1X (CConfig m cs) (CTally m cs) (corbit m cs) (csec m cs) (csecOrbit m cs) F a1 a2 t
+
+def cFact2fwdC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    SelfX (CConfig m cs) (CTally m cs) (corbit m cs) F ->
+    AggX (CConfig m cs) (CTally m cs) (corbit m cs) F :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (p : SelfX (CConfig m cs) (CTally m cs) (corbit m cs) F) =>
+      fact2fwdX (CConfig m cs) (CTally m cs) (corbit m cs) F p
+
+def cFact2bwdC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    AggX (CConfig m cs) (CTally m cs) (corbit m cs) F ->
+    SelfX (CConfig m cs) (CTally m cs) (corbit m cs) F :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) =>
+      fact2bwdX (CConfig m cs) (CTally m cs) (corbit m cs) F a
+
+def cFact3bwdC : (m : MechNat) -> (cs : CSizes m) -> (F : CConfig m cs -> Decision) ->
+    ((x : CConfig m cs) -> (y : CConfig m cs) ->
+      MechEq (CTally m cs) (corbit m cs x) (corbit m cs y) -> MechEq Decision (F x) (F y)) ->
+    AggX (CConfig m cs) (CTally m cs) (corbit m cs) F :=
+  fun (m : MechNat) (cs : CSizes m) (F : CConfig m cs -> Decision)
+    (c : (x : CConfig m cs) -> (y : CConfig m cs) ->
+      MechEq (CTally m cs) (corbit m cs x) (corbit m cs y) -> MechEq Decision (F x) (F y)) =>
+      fact3bwdX (CConfig m cs) (CTally m cs) (corbit m cs) (csec m cs) (csecOrbit m cs) F c
+
+def cFact3fwdC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) ->
+    (x : CConfig m cs) -> (y : CConfig m cs) ->
+    MechEq (CTally m cs) (corbit m cs x) (corbit m cs y) -> MechEq Decision (F x) (F y) :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F)
+    (x : CConfig m cs) (y : CConfig m cs)
+    (h : MechEq (CTally m cs) (corbit m cs x) (corbit m cs y)) =>
+      fact3fwdX (CConfig m cs) (CTally m cs) (corbit m cs) F a x y h
