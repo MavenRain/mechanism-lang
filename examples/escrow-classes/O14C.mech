@@ -1,0 +1,138 @@
+-- Escrow member classes (M8, rung 2): the decision flip (O14) at a class list.
+-- Check: join prelude/init.mech, examples/escrow-o1/O1.mech,
+-- examples/escrow-o14/O14.mech, Classes.mech, O1C.mech and this file with a
+-- newline, then run `mech.exe check` on the result (see README.md in this
+-- directory). Section 1 gives the flip on CConfig m cs and on CTally m cs:
+-- flipC and flipT at each class. Section 2 proves corbitFlip: corbit commutes
+-- with the flip at cs, by orbitFlip at each class. Section 3 states flipFwd
+-- and flipBwd of O14.mech one time, over a type X of configurations, a type Y
+-- of tallies, a map o : X -> Y, the flips on X, Y and Decision, and the
+-- orbitFlip form as a hypothesis. Sections 4 and 5 apply these forms at
+-- Config n and at CConfig m cs. O14.mech does not change. The file has no
+-- hole and no axiom.
+
+-- Section 1: the flip at cs. cflipC applies flipC and cflipT applies flipT at
+-- each class, by case on CPair, as corbit applies orbit.
+
+def rec cflipC : (m : MechNat) -> (cs : CSizes m) -> CConfig m cs -> CConfig m cs :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return (cs : CSizes self) -> CConfig self cs -> CConfig self cs with
+    | mechZero => fun (cs : CSizes mechZero) (x : CConfig mechZero cs) => mechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (x : CConfig (mechSucc p) cs) =>
+        case x as self in CPair return CConfig (mechSucc p) cs with
+        | cpair c r => cpair (flipC cs.1 c) (cflipC p cs.2 r)
+
+def rec cflipT : (m : MechNat) -> (cs : CSizes m) -> CTally m cs -> CTally m cs :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return (cs : CSizes self) -> CTally self cs -> CTally self cs with
+    | mechZero => fun (cs : CSizes mechZero) (t : CTally mechZero cs) => mechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (t : CTally (mechSucc p) cs) =>
+        case t as self in CPair return CTally (mechSucc p) cs with
+        | cpair a r => cpair (flipT cs.1 a) (cflipT p cs.2 r)
+
+-- Section 2: corbit commutes with the flip at cs. corbitFlip joins orbitFlip
+-- at the first class and corbitFlip at the other classes with cPairEqP.
+
+def rec corbitFlip : (m : MechNat) -> (cs : CSizes m) -> (x : CConfig m cs) ->
+    MechEq (CTally m cs) (corbit m cs (cflipC m cs x)) (cflipT m cs (corbit m cs x)) :=
+  fun (m : MechNat) =>
+    case m as self in MechNat
+      return (cs : CSizes self) -> (x : CConfig self cs) ->
+        MechEq (CTally self cs) (corbit self cs (cflipC self cs x)) (cflipT self cs (corbit self cs x)) with
+    | mechZero => fun (cs : CSizes mechZero) (x : CConfig mechZero cs) =>
+        mechRefl (CTally mechZero cs) mechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (x : CConfig (mechSucc p) cs) =>
+        case x as self in CPair
+          return MechEq (CTally (mechSucc p) cs)
+            (corbit (mechSucc p) cs (cflipC (mechSucc p) cs self))
+            (cflipT (mechSucc p) cs (corbit (mechSucc p) cs self)) with
+        | cpair c r =>
+            cPairEqP (Tally cs.1) (CTally p cs.2)
+              (orbit cs.1 (flipC cs.1 c)) (flipT cs.1 (orbit cs.1 c))
+              (corbit p cs.2 (cflipC p cs.2 r)) (cflipT p cs.2 (corbit p cs.2 r))
+              (orbitFlip cs.1 c) (corbitFlip p cs.2 r)
+
+-- Section 3: flipFwd and flipBwd over X, Y and o. fX, fY and fD are the flips
+-- on X, Y and Decision. oF is the orbitFlip form: o (fX x) is equal to
+-- fY (o x). For a : AggX X Y o F, F commutes with the flips at each x exactly
+-- when a.1 commutes with the flips on the image of o. The terms apply fX (in
+-- a.2), thus fX is not erased. o, fY and fD occur only in types and in erased
+-- arguments, thus they are erased.
+
+def flipFwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) ->
+    (fX : X -> X) -> (0 fY : Y -> Y) -> (0 fD : Decision -> Decision) ->
+    ((x : X) -> MechEq Y (o (fX x)) (fY (o x))) ->
+    (0 F : X -> Decision) -> (a : AggX X Y o F) ->
+    ((x : X) -> MechEq Decision (F (fX x)) (fD (F x))) ->
+    (x : X) -> MechEq Decision (a.1 (fY (o x))) (fD (a.1 (o x))) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (fX : X -> X) (0 fY : Y -> Y)
+    (0 fD : Decision -> Decision) (oF : (x : X) -> MechEq Y (o (fX x)) (fY (o x)))
+    (0 F : X -> Decision) (a : AggX X Y o F)
+    (h : (x : X) -> MechEq Decision (F (fX x)) (fD (F x))) (x : X) =>
+      mechTrans Decision (a.1 (fY (o x))) (F (fX x)) (fD (a.1 (o x)))
+        (mechTrans Decision (a.1 (fY (o x))) (a.1 (o (fX x))) (F (fX x))
+          (mechCongr Y Decision a.1 (fY (o x)) (o (fX x))
+            (mechSymm Y (o (fX x)) (fY (o x)) (oF x)))
+          (mechSymm Decision (F (fX x)) (a.1 (o (fX x))) (a.2 (fX x))))
+        (mechTrans Decision (F (fX x)) (fD (F x)) (fD (a.1 (o x)))
+          (h x)
+          (mechCongr Decision Decision fD (F x) (a.1 (o x)) (a.2 x)))
+
+def flipBwdX : (0 X : Type 0) -> (0 Y : Type 0) -> (0 o : X -> Y) ->
+    (fX : X -> X) -> (0 fY : Y -> Y) -> (0 fD : Decision -> Decision) ->
+    ((x : X) -> MechEq Y (o (fX x)) (fY (o x))) ->
+    (0 F : X -> Decision) -> (a : AggX X Y o F) ->
+    ((x : X) -> MechEq Decision (a.1 (fY (o x))) (fD (a.1 (o x)))) ->
+    (x : X) -> MechEq Decision (F (fX x)) (fD (F x)) :=
+  fun (0 X : Type 0) (0 Y : Type 0) (0 o : X -> Y) (fX : X -> X) (0 fY : Y -> Y)
+    (0 fD : Decision -> Decision) (oF : (x : X) -> MechEq Y (o (fX x)) (fY (o x)))
+    (0 F : X -> Decision) (a : AggX X Y o F)
+    (h : (x : X) -> MechEq Decision (a.1 (fY (o x))) (fD (a.1 (o x)))) (x : X) =>
+      mechTrans Decision (F (fX x)) (a.1 (fY (o x))) (fD (F x))
+        (mechTrans Decision (F (fX x)) (a.1 (o (fX x))) (a.1 (fY (o x)))
+          (a.2 (fX x))
+          (mechCongr Y Decision a.1 (o (fX x)) (fY (o x)) (oF x)))
+        (mechTrans Decision (a.1 (fY (o x))) (fD (a.1 (o x))) (fD (F x))
+          (h x)
+          (mechCongr Decision Decision fD (a.1 (o x)) (F x)
+            (mechSymm Decision (F x) (a.1 (o x)) (a.2 x))))
+
+-- Section 4: the forms at Config n, Tally n and orbit n, with flipC n, flipT n,
+-- flipD and orbitFlip n. AggX at Config n is Agg n F by conversion (cAggTo is
+-- the identity), thus cFlipFwdN and cFlipBwdN have the types of flipFwd and
+-- flipBwd in O14.mech.
+
+def cFlipFwdN : (n : MechNat) -> (0 F : Config n -> Decision) -> (a : Agg n F) ->
+    ((x : Config n) -> MechEq Decision (F (flipC n x)) (flipD (F x))) ->
+    (x : Config n) -> MechEq Decision (a.1 (flipT n (orbit n x))) (flipD (a.1 (orbit n x))) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) =>
+    flipFwdX (Config n) (Tally n) (orbit n) (flipC n) (flipT n) flipD (orbitFlip n) F a
+
+def cFlipBwdN : (n : MechNat) -> (0 F : Config n -> Decision) -> (a : Agg n F) ->
+    ((x : Config n) -> MechEq Decision (a.1 (flipT n (orbit n x))) (flipD (a.1 (orbit n x)))) ->
+    (x : Config n) -> MechEq Decision (F (flipC n x)) (flipD (F x)) :=
+  fun (n : MechNat) (0 F : Config n -> Decision) (a : Agg n F) =>
+    flipBwdX (Config n) (Tally n) (orbit n) (flipC n) (flipT n) flipD (orbitFlip n) F a
+
+-- Section 5: the forms at CConfig m cs, CTally m cs and corbit m cs, with
+-- cflipC m cs, cflipT m cs, flipD and corbitFlip m cs.
+
+def cFlipFwdC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) ->
+    ((x : CConfig m cs) -> MechEq Decision (F (cflipC m cs x)) (flipD (F x))) ->
+    (x : CConfig m cs) ->
+    MechEq Decision (a.1 (cflipT m cs (corbit m cs x))) (flipD (a.1 (corbit m cs x))) :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) =>
+    flipFwdX (CConfig m cs) (CTally m cs) (corbit m cs) (cflipC m cs) (cflipT m cs) flipD
+      (corbitFlip m cs) F a
+
+def cFlipBwdC : (m : MechNat) -> (cs : CSizes m) -> (0 F : CConfig m cs -> Decision) ->
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) ->
+    ((x : CConfig m cs) ->
+      MechEq Decision (a.1 (cflipT m cs (corbit m cs x))) (flipD (a.1 (corbit m cs x)))) ->
+    (x : CConfig m cs) -> MechEq Decision (F (cflipC m cs x)) (flipD (F x)) :=
+  fun (m : MechNat) (cs : CSizes m) (0 F : CConfig m cs -> Decision)
+    (a : AggX (CConfig m cs) (CTally m cs) (corbit m cs) F) =>
+    flipBwdX (CConfig m cs) (CTally m cs) (corbit m cs) (cflipC m cs) (cflipT m cs) flipD
+      (corbitFlip m cs) F a
