@@ -1,0 +1,159 @@
+-- Escrow member classes (M8, rung 2): the class model and its round trip.
+-- Check: join prelude/init.mech, examples/escrow-o1/O1.mech,
+-- examples/escrow-o14/O14.mech and this file with a newline, then run
+-- `mech.exe check` on the result. A class list cs : CSizes m gives the size
+-- of each of m classes. CConfig m cs and CTally m cs give one configuration
+-- and one tally for each class. corbit and csec apply orbit and sec at each
+-- class. csecOrbit and corbitSec are the round trip at cs. The one-class
+-- lemma (section 3) states that at the class list [n] the class model is the
+-- model of O1.mech: a tally is one Tally n with an empty tail, and corbit and
+-- csec are orbit and sec. The names start with C or c, because the join
+-- includes O1 and O14. The file has no hole and no axiom.
+
+-- Section 1: the class model. The tally of a class list is a mu pair (CPair),
+-- not a built-in pair, because case does not split a built-in pair. cMkP is a
+-- typed constructor for a CPair in a position where the type is not known.
+
+mu CPair (0 A : Type 0) (0 B : Type 0) : Type 0 with
+| cpair : A -> B -> CPair A B
+
+def cMkP : (0 A : Type 0) -> (0 B : Type 0) -> A -> B -> CPair A B :=
+  fun (0 A : Type 0) (0 B : Type 0) (a : A) (b : B) => cpair a b
+
+def rec CSizes : MechNat -> Type 0 :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return Type 0 with
+    | mechZero => MechUnit
+    | mechSucc p => (k : MechNat) * CSizes p
+
+def rec CConfig : (m : MechNat) -> CSizes m -> Type 0 :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return CSizes self -> Type 0 with
+    | mechZero => fun (cs : CSizes mechZero) => MechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) => CPair (Config cs.1) (CConfig p cs.2)
+
+def rec CTally : (m : MechNat) -> CSizes m -> Type 0 :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return CSizes self -> Type 0 with
+    | mechZero => fun (cs : CSizes mechZero) => MechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) => CPair (Tally cs.1) (CTally p cs.2)
+
+def rec corbit : (m : MechNat) -> (cs : CSizes m) -> CConfig m cs -> CTally m cs :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return (cs : CSizes self) -> CConfig self cs -> CTally self cs with
+    | mechZero => fun (cs : CSizes mechZero) (x : CConfig mechZero cs) => mechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (x : CConfig (mechSucc p) cs) =>
+        case x as self in CPair return CTally (mechSucc p) cs with
+        | cpair c r => cpair (orbit cs.1 c) (corbit p cs.2 r)
+
+def rec csec : (m : MechNat) -> (cs : CSizes m) -> CTally m cs -> CConfig m cs :=
+  fun (m : MechNat) =>
+    case m as self in MechNat return (cs : CSizes self) -> CTally self cs -> CConfig self cs with
+    | mechZero => fun (cs : CSizes mechZero) (t : CTally mechZero cs) => mechUnit
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (t : CTally (mechSucc p) cs) =>
+        case t as self in CPair return CConfig (mechSucc p) cs with
+        | cpair a r => cpair (sec cs.1 a) (csec p cs.2 r)
+
+-- Section 2: the round trip at cs. cPairEqP joins an equality of the first
+-- components and an equality of the second components. csecOrbit applies
+-- secOrbit at each class. corbitSec is its symmetric form.
+
+def cPairEqP : (0 A : Type 0) -> (0 B : Type 0) -> (0 a : A) -> (0 a2 : A) ->
+    (0 b : B) -> (0 b2 : B) -> MechEq A a a2 -> MechEq B b b2 ->
+    MechEq (CPair A B) (cMkP A B a b) (cMkP A B a2 b2) :=
+  fun (0 A : Type 0) (0 B : Type 0) (0 a : A) (0 a2 : A) (0 b : B) (0 b2 : B)
+    (ea : MechEq A a a2) (eb : MechEq B b b2) =>
+    mechTrans (CPair A B) (cMkP A B a b) (cMkP A B a2 b) (cMkP A B a2 b2)
+      (mechCongr A (CPair A B) (fun (x : A) => cMkP A B x b) a a2 ea)
+      (mechCongr B (CPair A B) (cMkP A B a2) b b2 eb)
+
+def rec csecOrbit : (m : MechNat) -> (cs : CSizes m) -> (t : CTally m cs) ->
+    MechEq (CTally m cs) t (corbit m cs (csec m cs t)) :=
+  fun (m : MechNat) =>
+    case m as self in MechNat
+      return (cs : CSizes self) -> (t : CTally self cs) ->
+        MechEq (CTally self cs) t (corbit self cs (csec self cs t)) with
+    | mechZero => fun (cs : CSizes mechZero) (t : CTally mechZero cs) =>
+        (case t as self in MechUnit
+          return MechEq (CTally mechZero cs) self (corbit mechZero cs (csec mechZero cs self)) with
+        | mechUnit => mechRefl (CTally mechZero cs) mechUnit)
+    | mechSucc p => fun (cs : CSizes (mechSucc p)) (t : CTally (mechSucc p) cs) =>
+        case t as self in CPair
+          return MechEq (CTally (mechSucc p) cs) self
+            (corbit (mechSucc p) cs (csec (mechSucc p) cs self)) with
+        | cpair a r =>
+            cPairEqP (Tally cs.1) (CTally p cs.2)
+              a (orbit cs.1 (sec cs.1 a))
+              r (corbit p cs.2 (csec p cs.2 r))
+              (secOrbit cs.1 a) (csecOrbit p cs.2 r)
+
+def corbitSec : (m : MechNat) -> (cs : CSizes m) -> (t : CTally m cs) ->
+    MechEq (CTally m cs) (corbit m cs (csec m cs t)) t :=
+  fun (m : MechNat) (cs : CSizes m) (t : CTally m cs) =>
+    mechSymm (CTally m cs) t (corbit m cs (csec m cs t)) (csecOrbit m cs t)
+
+-- Section 3: the one-class lemma. cOne n is the class list [n]. cOneT puts a
+-- Tally n in front of an empty tail, and cOneTo takes the Tally n back.
+-- cOneTBeta and cOneTEta state that the two maps are inverse. cOneC, cOneCTo,
+-- cOneCBeta and cOneCEta are the same for configurations. cOneOrbit and
+-- cOneSec state that corbit and csec at [n] are orbit and sec of O1.mech.
+
+def cOne : MechNat -> CSizes (mechSucc mechZero) :=
+  fun (n : MechNat) => (n, mechUnit)
+
+def cUnitEta : (u : MechUnit) -> MechEq MechUnit u mechUnit :=
+  fun (u : MechUnit) =>
+    case u as self in MechUnit return MechEq MechUnit self mechUnit with
+    | mechUnit => mechRefl MechUnit mechUnit
+
+def cOneT : (n : MechNat) -> Tally n -> CTally (mechSucc mechZero) (cOne n) :=
+  fun (n : MechNat) (a : Tally n) => cMkP (Tally n) MechUnit a mechUnit
+
+def cOneTo : (n : MechNat) -> CTally (mechSucc mechZero) (cOne n) -> Tally n :=
+  fun (n : MechNat) (t : CTally (mechSucc mechZero) (cOne n)) =>
+    case t as self in CPair return Tally n with
+    | cpair a r => a
+
+def cOneTBeta : (n : MechNat) -> (a : Tally n) ->
+    MechEq (Tally n) (cOneTo n (cOneT n a)) a :=
+  fun (n : MechNat) (a : Tally n) => mechRefl (Tally n) a
+
+def cOneTEta : (n : MechNat) -> (t : CTally (mechSucc mechZero) (cOne n)) ->
+    MechEq (CTally (mechSucc mechZero) (cOne n)) t (cOneT n (cOneTo n t)) :=
+  fun (n : MechNat) (t : CTally (mechSucc mechZero) (cOne n)) =>
+    case t as self in CPair
+      return MechEq (CTally (mechSucc mechZero) (cOne n)) self (cOneT n (cOneTo n self)) with
+    | cpair a r =>
+        cPairEqP (Tally n) MechUnit a a r mechUnit (mechRefl (Tally n) a) (cUnitEta r)
+
+def cOneC : (n : MechNat) -> Config n -> CConfig (mechSucc mechZero) (cOne n) :=
+  fun (n : MechNat) (c : Config n) => cMkP (Config n) MechUnit c mechUnit
+
+def cOneCTo : (n : MechNat) -> CConfig (mechSucc mechZero) (cOne n) -> Config n :=
+  fun (n : MechNat) (x : CConfig (mechSucc mechZero) (cOne n)) =>
+    case x as self in CPair return Config n with
+    | cpair c r => c
+
+def cOneCBeta : (n : MechNat) -> (c : Config n) ->
+    MechEq (Config n) (cOneCTo n (cOneC n c)) c :=
+  fun (n : MechNat) (c : Config n) => mechRefl (Config n) c
+
+def cOneCEta : (n : MechNat) -> (x : CConfig (mechSucc mechZero) (cOne n)) ->
+    MechEq (CConfig (mechSucc mechZero) (cOne n)) x (cOneC n (cOneCTo n x)) :=
+  fun (n : MechNat) (x : CConfig (mechSucc mechZero) (cOne n)) =>
+    case x as self in CPair
+      return MechEq (CConfig (mechSucc mechZero) (cOne n)) self (cOneC n (cOneCTo n self)) with
+    | cpair c r =>
+        cPairEqP (Config n) MechUnit c c r mechUnit (mechRefl (Config n) c) (cUnitEta r)
+
+def cOneOrbit : (n : MechNat) -> (c : Config n) ->
+    MechEq (CTally (mechSucc mechZero) (cOne n))
+      (corbit (mechSucc mechZero) (cOne n) (cOneC n c)) (cOneT n (orbit n c)) :=
+  fun (n : MechNat) (c : Config n) =>
+    mechRefl (CTally (mechSucc mechZero) (cOne n)) (cOneT n (orbit n c))
+
+def cOneSec : (n : MechNat) -> (a : Tally n) ->
+    MechEq (CConfig (mechSucc mechZero) (cOne n))
+      (csec (mechSucc mechZero) (cOne n) (cOneT n a)) (cOneC n (sec n a)) :=
+  fun (n : MechNat) (a : Tally n) =>
+    mechRefl (CConfig (mechSucc mechZero) (cOne n)) (cOneC n (sec n a))
