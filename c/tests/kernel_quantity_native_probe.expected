@@ -1,0 +1,24 @@
+or FT: true
+or TF: true
+or FF refused: true
+or TT: true
+pick F: true
+nested OR: true
+not T or T: true
+not T or false refused: true
+not Qequal or T: true
+qone equality: true
+nat zero equality: true
+once singleton: true
+once sequence left: true
+once sequence right: true
+once scale: true
+nested close valid: true
+at most singleton: true
+affine pick false: true
+affine pick true: true
+inner: true
+middle: true
+outer: true
+twice refused: true
+zero refused: true

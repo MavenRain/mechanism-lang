@@ -1,0 +1,9 @@
+formers 2: Lan Ran
+schema constructors 4: In Elim Sec Out
+shapes declared 9: SPi SArg SColl SPar SMu SNu SZk SFhc SMpc
+shapes admitted 6: SPi SColl SMu SZk SFhc SMpc
+named rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc
+named rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path
+eta rows 3: Ran-SPi Lan-SPi Ran-SColl
+no eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc Lan-SMpc
+

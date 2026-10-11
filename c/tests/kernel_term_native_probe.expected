@@ -1,0 +1,75 @@
+ctor kinds: var auto let
+children Ran(Pi Nat) Tree: 2 global global
+children Let univ lit var: 3 univ lit var
+children Lan(Mu Tree [Nat]) Nat: 2 global global
+exists Tree in Ran(Pi Nat) Tree: true
+exists Tree in Nat: false
+exists Tree in Lan(Mu Tree) with families: true
+exists Tree in Lan(Mu Tree) without families: false
+equal bool_ty bool_ty: true
+equal bool_ty unit_ty: false
+formers: 2 Lan Ran
+schema: 4 In Elim Sec Out
+as_apt one Nat: true one
+as_aleg 3: 3
+as_actor of APt: false
+value_var 4: neutral local 4
+as_univ VUniv 1: 1
+as_univ VLit: false
+head_equal local 1 local 1: true
+head_equal local 1 local 2: false
+head_equal local 1 global f: false
+head_equal global f global f: true
+prim names: natAdd natSub natMul natEq natLt
+prim of_name natMul: natMul
+prim of_name natDiv: none
+prim arity: 2
+prim ty natAdd: Ran(Pi(many a: Nat), Ran(Pi(many b: Nat), Nat))
+prim ty natEq: Ran(Pi(many a: Nat), Ran(Pi(many b: Nat), Lan(Coll(2), Sec(Coll(2), [Leg(0, Ann(Ran(Coll(0), Sec(Coll(0), [])) : U1)), Leg(0, Ann(Ran(Coll(0), Sec(Coll(0), [])) : U1))]))))
+apply natAdd 2 3: lit 5
+apply natSub 5 3: lit 2
+apply natSub 2 3: lit 0
+apply natMul 6 7: lit 42
+apply natEq 3 3: in leg 1 args 1
+apply natEq 3 4: in leg 0 args 1
+apply natLt 2 3: in leg 1 args 1
+apply natLt 3 2: in leg 0 args 1
+apply natLt 3 3: in leg 0 args 1
+apply natAdd one arg: none
+apply natAdd string arg: none
+apply natAdd negative arg: none
+positive Global Tree: true
+positive Ran(Pi Nat) Tree: true
+positive Ran(Pi Tree) Nat: false
+positive Ran(Coll 2) Tree: false
+positive Ran(Coll 2) Nat: true
+positive Lan(Mu Tree [Nat]) Nat: true
+positive Lan(Mu Tree [Tree]) Nat: false
+positive Lan(Coll 2) Tree: false
+positive Out(Pi Nat) APt(Nat) Tree: true
+positive Out(Pi Nat) ALeg(0) Tree: false
+positive Out(Coll 2) APt(Nat) Tree: false
+positive In(Coll 2) [Nat]: true
+positive In(Coll 2) [Tree]: false
+point_dom Pi Zk Coll: true true false
+fields_positive [l: Tree, r: Tree]: true
+fields_positive [f: Ran(Pi Tree) Nat]: false
+ctor_fields good: done
+ctor_fields bad: fail not_yet: a family that is not strictly positive arrives at M2
+self_rec [l: Tree, r: Tree]: true
+self_rec [n: Nat]: false
+ctor_of node: node arity 2
+ctor_of branch: false
+same_telescope equal: true
+same_telescope quantity differs: false
+same_telescope length differs: false
+same_status complete complete: true
+same_status provisional builtin: false
+same_bool: true true false
+same_ctors self_rec differs strict: false
+same_ctors self_rec differs ignored: true
+same_family copy: true
+same_family level differs: false
+same_family_except ignore_level: true
+same_family status differs: false
+same_family_except ignore_self_rec: true

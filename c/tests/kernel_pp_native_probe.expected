@@ -1,0 +1,109 @@
+escaped quote: a\"b
+escaped backslash: a\\b
+escaped newline tab: a\nb\tc
+escaped cr bs: \r\b
+escaped e-acute: \195\169
+escaped del: \127
+escaped control 1: \001
+escaped space tilde: [ ~]
+literal string: "hi"
+literal int: 42
+literal negative int: -7
+join empty: []
+join one: [x]
+join three: [a, b, c]
+shape SPi: SPi w x Nat
+shape SArg: SArg 1 y
+shape SColl: SColl 3
+shape SPar: SPar Type 0 Nat
+shape SMu: SMu Tree [Nat; Type 0]
+shape SMu empty: SMu T []
+shape SNu: SNu Stream [Nat]
+shape SZk: SZk (0 w : Nat)
+shape SFhc: SFhc Type 0
+shape SMpc: SMpc (Nat, Type 0)
+under SPi: 2 x n
+under SZk: 2 w n
+under SColl: 1 n
+push: 3 b a n
+addr APt: (APt 1 Nat)
+addr ALeg: (ALeg 2)
+addr ACtor: (ACtor cons)
+term var named: x
+term var unnamed: #3
+term univ zero: Type 0
+term univ one: Type 1
+term global: Nat
+term lan SPi: (Lan SPi w x Nat x)
+term ran SPi var1: (Ran SPi 0 a Nat y)
+term ran SColl: (Ran SColl 2 y)
+term sec: (Sec SColl 2 [ => Nat; a b => b])
+term ann: (zero : Nat)
+term let: let n : Nat := zero in n
+term in: (In SColl 1 (ALeg 0) [zero; k])
+term out: (Out SPi w x Nat (APt w zero) f)
+term elim: (Elim SColl 2 b with | (ALeg 0)  => t | (ALeg 1) v => v)
+term elim motive: (Elim SColl 2 b as s return i with)
+term lit: "a\"b"
+term auto: auto
+nth_name none 5: #5
+nth_name some: z
+level_scope zero arity 0: done
+level_scope var 0 arity 1: done
+level_scope var 1 arity 1: fail universe: universe level is outside the global parameter scope
+level_scope domain var 2 arity 2: fail universe: universe level is outside the global parameter scope
+level_scope succ var 0 arity 1: done
+level_scope let body var 0 arity 0: fail universe: universe level is outside the global parameter scope
+context make size arity checked: 0 2 false
+context make names: 0
+context make env len: 0
+context 7 size: 7
+context 7 names: 7 t u v w z y x
+context 7 env len: 7
+context 7 lget 0: t many
+context 7 lget 3: w one
+context 7 lget 4: z zero
+context 7 lget 6: x many
+context 7 lget 7: none
+context 7 lview head: t
+context 0 lview: nil
+context 3 names: 3 z y x
+context 3 lget 1: y one
+readable mode zero: true true true
+readable mode one: false true true
+readable mode many: false true true
+context from_list names: 7 t u v w z y x
+context from_list lget 4: z zero
+admitted: 6 SPi SColl SMu SZk SFhc SMpc
+named_declared: 6 proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc
+named_present: 3 proof-irrelevance subsingleton-large-elimination literal-fast-path
+eta_of SPi: some ran=true lan=true
+eta_of SArg: none
+eta_of SColl: some ran=true lan=false
+eta_of SPar: none
+eta_of SMu: some ran=false lan=false
+eta_of SNu: none
+eta_of SZk: some ran=false lan=false
+eta_of SFhc: some ran=false lan=false
+eta_of SMpc: some ran=false lan=false
+arrow: (Ran SPi 0 q Nat Type 0)
+unit_ty: ((Ran SColl 0 (Sec SColl 0 [])) : Type 0)
+unit_val: (Sec SColl 0 [])
+bool_ty: (Lan SColl 2 (Sec SColl 2 [ => ((Ran SColl 0 (Sec SColl 0 [])) : Type 1);  => ((Ran SColl 0 (Sec SColl 0 [])) : Type 1)]))
+prod_ty 2: (Ran SColl 2 (Sec SColl 2 [ => Nat;  => Bool]))
+sum_ty 2: (Lan SColl 2 (Sec SColl 2 [ => Nat;  => Bool]))
+prod_ty 0: (Ran SColl 0 (Sec SColl 0 []))
+mpc_sub_ty 2: done (Ran SColl 2 (Sec SColl 2 [ => Nat;  => Nat]))
+mpc_sub_ty 0: done (Ran SColl 0 (Sec SColl 0 []))
+mpc_sub_ty -1: fail mismatch: an mpc subset width must be nonnegative
+mpc_pred_ty 1: done (Ran SPi 0 q (Ran SColl 1 (Sec SColl 1 [ => Nat])) Type 0)
+mpc_pred_ty -2: fail mismatch: an mpc subset width must be nonnegative
+mpc_party_count 0: done
+mpc_party_count 1: fail mismatch: the party set of an mpc type is a finite enumeration
+mpc_party_value VUniv: fail mismatch: the party set of an mpc type is a finite enumeration
+coll_legs VUniv: fail mismatch: the diagram is not a section of the declared width
+family_found none: fail unbound: the family Tree is not declared
+mu_family empty globals: fail unbound: the family List is not declared
+elim_result none none: fail cannot_infer: an elimination without a motive needs an expected type
+elim_result none some: done
+term_legs 2: 2 0 0

@@ -119,8 +119,31 @@ bend2-diff: bend2-reference-check bend2-build
 TCC ?= tcc
 C_RT_SOURCES := $(wildcard c/rt/*.c)
 C_RT_HEADERS := $(wildcard c/rt/*.h)
+C_KERNEL_SOURCES := $(wildcard c/kernel/*.c)
+C_KERNEL_HEADERS := $(wildcard c/kernel/*.h)
+# Kernel test drivers: one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c.
+# Checks print PASS or die; probes print lines that c-test compares with c/tests/<driver>.expected.
+C_KERNEL_CHECKS := kernel_budget_callback_check kernel_budget_callbacks kernel_budget_dag kernel_check kernel_conversion kernel_declarations kernel_eval kernel_global_lookup kernel_head_ty_invalid_level kernel_numbers kernel_projection_motive kernel_quantity levels_budget levels_checker levels_exact levels_regression runtime_slice surface_equality wasm_circuit wasm_order
+# Checks that take the manifest arguments (dev/bend2/test-manifest.json) on the command line.
+C_KERNEL_ARG_CHECKS := kernel_global_index kernel_usage_native
+C_KERNEL_PROBES := kernel_quantity_native_probe kernel_term_native_probe kernel_pp_native_probe kernel_linear_check_probe kernel_spec_count
+C_KERNEL_DRIVERS := $(C_KERNEL_CHECKS) $(C_KERNEL_ARG_CHECKS) $(C_KERNEL_PROBES)
+C_TEST_HEADERS := $(wildcard c/tests/*.h)
+C_KERNEL_BINARIES := $(addprefix _tcc/,$(C_KERNEL_DRIVERS))
+C_KERNEL_FAULT_CHECKS := kernel_allocation_check kernel_lookup_allocation kernel_erasure_allocation kernel_order_allocation
+C_KERNEL_FAULT_BINARIES := $(addprefix _tcc/,$(C_KERNEL_FAULT_CHECKS))
 .PHONY: c-build c-test
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) _tcc/runtime_reachable.o
+
+# bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
+# prelude_runtime (S5.1) links it and runs its self test.
+_tcc/runtime_reachable.o: c/tests/runtime_reachable.c $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -c -o $@ $<
+
+$(C_KERNEL_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -o $@ $< $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 
 _tcc/rt_test _tcc/rt_regression_test: _tcc/%: c/tests/%.c $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
@@ -133,7 +156,30 @@ _tcc/arena_fault.o: c/rt/arena.c $(C_RT_HEADERS)
 _tcc/rt_oom_test: c/tests/rt_oom_test.c $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -o $@ $< $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
 
+$(C_KERNEL_FAULT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -o $@ $< $(C_KERNEL_SOURCES) $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
+
 c-test: c-build
 	./_tcc/rt_test
 	./_tcc/rt_regression_test
 	./_tcc/rt_oom_test
+	$(foreach d,$(C_KERNEL_FAULT_CHECKS),./_tcc/$(d) &&) true
+	$(foreach d,$(C_KERNEL_CHECKS),./_tcc/$(d) &&) true
+	./_tcc/kernel_global_index "$$(printf 'case/A\303\251\360\237\230\200')" "$$(printf 'case/Ae\314\201\360\237\230\200')" "$$(printf 'case/a\303\251\360\237\230\200')"
+	./_tcc/kernel_usage_native 0
+	./_tcc/kernel_usage_native 7
+	./_tcc/kernel_quantity_native_probe 0 > _tcc/kernel_quantity_native_probe.actual
+	cmp _tcc/kernel_quantity_native_probe.actual c/tests/kernel_quantity_native_probe.expected
+	@echo "PROBE-OK kernel_quantity_native_probe lines=24"
+	./_tcc/kernel_term_native_probe > _tcc/kernel_term_native_probe.actual
+	cmp _tcc/kernel_term_native_probe.actual c/tests/kernel_term_native_probe.expected
+	@echo "PROBE-OK kernel_term_native_probe lines=75"
+	./_tcc/kernel_pp_native_probe > _tcc/kernel_pp_native_probe.actual
+	cmp _tcc/kernel_pp_native_probe.actual c/tests/kernel_pp_native_probe.expected
+	@echo "PROBE-OK kernel_pp_native_probe lines=109"
+	./_tcc/kernel_linear_check_probe > _tcc/kernel_linear_check_probe.actual
+	cmp _tcc/kernel_linear_check_probe.actual c/tests/kernel_linear_check_probe.expected
+	@echo "PROBE-OK kernel_linear_check_probe lines=1"
+	./_tcc/kernel_spec_count > _tcc/kernel_spec_count.actual
+	cmp _tcc/kernel_spec_count.actual c/tests/kernel_spec_count.expected
+	@echo "PROBE-OK kernel_spec_count lines=9"
