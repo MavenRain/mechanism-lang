@@ -13,3 +13,4 @@ dist/
 build/
 .bend2-local.mk
 _bend2/
+_tcc/

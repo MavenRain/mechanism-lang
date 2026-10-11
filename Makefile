@@ -114,3 +114,26 @@ bend2-diff: bend2-reference-check bend2-build
 	$(PYTHON) -P dev/bend2-equality-runtime-check.py
 	$(PYTHON) -P dev/bend2-composition-runtime-check.py
 	$(PYTHON) -P dev/bend2-reuse-runtime-check.py
+
+# C port compiled with TinyCC: sources under c/, outputs under _tcc/ (see MIGRATION notes in W/PLAN.md)
+TCC ?= tcc
+C_RT_SOURCES := $(wildcard c/rt/*.c)
+C_RT_HEADERS := $(wildcard c/rt/*.h)
+.PHONY: c-build c-test
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test
+
+_tcc/rt_test _tcc/rt_regression_test: _tcc/%: c/tests/%.c $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -o $@ $< $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+_tcc/arena_fault.o: c/rt/arena.c $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -Darena_alloc=rt_test_arena_alloc_real -c -o $@ $<
+
+_tcc/rt_oom_test: c/tests/rt_oom_test.c $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -o $@ $< $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
+
+c-test: c-build
+	./_tcc/rt_test
+	./_tcc/rt_regression_test
+	./_tcc/rt_oom_test
