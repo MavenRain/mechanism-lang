@@ -1,0 +1,15 @@
+PASS mapping canonical-identities-and-stable-order
+PASS mapping declared-and-referenced-counts-stay-distinct
+PASS mapping only-exact-public-omega-namespace-is-never
+PASS mapping candidate-never-claims-type-parity
+PASS mapping duplicate-source-target-refused
+PASS mapping unknown-source-target-refused
+PASS mapping unreferenced-source-target-refused
+PASS mapping in-house-source-target-refused
+PASS mapping never-target-conflict-refused
+PASS mapping tab-target-refused
+PASS mapping newline-target-refused
+PASS mapping empty-target-refused
+PASS mapping sentinel-target-refused
+PASS mapping tsv-schema-is-stable
+MAPPING-OK

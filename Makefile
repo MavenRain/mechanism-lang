@@ -125,6 +125,8 @@ C_SURFACE_SOURCES := $(wildcard c/surface/*.c)
 C_SURFACE_HEADERS := $(wildcard c/surface/*.h)
 C_PRELUDE_SOURCES := $(wildcard c/prelude/*.c)
 C_PRELUDE_HEADERS := $(wildcard c/prelude/*.h)
+C_IMPORT_SOURCES := $(wildcard c/import/*.c)
+C_IMPORT_HEADERS := $(wildcard c/import/*.h)
 # Kernel test drivers: one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c.
 # Checks print PASS or die; probes print lines that c-test compares with c/tests/<driver>.expected.
 C_KERNEL_CHECKS := kernel_budget_callback_check kernel_budget_callbacks kernel_budget_dag kernel_check kernel_conversion kernel_declarations kernel_eval kernel_global_lookup kernel_head_ty_invalid_level kernel_numbers kernel_projection_motive kernel_quantity levels_budget levels_checker levels_exact levels_regression runtime_slice surface_equality wasm_circuit wasm_order
@@ -152,9 +154,14 @@ C_RELATIONAL_HEADERS := c/tests/relational_fs.h c/tests/relational_common.h c/te
 C_RELATIONAL_LIBS := _tcc/relational_fs.o _tcc/relational_common.o _tcc/relational_text.o _tcc/relational_program.o _tcc/relational_digest.o _tcc/relational_negatives.o
 C_PRELUDE_CHECKS := prelude_category prelude_functor prelude_heterogeneous_functor prelude_heterogeneous_nattrans prelude_heterogeneous_whiskering prelude_shared_nattrans prelude_nattrans_laws
 C_PRELUDE_BINARIES := $(addprefix _tcc/,$(C_PRELUDE_CHECKS))
+# Import test drivers (S3): one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c. The CLI
+# drivers (import_json takes one JSON argument) are replayed by the oracle gate; c-test runs the checks only.
+C_IMPORT_CHECKS := import_types_protocol mapping_protocol import_regression
+C_IMPORT_CLI := import_json import_export import_translate import_pipeline
+C_IMPORT_BINARIES := $(addprefix _tcc/,$(C_IMPORT_CHECKS) $(C_IMPORT_CLI))
 C_PRELUDE_LINK := $(C_RELATIONAL_LIBS) _tcc/relational_syntax_equal.o
 .PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
 
 # bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
 # prelude_runtime (S5.1) links it and runs its self test.
@@ -208,6 +215,10 @@ $(C_KERNEL_BINARIES) $(C_SURFACE_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -o $@ $< $(C_SURFACE_LINK) $(C_KERNEL_SOURCES) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 
+$(C_IMPORT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_IMPORT_SOURCES) $(C_IMPORT_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/import -o $@ $< $(C_IMPORT_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
 _tcc/rt_test _tcc/rt_regression_test: _tcc/%: c/tests/%.c $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -o $@ $< $(C_RT_SOURCES) $(LDFLAGS) -lpthread
@@ -230,6 +241,7 @@ c-test: c-build
 	$(foreach d,$(C_KERNEL_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_SURFACE_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_LEVELS_CHECKS),./_tcc/$(d) &&) true
+	$(foreach d,$(C_IMPORT_CHECKS),./_tcc/$(d) &&) true
 	./_tcc/surface_driver 'def x : Type := Type'
 	./_tcc/surface_check_driver 'def main : Nat := 12345678901234567890123456789'
 	./_tcc/kernel_erase_driver 'def main : Nat := 12345678901234567890123456789'
@@ -254,6 +266,12 @@ c-test: c-build
 	./_tcc/surface_shape_metadata > _tcc/surface_shape_metadata.actual
 	cmp _tcc/surface_shape_metadata.actual c/tests/surface_shape_metadata.expected
 	@echo "PROBE-OK surface_shape_metadata shapes=4"
+	./_tcc/import_types_protocol > _tcc/import_types_protocol.actual
+	cmp _tcc/import_types_protocol.actual c/tests/import_types_protocol.expected
+	@echo "PROBE-OK import_types_protocol lines=29"
+	./_tcc/mapping_protocol > _tcc/mapping_protocol.actual
+	cmp _tcc/mapping_protocol.actual c/tests/mapping_protocol.expected
+	@echo "PROBE-OK mapping_protocol lines=15"
 
 # Prelude drivers (C_PRELUDE_CHECKS) elaborate the whole prelude per entry, so each runs under the memcap tool:
 # footprint cap MEMCAP_MB (3500 MB, the 4 GB rule), time cap MEMCAP_SECS (120 s) or the per-driver
