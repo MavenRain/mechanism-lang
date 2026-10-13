@@ -82,8 +82,10 @@ Result budget_result_fail(Error error) {
   return r;
 }
 
+/* Steps are one-shot: the run loops read each one once and return it to the heap free list.
+ * The static step_oom is never recycled. */
 static Step *step_finished(Heap *heap, Result result) {
-  Step *step = heap_alloc(heap, sizeof *step);
+  Step *step = heap_alloc_small(heap, sizeof *step);
   if (step == NULL) return &step_oom;
   step->kind = STEP_FINISHED;
   step->result = result;
@@ -93,12 +95,23 @@ static Step *step_finished(Heap *heap, Result result) {
 }
 
 static Step *step_poll(Heap *heap, ResumeK resume) {
-  Step *step = heap_alloc(heap, sizeof *step);
+  Step *step = heap_alloc_small(heap, sizeof *step);
   if (step == NULL) return &step_oom;
   step->kind = STEP_POLL;
   step->result = budget_result_done(NULL);
   step->resume = resume;
   return step;
+}
+
+static void step_release(Heap *heap, Step *step) {
+  if (step != &step_oom) heap_release_small(heap, step, sizeof *step);
+}
+
+/* Reads the result of a finished step and releases the step. */
+static Result step_result(Heap *heap, Step *step) {
+  Result result = step->result;
+  step_release(heap, step);
+  return result;
 }
 
 static Step *call_done(Heap *heap, DoneK done, Result result) { return done.fn(heap, done.ctx, result); }
@@ -164,14 +177,20 @@ typedef struct {
   DoneK done;
 } BindDoneCtx;
 
+/* The done-side records (BindDoneCtx, TickResumeCtx, RecoverDoneCtx, the attempt DoneK box) are
+ * built once per start of an action and consumed by the one continuation call that reads them,
+ * so each is returned to the heap free list at that call, after its fields are copied out. */
 static Step *bind_done(Heap *heap, void *ctx, Result result) {
   BindDoneCtx *c = ctx;
-  return budget_bind_result(heap, result, c->next, c->done);
+  NextK next = c->next;
+  DoneK done = c->done;
+  heap_release_small(heap, c, sizeof *c);
+  return budget_bind_result(heap, result, next, done);
 }
 
 static Step *bind_action(Heap *heap, void *ctx, DoneK done) {
   BindCtx *c = ctx;
-  BindDoneCtx *inner = heap_alloc(heap, sizeof *inner);
+  BindDoneCtx *inner = heap_alloc_small(heap, sizeof *inner);
   if (inner == NULL) return call_done(heap, done, budget_result_fail(error_host_oom()));
   inner->next = c->next;
   inner->done = done;
@@ -218,12 +237,15 @@ typedef struct {
 
 static Step *tick_resume(Heap *heap, void *ctx, bool spent) {
   TickResumeCtx *c = ctx;
-  return budget_tick_result(heap, spent, c->message, c->done);
+  Str message = c->message;
+  DoneK done = c->done;
+  heap_release_small(heap, c, sizeof *c);
+  return budget_tick_result(heap, spent, message, done);
 }
 
 static Step *tick_action(Heap *heap, void *ctx, DoneK done) {
   TickCtx *c = ctx;
-  TickResumeCtx *r = heap_alloc(heap, sizeof *r);
+  TickResumeCtx *r = heap_alloc_small(heap, sizeof *r);
   if (r == NULL) return call_done(heap, done, budget_result_fail(error_host_oom()));
   r->message = c->message;
   r->done = done;
@@ -255,7 +277,12 @@ Comp budget_lift(Result result) {
   return budget_failed(result.error);
 }
 
-static Step *resume_with(Heap *heap, Step *step, bool spent) { return step->resume.fn(heap, step->resume.ctx, spent); }
+/* Resumes a poll step; the step is released before its continuation runs. */
+static Step *resume_with(Heap *heap, Step *step, bool spent) {
+  ResumeK resume = step->resume;
+  step_release(heap, step);
+  return resume.fn(heap, resume.ctx, spent);
+}
 
 /* @unsafe def run_step: the tail recursion over polls as a loop. */
 BudgetState budget_run_step(Heap *heap, Step *step, Budget budget) {
@@ -279,7 +306,7 @@ BudgetState budget_run_step(Heap *heap, Step *step, Budget budget) {
   }
   BudgetState state;
   state.budget = b;
-  state.result = cur->result;
+  state.result = step_result(heap, cur);
   return state;
 }
 
@@ -329,12 +356,15 @@ typedef struct {
 
 static Step *recover_done(Heap *heap, void *ctx, Result result) {
   RecoverDoneCtx *c = ctx;
-  return budget_recover_result(heap, result, c->handler, c->done);
+  HandlerK handler = c->handler;
+  DoneK done = c->done;
+  heap_release_small(heap, c, sizeof *c);
+  return budget_recover_result(heap, result, handler, done);
 }
 
 static Step *recover_action(Heap *heap, void *ctx, DoneK done) {
   RecoverCtx *c = ctx;
-  RecoverDoneCtx *inner = heap_alloc(heap, sizeof *inner);
+  RecoverDoneCtx *inner = heap_alloc_small(heap, sizeof *inner);
   if (inner == NULL) return call_done(heap, done, budget_result_fail(error_host_oom()));
   inner->handler = c->handler;
   inner->done = done;
@@ -371,15 +401,17 @@ static Result *box_result(Heap *heap, Result result) {
 }
 
 static Step *attempt_done(Heap *heap, void *ctx, Result result) {
-  DoneK *done = ctx;
+  DoneK *outer = ctx;
+  DoneK done = *outer;
+  heap_release_small(heap, outer, sizeof *outer);
   Result *boxed = box_result(heap, result);
-  if (boxed == NULL) return call_done(heap, *done, budget_result_fail(error_host_oom()));
-  return call_done(heap, *done, budget_result_done(boxed));
+  if (boxed == NULL) return call_done(heap, done, budget_result_fail(error_host_oom()));
+  return call_done(heap, done, budget_result_done(boxed));
 }
 
 static Step *attempt_action(Heap *heap, void *ctx, DoneK done) {
   LaterK *action = ctx;
-  DoneK *outer = heap_alloc(heap, sizeof *outer);
+  DoneK *outer = heap_alloc_small(heap, sizeof *outer);
   if (outer == NULL) return call_done(heap, done, budget_result_fail(error_host_oom()));
   *outer = done;
   DoneK k;
@@ -445,7 +477,7 @@ CallbackState budget_run_poll_step(Heap *heap, Step *step, Callback callback) {
     cur = resume_with(heap, cur, response->spent);
     cb = response->next;
   }
-  return callback_state(cb, cur->result);
+  return callback_state(cb, step_result(heap, cur));
 }
 
 CallbackState budget_run_poll_state(Heap *heap, Comp action, Callback callback) {
@@ -489,7 +521,7 @@ IOCallbackState budget_run_io_step(Heap *heap, Step *step, IOCallback callback) 
     cur = resume_with(heap, cur, response->spent);
     cb = response->next;
   }
-  return io_callback_state(cb, cur->result);
+  return io_callback_state(cb, step_result(heap, cur));
 }
 
 IOCallbackState budget_run_io_state(Heap *heap, Comp action, IOCallback callback) {

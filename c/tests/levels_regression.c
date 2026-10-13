@@ -1,10 +1,6 @@
 /* Port of bend2/tests/levels_regression.bend (oracle label unit-levels-regression). */
 #include "driver.h"
-
-typedef struct {
-  const char *name;
-  bool holds;
-} Case;
+#include "levels_regression.h"
 
 static bool subst_ok(Heap *heap, MaybeLevelVar value) {
   if (!value.some) return false;
@@ -31,16 +27,16 @@ static Vec levels(Heap *heap, const LevelVar *first, const LevelVar *second, boo
   return xs;
 }
 
-static Case make_case(const char *name, bool holds) {
-  Case c;
+static LevelsCase make_case(const char *name, bool holds) {
+  LevelsCase c;
   c.name = name;
   c.holds = holds;
   return c;
 }
 
-#define CASE_COUNT 17
+#define CASE_COUNT LEVELS_REGRESSION_CASE_COUNT
 
-static void cases(Heap *h, Case *out) {
+void levels_regression_cases(Heap *h, LevelsCase *out) {
   const LevelVar *u = level_var(h, heap_nat_of_u64(h, 0));
   const LevelVar *v = level_var(h, heap_nat_of_u64(h, 1));
   const LevelVar *w = level_var(h, heap_nat_of_u64(h, 2));
@@ -81,7 +77,8 @@ static void cases(Heap *h, Case *out) {
                           absent(level_subst(h, &one_arg, level_max(h, u, v))));
 }
 
-static int run(Heap *heap, const Case *all) {
+#ifndef MECH_DRIVER_LIBRARY
+static int run(Heap *heap, const LevelsCase *all) {
   size_t i = 0;
   while (i < CASE_COUNT) {
     if (!all[i].holds) {
@@ -101,11 +98,12 @@ static int program(int argc, char **argv) {
   (void)argv;
   Arena arena = arena_new(1 << 20);
   Heap heap = heap_new(&arena);
-  Case all[CASE_COUNT];
-  cases(&heap, all);
+  LevelsCase all[CASE_COUNT];
+  levels_regression_cases(&heap, all);
   int code = heap.oom ? driver_host_failure() : run(&heap, all);
   arena_free(&arena);
   return code;
 }
 
 int main(int argc, char **argv) { return rt_run_main(argc, argv, program); }
+#endif

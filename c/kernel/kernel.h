@@ -8,14 +8,24 @@
 #include "rt.h"
 
 /* ---- common (bend2/kernel/common.bend) ---- */
+#define HEAP_SMALL_CLASSES 32
 typedef struct {
   Arena *arena;
   bool oom;
+  /* Free lists of small one-shot records (budget.c steps and continuation contexts), one per
+   * 8-byte size class up to HEAP_SMALL_CLASSES * 8 bytes. */
+  void *small_blocks[HEAP_SMALL_CLASSES];
 } Heap;
 
 Heap heap_new(Arena *arena);
 /* Zeroed memory, or NULL after setting heap->oom. */
 void *heap_alloc(Heap *heap, size_t size);
+/* Zeroed memory from the size-class free list when a block is available, else from the arena
+ * (rounded up to the class size). Sizes above HEAP_SMALL_CLASSES * 8 go to heap_alloc. */
+void *heap_alloc_small(Heap *heap, size_t size);
+/* Returns a block of heap_alloc_small (or of heap_alloc with a size that is a multiple of 8)
+ * to its free list. The caller must not touch the block again. Oversized blocks stay in the arena. */
+void heap_release_small(Heap *heap, void *block, size_t size);
 Str heap_str_cat(Heap *heap, Str a, Str b);
 /* Nat.show */
 Str heap_nat_show(Heap *heap, Nat n);
@@ -625,21 +635,40 @@ typedef enum {
   TERM_LIT,
   TERM_AUTO
 } TermKind;
+/* The payloads overlay in anonymous unions (decision 154 precedent for Value and Spine): each
+ * constructor in term.c sets only the fields of its own kind, every reader switches on the kind,
+ * and compact_term copies per kind. Fields that never share a kind share storage: shape with the
+ * LET/GLOBAL/ANN name/ty/value group, body with the IN/OUT addr group and with legs, args with head.
+ * sizeof(Term) is 224 bytes against 384 for the flat record. */
 struct Term {
   TermKind kind;
-  Nat index;             /* TERM_VAR */
-  const LevelVar *level; /* TERM_UNIV */
-  Shape shape;           /* TERM_LAN, TERM_RAN, TERM_IN, TERM_SEC, TERM_OUT */
-  const Term *body;      /* TERM_LAN, TERM_RAN, TERM_LET, TERM_ANN */
-  Addr addr;             /* TERM_IN, TERM_OUT */
-  Vec args;              /* TERM_IN: List<T> as Term pointers */
-  const ElimData *data;  /* TERM_ELIM, never NULL */
-  Vec legs;              /* TERM_SEC: List<Leg<T>> as Leg pointers */
-  const Term *head;      /* TERM_OUT */
-  Str name;              /* TERM_LET, TERM_GLOBAL */
-  const Term *ty;        /* TERM_LET, TERM_ANN */
-  const Term *value;     /* TERM_LET */
-  Literal lit;           /* TERM_LIT */
+  union {
+    Nat index;             /* TERM_VAR */
+    const LevelVar *level; /* TERM_UNIV */
+    const ElimData *data;  /* TERM_ELIM, never NULL */
+    Literal lit;           /* TERM_LIT */
+    struct {
+      union {
+        Shape shape;       /* TERM_LAN, TERM_RAN, TERM_IN, TERM_SEC, TERM_OUT */
+        struct {
+          Str name;        /* TERM_LET, TERM_GLOBAL */
+          const Term *ty;  /* TERM_LET, TERM_ANN */
+          const Term *value; /* TERM_LET */
+        };
+      };
+      union {
+        const Term *body;  /* TERM_LAN, TERM_RAN, TERM_LET, TERM_ANN */
+        struct {
+          Addr addr;       /* TERM_IN, TERM_OUT */
+          union {
+            Vec args;      /* TERM_IN: List<T> as Term pointers */
+            const Term *head; /* TERM_OUT */
+          };
+        };
+        Vec legs;          /* TERM_SEC: List<Leg<T>> as Leg pointers */
+      };
+    };
+  };
 };
 /* Maybe<Common.Pair<Quantity.T, A>> of as_apt. */
 typedef struct {
@@ -748,11 +777,17 @@ typedef struct {
   Vec env;
 } StuckElim;
 typedef enum { SPINE_OUT, SPINE_ELIM } SpineKind;
+/* The two constructors share storage: a Spine is built once by value_sout or value_selim and
+ * read only through its kind, so the payloads overlay (288 B instead of 480 B; hop 101). */
 typedef struct {
   SpineKind kind;
-  Shape shape;    /* SPINE_OUT */
-  VAddr addr;     /* SPINE_OUT */
-  StuckElim data; /* SPINE_ELIM */
+  union {
+    struct {
+      Shape shape; /* SPINE_OUT */
+      VAddr addr;  /* SPINE_OUT */
+    };
+    StuckElim data; /* SPINE_ELIM */
+  };
 } Spine;
 typedef enum {
   VALUE_UNIV,
@@ -763,18 +798,30 @@ typedef enum {
   VALUE_LIT,
   VALUE_NEUTRAL
 } ValueKind;
+/* Values are built once by the value_v* constructors in value.c (each sets only its own
+ * fields) and read only through the kind, so the per-constructor payloads overlay in one
+ * union (224 B instead of 440 B; hop 101). The shape stays outside the union: it is read for
+ * every shaped kind and is zero for the others. */
 struct Value {
   ValueKind kind;
-  const LevelVar *level;     /* VALUE_UNIV */
-  Shape shape;               /* VALUE_LAN, VALUE_RAN, VALUE_IN, VALUE_SEC; payload pointers are const Value * */
-  Closure diagram;           /* VALUE_LAN, VALUE_RAN */
-  MaybeLevelVar former_level; /* VALUE_LAN, VALUE_RAN: the Maybe<Level.T> field named level */
-  VAddr addr;                /* VALUE_IN */
-  Vec args;                  /* VALUE_IN: List<T> as Value pointers */
-  Vec legs;                  /* VALUE_SEC: List<VLeg<T>> as VLeg pointers */
-  Literal lit;               /* VALUE_LIT */
-  Head head;                 /* VALUE_NEUTRAL */
-  Vec spine;                 /* VALUE_NEUTRAL: List<Spine<T>> as Spine pointers */
+  Shape shape; /* VALUE_LAN, VALUE_RAN, VALUE_IN, VALUE_SEC; payload pointers are const Value * */
+  union {
+    const LevelVar *level; /* VALUE_UNIV */
+    struct {
+      Closure diagram;            /* VALUE_LAN, VALUE_RAN */
+      MaybeLevelVar former_level; /* VALUE_LAN, VALUE_RAN: the Maybe<Level.T> field named level */
+    };
+    struct {
+      VAddr addr; /* VALUE_IN */
+      Vec args;   /* VALUE_IN: List<T> as Value pointers */
+    };
+    Vec legs;    /* VALUE_SEC: List<VLeg<T>> as VLeg pointers */
+    Literal lit; /* VALUE_LIT */
+    struct {
+      Head head;  /* VALUE_NEUTRAL */
+      Vec spine;  /* VALUE_NEUTRAL: List<Spine<T>> as Spine pointers */
+    };
+  };
 };
 
 /* The constructors HLocal .. SElim. */
@@ -2738,5 +2785,40 @@ Str spec_count_pick(Nat index, const Vec *items);
 Vec spec_count_eta_names(Heap *heap, const Vec *rows, bool keep);
 Str spec_count_row(Heap *heap, Str label, const Vec *items);
 Str spec_count_print(Heap *heap);
+
+/* ---- compact (host only, no Bend counterpart: c/kernel/compact.c, index_copy in global.c) ----
+ * Deep copies into heap->arena of the state that survives a declaration (decisions 156, 157).
+ * Shape payloads are copied as Terms (the only instantiation inside Globals). */
+typedef void *(*CompactItem)(Heap *heap, const void *item);
+typedef const void *(*IndexRemap)(void *ctx, Str key, const void *old);
+Index index_copy(Heap *heap, Index ix, IndexRemap remap, void *ctx);
+Nat compact_nat(Heap *heap, Nat n);
+MaybeNat compact_maybe_nat(Heap *heap, MaybeNat n);
+Big compact_big(Heap *heap, Big b);
+Str compact_str(Heap *heap, Str s);
+MaybeStr compact_maybe_str(Heap *heap, MaybeStr s);
+Vec compact_vec_with(Heap *heap, const Vec *vec, CompactItem f);
+Vec compact_str_vec(Heap *heap, const Vec *vec);
+Vec compact_term_vec(Heap *heap, const Vec *vec);
+const LevelVar *compact_level(Heap *heap, const LevelVar *level);
+Shape compact_shape_term(Heap *heap, Shape shape);
+Addr compact_addr(Heap *heap, Addr addr);
+Leg compact_leg(Heap *heap, Leg leg);
+Motive compact_motive(Heap *heap, Motive motive);
+const ElimData *compact_elim(Heap *heap, const ElimData *data);
+Literal compact_literal(Heap *heap, Literal lit);
+const Term *compact_term(Heap *heap, const Term *term);
+MaybeTermPtr compact_maybe_term(Heap *heap, MaybeTermPtr term);
+Vec compact_tele(Heap *heap, const Vec *binders);
+Vec compact_ctors(Heap *heap, const Vec *ctors);
+CtorStatus compact_ctor_status(Heap *heap, CtorStatus status);
+Family compact_family(Heap *heap, Family family);
+Entry compact_entry(Heap *heap, Entry entry);
+Decl compact_decl(Heap *heap, Decl decl);
+Vec compact_check_rows(Heap *heap, const Vec *rows);
+Error compact_error(Heap *heap, Error error);
+const EntryRows *compact_entry_rows(Heap *heap, const EntryRows *rows);
+const FamilyRows *compact_family_rows(Heap *heap, const FamilyRows *rows);
+Globals compact_globals(Heap *heap, Globals globals);
 
 #endif

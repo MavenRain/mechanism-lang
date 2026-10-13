@@ -15,7 +15,8 @@ static NextK next_k(Comp (*fn)(Heap *heap, void *ctx, void *value), void *ctx) {
   return next;
 }
 
-/* The free variables of one continuation; a zeroed Frame is allocated per bind. */
+/* The free variables of one continuation; a zeroed Frame is allocated per bind.
+ * A Comp can run again, so its captured frame stays live until the arena is freed. */
 typedef struct {
   Ctx ctx;
   Quantity mode;

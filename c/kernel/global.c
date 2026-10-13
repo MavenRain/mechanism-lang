@@ -411,3 +411,41 @@ bool global_families_kept(const FamilyRows *families, Globals later) {
 bool global_extended_by(Globals earlier, Globals later) {
   return global_entries_kept(earlier.entries, later) && global_families_kept(earlier.families, later);
 }
+
+/* ---- compact (host only, no Bend counterpart; decision 157) ---- */
+/* Node by node copy of a trie into heap->arena: del leaves tombstone-free holes only through
+ * copied nodes, so a rebuild from the row lists is not equivalent and is never done. Every leaf
+ * value goes through remap, which returns the pointer the value takes in the new arena. */
+static const IndexLeaf *leaf_copy(Heap *heap, const IndexLeaf *leaf, IndexRemap remap, void *ctx) {
+  IndexLeaf *head = NULL;
+  IndexLeaf *tail = NULL;
+  for (const IndexLeaf *cursor = leaf; cursor != NULL; cursor = cursor->rest) {
+    IndexLeaf *node = heap_alloc(heap, sizeof(IndexLeaf));
+    if (node == NULL) return head;
+    node->key = str_copy(heap->arena, cursor->key);
+    if (node->key.data == NULL && cursor->key.len > 0) heap->oom = true;
+    node->value = remap(ctx, cursor->key, cursor->value);
+    node->rest = NULL;
+    if (tail == NULL) head = node; else tail->rest = node;
+    tail = node;
+  }
+  return head;
+}
+
+static const void *node_copy(Heap *heap, const void *node, unsigned level, IndexRemap remap, void *ctx) {
+  if (node == NULL) return NULL;
+  if (level >= INDEX_DEPTH) return leaf_copy(heap, node, remap, ctx);
+  IndexNode *copy = heap_alloc(heap, sizeof(IndexNode));
+  if (copy == NULL) return NULL;
+  const IndexNode *old = node;
+  for (unsigned slot = 0; slot < INDEX_WIDTH; slot++) {
+    copy->slots[slot] = node_copy(heap, old->slots[slot], level + 1u, remap, ctx);
+  }
+  return copy;
+}
+
+Index index_copy(Heap *heap, Index ix, IndexRemap remap, void *ctx) {
+  Index result;
+  result.root = node_copy(heap, ix.root, 0u, remap, ctx);
+  return result;
+}

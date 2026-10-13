@@ -21,6 +21,13 @@ static inline int driver_die(int code, const char *message) {
   return code;
 }
 
+/* IO.die with a Str message (error texts built on the heap). */
+static inline int driver_die_text(int code, Str message) {
+  if (message.len > 0) fwrite(message.data, 1, message.len, stderr);
+  fputc('\n', stderr);
+  return code;
+}
+
 static inline int driver_host_failure(void) {
   fputs("mechanism: host out of memory\n", stderr);
   return 70;

@@ -1,10 +1,12 @@
 /* Port of bend2/kernel/common.bend plus the heap helpers every kernel file shares. */
 #include "kernel.h"
+#include <string.h>
 
 Heap heap_new(Arena *arena) {
   Heap heap;
   heap.arena = arena;
   heap.oom = false;
+  memset(heap.small_blocks, 0, sizeof heap.small_blocks);
   return heap;
 }
 
@@ -12,6 +14,26 @@ void *heap_alloc(Heap *heap, size_t size) {
   void *out = arena_alloc(heap->arena, size);
   if (out == NULL) heap->oom = true;
   return out;
+}
+
+/* Size class of a small block: 1 for 1..8 bytes, 2 for 9..16, and so on; 0 for an empty request. */
+static size_t heap_small_class(size_t size) { return (size + 7) / 8; }
+
+void *heap_alloc_small(Heap *heap, size_t size) {
+  size_t cls = heap_small_class(size);
+  if (cls == 0 || cls > HEAP_SMALL_CLASSES) return heap_alloc(heap, size);
+  void *block = heap->small_blocks[cls - 1];
+  if (block == NULL) return heap_alloc(heap, cls * 8);
+  heap->small_blocks[cls - 1] = *(void **)block;
+  memset(block, 0, cls * 8);
+  return block;
+}
+
+void heap_release_small(Heap *heap, void *block, size_t size) {
+  size_t cls = heap_small_class(size);
+  if (block == NULL || cls == 0 || cls > HEAP_SMALL_CLASSES) return;
+  *(void **)block = heap->small_blocks[cls - 1];
+  heap->small_blocks[cls - 1] = block;
 }
 
 Str heap_str_cat(Heap *heap, Str a, Str b) {

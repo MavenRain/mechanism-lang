@@ -1,5 +1,6 @@
 /* Port of bend2/tests/kernel_projection_motive.bend (oracle label unit-kernel-projection-motive). */
 #include "driver.h"
+#include "levels_protocol.h"
 
 static MaybeStr no_ind(void) {
   MaybeStr none;
@@ -237,6 +238,9 @@ static int run(Heap *heap) {
   return driver_print(str_lit("PASS dependent pair projection motives: 9 positive assertions, 3 old-port refusals"));
 }
 
+int kernel_projection_motive_run(Heap *heap) { return run(heap); }
+
+#ifndef MECH_DRIVER_LIBRARY
 static int program(int argc, char **argv) {
   (void)argc;
   (void)argv;
@@ -249,3 +253,4 @@ static int program(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) { return rt_run_main(argc, argv, program); }
+#endif
