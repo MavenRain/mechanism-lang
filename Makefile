@@ -127,6 +127,8 @@ C_PRELUDE_SOURCES := $(wildcard c/prelude/*.c)
 C_PRELUDE_HEADERS := $(wildcard c/prelude/*.h)
 C_IMPORT_SOURCES := $(wildcard c/import/*.c)
 C_IMPORT_HEADERS := $(wildcard c/import/*.h)
+C_WASM_SOURCES := $(wildcard c/wasm/*.c)
+C_WASM_HEADERS := $(wildcard c/wasm/*.h)
 # Kernel test drivers: one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c.
 # Checks print PASS or die; probes print lines that c-test compares with c/tests/<driver>.expected.
 C_KERNEL_CHECKS := kernel_budget_callback_check kernel_budget_callbacks kernel_budget_dag kernel_check kernel_conversion kernel_declarations kernel_eval kernel_global_lookup kernel_head_ty_invalid_level kernel_numbers kernel_projection_motive kernel_quantity levels_budget levels_checker levels_exact levels_regression runtime_slice surface_equality wasm_circuit wasm_order
@@ -159,9 +161,13 @@ C_PRELUDE_BINARIES := $(addprefix _tcc/,$(C_PRELUDE_CHECKS))
 C_IMPORT_CHECKS := import_types_protocol mapping_protocol import_regression
 C_IMPORT_CLI := import_json import_export import_translate import_pipeline
 C_IMPORT_BINARIES := $(addprefix _tcc/,$(C_IMPORT_CHECKS) $(C_IMPORT_CLI))
+# The wasm CLI drivers print encoded modules as byte lists that the oracle gate replays; c-test runs the wasm checks.
+C_WASM_CHECKS := wasm_link
+C_WASM_CLI := wasm_encode wasm_layout wasm_nat_runtime wasm_emit wasm_reactor wasm_wide_metadata wasm_oracle
+C_WASM_BINARIES := $(addprefix _tcc/,$(C_WASM_CHECKS) $(C_WASM_CLI))
 C_PRELUDE_LINK := $(C_RELATIONAL_LIBS) _tcc/relational_syntax_equal.o
 .PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
 
 # bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
 # prelude_runtime (S5.1) links it and runs its self test.
@@ -219,6 +225,10 @@ $(C_IMPORT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_IMPORT_SOURCES) 
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/import -o $@ $< $(C_IMPORT_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 
+$(C_WASM_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_WASM_SOURCES) $(C_WASM_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/wasm -o $@ $< $(C_WASM_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
 _tcc/rt_test _tcc/rt_regression_test: _tcc/%: c/tests/%.c $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -o $@ $< $(C_RT_SOURCES) $(LDFLAGS) -lpthread
@@ -242,6 +252,7 @@ c-test: c-build
 	$(foreach d,$(C_SURFACE_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_LEVELS_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_IMPORT_CHECKS),./_tcc/$(d) &&) true
+	$(foreach d,$(C_WASM_CHECKS),./_tcc/$(d) &&) true
 	./_tcc/surface_driver 'def x : Type := Type'
 	./_tcc/surface_check_driver 'def main : Nat := 12345678901234567890123456789'
 	./_tcc/kernel_erase_driver 'def main : Nat := 12345678901234567890123456789'
