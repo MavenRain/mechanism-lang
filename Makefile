@@ -146,7 +146,7 @@ C_SURFACE_CHECKS := surface_expectations surface_lexer surface_parser surface_po
 C_SURFACE_BINARIES := $(addprefix _tcc/,$(C_SURFACE_CHECKS)) _tcc/surface_driver _tcc/surface_shape_metadata _tcc/surface_check_driver _tcc/kernel_erase_driver
 # surface_boundary, surface_shape_metadata and surface_universes import surface_catalog as Test: its library object (MECH_DRIVER_LIBRARY
 # drops main) links into them.
-C_SURFACE_LIBS := _tcc/surface_catalog_lib.o
+C_SURFACE_LIBS := _tcc/surface_catalog_lib.o _tcc/kernel_recursive_lib.o
 C_LEVELS_CHECKS := levels_protocol kernel_large_addresses kernel_conversion_budget kernel_numeric_regressions kernel_computation_replay
 C_LEVELS_BINARIES := $(addprefix _tcc/,$(C_LEVELS_CHECKS))
 C_LEVELS_LIBS := _tcc/levels_regression_lib.o _tcc/levels_protocol_lib.o _tcc/kernel_projection_motive_lib.o _tcc/kernel_large_addresses_lib.o _tcc/kernel_conversion_budget_lib.o
@@ -154,7 +154,7 @@ C_LEVELS_LIBS := _tcc/levels_regression_lib.o _tcc/levels_protocol_lib.o _tcc/ke
 # prerequisite list, which make expands when it reads the rule, sees them.
 C_RELATIONAL_HEADERS := c/tests/relational_fs.h c/tests/relational_common.h c/tests/relational_text.h c/tests/relational_program.h c/tests/relational_digest.h c/tests/relational_negatives.h
 C_RELATIONAL_LIBS := _tcc/relational_fs.o _tcc/relational_common.o _tcc/relational_text.o _tcc/relational_program.o _tcc/relational_digest.o _tcc/relational_negatives.o
-C_PRELUDE_CHECKS := prelude_category prelude_functor prelude_heterogeneous_functor prelude_heterogeneous_nattrans prelude_heterogeneous_whiskering prelude_shared_nattrans prelude_nattrans_laws
+C_PRELUDE_CHECKS := prelude_category prelude_functor prelude_heterogeneous_functor prelude_heterogeneous_nattrans prelude_heterogeneous_whiskering prelude_shared_nattrans prelude_nattrans_laws surface_family_poly
 C_PRELUDE_BINARIES := $(addprefix _tcc/,$(C_PRELUDE_CHECKS))
 # Import test drivers (S3): one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c. The CLI
 # drivers (import_json takes one JSON argument) are replayed by the oracle gate; c-test runs the checks only.
@@ -165,9 +165,84 @@ C_IMPORT_BINARIES := $(addprefix _tcc/,$(C_IMPORT_CHECKS) $(C_IMPORT_CLI))
 C_WASM_CHECKS := wasm_link
 C_WASM_CLI := wasm_encode wasm_layout wasm_nat_runtime wasm_emit wasm_reactor wasm_wide_metadata wasm_oracle
 C_WASM_BINARIES := $(addprefix _tcc/,$(C_WASM_CHECKS) $(C_WASM_CLI))
+# CLI component (S5): c/cli ports bend2/host_fs.bend, bend2/io.bend and bend2/cli (cert.c links c/surface). io_driver runs under
+# dev/bend2-io-check.py in c-test (its oracle calls ran in a temporary directory that no longer exists).
+# kanon.c (bend2/cli/kanon.bend) needs c/wasm, so it is kept out of C_CLI_SOURCES and linked only by
+# the kanon drivers (C_KANON_CLI). The production programs (C_CLI_MAINS: bend2/mech_cert.bend) hold main,
+# so they are kept out too and each links only into its own _tcc/bin/ binary.
+C_CLI_KANON := c/cli/kanon.c
+C_CLI_MAINS := c/cli/mech_cert.c
+C_CLI_SOURCES := $(filter-out $(C_CLI_KANON) $(C_CLI_MAINS),$(wildcard c/cli/*.c))
+C_CLI_HEADERS := $(wildcard c/cli/*.h)
+# CLI drivers over c/cli + surface + kernel. prelude_protocol (suite mode elaborates the whole prelude)
+# is built by c-build; its suite and --audit runs are gated outside c-test. template_cost (live JS oracle
+# W/oracle/template-cost) is built by c-build and run by c-test on prelude/cat/category.mech.
+# wasm_circuit_bounds (Out.cli_exit from c/cli) is run by c-test (CIRCUIT-BOUNDS 18/18).
+C_IO_CLI := io_driver prelude_protocol template_cost wasm_circuit_bounds
+C_IO_BINARIES := $(addprefix _tcc/,$(C_IO_CLI))
+C_CLI_FAULT_CHECKS := cli_allocation
+C_CLI_FAULT_BINARIES := $(addprefix _tcc/,$(C_CLI_FAULT_CHECKS))
+$(C_CLI_FAULT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
+$(C_IO_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+# CLI drivers that also link the import pipeline (c/import). import_protocol reads the frozen UAT export
+# through Files.read_file with --corpus; c-test runs its 120 fixture cases (IMPORT-OK).
+C_IMPORT_IO := import_protocol
+C_IMPORT_IO_BINARIES := $(addprefix _tcc/,$(C_IMPORT_IO))
+$(C_IMPORT_IO_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_IMPORT_SOURCES) $(C_IMPORT_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/import -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_IMPORT_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+# CLI drivers that also link the WasmGC backend (c/wasm). wasm_host writes /private/tmp and spawns
+# node and wasmtime, so it is built by c-build but not run by c-test. wasm_protocol (SUITE-WASM) spawns
+# wasm-opt and node over a fixture repo; its live oracle replay (W/hop168-driver-oracle.sh) gates it.
+C_CLI_WASM := wasm_host wasm_protocol
+C_CLI_WASM_BINARIES := $(addprefix _tcc/,$(C_CLI_WASM))
+$(C_CLI_WASM_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_WASM_SOURCES) $(C_WASM_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/wasm -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+# The kanon drivers link c/cli/kanon.c over c/cli + wasm + surface + kernel. cli_core (bend2/tests/cli_core.bend)
+# is built by c-build; it writes temporary files and spawns node and wasmtime, so its live oracle replay
+# (the corpus kanon label) and bend2/tests/cli_core_check.py gate it outside c-test. The kanon drivers go to
+# _tcc/bin/ as the Bend binaries go to _bend2/bin/: Host.root (bend2/cli/host.bend) is the third dirname of
+# the executable, and kanon run finds dev/run-node.mjs and dev/run-wasmtime.sh under that root.
+C_KANON_CLI := cli_core
+C_KANON_BINARIES := $(addprefix _tcc/bin/,$(C_KANON_CLI))
+$(C_KANON_BINARIES): _tcc/bin/%: c/tests/%.c $(C_CLI_KANON) $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_WASM_SOURCES) $(C_WASM_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc/bin
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/wasm -I c/cli -o $@ $< $(C_CLI_KANON) $(C_CLI_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+# mech_cert (bend2/mech_cert.bend) is c/cli/mech_cert.c over c/cli (cert.c) + surface + kernel. c-build builds
+# it to _tcc/bin/ beside the kanon drivers; dev/bend2-cli-check.py --cert _tcc/bin/mech_cert gates its 13
+# cert cases (it writes temporary files, so it runs outside c-test).
+C_CERT_BINARIES := _tcc/bin/mech_cert
+$(C_CERT_BINARIES): _tcc/bin/%: c/cli/%.c $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc/bin
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+# prelude_runtime also links the two runtime library modules: runtime_slice.c compiled with
+# RUNTIME_SLICE_LIBRARY (which drops its c-test main) and runtime_reachable.o. c-build builds it, c-test
+# runs its --slice-self-test; its oracle calls (test/gpu_auction.py) are replayed outside c-test.
+C_CLI_RUNTIME := prelude_runtime
+C_CLI_RUNTIME_BINARIES := $(addprefix _tcc/,$(C_CLI_RUNTIME))
+C_RUNTIME_LINK := _tcc/runtime_slice_library.o _tcc/runtime_reachable.o
+_tcc/runtime_slice_library.o: c/tests/runtime_slice.c $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -DRUNTIME_SLICE_LIBRARY -I c/rt -I c/kernel -c -o $@ $<
+$(C_CLI_RUNTIME_BINARIES): _tcc/%: c/tests/%.c $(C_RUNTIME_LINK) $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_WASM_SOURCES) $(C_WASM_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/wasm -I c/cli -o $@ $< $(C_RUNTIME_LINK) $(C_CLI_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 C_PRELUDE_LINK := $(C_RELATIONAL_LIBS) _tcc/relational_syntax_equal.o
+# Relational drivers that also link c/cli. kernel_protocol (SUITE-KERNEL) links the kernel_recursive
+# library object; its live oracle replay (W/hop168-driver-oracle.sh) gates it, so c-test does not run it.
+C_RELATIONAL_IO := kernel_protocol
+C_RELATIONAL_IO_BINARIES := $(addprefix _tcc/,$(C_RELATIONAL_IO))
+C_RELATIONAL_IO_LINK := $(C_PRELUDE_LINK) _tcc/kernel_recursive_lib.o
+$(C_RELATIONAL_IO_BINARIES): _tcc/%: c/tests/%.c $(C_RELATIONAL_IO_LINK) c/tests/kernel_recursive.h $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -I c/cli -o $@ $< $(C_RELATIONAL_IO_LINK) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 .PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
 
 # bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
 # prelude_runtime (S5.1) links it and runs its self test.
@@ -253,6 +328,12 @@ c-test: c-build
 	$(foreach d,$(C_LEVELS_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_IMPORT_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_WASM_CHECKS),./_tcc/$(d) &&) true
+	$(PYTHON) -P dev/bend2-io-check.py --driver _tcc/io_driver
+	$(foreach d,$(C_CLI_FAULT_CHECKS),./_tcc/$(d) &&) true
+	./_tcc/prelude_runtime --slice-self-test
+	./_tcc/template_cost prelude/cat/category.mech --through Hom > /dev/null
+	./_tcc/wasm_circuit_bounds > /dev/null
+	./_tcc/import_protocol > /dev/null
 	./_tcc/surface_driver 'def x : Type := Type'
 	./_tcc/surface_check_driver 'def main : Nat := 12345678901234567890123456789'
 	./_tcc/kernel_erase_driver 'def main : Nat := 12345678901234567890123456789'

@@ -313,9 +313,12 @@ ProcessResult host_process_run(const char *const *argv, size_t argc, Str stdout_
         bool exited = waited >= 0 && WIFEXITED(status);
         bool signaled = waited >= 0 && WIFSIGNALED(status);
         uint32_t exit_code = exited ? (uint32_t)WEXITSTATUS(status) : signaled ? 128u + (uint32_t)WTERMSIG(status) : 127u;
-        result = process_result(PROCESS_RAN, exit_code);
+        if (waited < 0) code = errno;
+        else result = process_result(PROCESS_RAN, exit_code);
       }
     }
+    /* bend2/cli/effects/process.c: a failed spawn or wait keeps exit 127 and writes one stderr line. */
+    if (code != 0) dprintf(err, "invalid: %s: %s\n", argv[0], strerror(code));
   }
   close(out);
   close(err);

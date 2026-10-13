@@ -2,6 +2,7 @@
  * guarded neutrals stay neutral, opacity is honoured, and two raw kernel negatives fail with the exact text. */
 #include "driver.h"
 #include "surface.h"
+#include "kernel_recursive.h"
 
 /* source(): transcribed verbatim from the Bend driver (same escapes). */
 static const char *SOURCE =
@@ -135,6 +136,12 @@ static Result validate(Heap *heap, const ElabChecked *checked) {
   return require(heap, is_neutral(value), str_lit("an explicitly opaque recursive definition unfolded"));
 }
 
+/* source() and validate(checked) as kernel_protocol (Recursive) calls them. */
+Str kernel_recursive_source(void) { return str_lit(SOURCE); }
+
+Result kernel_recursive_validate(Heap *heap, const ElabChecked *checked) { return validate(heap, checked); }
+
+#ifndef MECH_DRIVER_LIBRARY
 /* mu_negative(result): Fail{Not_yet{"a right former at a mu shape arrives at M2"}} */
 static bool mu_negative(Result result) {
   if (result.kind != RESULT_FAIL || result.error.kind != ERROR_NOT_YET) return false;
@@ -187,3 +194,4 @@ static int program(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) { return rt_run_main(argc, argv, program); }
+#endif
