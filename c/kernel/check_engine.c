@@ -4,6 +4,8 @@
  * budget_bind chains; each continuation keeps its free variables in a heap allocated Frame. */
 #include "kernel.h"
 
+#include <stddef.h>
+
 /* ---- host helpers (not in the Bend source) ---- */
 
 static Comp comp_oom(void) { return budget_failed(error_host_oom()); }
@@ -19,62 +21,79 @@ static NextK next_k(Comp (*fn)(Heap *heap, void *ctx, void *value), void *ctx) {
  * A Comp can run again, so its captured frame stays live until the arena is freed. */
 typedef struct {
   Ctx ctx;
+  const Value * value;
   Quantity mode;
-  bool flag;
-  Str name;
-  Str message;
-  Nat nat;
-  Nat nat2;
-  Shape shape;
-  Addr addr;
-  const Term *term;
-  const Term *term2;
-  const Term *term3;
-  const Value *value;
-  const Value *value2;
-  const LevelVar *level;
+  const Term * term;
   Vec vec;
+  Str name;
+  const Value * value2;
   Usage uses;
-  Inferred inferred;
-  ExpectedValue expected;
-  const Locals *locals;
-  const Vec *items;
-  const Vec *items2;
-  Vec vec2;
-  Ctx inner;
   Former former;
-  Point point;
-  Leg leg;
-  Binder binder;
-  Binder binder2;
-  MaybeMotive motive;
-  const ElimData *data;
+  Vec vec2;
+  const Term * term2;
+  const Vec * items;
+  Shape shape;
   Big big;
-  const Value *value3;
-  MaybeLevelVar expected_level;
-  Big big2;
-  Family family; Ctor ctor; Mu mu; Motive mot; Vec vec3; Vec vec4; Vec vec5; Quantity q; Usage uses2; Str name2; Nat nat3;
-  Fields fields;
+  Nat nat;
+  Inferred inferred;
+  bool flag;
+  const Value * value3;
+  Vec vec3;
+  ExpectedValue expected;
+  Point point;
   Closure clo;
-  ProofArgs proof;
-  const LevelVar *level2;
-  Quantity q2;
-  Former former2;
-  Big big3;
+  Nat nat2;
+  const ElimData * data;
+  Quantity q;
+  const LevelVar * level;
+  Family family;
+  Str name2;
+  const Value * value4;
+  Motive mot;
+  Vec vec4;
+  Addr addr;
+  const Term * term3;
+  Ctx inner;
+  Leg leg;
+  Big big2;
   Mpc mpc;
-  const Value *value4;
-  const Value *value5;
-  const Term *term4;
+  Str message;
+  Binder binder;
+  MaybeMotive motive;
+  const Value * value5;
+  VAddr vaddr;
+  MaybeLevelVar expected_level;
+  Ctor ctor;
+  Mu mu;
+  Vec vec5;
+  Usage uses2;
+  Big big3;
   Inferred inferred2;
   Closure clo2;
-  StuckElim stuck;
-  StuckElim stuck2;
-  VAddr vaddr;
   VAddr vaddr2;
   Shape shape2;
+  const Locals * locals;
+  Binder binder2;
+  Nat nat3;
+  Fields fields;
+  ProofArgs proof;
+  const LevelVar * level2;
+  Quantity q2;
+  Former former2;
+  const Term * term4;
+  StuckElim stuck;
+  StuckElim stuck2;
   Leg leg2;
   MaybeLevelVar expected_level2;
+  const Vec * items2;
 } Frame;
+
+/* Each bind allocates only the prefix of Frame up to the last field that its continuation chain
+ * touches (hop 232: a full Frame is 3504 bytes and the arena never frees it inside one declaration).
+ * The fields are ordered by the number of chains that use them. */
+#define FRAME_UPTO(field) (offsetof(Frame, field) + sizeof(((Frame *)0)->field))
+
+static Frame *frame_new_upto(Heap *heap, size_t size) { return heap_alloc(heap, size); }
 
 static Frame *frame_new(Heap *heap) { return heap_alloc(heap, sizeof(Frame)); }
 
@@ -288,7 +307,7 @@ Comp check_engine_scope_walk(Heap *heap, Vec todo, Nat arity) {
   case VEC_GET_OK:
     break;
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(nat));
   if (f == NULL) return comp_oom();
   f->term = head.value;
   f->vec = todo;
@@ -312,7 +331,7 @@ Comp check_engine_scope(Heap *heap, Ctx ctx, const Term *term) {
   if (ctx.levels_checked) return pure_ctx(heap, ctx);
   todo = vec_new(heap->arena);
   if (!vec_push(&todo, (void *)term)) return comp_oom();
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   return bind_frame(heap, check_engine_scope_walk(heap, todo, ctx.level_arity), scope_after_walk, f);
@@ -361,7 +380,7 @@ Comp check_engine_close_continue(Heap *heap, bool outside, const Locals *rest, N
                                  bool affine, Usage uses, Str name, Quantity q) {
   Frame *f;
   if (outside) return pure_usage(heap, uses);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(locals));
   if (f == NULL) return comp_oom();
   f->locals = rest;
   f->nat = level;
@@ -451,7 +470,7 @@ static Comp infer_univ_after_infer(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_infer_univ(Heap *heap, Ctx ctx, const Term *term) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   return bind_frame(heap, check_engine_infer_uses(heap, ctx, QUANTITY_ZERO, term), infer_univ_after_infer, f);
@@ -479,7 +498,7 @@ Comp check_engine_local_infer(Heap *heap, MaybeLocal local, Nat index, Nat size,
     return budget_failed(error_make(
         ERROR_UNBOUND, cat3(heap, str_lit("de Bruijn index "), heap_nat_show(heap, index), str_lit(" is outside the context"))));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(nat2));
   if (f == NULL) return comp_oom();
   f->name = local.value.name;
   f->value = local.value.ty;
@@ -503,7 +522,7 @@ static Comp infer_ann_after_check(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_infer_ann(Heap *heap, Ctx ctx, Quantity mode, const Term *body, const Value *ty) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value));
   if (f == NULL) return comp_oom();
   f->value = ty;
   return bind_frame(heap, check_engine_check_uses(heap, ctx, mode, body, ty), infer_ann_after_check, f);
@@ -542,7 +561,7 @@ static Comp infer_node_lit(Heap *heap, Ctx ctx, Literal lit) {
   Frame *f;
   switch (lit.kind) {
   case LITERAL_INT:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(ctx));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     return bind_frame(heap,
@@ -575,7 +594,7 @@ Comp check_engine_infer_node(Heap *heap, Ctx ctx, Quantity mode, const Term *ter
   case TERM_LET:
     return check_engine_let_body(heap, ctx, mode, term->name, term->ty, term->value, term->body, expected_none());
   case TERM_ANN:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(term2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -606,7 +625,7 @@ static Comp infer_scoped_after_scope(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_infer_scoped(Heap *heap, Ctx ctx, Quantity mode, const Term *term) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->mode = mode;
   f->term = term;
@@ -620,7 +639,7 @@ static Comp infer_uses_after_tick(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_infer_uses(Heap *heap, Ctx ctx, Quantity mode, const Term *term) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -643,7 +662,7 @@ static Comp ensure_after_conv(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_ensure(Heap *heap, Ctx ctx, const Value *got, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = got;
@@ -658,7 +677,7 @@ static Comp check_inferred_after_ensure(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_check_inferred(Heap *heap, Inferred got, Ctx ctx, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(uses));
   if (f == NULL) return comp_oom();
   f->uses = got.uses;
   return bind_frame(heap, check_engine_ensure(heap, ctx, got.ty, expected), check_inferred_after_ensure, f);
@@ -679,7 +698,7 @@ static Comp check_former_equal_after_decide(Heap *heap, void *ctx, void *value) 
 }
 
 Comp check_engine_check_former_equal(Heap *heap, const LevelVar *got, const LevelVar *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(level));
   if (f == NULL) return comp_oom();
   f->level = got;
   f->value = (const Value *)expected;
@@ -693,7 +712,7 @@ static Comp check_former_level_after_form(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_check_former_level(Heap *heap, const LevelVar *level, Ctx ctx, bool left, Shape shape,
                                      const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(level));
   if (f == NULL) return comp_oom();
   f->level = level;
   return bind_frame(heap, check_engine_form(heap, ctx, left, shape, diagram, level_some(level)),
@@ -732,7 +751,7 @@ static Comp check_former_after_whnf(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_check_former(Heap *heap, Ctx ctx, bool left, Shape shape, const Term *diagram,
                                const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(flag));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->flag = left;
@@ -761,7 +780,7 @@ Comp check_engine_check_node(Heap *heap, Ctx ctx, Quantity mode, const Term *ter
   case TERM_IN:
     return check_engine_intro_in(heap, ctx, mode, term->shape, term->addr, &term->args, expected);
   case TERM_ELIM:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(value));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->value = expected;
@@ -785,7 +804,7 @@ Comp check_engine_check_node(Heap *heap, Ctx ctx, Quantity mode, const Term *ter
   case TERM_AUTO:
     break;
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = expected;
@@ -799,7 +818,7 @@ static Comp check_uses_after_scope(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_check_uses(Heap *heap, Ctx ctx, Quantity mode, const Term *term, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->mode = mode;
   f->term = term;
@@ -834,7 +853,7 @@ static Comp let_finish_after_close(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_let_finish(Heap *heap, Inferred result, Ctx inner, Nat size, Quantity mode, Usage def_uses,
                              bool linear) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(uses));
   if (f == NULL) return comp_oom();
   f->value = result.ty;
   f->mode = mode;
@@ -851,7 +870,7 @@ static Comp let_inner_after_check(Heap *heap, void *ctx, void *value) {
 Comp check_engine_let_inner(Heap *heap, ExpectedValue expected, Ctx inner, Quantity mode, const Term *body) {
   Frame *f;
   if (!expected.some) return check_engine_infer_uses(heap, inner, mode, body);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value));
   if (f == NULL) return comp_oom();
   f->value = expected.value;
   return bind_frame(heap, check_engine_check_uses(heap, inner, mode, body, expected.value), let_inner_after_check, f);
@@ -868,7 +887,7 @@ Comp check_engine_let_defined(Heap *heap, Ctx ctx, Quantity mode, Str name, cons
   bool linear = check_engine_has_linear(heap, ctx, uses);
   Quantity q = quantity_equal(mode, QUANTITY_ZERO) ? QUANTITY_ZERO : (linear ? QUANTITY_ONE : QUANTITY_MANY);
   Ctx inner = context_define(heap, name, q, ty, value, ctx);
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(flag));
   if (f == NULL) return comp_oom();
   f->ctx = inner;
   f->nat = context_size_of(ctx);
@@ -892,7 +911,7 @@ static Comp let_typed_after_check(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_let_typed(Heap *heap, Ctx ctx, Quantity mode, Str name, const Value *ty, const Term *value,
                             const Term *body, ExpectedValue expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(expected));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -918,7 +937,7 @@ static Comp let_body_after_univ(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_let_body(Heap *heap, Ctx ctx, Quantity mode, Str name, const Term *ty, const Term *value,
                            const Term *body, ExpectedValue expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -964,7 +983,7 @@ static Comp former_view_after_whnf(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_former_view(Heap *heap, Ctx ctx, bool left, const Value *value, Str message) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(message));
   if (f == NULL) return comp_oom();
   f->flag = left;
   f->message = message;
@@ -1050,7 +1069,7 @@ static Error binder_quantity_error(Heap *heap, void *ctx) {
 }
 
 Comp check_engine_binder_quantity(Heap *heap, Str subject, Str source, Str name, Quantity marked, Quantity declared) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(message));
   Str *source_box = heap_alloc(heap, sizeof *source_box);
   ErrorThunk thunk;
   if (f == NULL || source_box == NULL) return comp_oom();
@@ -1169,7 +1188,7 @@ static Comp point_form_after_dom(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_point_form(Heap *heap, Ctx ctx, bool left, Quantity q, Str name, const Term *dom,
                              const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(level));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->flag = left;
@@ -1245,7 +1264,7 @@ static Comp point_intro_sec_after_former(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_point_intro_sec(Heap *heap, Ctx ctx, Quantity mode, const Vec *legs, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(binder));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1315,7 +1334,7 @@ static Comp point_intro_in_after_former(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_point_intro_in(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Vec *args,
                                  const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(addr));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1380,7 +1399,7 @@ static Comp point_elim_out_after_arg(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_point_elim_out(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Term *head) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(point));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1428,7 +1447,7 @@ static Comp infer_scrutinee_after_require(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_infer_scrutinee(Heap *heap, Ctx ctx, Quantity mode, const ElimData *data) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(data));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1458,7 +1477,7 @@ static Comp first_branch_pair_after_index(Heap *heap, void *ctx, void *value) {
 
 /* The ready value is the Leg pointer of the branch. */
 Comp check_engine_first_branch_pair(Heap *heap, const Branch *branch) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(items));
   if (f == NULL) return comp_oom();
   f->items = (const Vec *)&branch->leg;
   return bind_frame(heap, check_engine_leg_index(heap, branch->addr, str_lit("the branch takes the leg address")),
@@ -1513,7 +1532,7 @@ Comp check_engine_point_branch(Heap *heap, Leg leg, Ctx ctx, Quantity mode, Form
     return budget_failed(
         error_text(ERROR_MISSING_BRANCH, "the branch binds the point and the fibre element (D-M0-3)"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(binder2));
   if (f == NULL) return comp_oom();
   size = context_size_of(ctx);
   f->ctx = ctx;
@@ -1601,7 +1620,7 @@ static Comp point_elim_elim_after_infer(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_point_elim_elim(Heap *heap, Ctx ctx, Quantity mode, const ElimData *data, ExpectedValue expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(data));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1630,7 +1649,7 @@ Comp check_engine_coll_levels(Heap *heap, Vec legs, Ctx ctx, const LevelVar *lev
   first = vec_get(&legs, 0);
   if (first.status != VEC_GET_OK) return pure_level(level);
   leg = first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(level));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = legs;
@@ -1658,7 +1677,7 @@ Comp check_engine_coll_form(Heap *heap, Ctx ctx, Big count, const Term *diagram,
   if (diagram->kind != TERM_SEC || diagram->shape.kind != SHAPE_COLL) {
     return budget_failed(error_text(ERROR_MISMATCH, "the diagram is not a section of the declared width"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(expected_level));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->big = count;
@@ -1709,7 +1728,7 @@ Comp check_engine_coll_check_legs(Heap *heap, Vec legs, Vec dlegs, Ctx ctx, Quan
   }
   leg = first.value;
   dleg = dfirst.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1752,7 +1771,7 @@ static Comp coll_intro_sec_after_former(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_coll_intro_sec(Heap *heap, Ctx ctx, Quantity mode, Big count, const Vec *legs,
                                  const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(big));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1816,7 +1835,7 @@ static Comp coll_intro_in_after_former(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_coll_intro_in(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Vec *args, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(big2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1880,7 +1899,7 @@ static Comp coll_elim_out_after_index(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_coll_elim_out(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Term *head) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(inferred));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -1938,7 +1957,7 @@ static Comp coll_branch_after_leg(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_coll_branch(Heap *heap, Ctx ctx, Quantity mode, const ElimData *data, Shape shape, Vec dlegs,
                               ExpectedValue expected, Nat index) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(binder));
   MaybeLegPtr found;
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
@@ -1964,7 +1983,7 @@ Comp check_engine_coll_branches(Heap *heap, Nat count, Nat index, Ctx ctx, Quant
                                 Shape shape, Vec dlegs, ExpectedValue expected, Usage uses) {
   Frame *f;
   if (nat_is_zero(count)) return pure_usage(heap, uses);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(data));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -2056,7 +2075,7 @@ static Comp coll_elim_elim_after_infer(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_coll_elim_elim(Heap *heap, Ctx ctx, Quantity mode, const ElimData *data, ExpectedValue expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(data));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -2204,7 +2223,7 @@ Comp check_engine_telescope_loop(Heap *heap, Vec tele, Vec args, Ctx ctx, Quanti
     return budget_failed(error_text(ERROR_MISMATCH, "the telescope has the wrong arity"));
   }
   binder = first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(uses2));
   if (f == NULL) return comp_oom();
   f->vec = tele;
   f->vec2 = args;
@@ -2232,7 +2251,7 @@ static Comp telescope_uses_after_require(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_telescope_uses(Heap *heap, Ctx ctx, Quantity mode, Str what, const Vec *tele, const Vec *args,
                                  Vec env) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(message));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -2280,7 +2299,7 @@ static Comp mu_form_after_family(Heap *heap, void *ctx, void *value) {
 
 /* indices: Term pointers. */
 Comp check_engine_mu_form(Heap *heap, Ctx ctx, Str name, const Vec *indices, const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(family));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->name = name;
@@ -2350,7 +2369,7 @@ Comp check_engine_index_loop(Heap *heap, Vec tele, Vec results, Vec wants, Ctx c
     return budget_failed(error_text(ERROR_MISMATCH, "the family index telescope has the wrong arity"));
   }
   binder = first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec5));
   if (f == NULL) return comp_oom();
   f->vec = tele;
   f->vec2 = results;
@@ -2382,7 +2401,7 @@ static Comp mu_indices_after_require(Heap *heap, void *ctx, void *value) {
 /* tele: TeleBinder pointers; results: Term pointers; penv, wants, env: Value pointers. */
 Comp check_engine_mu_indices(Heap *heap, Ctx ctx, Str name, Str ctor, const Vec *tele, const Vec *results, Vec penv,
                              Vec wants, Vec env) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(vec5));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->name = name;
@@ -2480,7 +2499,7 @@ static Comp mu_intro_in_after_former(Heap *heap, void *ctx, void *value) {
 
 /* args: Term pointers. */
 Comp check_engine_mu_intro_in(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Vec *args, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(mu));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -2567,7 +2586,7 @@ static Comp mu_motive_of_after_motive(Heap *heap, void *ctx, void *value) {
 
 /* indices: Value pointers. The ready value is a heap boxed Motive. */
 Comp check_engine_mu_motive_of(Heap *heap, Str name, Family fam, const Vec *indices, const ElimData *data) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(nat3));
   MaybeMotive motive;
   Motive *boxed;
   if (f == NULL) return comp_oom();
@@ -2621,7 +2640,7 @@ Comp check_engine_motive_bind_indices(Heap *heap, Vec tele, Vec names, Ctx ctx, 
         error_make(ERROR_MISMATCH, cat3(heap, str_lit("the motive of "), family, str_lit(" does not bind the indices"))));
   }
   binder = first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec4));
   if (f == NULL) return comp_oom();
   f->vec = tele;
   f->vec2 = names;
@@ -2649,7 +2668,7 @@ static Comp mu_motive_level_after_fields(Heap *heap, void *ctx, void *value) {
 
 /* penv: Value pointers. */
 Comp check_engine_mu_motive_level(Heap *heap, Ctx ctx, Str name, Family fam, Motive motive, Former former, Vec penv) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(mot));
   if (f == NULL) return comp_oom();
   f->name = name;
   f->mot = motive;
@@ -2699,7 +2718,7 @@ static Error mu_large_error(Heap *heap, void *ctx) {
 }
 
 Comp check_engine_mu_large(Heap *heap, Str name, Family fam, const LevelVar *level) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(name));
   bool valid;
   if (f == NULL) return comp_oom();
   f->name = name;
@@ -2741,7 +2760,7 @@ Comp check_engine_branch_keys(Heap *heap, Vec branches, Str name) {
     return budget_failed(
         error_make(ERROR_WRONG_LEG, cat3(heap, str_lit("a branch of "), name, str_lit(" takes the constructor address"))));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value));
   if (f == NULL) return comp_oom();
   f->value = (const Value *)&branch->addr.name;
   return bind_frame(heap, check_engine_branch_keys(heap, list_tail(branches), name), branch_keys_after_rest, f);
@@ -2785,7 +2804,7 @@ Comp check_engine_cover_names(Heap *heap, Vec names, const Vec *keys, Str family
   first = vec_get(&names, 0);
   if (first.status != VEC_GET_OK) return pure_unit();
   name = *(const Str *)first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(items));
   if (f == NULL) return comp_oom();
   f->vec = names;
   f->items = keys;
@@ -2812,7 +2831,7 @@ Comp check_engine_cover_known(Heap *heap, Vec keys, const Vec *names, Str family
   if (keys.len == 0) return pure_unit();
   first = vec_get(&keys, 0);
   if (first.status != VEC_GET_OK) return pure_unit();
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(name2));
   if (f == NULL) return comp_oom();
   f->vec = keys;
   f->items = names;
@@ -2837,7 +2856,7 @@ static Comp mu_cover_after_keys(Heap *heap, void *ctx, void *value) {
 
 /* names: Str pointers; branches: Branch pointers. */
 Comp check_engine_mu_cover(Heap *heap, Str name, const Vec *names, const Vec *branches) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(items));
   if (f == NULL) return comp_oom();
   f->name = name;
   f->items = names;
@@ -2886,7 +2905,7 @@ Comp check_engine_branch_bind_fields(Heap *heap, Vec tele, Vec binders, Ctx ctx,
   if (first.status != VEC_GET_OK || second.status != VEC_GET_OK) return comp_oom();
   binder = first.value;
   pair = second.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(q2));
   if (f == NULL) return comp_oom();
   f->vec = tele;
   f->vec2 = binders;
@@ -2994,7 +3013,7 @@ static Comp mu_branch_after_ctor(Heap *heap, void *ctx, void *value) {
 /* penv: Value pointers; branches: Branch pointers. */
 Comp check_engine_mu_branch(Heap *heap, Ctx ctx, Quantity mode, Str name, Family fam, Motive motive, Vec penv,
                             const Vec *branches, Str ctor) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(fields));
   MaybeCtor ct;
   Ctor *boxed;
   if (f == NULL) return comp_oom();
@@ -3029,7 +3048,7 @@ Comp check_engine_mu_branches(Heap *heap, Vec names, Ctx ctx, Quantity mode, Str
   if (names.len == 0) return pure_usage(heap, uses);
   first = vec_get(&names, 0);
   if (first.status != VEC_GET_OK) return comp_oom();
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(mot));
   if (f == NULL) return comp_oom();
   f->vec = names;
   f->ctx = ctx;
@@ -3154,7 +3173,7 @@ static Comp mu_elim_elim_after_got(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_mu_elim_elim(Heap *heap, Ctx ctx, Quantity mode, const ElimData *data) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(mu));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3228,7 +3247,7 @@ static Comp zk_form_after_dom_level(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_zk_form(Heap *heap, Ctx ctx, Quantity q, Str name, const Term *dom, const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(level2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->q = q;
@@ -3253,7 +3272,7 @@ Comp check_engine_proof_args(Heap *heap, Vec args, Ctx ctx, Quantity mode) {
   if (args.len != 2 || first.status != VEC_GET_OK || second.status != VEC_GET_OK) {
     return budget_failed(error_make(ERROR_MISMATCH, str_lit("a proof carries one relation leg")));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->term = first.value;
   return bind_frame(heap, check_engine_infer_uses(heap, ctx, mode, second.value), proof_args_after_got, f);
@@ -3285,7 +3304,7 @@ static Comp zk_prove_after_point(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_zk_prove(Heap *heap, ProofArgs args, Ctx ctx, Quantity mode, const Value *dom, Closure clo,
                            const Term *point) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(proof));
   if (f == NULL) return comp_oom();
   f->proof = args;
   f->ctx = ctx;
@@ -3327,7 +3346,7 @@ static Comp zk_intro_in_after_former(Heap *heap, void *ctx, void *value) {
 
 /* args: Term pointers. */
 Comp check_engine_zk_intro_in(Heap *heap, Ctx ctx, Quantity mode, Addr addr, const Vec *args, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(addr));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3355,7 +3374,7 @@ static Comp fhc_level_after_reduced(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_fhc_level(Heap *heap, Ctx ctx, const Value *value) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   return bind_frame(heap, check_engine_whnf(heap, ctx, value), fhc_level_after_reduced, f);
 }
@@ -3382,7 +3401,7 @@ Comp check_engine_fragment_legs(Heap *heap, Vec legs, Ctx ctx) {
   first = vec_get(&legs, 0);
   if (first.status != VEC_GET_OK) return comp_oom();
   leg = first.value;
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec));
   if (f == NULL) return comp_oom();
   f->vec = legs;
   f->ctx = ctx;
@@ -3400,7 +3419,7 @@ Comp check_engine_fragment_former(Heap *heap, Shape shape, Closure clo, Ctx ctx)
   if (shape.kind != SHAPE_COLL) {
     return budget_failed(error_text(ERROR_MISMATCH, "a ciphertext carries a fragment type"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   return bind_frame(heap, lift_vec(heap, rules_coll_legs_of(heap, ctx, clo)), fragment_former_after_legs, f);
@@ -3432,7 +3451,7 @@ static Comp fhc_fragment_after_whnf(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_fhc_fragment(Heap *heap, Ctx ctx, const Value *ty) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   return bind_frame(heap, check_engine_whnf(heap, ctx, ty), fhc_fragment_after_whnf, f);
@@ -3468,7 +3487,7 @@ static Comp fhc_form_after_value(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_fhc_form(Heap *heap, Ctx ctx, const Term *level, const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(level));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->term = level;
@@ -3594,7 +3613,7 @@ static Comp fhc_eval_after_depth(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_fhc_eval(Heap *heap, Ctx ctx, Quantity mode, Big out_level, const Value *out_ty, const Value *fty,
                            Usage f_uses, const Term *function, const Term *cipher) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(former2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3615,7 +3634,7 @@ static Comp fhc_const_pi_after_term(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_fhc_const_pi(Heap *heap, Ctx ctx, const Value *dom, const Value *cod) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = dom;
@@ -3700,7 +3719,7 @@ static Comp fhc_cipher_first_after_depth(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_fhc_cipher_first(Heap *heap, Ctx ctx, Quantity mode, Big out_level, const Value *out_ty,
                                    const Term *function, const Term *cipher) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(big3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3735,7 +3754,7 @@ Comp check_engine_fhc_head_function(Heap *heap, bool is_fun, Ctx ctx, Quantity m
   if (is_fun) {
     return check_engine_fhc_eval(heap, ctx, mode, out_level, out_ty, fw, uses, first, second);
   } else {
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(term2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -3766,7 +3785,7 @@ Comp check_engine_fhc_head_result(Heap *heap, const Result *result, Ctx ctx, Qua
     return check_engine_fhc_cipher_first(heap, ctx, mode, out_level, out_ty, first, second);
   case RESULT_DONE:
     got = result->value;
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(big));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -3803,7 +3822,7 @@ Comp check_engine_fhc_legs(Heap *heap, const Vec *legs, Ctx ctx, Quantity mode, 
   if (head->binders.len != 0 || tail->binders.len != 0) {
     return budget_failed(error_text(ERROR_MISMATCH, "a ciphertext section takes two arguments"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(big));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3847,7 +3866,7 @@ static Comp fhc_intro_sec_after_former(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_fhc_intro_sec(Heap *heap, Ctx ctx, Quantity mode, const Vec *legs, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(big));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -3917,7 +3936,7 @@ Comp check_engine_fhc_elim_out(Heap *heap, Ctx ctx, Quantity mode, Addr addr, co
   Frame *f;
   switch (addr.kind) {
   case ADDR_PT:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(inferred2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -4014,7 +4033,7 @@ static Comp mpc_form_after_pv(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_mpc_form(Heap *heap, Ctx ctx, const Term *parties, const Term *access, const Term *diagram) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->term = access;
@@ -4030,7 +4049,7 @@ static Comp mpc_share_ty_after_term(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_mpc_share_ty(Heap *heap, Ctx ctx, const Value *pv, const Value *av, const Value *ty) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = pv;
@@ -4093,7 +4112,7 @@ Comp check_engine_mpc_shares(Heap *heap, Vec shares, Ctx ctx, Quantity mode, Mpc
   if (shares.len == 0) return pure_inferred(heap, fty, quantity_empty(heap));
   first = vec_get(&shares, 0);
   if (first.status != VEC_GET_OK) return comp_oom();
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(mpc));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -4180,7 +4199,7 @@ static Comp mpc_join_after_count(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_mpc_join(Heap *heap, Ctx ctx, Quantity mode, Mpc mpc, const Value *out_ty, const Term *ps,
                            const Term *function, Vec shares) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(inferred2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -4210,7 +4229,7 @@ Comp check_engine_mpc_args(Heap *heap, Vec legs) {
   if (leg->binders.len != 0) {
     return budget_failed(error_text(ERROR_MISMATCH, "an mpc section leg binds nothing"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->term = leg->body;
   return bind_frame(heap, check_engine_mpc_args(heap, list_tail(legs)), mpc_args_after_others, f);
@@ -4247,7 +4266,7 @@ Comp check_engine_mpc_intro_args(Heap *heap, Vec args, Ctx ctx, Quantity mode, M
   second = vec_get(&args, 1);
   if (second.status != VEC_GET_OK) return comp_oom();
   if (args.len == 2) {
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(uses));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -4293,7 +4312,7 @@ static Comp mpc_intro_sec_after_former(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_mpc_intro_sec(Heap *heap, Ctx ctx, Quantity mode, const Vec *legs, const Value *expected) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(mpc));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -4318,7 +4337,7 @@ Comp check_engine_mpc_address(Heap *heap, const Term *point) {
     return budget_failed(
         error_text(ERROR_WRONG_LEG, "open takes the party set address with the authorization proof"));
   }
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(term));
   if (f == NULL) return comp_oom();
   f->term = point->addr.arg;
   return bind_frame(heap,
@@ -4416,7 +4435,7 @@ static Comp mpc_open_pair_after_got(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_mpc_open_pair(Heap *heap, Pair pair, Ctx ctx, Quantity mode, const Term *head) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(term4));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->mode = mode;
@@ -4442,7 +4461,7 @@ Comp check_engine_mpc_elim_out(Heap *heap, Ctx ctx, Quantity mode, Addr addr, co
   Frame *f;
   switch (addr.kind) {
   case ADDR_PT:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(term2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->mode = mode;
@@ -4698,7 +4717,7 @@ Comp check_engine_conv_list(Heap *heap, Ctx ctx, Vec xs, Vec ys) {
   Frame *f;
   if (xs.len == 0 && ys.len == 0) return pure_bool(true);
   if (xs.len == 0 || ys.len == 0) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = xs;
@@ -4735,7 +4754,7 @@ Comp check_engine_conv_shape(Heap *heap, Ctx ctx, Shape a, Shape b) {
   case SHAPE_FHC:
     return check_engine_conv_type(heap, ctx, a.level, b.level);
   case SHAPE_MPC:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(value2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->value = a.access;
@@ -4783,7 +4802,7 @@ Comp check_engine_conv_closure_same(Heap *heap, bool same, Ctx ctx, Nat arity, C
   Vec fresh;
   if (!same) return pure_bool(false);
   fresh = check_engine_conv_fresh(heap, arity, context_size_of(ctx));
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(clo));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->nat = arity;
@@ -4813,7 +4832,7 @@ Comp check_engine_conv_legs(Heap *heap, Ctx ctx, Vec xs, Vec ys) {
   if (xs.len == 0 || ys.len == 0) return pure_bool(false);
   x = list_head(xs);
   y = list_head(ys);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = xs;
@@ -4842,7 +4861,7 @@ Comp check_engine_conv_branch_addr(Heap *heap, Ctx ctx, Vec env1, Vec env2, Addr
   if (a.kind != b.kind) return pure_bool(false);
   switch (a.kind) {
   case ADDR_PT:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(vec2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->vec2 = env2;
@@ -4884,7 +4903,7 @@ Comp check_engine_conv_branches(Heap *heap, Ctx ctx, Vec env1, Vec env2, Vec bs1
   if (bs1.len == 0 || bs2.len == 0) return pure_bool(false);
   b1 = list_head(bs1);
   b2 = list_head(bs2);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(leg2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = env1;
@@ -4924,7 +4943,7 @@ static Comp conv_stuck_after_same(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv_stuck(Heap *heap, Ctx ctx, StuckElim m1, StuckElim m2) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(stuck2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->stuck = m1;
@@ -4955,7 +4974,7 @@ static Comp conv_spine_leg_after_t(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_spine_leg(Heap *heap, Ctx ctx, bool some, const VLeg *leg) {
   Frame *f;
   if (!some) return pure_step(heap, check_engine_conv_step_default(heap));
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   return bind_frame(heap, check_engine_open(heap, ctx, leg->clo, vec_new(heap->arena)), conv_spine_leg_after_t, f);
 }
@@ -5004,7 +5023,7 @@ static Comp conv_spine_former_after_supported(Heap *heap, void *ctx, void *value
 Comp check_engine_conv_spine_former(Heap *heap, Ctx ctx, const Value *w, Shape s, VAddr addr) {
   Frame *f;
   if (w->kind != VALUE_RAN) return pure_step(heap, check_engine_conv_step_default(heap));
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(big));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   switch (s.kind) {
@@ -5047,7 +5066,7 @@ static Comp conv_spine_step_after_w(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv_spine_step(Heap *heap, Ctx ctx, const Value *hty, Shape s, VAddr a) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(vaddr));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5102,7 +5121,7 @@ Comp check_engine_conv_spines(Heap *heap, Ctx ctx, const Value *hty, Vec xs, Vec
   s1 = list_head(xs);
   s2 = list_head(ys);
   if (s1->kind != s2->kind) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(shape2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = xs;
@@ -5176,7 +5195,7 @@ static bool conv_diagram_binds(Shape s) {
 }
 
 Comp check_engine_conv_diagram(Heap *heap, Ctx ctx, Shape s, Closure d1, Closure d2) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(clo));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5200,7 +5219,7 @@ Comp check_engine_conv_former_annotations(Heap *heap, bool same, Ctx ctx, Shape 
                                           Closure d2, MaybeLevelVar u2) {
   Frame *f;
   if (!same) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(clo2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5224,7 +5243,7 @@ static Comp conv_formers_after_supported(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_conv_formers(Heap *heap, Ctx ctx, Shape s1, Closure d1, MaybeLevelVar u1, Shape s2, Closure d2,
                                MaybeLevelVar u2) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(expected_level2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s1;
@@ -5246,7 +5265,7 @@ static Comp conv_neutrals_after_ty(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_neutrals(Heap *heap, bool same, Ctx ctx, Head h, Vec sp1, Vec sp2) {
   Frame *f;
   if (!same) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(vec2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->vec = sp1;
@@ -5286,7 +5305,7 @@ Comp check_engine_conv_structural_whnf(Heap *heap, Ctx ctx, const Value *a, cons
     return check_engine_conv_formers(heap, ctx, a->shape, a->diagram, a->former_level, b->shape, b->diagram,
                                      b->former_level);
   case VALUE_IN:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(vaddr2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->vaddr = a->addr;
@@ -5296,7 +5315,7 @@ Comp check_engine_conv_structural_whnf(Heap *heap, Ctx ctx, const Value *a, cons
     return bind_frame(heap, check_engine_conv_shape(heap, ctx, a->shape, b->shape), conv_structural_whnf_after_same_in,
                       f);
   case VALUE_SEC:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(vaddr2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->vec = a->legs;
@@ -5325,7 +5344,7 @@ Comp check_engine_conv_delta_unfold(Heap *heap, Ctx ctx, ExpectedValue ua, Expec
                                     const Value *b) {
   Frame *f;
   if (!ua.some && !ub.some) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = check_engine_unfolded_or(ua, a);
@@ -5350,7 +5369,7 @@ static Comp conv_delta_retry_after_ua(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_delta_retry(Heap *heap, bool same, Ctx ctx, const Value *a, const Value *b) {
   Frame *f;
   if (same) return pure_bool(true);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(expected));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = a;
@@ -5378,7 +5397,7 @@ static Comp conv_structural_after_wa(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv_structural(Heap *heap, Ctx ctx, const Value *a, const Value *b) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value2 = b;
@@ -5398,7 +5417,7 @@ static Comp conv_prop_probe_after_t(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv_prop_probe(Heap *heap, Ctx ctx, const Value *ty) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   return bind_frame(heap, check_engine_quote(heap, ctx, ty), conv_prop_probe_after_t, f);
@@ -5475,7 +5494,7 @@ Comp check_engine_conv_subsingleton(Heap *heap, Ctx ctx, const Value *w) {
   if (w->kind != VALUE_LAN) return pure_bool(false);
   if (w->shape.kind == SHAPE_MU)
     return pure_bool(check_engine_conv_family_probe(rules_mu_family(heap, ctx, w->shape.name)));
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(ctx));
   if (f == NULL) return comp_oom();
   return bind_frame(heap, check_engine_conv_supported(w->shape), conv_subsingleton_after_supported, f);
 }
@@ -5537,7 +5556,7 @@ Comp check_engine_conv_proj_motive_body(Heap *heap, Nat which, Ctx ctx, Shape s,
                                         const Value *dom) {
   Frame *f;
   if (nat_is_zero(which)) return pure_value(dom);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(q));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5562,7 +5581,7 @@ static Comp conv_proj_motive_after_v(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_conv_proj_motive(Heap *heap, Ctx ctx, Shape s, Closure d, Quantity q, Str n, const Value *dom,
                                    Nat which) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(q));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->name = n;
@@ -5611,7 +5630,7 @@ Comp check_engine_conv_eta_pair_second(Heap *heap, bool first, Ctx ctx, Shape s,
                                        const Value *dom, const Value *a1, const Value *a, const Value *b) {
   Frame *f;
   if (!first) return pure_bool(false);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value5));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5658,7 +5677,7 @@ static Comp conv_eta_pair_after_mo(Heap *heap, void *ctx, void *value) {
 
 Comp check_engine_conv_eta_pair(Heap *heap, Ctx ctx, Shape s, Closure d, Quantity q, Str n, const Value *dom,
                                 const Value *a, const Value *b) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(motive));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->shape = s;
@@ -5709,7 +5728,7 @@ Comp check_engine_conv_eta_coll(Heap *heap, Cmp sign, Big n, Big index, Ctx ctx,
   case CMP_LT:
     return budget_failed(error_text(ERROR_MISMATCH, "a collection width must be nonnegative"));
   case CMP_GT:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(big2));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->big = n;
@@ -5764,7 +5783,7 @@ static Comp conv_eta_or_structural_after_supported(Heap *heap, void *ctx, void *
 }
 
 static Comp conv_eta_or_structural_supported(Heap *heap, Ctx ctx, Shape s, const Value *a, const Value *b) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = a;
@@ -5776,7 +5795,7 @@ static Comp conv_eta_or_structural_ran(Heap *heap, Ctx ctx, const Value *w, cons
   Frame *f;
   switch (w->shape.kind) {
   case SHAPE_PI:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(value5));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->shape = w->shape;
@@ -5786,7 +5805,7 @@ static Comp conv_eta_or_structural_ran(Heap *heap, Ctx ctx, const Value *w, cons
     return bind_frame(heap, check_engine_open(heap, ctx, w->diagram, singleton(heap, (void *)f->value)),
                       conv_eta_or_structural_after_cod, f);
   case SHAPE_COLL:
-    f = frame_new(heap);
+    f = frame_new_upto(heap, FRAME_UPTO(value5));
     if (f == NULL) return comp_oom();
     f->ctx = ctx;
     f->shape = w->shape;
@@ -5849,7 +5868,7 @@ static Comp conv_after_prop_after_w(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_after_prop(Heap *heap, bool prop, Ctx ctx, const Value *ty, const Value *a, const Value *b) {
   Frame *f;
   if (prop) return pure_bool(true);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = a;
@@ -5870,7 +5889,7 @@ static Comp conv_quick_after_wa(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv_quick(Heap *heap, Ctx ctx, const Value *a, const Value *b) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value2 = b;
@@ -5886,7 +5905,7 @@ static Comp conv_after_quick_after_prop(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_after_quick(Heap *heap, bool quick, Ctx ctx, const Value *w, const Value *a, const Value *b) {
   Frame *f;
   if (quick) return pure_bool(true);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = w;
@@ -5904,7 +5923,7 @@ static Comp conv_whnf_ty_after_quick(Heap *heap, void *ctx, void *value) {
 Comp check_engine_conv_whnf_ty(Heap *heap, Ctx ctx, const Value *w, const Value *a, const Value *b) {
   Frame *f;
   if (w->kind == VALUE_UNIV) return check_engine_conv_structural(heap, ctx, a, b);
-  f = frame_new(heap);
+  f = frame_new_upto(heap, FRAME_UPTO(value3));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = w;
@@ -5920,7 +5939,7 @@ static Comp conv_after_w(Heap *heap, void *ctx, void *value) {
 }
 
 Comp check_engine_conv(Heap *heap, Ctx ctx, const Value *ty, const Value *a, const Value *b) {
-  Frame *f = frame_new(heap);
+  Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
   f->value = a;

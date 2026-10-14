@@ -1865,12 +1865,14 @@ static Comp group_open_comp(Heap *heap, ElabProgram state, const SDecl *decl) {
 static bool compact_group_swap(Arena *live, CompactGroup *cg) {
   Arena next = arena_new(COMPACT_CHUNK);
   Heap dst = heap_new(&next);
+  bool memo = compact_memo_open(&dst);
   CompactGroup copied;
   copied.group = compact_family_group_state(&dst, &cg->group);
   copied.state.globals = copied.group.globals;
   copied.state.families = copied.group.catalog;
   copied.state.definitions = compact_poly_catalog(&dst, cg->state.definitions);
   copied.state.rows = compact_check_rows(&dst, &cg->state.rows);
+  compact_memo_close(&dst, memo);
   arena_free(live);
   *live = next;
   *cg = copied;
@@ -1985,12 +1987,14 @@ static Comp compose_open_comp(Heap *heap, ElabProgram state, const SDecl *decl) 
 static bool compact_compose_swap(Arena *live, CompactCompose *cc) {
   Arena next = arena_new(COMPACT_CHUNK);
   Heap dst = heap_new(&next);
+  bool memo = compact_memo_open(&dst);
   CompactCompose copied;
   copied.compose = compact_family_compose_state(&dst, &cc->compose);
   copied.state.globals = copied.compose.group.globals;
   copied.state.families = copied.compose.group.catalog;
   copied.state.definitions = compact_poly_catalog(&dst, cc->state.definitions);
   copied.state.rows = compact_check_rows(&dst, &cc->state.rows);
+  compact_memo_close(&dst, memo);
   arena_free(live);
   *live = next;
   *cc = copied;
@@ -2002,12 +2006,14 @@ static bool compact_compose_swap(Arena *live, CompactCompose *cc) {
 static bool compact_compose_swap_start(Arena *live, CompactCompose *cc) {
   Arena next = arena_new(COMPACT_CHUNK);
   Heap dst = heap_new(&next);
+  bool memo = compact_memo_open(&dst);
   FamilyComposeStart start = compact_family_compose_start(&dst, &cc->start);
   ElabProgram state;
   state.globals = compact_globals(&dst, cc->state.globals);
   state.families = compact_family_catalog(&dst, cc->state.families);
   state.definitions = compact_poly_catalog(&dst, cc->state.definitions);
   state.rows = compact_check_rows(&dst, &cc->state.rows);
+  compact_memo_close(&dst, memo);
   arena_free(live);
   *live = next;
   cc->start = start;
@@ -2209,9 +2215,11 @@ static Comp instantiate_close_comp(Heap *heap, ElabProgram state, const SDecl *d
 static bool compact_instantiate_swap(Arena *live, CompactInstantiate *ci, size_t from) {
   Arena next = arena_new(COMPACT_CHUNK);
   Heap dst = heap_new(&next);
+  bool memo = compact_memo_open(&dst);
   CompactInstantiate copied;
   copied.state = compact_program(&dst, &ci->state);
   copied.start = compact_family_instantiate_start(&dst, &ci->start, from);
+  compact_memo_close(&dst, memo);
   arena_free(live);
   *live = next;
   *ci = copied;

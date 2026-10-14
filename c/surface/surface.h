@@ -184,7 +184,8 @@ typedef enum {
   SDECL_MU,
   SDECL_REC
 } SDeclKind;
-typedef struct {
+/* The tag SDecl lets rust.h name the type without this header (lower_fn_decl). */
+typedef struct SDecl {
   SDeclKind kind;
   Nat universes;                  /* POLY, POLY_MU, POLY_GROUP, POLY_COMPOSE */
   Str name;                       /* POLY, POLY_COMPOSE, DEF, AXIOM */
@@ -470,6 +471,8 @@ uint32_t token_tag(TokenKind k);
 /* lex(source): the Done value is a Vec * of Token pointers (the Eof token last); Fail carries
  * Error.Parse with the message, line and column of the offending byte. */
 Result lexer_lex(Heap *heap, Str source);
+/* ident_kind(name): a keyword kind when name is a keyword, else Ident{name}. */
+TokenKind lexer_ident_kind(Str name);
 
 /* ---- parser (bend2/surface/parser.bend) ---- */
 /* term(source): the Done value is a const STerm *. program(source): the Done value is a Vec * of SDecl

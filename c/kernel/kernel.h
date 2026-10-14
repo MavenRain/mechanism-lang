@@ -9,15 +9,22 @@
 
 /* ---- common (bend2/kernel/common.bend) ---- */
 #define HEAP_SMALL_CLASSES 32
+/* The sharing memo of one compact pass (host only: c/kernel/compact.c, compact_memo_open). */
+typedef struct CompactMemo CompactMemo;
 typedef struct {
   Arena *arena;
   bool oom;
   /* Free lists of small one-shot records (budget.c steps and continuation contexts), one per
    * 8-byte size class up to HEAP_SMALL_CLASSES * 8 bytes. */
   void *small_blocks[HEAP_SMALL_CLASSES];
+  /* NULL outside a compact pass; inside one, compact_term returns the same copy for the same source. */
+  CompactMemo *memo;
 } Heap;
 
 Heap heap_new(Arena *arena);
+/* Preserve allocation failures from vector operations in the heap error flag. */
+Vec heap_vec_concat(Heap *heap, const Vec *a, const Vec *b);
+Vec heap_vec_reverse(Heap *heap, const Vec *items);
 /* Zeroed memory, or NULL after setting heap->oom. */
 void *heap_alloc(Heap *heap, size_t size);
 /* Zeroed memory from the size-class free list when a block is available, else from the arena
@@ -2807,6 +2814,14 @@ Leg compact_leg(Heap *heap, Leg leg);
 Motive compact_motive(Heap *heap, Motive motive);
 const ElimData *compact_elim(Heap *heap, const ElimData *data);
 Literal compact_literal(Heap *heap, Literal lit);
+/* Opens the sharing memo of one compact pass on heap (D-240a): until compact_memo_close, compact_term
+ * returns the same copy for the same source Term, so a copied DAG stays a DAG. Returns true when this
+ * call opened the memo; false when one is already open (the outer pass owns it) or when the table could
+ * not be allocated (heap->oom is then set). The memo must not outlive the pass: the source arena is
+ * freed after it and its addresses are reused. */
+bool compact_memo_open(Heap *heap);
+/* Frees the memo when opened is true (the result of the matching compact_memo_open). */
+void compact_memo_close(Heap *heap, bool opened);
 const Term *compact_term(Heap *heap, const Term *term);
 MaybeTermPtr compact_maybe_term(Heap *heap, MaybeTermPtr term);
 Vec compact_tele(Heap *heap, const Vec *binders);

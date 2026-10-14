@@ -93,11 +93,13 @@ static KanonIo read_result(Heap *heap, IoResult result, Str path) {
 /* read_file (42-45) */
 static KanonIo read_file(Heap *heap, Str path) { return read_result(heap, io_read_file(heap, path), path); }
 
-/* checked_in (47-50): the value is a const ElabChecked *. */
+/* checked_in (47-50): the value is a const ElabChecked *. Host: Elab.check_in with budget_unlimited runs
+ * as elab_check_in_compact (the same rows and errors, one arena reset per declaration), so a check of
+ * a long file keeps no garbage of the declarations before the current one. */
 static KanonIo checked_in(Heap *heap, Str path) {
   KanonIo source = read_file(heap, path);
   if (!source.live) return source;
-  return accept(heap, elab_check_in(heap, global_initial(heap), budget_unlimited(), text_of(source)), 1, str_empty());
+  return accept(heap, elab_check_in_compact(heap, global_initial(heap), text_of(source)), 1, str_empty());
 }
 
 /* checked_rows (52-54) */
@@ -229,7 +231,7 @@ static KanonIo run_build(Heap *heap, const Vec *paths, Str out, const Vec *expor
   if (!ready.live) return ready;
   KanonIo source = read_files(heap, paths, 0);
   if (!source.live) return source;
-  KanonIo c = accept(heap, elab_check_in(heap, global_initial(heap), budget_unlimited(), text_of(source)), 1, str_empty());
+  KanonIo c = accept(heap, elab_check_in_compact(heap, global_initial(heap), text_of(source)), 1, str_empty());
   if (!c.live) return c;
   KanonIo rows = erase_checked(heap, (const ElabChecked *)c.value);
   if (!rows.live) return rows;

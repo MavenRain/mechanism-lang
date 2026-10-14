@@ -165,7 +165,7 @@ int cert_read_result(Heap *heap, IoResult result, const Vec *exports, size_t ind
   switch (result.status) {
   case IO_FAIL: return cli_die(1, result.value);
   case IO_DONE:
-    return cert_report(heap, cert_checked(heap, elab_check_in(heap, global_initial(heap), budget_unlimited(), result.value), exports, index));
+    return cert_report(heap, cert_checked(heap, elab_check_in_compact(heap, global_initial(heap), result.value), exports, index));
   }
   return cli_die(1, result.value);
 }

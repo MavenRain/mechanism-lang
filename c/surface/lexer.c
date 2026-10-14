@@ -170,6 +170,9 @@ static TokenKind ident_kind_from(Str name, size_t from) {
 
 static TokenKind ident_kind(Str name) { return ident_kind_from(name, 0); }
 
+/* C: ident_kind for other components (Lex.ident_kind of bend2/rust/lower.bend). */
+TokenKind lexer_ident_kind(Str name) { return ident_kind(name); }
+
 /* normalize_digits(digits): drop leading zeros, the empty remainder is "0". */
 static Str normalize_digits(Str digits) {
   if (digits.len == 0) return str_lit("0");

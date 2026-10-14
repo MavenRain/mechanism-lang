@@ -200,10 +200,12 @@ FamilyInstantiateStart compact_family_instantiate_start(Heap *heap, const Family
 }
 
 ElabProgram compact_program(Heap *heap, const ElabProgram *program) {
+  bool memo = compact_memo_open(heap);
   ElabProgram out;
   out.globals = compact_globals(heap, program->globals);
   out.definitions = compact_poly_catalog(heap, program->definitions);
   out.families = compact_family_catalog(heap, program->families);
   out.rows = compact_check_rows(heap, &program->rows);
+  compact_memo_close(heap, memo);
   return out;
 }

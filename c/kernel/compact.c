@@ -6,6 +6,8 @@
  * built there; allocation failure sets heap->oom and returns a placeholder, as everywhere else. */
 #include "kernel.h"
 
+#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 Nat compact_nat(Heap *heap, Nat n) {
@@ -167,12 +169,119 @@ Literal compact_literal(Heap *heap, Literal lit) {
   return out;
 }
 
+/* ---- sharing memo (D-240a) ----
+ * Without a memo, a subterm reached along two paths is copied twice, so every ping-pong copy of the
+ * elaboration state turns more of its term DAG into a tree (hop 239: the copy after the last
+ * declaration of prelude_shared_nattrans crossed the 3.5 GB cap). The memo maps each source Term to
+ * its copy for one pass: open addressing with linear probing over a power-of-two table in malloc
+ * memory outside the arenas. Terms are immutable after construction, so a shared copy reads the same
+ * as two equal copies and the output bytes do not change. */
+#define COMPACT_MEMO_FIRST 4096u
+
+typedef struct {
+  const Term *key;
+  const Term *value;
+} CompactMemoSlot;
+
+struct CompactMemo {
+  size_t capacity; /* a power of two */
+  size_t count;
+  CompactMemoSlot *slots;
+};
+
+static size_t compact_memo_hash(const Term *key) {
+  uint64_t bits = (uint64_t)(uintptr_t)key >> 3;
+  bits = bits ^ (bits >> 29);
+  bits = bits * UINT64_C(0x9E3779B97F4A7C15);
+  return (size_t)(bits ^ (bits >> 32));
+}
+
+/* The slot that holds key, or the empty slot where key goes. The table is never full (load <= 1/2),
+ * and the mask keeps every probe inside slots[0 .. capacity). */
+static CompactMemoSlot *compact_memo_slot(const CompactMemo *memo, const Term *key) {
+  size_t mask = memo->capacity - 1;
+  size_t at = compact_memo_hash(key) & mask;
+  for (;;) {
+    CompactMemoSlot *slot = memo->slots + at;
+    if (slot->key == NULL || slot->key == key) return slot;
+    at = (at + 1) & mask;
+  }
+}
+
+static bool compact_memo_grow(CompactMemo *memo) {
+  CompactMemo larger;
+  size_t i = 0;
+  larger.capacity = memo->capacity * 2;
+  larger.count = memo->count;
+  larger.slots = calloc(larger.capacity, sizeof(CompactMemoSlot));
+  if (larger.slots == NULL) return false;
+  for (; i < memo->capacity; i = i + 1) {
+    const CompactMemoSlot *old = memo->slots + i;
+    if (old->key != NULL) *compact_memo_slot(&larger, old->key) = *old;
+  }
+  free(memo->slots);
+  *memo = larger;
+  return true;
+}
+
+bool compact_memo_open(Heap *heap) {
+  CompactMemo *memo;
+  if (heap->memo != NULL) return false;
+  memo = malloc(sizeof(CompactMemo));
+  if (memo == NULL) {
+    heap->oom = true;
+    return false;
+  }
+  memo->capacity = COMPACT_MEMO_FIRST;
+  memo->count = 0;
+  memo->slots = calloc(memo->capacity, sizeof(CompactMemoSlot));
+  if (memo->slots == NULL) {
+    free(memo);
+    heap->oom = true;
+    return false;
+  }
+  heap->memo = memo;
+  return true;
+}
+
+void compact_memo_close(Heap *heap, bool opened) {
+  if (!opened || heap->memo == NULL) return;
+  free(heap->memo->slots);
+  free(heap->memo);
+  heap->memo = NULL;
+}
+
+static const Term *compact_memo_find(const Heap *heap, const Term *term) {
+  if (heap->memo == NULL) return NULL;
+  return compact_memo_slot(heap->memo, term)->value;
+}
+
+static void compact_memo_record(Heap *heap, const Term *term, const Term *copy) {
+  CompactMemo *memo = heap->memo;
+  CompactMemoSlot *slot;
+  if (memo == NULL) return;
+  if ((memo->count + 1) * 2 > memo->capacity && !compact_memo_grow(memo)) {
+    heap->oom = true;
+    return;
+  }
+  slot = compact_memo_slot(memo, term);
+  if (slot->key == NULL) memo->count = memo->count + 1;
+  slot->key = term;
+  slot->value = copy;
+}
+
 /* Terms are built by term_new (zeroed) plus the fields of one constructor; the payloads overlay
- * in unions (kernel.h), so the copy reads only the fields of the term's own kind. */
+ * in unions (kernel.h), so the copy reads only the fields of the term's own kind. Inside a pass
+ * with a memo, a source term already copied returns its first copy. */
 const Term *compact_term(Heap *heap, const Term *term) {
+  const Term *seen;
+  Term *out;
   if (term == NULL) return NULL;
-  Term *out = heap_alloc(heap, sizeof(Term));
+  seen = compact_memo_find(heap, term);
+  if (seen != NULL) return seen;
+  out = heap_alloc(heap, sizeof(Term));
   if (out == NULL) return NULL;
+  compact_memo_record(heap, term, out);
   out->kind = term->kind;
   switch (term->kind) {
   case TERM_VAR:

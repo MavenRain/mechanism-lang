@@ -204,4 +204,60 @@ int kanon_usage(Heap *heap);
  * the process exit code (0 when the command ran to the end). */
 int kanon_dispatch(Heap *heap, Str cmd, const Vec *args, size_t index);
 
+/* ---- mech (bend2/cli/mech.bend; S6.13): mech.c needs c/import, c/wasm and c/rust, so only
+ * _tcc/bin/mech and _tcc/bin/main link it ---- */
+/* usage(): the usage text on stderr, exit 64. */
+int mech_usage(void);
+/* arguments(args): args = the Str pointers of argv without the program name; the result is the
+ * process exit code. */
+int mech_arguments(Heap *heap, const Vec *args);
+
+/* ---- rust_out (bend2/cli/rust_out.bend; S6.12) ---- */
+/* Ro.run(args): the `mech rust-out` command over `args` (Str pointers, in order); writes its
+ * output and returns the exit code. */
+int rust_out_run(Heap *heap, const Vec *args);
+/* Exported for rust/resolve.bend and cli/rust_in.bend. Strings are Str pointers in each Vec. */
+/* code_is(c, n): byte c has code n (n < 128, so a byte test is the Bend Char test). */
+bool rust_out_code_is(unsigned char c, uint32_t n);
+/* mod_ok(s): a lower-case letter, then lower-case letters, digits, `_` or `-` (D7). */
+bool rust_out_mod_ok(Str s);
+/* mod_name(stem): Et.rust_name of the stem with each `-` made `_`. */
+Str rust_out_mod_name(Heap *heap, Str stem);
+/* reserved(): ["bin", "lib", "main", "nat"]; nat_names(): ["Nat", "nat_small", "nat_add",
+ * "nat_decimal"]. */
+Vec rust_out_reserved(Heap *heap);
+Vec rust_out_nat_names(Heap *heap);
+/* sorted(xs): the strings in byte order (R7), Bend insert(sorted(rest), x). */
+Vec rust_out_sorted(Heap *heap, const Vec *xs);
+/* variant_tys(vs): the fields of each variant (RirVariant pointers) as RirTy pointers. */
+Vec rust_out_variant_tys(Heap *heap, const Vec *vs);
+/* lines_of(s): the parts between "\n" bytes, the part after the last one included. */
+Vec rust_out_lines_of(Heap *heap, Str s);
+/* words(s): the parts between single spaces. chunks_of(text): the carrier chunks (a Vec of Vecs of
+ * Str pointers, source order). join_lines(lines) = Et.join("\n", lines). */
+Vec rust_out_words(Heap *heap, Str s);
+Vec rust_out_chunks_of(Heap *heap, Str text);
+Str rust_out_join_lines(Heap *heap, const Vec *lines);
+/* key_line(file, prev): "-- at FILE start" for prev = "", else "-- at FILE after PREV". */
+Str rust_out_key_line(Heap *heap, Str file, Str prev);
+/* nat_rs(): the text of src/nat.rs (the kernel `Nat` module, Q5). */
+Str rust_out_nat_rs(void);
+/* IO(String) of read_file: ok = the text; else the stderr line is written and `code` is the exit
+ * status (64, "mech: cannot read PATH"). */
+typedef struct {
+  bool ok;
+  Str text;
+  int code;
+} RustOutText;
+RustOutText rust_out_read_file(Heap *heap, Str path);
+/* wrote(result): 0 for Done, else "mech: MESSAGE" on stderr and exit status 1. */
+int rust_out_wrote(Heap *heap, IoResult result);
+/* absent(present, out): Fail "output already exists: OUT" when present, else Done. */
+IoResult rust_out_absent(Heap *heap, bool present, Str out);
+
+/* ---- rust_in (bend2/cli/rust_in.bend; S6.13a) ---- */
+/* RustIn.run(args): the `mech rust-in CRATE_DIR OUT_DIR` command over `args` (Str pointers, in
+ * order); writes its output and returns the exit code. lows_of is declared in rust.h (D-226a). */
+int rust_in_run(Heap *heap, const Vec *args);
+
 #endif

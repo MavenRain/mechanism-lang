@@ -129,6 +129,9 @@ C_IMPORT_SOURCES := $(wildcard c/import/*.c)
 C_IMPORT_HEADERS := $(wildcard c/import/*.h)
 C_WASM_SOURCES := $(wildcard c/wasm/*.c)
 C_WASM_HEADERS := $(wildcard c/wasm/*.h)
+C_RUST_SOURCES := $(wildcard c/rust/*.c)
+C_RUST_HEADERS := $(wildcard c/rust/*.h)
+C_RUST_OBJECTS := $(patsubst c/rust/%.c,_tcc/rust/%.o,$(C_RUST_SOURCES))
 # Kernel test drivers: one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c.
 # Checks print PASS or die; probes print lines that c-test compares with c/tests/<driver>.expected.
 C_KERNEL_CHECKS := kernel_budget_callback_check kernel_budget_callbacks kernel_budget_dag kernel_check kernel_conversion kernel_declarations kernel_eval kernel_global_lookup kernel_head_ty_invalid_level kernel_numbers kernel_projection_motive kernel_quantity levels_budget levels_checker levels_exact levels_regression runtime_slice surface_equality wasm_circuit wasm_order
@@ -171,8 +174,16 @@ C_WASM_BINARIES := $(addprefix _tcc/,$(C_WASM_CHECKS) $(C_WASM_CLI))
 # the kanon drivers (C_KANON_CLI). The production programs (C_CLI_MAINS: bend2/mech_cert.bend) hold main,
 # so they are kept out too and each links only into its own _tcc/bin/ binary.
 C_CLI_KANON := c/cli/kanon.c
-C_CLI_MAINS := c/cli/mech_cert.c
-C_CLI_SOURCES := $(filter-out $(C_CLI_KANON) $(C_CLI_MAINS),$(wildcard c/cli/*.c))
+C_CLI_MAINS := c/cli/mech_cert.c c/cli/mech_main.c c/cli/main.c
+# mech.c (bend2/cli/mech.bend) needs c/import, c/wasm (kanon.c) and c/rust (rust_out.c, rust_in.c), so it
+# is kept out of C_CLI_SOURCES too and linked only into _tcc/bin/mech and _tcc/bin/main (C_MECH_BINARIES).
+C_CLI_MECH := c/cli/mech.c
+# rust_out.c and rust_in.c (bend2/cli/rust_out.bend, rust_in.bend) need c/rust, so they are kept out of
+# C_CLI_SOURCES and compiled to their own objects (C_CLI_RUST_OBJECTS); the S6 drivers and the mech
+# binary link them with C_RUST_OBJECTS.
+C_CLI_RUST := c/cli/rust_out.c c/cli/rust_in.c
+C_CLI_RUST_OBJECTS := $(patsubst c/cli/%.c,_tcc/cli/%.o,$(C_CLI_RUST))
+C_CLI_SOURCES := $(filter-out $(C_CLI_KANON) $(C_CLI_MAINS) $(C_CLI_MECH) $(C_CLI_RUST),$(wildcard c/cli/*.c))
 C_CLI_HEADERS := $(wildcard c/cli/*.h)
 # CLI drivers over c/cli + surface + kernel. prelude_protocol (suite mode elaborates the whole prelude)
 # is built by c-build; its suite and --audit runs are gated outside c-test. template_cost (live JS oracle
@@ -242,7 +253,60 @@ $(C_RELATIONAL_IO_BINARIES): _tcc/%: c/tests/%.c $(C_RELATIONAL_IO_LINK) c/tests
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -I c/cli -o $@ $< $(C_RELATIONAL_IO_LINK) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 .PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES)
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) _tcc/rust_emit _tcc/rust_frontend _tcc/rust_let _tcc/rust_import
+
+# The c/rust objects (S6, bend2/rust): c-build compiles them; the S6 drivers and c/cli link them.
+$(C_RUST_OBJECTS): _tcc/rust/%.o: c/rust/%.c $(C_RUST_HEADERS) $(C_CLI_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS) $(C_SURFACE_HEADERS)
+	@mkdir -p _tcc/rust
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -c -o $@ $<
+$(C_CLI_RUST_OBJECTS): _tcc/cli/%.o: c/cli/%.c $(C_CLI_HEADERS) $(C_RUST_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS) $(C_SURFACE_HEADERS)
+	@mkdir -p _tcc/cli
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -c -o $@ $<
+# The rust_emit driver (bend2/tests/rust_emit.bend and its library module rust_emit_oracle.bend):
+# c/tests/rust_emit.c + rust_emit_oracle.c over c/rust, c/cli (with rust_out.o), surface and kernel.
+C_RUST_EMIT_SOURCES := c/tests/rust_emit.c c/tests/rust_emit_oracle.c
+_tcc/rust_emit: $(C_RUST_EMIT_SOURCES) $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ $(C_RUST_EMIT_SOURCES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# The rust_frontend driver (bend2/tests/rust_frontend.bend): lex, parse, print, check and pos over
+# c/rust (the fragment pass and the parser); linked as rust_emit is, since c/rust needs c/cli.
+_tcc/rust_frontend: c/tests/rust_frontend.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_frontend.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# The rust_let driver (bend2/tests/rust_let.bend): direct RIR let lowering through c/rust lower.c and
+# infer.c; linked as rust_frontend is.
+_tcc/rust_let: c/tests/rust_let.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_let.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# The rust_import driver (bend2/tests/rust_import.bend): the lift, resolve, types, lower, check,
+# seed-check, rt-mech and run modes over c/rust and c/cli/rust_in.c; linked as rust_frontend is.
+_tcc/rust_import: c/tests/rust_import.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_import.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# Rust allocation regressions use the renamed arena allocator to inject one failed allocation.
+C_RUST_FAULT_CHECKS := rust_resolve_oom rust_infer_oom rust_emit_oom rust_print_oom
+C_RUST_FAULT_BINARIES := $(addprefix _tcc/,$(C_RUST_FAULT_CHECKS))
+$(C_RUST_FAULT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ $< $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
+c-build: $(C_RUST_FAULT_BINARIES)
+
+# The mech and mechanism-driver programs (bend2/mech.bend, bend2/main.bend; S6.13): c/cli/mech_main.c
+# and c/cli/main.c over c/cli/mech.c (bend2/cli/mech.bend), kanon.c, rust_out.o, rust_in.o, c/rust,
+# c/import, c/wasm, surface and kernel. The S6 full-corpus oracle diff runs them.
+C_MECH_LINK := $(C_CLI_MECH) $(C_CLI_KANON) $(C_CLI_RUST_OBJECTS) $(C_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_IMPORT_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES)
+C_MECH_HEADERS := $(C_CLI_HEADERS) $(C_RUST_HEADERS) $(C_IMPORT_HEADERS) $(C_WASM_HEADERS) $(C_SURFACE_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS)
+C_MECH_BINARIES := _tcc/bin/mech _tcc/bin/main
+_tcc/bin/mech: c/cli/mech_main.c $(C_MECH_LINK) $(C_MECH_HEADERS)
+	@mkdir -p _tcc/bin
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/import -I c/wasm -I c/rust -I c/cli -o $@ c/cli/mech_main.c $(C_MECH_LINK) $(LDFLAGS) -lpthread
+_tcc/bin/main: c/cli/main.c $(C_MECH_LINK) $(C_MECH_HEADERS)
+	@mkdir -p _tcc/bin
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/import -I c/wasm -I c/rust -I c/cli -o $@ c/cli/main.c $(C_MECH_LINK) $(LDFLAGS) -lpthread
+c-build: $(C_MECH_BINARIES)
 
 # bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
 # prelude_runtime (S5.1) links it and runs its self test.
@@ -323,6 +387,7 @@ c-test: c-build
 	./_tcc/rt_regression_test
 	./_tcc/rt_oom_test
 	$(foreach d,$(C_KERNEL_FAULT_CHECKS),./_tcc/$(d) &&) true
+	$(foreach d,$(C_RUST_FAULT_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_KERNEL_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_SURFACE_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_LEVELS_CHECKS),./_tcc/$(d) &&) true

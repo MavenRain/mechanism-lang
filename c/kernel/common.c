@@ -7,6 +7,7 @@ Heap heap_new(Arena *arena) {
   heap.arena = arena;
   heap.oom = false;
   memset(heap.small_blocks, 0, sizeof heap.small_blocks);
+  heap.memo = NULL;
   return heap;
 }
 
@@ -34,6 +35,18 @@ void heap_release_small(Heap *heap, void *block, size_t size) {
   if (block == NULL || cls == 0 || cls > HEAP_SMALL_CLASSES) return;
   *(void **)block = heap->small_blocks[cls - 1];
   heap->small_blocks[cls - 1] = block;
+}
+
+Vec heap_vec_concat(Heap *heap, const Vec *a, const Vec *b) {
+  Vec out = vec_concat(heap->arena, a, b);
+  if (out.len != a->len + b->len) heap->oom = true;
+  return out;
+}
+
+Vec heap_vec_reverse(Heap *heap, const Vec *items) {
+  Vec out = vec_reverse(heap->arena, items);
+  if (out.len != items->len) heap->oom = true;
+  return out;
 }
 
 Str heap_str_cat(Heap *heap, Str a, Str b) {
