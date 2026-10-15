@@ -253,7 +253,7 @@ $(C_RELATIONAL_IO_BINARIES): _tcc/%: c/tests/%.c $(C_RELATIONAL_IO_LINK) c/tests
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -I c/cli -o $@ $< $(C_RELATIONAL_IO_LINK) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 .PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) _tcc/rust_emit _tcc/rust_frontend _tcc/rust_let _tcc/rust_import
+c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) _tcc/rust_emit _tcc/rust_frontend _tcc/rust_let _tcc/rust_import _tcc/rust_lexer_lines _tcc/rust_lower_under
 
 # The c/rust objects (S6, bend2/rust): c-build compiles them; the S6 drivers and c/cli link them.
 $(C_RUST_OBJECTS): _tcc/rust/%.o: c/rust/%.c $(C_RUST_HEADERS) $(C_CLI_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS) $(C_SURFACE_HEADERS)
@@ -280,6 +280,18 @@ _tcc/rust_frontend: c/tests/rust_frontend.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) 
 _tcc/rust_let: c/tests/rust_let.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_let.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# The rust_lexer_lines driver (C only): the line and column tracking of c/rust/lexer.c across
+# comments, which the Bend gates do not reach; linked as rust_frontend is.
+_tcc/rust_lexer_lines: c/tests/rust_lexer_lines.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_lexer_lines.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
+
+# The rust_lower_under driver (C only): the underscore rule of c/rust/lower.c local names
+# (bend2/rust/lower.bend:50-59), which the Bend gates do not reach; linked as rust_let is.
+_tcc/rust_lower_under: c/tests/rust_lower_under.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+	@mkdir -p _tcc
+	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ c/tests/rust_lower_under.c $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 
 # The rust_import driver (bend2/tests/rust_import.bend): the lift, resolve, types, lower, check,
 # seed-check, rt-mech and run modes over c/rust and c/cli/rust_in.c; linked as rust_frontend is.
@@ -397,6 +409,8 @@ c-test: c-build
 	$(foreach d,$(C_CLI_FAULT_CHECKS),./_tcc/$(d) &&) true
 	./_tcc/prelude_runtime --slice-self-test
 	./_tcc/template_cost prelude/cat/category.mech --through Hom > /dev/null
+	./_tcc/rust_lexer_lines
+	./_tcc/rust_lower_under
 	./_tcc/wasm_circuit_bounds > /dev/null
 	./_tcc/import_protocol > /dev/null
 	./_tcc/surface_driver 'def x : Type := Type'
