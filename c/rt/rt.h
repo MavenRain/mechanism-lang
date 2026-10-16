@@ -12,12 +12,15 @@ typedef struct ArenaChunk ArenaChunk;
 typedef struct {
   ArenaChunk *head;
   size_t chunk_size;
+  size_t reserved;
 } Arena;
 
 Arena arena_new(size_t chunk_size);
 /* Returns NULL when the host is out of memory. Memory is zeroed. */
 void *arena_alloc(Arena *arena, size_t size);
 void arena_free(Arena *arena);
+/* Bytes of chunk storage the arena holds now (the sum of its chunk sizes; 0 after arena_free). */
+size_t arena_reserved(const Arena *arena);
 
 /* ---- strings: immutable byte slices ---- */
 typedef struct {

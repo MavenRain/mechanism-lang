@@ -110,7 +110,7 @@
     },
     {
       "path": "prelude/cat/left-kan-laws.mech",
-      "sha256": "af3b1906431400c96beb28ed662319a2e6930ea5ded8ce37ff2105413763b480",
+      "sha256": "9f829c1b29ca894b082369f5a2180e76ee1d4a40fc28ad6b1c4ac43a641068b1",
       "code": 0,
       "stdout": "OK\n",
       "stderr": ""
@@ -411,14 +411,14 @@
     },
     {
       "path": "test/fixtures/prelude/left-kan-laws-runtime.mech",
-      "sha256": "e78a90462bd20629f80e0559a5634a451d0990daedd27dcf5daac5aa9ba1ad97",
+      "sha256": "be047af8d81edb3764754ceed503b71f6a7de13bf431c3399989c8ccb5865534",
       "code": 0,
       "stdout": "OK\n",
       "stderr": ""
     },
     {
       "path": "test/fixtures/prelude/left-kan-laws.mech",
-      "sha256": "5d0b77b5f47bdc974d98286654f980bfe03392c3e5d4698714aeb22d424d413c",
+      "sha256": "1f115b3deb76752c1768c257f30224586e2cc87c97c01e76b5f99448ed072286",
       "code": 0,
       "stdout": "OK\n",
       "stderr": ""

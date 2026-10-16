@@ -1,12 +1,30 @@
 """Compare certified left Kan mediator laws on three hosts."""
 from pathlib import Path
 import re
+import os
 import subprocess
 import sys
 import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Hop 329 (USER ruling 1 on the memcap-blind python legs): when MEMCAP names the
+# memcap wrapper, the driver runs as `MEMCAP 3800 <secs> driver...`, so the
+# 3800 MB cap sits on the driver and not only on this python process.  The
+# wrapper prints one `memcap cmd=...` record on stdout after the driver exits;
+# uncapped moves those lines to stderr so the stdout checks stay byte for byte.
+MEMCAP = os.environ.get("MEMCAP")
+
+def capped(command, seconds):
+    prefix = [MEMCAP, "3800", str(seconds)] if MEMCAP else []
+    return [str(part) for part in prefix + list(command)]
+
+def uncapped(result):
+    lines = result.stdout.splitlines(keepends=True)
+    sys.stderr.write("".join(line for line in lines if line.startswith("memcap cmd=")))
+    result.stdout = "".join(line for line in lines if not line.startswith("memcap cmd="))
+    return result
 GATE = "PRELUDE-LEFT-KAN-LAWS-RUNTIME"
 # The CATEGORY watchdog of dev/gates.sh is 900 s, so the total stays under it and
 # every expiry reports "timed out after", which the gate ladder can recheck.
@@ -131,12 +149,12 @@ def main():
         remaining = min(limit, deadline - time.monotonic())
         if remaining <= 0:
             raise TimeoutError(f"timed out after the {TOTAL_BUDGET} s total budget")
-        return subprocess.run(list(map(str, command)), cwd=ROOT,
-                              capture_output=True, text=True, timeout=remaining)
+        return uncapped(subprocess.run(capped(command, max(1, int(remaining) - 1)), cwd=ROOT,
+                                       capture_output=True, text=True, timeout=remaining))
 
     completed = 0
     hosts = set()
-    selected = run([ROOT / "_bend2/test/prelude_runtime.exe", "--slice-self-test"], HOST_BUDGET)
+    selected = run([ROOT / "_tcc/prelude_runtime", "--slice-self-test"], HOST_BUDGET)
     if selected.returncode or selected.stderr or selected.stdout != "RUNTIME-SLICE-OK\n":
         print(f"{GATE} FAIL runtime selection check stdout={selected.stdout!r} stderr={selected.stderr!r}")
         return 1
@@ -145,7 +163,7 @@ def main():
         fixture = work / "source.mech"
         fixture.write_text(source)
         expected = "".join(f"{actual}\t{value}\n" for _, actual, value in cases)
-        emitted = run([ROOT / "_bend2/test/prelude_runtime.exe", "--reachable", fixture,
+        emitted = run([ROOT / "_tcc/prelude_runtime", "--reachable", fixture,
                        work, *(actual for _, actual, _ in cases)], EMIT_BUDGET)
         if emitted.returncode or emitted.stderr or emitted.stdout != expected:
             print(f"{GATE} FAIL kernel-emit exit={emitted.returncode} "

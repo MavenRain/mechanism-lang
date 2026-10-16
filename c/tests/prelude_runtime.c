@@ -162,9 +162,12 @@ static Prepared prepare_rows(Heap *heap, const ElabChecked *checked, bool reacha
   return prepare_mode(heap, reachable, checked->globals, &checked->rows, names);
 }
 
-/* prepare (69-72) */
+/* prepare (69-72). The check runs on the host-only compact path (D-253a): elab_check_in_compact is
+ * check_in under budget_unlimited with a fresh arena per declaration, so each declaration's checker
+ * garbage is freed after its step (the Bend bundle reclaimed it by garbage collection). Its rows,
+ * globals and error text equal those of check_in with budget_unlimited (decision 156). */
 static Prepared prepare(Heap *heap, Str text, bool reachable, const Vec *names) {
-  SliceResult checked = kernel(heap, elab_check_in(heap, global_initial(heap), budget_unlimited(), text));
+  SliceResult checked = kernel(heap, elab_check_in_compact(heap, global_initial(heap), text));
   if (slice_failed(checked)) return prepared_fail(checked.message);
   if (checked.value == NULL) return prepared_fail(str_lit(HOST_OOM));
   return prepare_rows(heap, checked.value, reachable, names);
@@ -352,10 +355,16 @@ static int arguments(Heap *heap, int argc, char **argv) {
   return usage();
 }
 
+/* D-274a (host only): the driver heap carries the D-261a scratch flag, so the conversion queries of
+ * erase_program (the whole program when --reachable is absent) and of eval and emit run in a scratch
+ * arena under the budget_unlimited guard and are freed after each query; the verdict is a bool, so no
+ * output changes (D-262a reasoning). */
 static int entry(int argc, char **argv) {
   Arena arena = arena_new(1 << 16);
   Heap heap = heap_new(&arena);
-  int code = arguments(&heap, argc, argv);
+  int code;
+  heap.conv_scratch = true;
+  code = arguments(&heap, argc, argv);
   arena_free(&arena);
   return code;
 }

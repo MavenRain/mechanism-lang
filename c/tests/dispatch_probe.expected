@@ -1,0 +1,222 @@
+$ runner unit kernel-numbers
+probe kernel_numbers
+rc=0
+$ runner unit kernel-eval
+probe kernel_eval
+rc=0
+$ runner unit kernel-quantity
+probe kernel_quantity
+rc=0
+$ runner unit kernel-check
+probe kernel_check
+rc=0
+$ runner unit kernel-declarations
+probe kernel_declarations
+rc=0
+$ runner unit kernel-conversion
+probe kernel_conversion
+rc=0
+$ runner unit kernel-recursive
+probe kernel_recursive
+rc=0
+$ runner unit kernel-budget-dag
+probe kernel_budget_dag
+rc=0
+$ runner unit kernel-budget-callbacks
+probe kernel_budget_callbacks
+rc=0
+$ runner unit kernel-budget-callback-check
+probe kernel_budget_callback_check
+rc=0
+$ runner unit kernel-spec-count
+probe kernel_spec_count
+rc=0
+$ runner unit levels-exact
+probe levels_exact
+rc=0
+$ runner unit levels-budget
+probe levels_budget
+rc=0
+$ runner unit levels-checker
+probe levels_checker
+rc=0
+$ runner unit levels-regression
+probe levels_regression
+rc=0
+$ runner unit surface-lexer
+PASS surface_lexer
+rc=0
+$ runner unit surface-diagnostics
+PASS surface_diagnostics
+rc=0
+$ runner unit surface-shape-metadata
+probe surface_shape_metadata
+rc=0
+$ runner unit surface-parser
+PASS surface_parser
+rc=0
+$ runner unit surface-transform
+PASS surface_transform
+rc=0
+$ runner unit surface-poly
+PASS surface_poly
+rc=0
+$ runner unit surface-family
+PASS surface_family
+rc=0
+$ runner unit surface-elab
+probe surface_elab
+rc=0
+$ runner unit surface-catalog
+probe surface_catalog
+rc=0
+$ runner unit surface-program
+probe surface_program
+rc=0
+$ runner unit surface-prelude
+probe surface_prelude
+rc=0
+$ runner unit surface-crypto
+probe surface_crypto
+rc=0
+$ runner unit surface-trust
+probe surface_trust
+rc=0
+$ runner unit surface-boundary
+probe surface_boundary
+rc=0
+$ runner unit surface-universes
+probe surface_universes
+rc=0
+$ runner unit wasm-circuit
+probe wasm_circuit
+rc=0
+$ runner unit wasm-order
+probe wasm_order
+rc=0
+$ runner unit wasm-link
+probe wasm_link
+rc=0
+$ runner unit wasm-host
+probe wasm_host
+rc=0
+$ runner fixture encode
+probe wasm_encode
+rc=0
+$ runner fixture emit
+probe wasm_emit
+rc=0
+$ runner fixture nat
+probe wasm_nat_runtime
+rc=0
+$ runner fixture reactor
+probe wasm_reactor
+rc=0
+$ runner fixture layout
+probe wasm_layout
+rc=0
+$ runner fixture oracle
+probe wasm_oracle
+rc=0
+$ runner import-json a1 a2
+probe import_json a1 a2
+rc=0
+$ runner import-export a1 a2
+probe import_export a1 a2
+rc=0
+$ runner import-translate a1 a2
+probe import_translate a1 a2
+rc=0
+$ runner import-pipeline a1 a2
+probe import_pipeline a1 a2
+rc=0
+$ runner surface-parser a1 a2
+probe surface_driver a1 a2
+rc=0
+$ runner surface-check a1 a2
+probe surface_check_driver a1 a2
+rc=0
+$ runner erase a1 a2
+probe kernel_erase_driver a1 a2
+rc=0
+$ runner io a1 a2
+probe io_driver a1 a2
+rc=0
+$ runner prelude-runtime a1 a2
+probe prelude_runtime a1 a2
+rc=0
+$ runner wasm-protocol a1 a2
+probe wasm_protocol a1 a2
+rc=0
+$ runner prelude-protocol a1 a2
+probe prelude_protocol a1 a2
+rc=0
+$ runner mapping-protocol a1 a2
+probe mapping_protocol a1 a2
+rc=0
+$ surface_foundation_runner equality a1 a2
+probe surface_equality
+rc=0
+$ surface_foundation_runner poly a1 a2
+probe surface_prelude_poly a1 a2
+rc=0
+$ surface_foundation_runner dependent a1 a2
+probe surface_prelude_dependent a1 a2
+rc=0
+$ surface_foundation_runner equality-ops a1 a2
+probe surface_prelude_equality_ops a1 a2
+rc=0
+$ surface_foundation_runner congruence a1 a2
+probe surface_prelude_congruence a1 a2
+rc=0
+$ surface_foundation_runner transport a1 a2
+probe surface_prelude_transport a1 a2
+rc=0
+$ surface_foundation_runner groups a1 a2
+probe surface_family_groups a1 a2
+rc=0
+$ surface_foundation_runner sl a1 a2
+probe surface_sl a1 a2
+rc=0
+$ surface_foundation_runner veil a1 a2
+probe surface_shape_metadata a1 a2
+rc=0
+$ surface_foundation_runner members a1 a2
+probe surface_family_members a1 a2
+rc=0
+$ surface_foundation_runner prenex a1 a2
+probe surface_prenex a1 a2
+rc=0
+$ surface_foundation_runner prenex-families a1 a2
+probe surface_prenex_families a1 a2
+rc=0
+$ surface_foundation_runner prenex-groups a1 a2
+probe surface_prenex_groups a1 a2
+rc=0
+$ surface_foundation_runner prenex-exports a1 a2
+probe surface_prenex_exports a1 a2
+rc=0
+$ surface_foundation_runner dependency-exports a1 a2
+probe surface_prenex_dependency_exports a1 a2
+rc=0
+$ surface_foundation_runner reuse a1 a2
+probe surface_template_reuse a1 a2
+rc=0
+$ surface_foundation_runner symbolic-reuse a1 a2
+probe surface_template_symbolic_reuse a1 a2
+rc=0
+$ surface_foundation_runner composition a1 a2
+probe surface_template_composition a1 a2
+rc=0
+$ surface_foundation_runner family-poly a1 a2
+probe surface_family_poly a1 a2
+rc=0
+$ surface_foundation_runner numbers a1 a2
+probe surface_numbers a1 a2
+rc=0
+$ surface_foundation_runner expectations a1 a2
+probe surface_expectations a1 a2
+rc=0
+$ surface_foundation_runner surface-check a1 a2
+probe surface_check_driver a1 a2
+rc=0

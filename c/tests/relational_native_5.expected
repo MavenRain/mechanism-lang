@@ -1,0 +1,6 @@
+$ relational_native_5
+expected relational shard mode
+rc=2
+$ relational_native_5 nope
+unknown relational shard mode
+rc=2

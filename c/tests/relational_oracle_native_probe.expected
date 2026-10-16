@@ -1,0 +1,8 @@
+length: true
+distinct: true
+not common: true
+oracle: true
+length: false
+distinct: false
+not common: false
+oracle: false

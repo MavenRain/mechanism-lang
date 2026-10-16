@@ -4,6 +4,40 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import os
+
+# Hop 330 (USER ruling 1 on the memcap-blind python legs, D-329a): when MEMCAP
+# names the memcap wrapper, every driver this harness spawns runs as
+# `MEMCAP 3800 <secs> driver...`, so the cap sits on the driver, not on python3.
+# <secs> is the call's own timeout less one second (memcap fires first and
+# leaves a record), or MEMCAP_SECONDS when the call has no timeout.  Without
+# MEMCAP the commands are unchanged.  memcap prints its record line on the
+# driver's stdout; uncapped() moves such lines to this harness's stderr so the
+# byte-for-byte stdout checks stay.
+MEMCAP = os.environ.get("MEMCAP")
+MEMCAP_SECONDS = int(os.environ.get("MEMCAP_SECONDS", "900"))
+
+
+def capped(command, seconds=None):
+    budget = MEMCAP_SECONDS if seconds is None else max(1, int(seconds) - 1)
+    prefix = [MEMCAP, "3800", str(budget)] if MEMCAP else []
+    return prefix + [str(part) for part in command]
+
+
+def uncapped(result):
+    stdout = getattr(result, "stdout", None)
+    if not MEMCAP or stdout is None:
+        return result
+    marker = "memcap " if isinstance(stdout, str) else b"memcap "
+    lines = stdout.splitlines(keepends=True)
+    moved = [line for line in lines if line.startswith(marker)]
+    kept = [line for line in lines if not line.startswith(marker)]
+    if moved:
+        text = marker[:0].join(moved)
+        sys.stderr.write(text if isinstance(text, str) else text.decode("utf-8", "replace"))
+        sys.stderr.flush()
+    result.stdout = marker[:0].join(kept)
+    return result
 
 GATES = {(): "PRENEX-RUNTIME", ("--families",): "PRENEX-FAMILIES-RUNTIME",
          ("--groups",): "PRENEX-GROUPS-RUNTIME", ("--category",): "PRELUDE-CATEGORY-RUNTIME",
@@ -26,7 +60,7 @@ def main():
         return 64
 
     root = Path(__file__).resolve().parent.parent
-    executable = root / "_bend2/bin/mech.exe"
+    executable = root / "_tcc/bin/mech"
     families = sys.argv[1:] == ["--families"]
     gate = gate_name(sys.argv[1:])
     fixture_name = "prenex-families-runtime.mech" if families else "prenex-runtime.mech"
@@ -70,8 +104,8 @@ def main():
     hosts = set()
 
     def invoke(label, arguments, expected="", timeout=20):
-        result = subprocess.run(list(map(str, arguments)), cwd=root,
-                                capture_output=True, text=True, timeout=timeout)
+        result = uncapped(subprocess.run(capped(list(map(str, arguments)), timeout), cwd=root,
+                                capture_output=True, text=True, timeout=timeout))
         if result.returncode != 0 or result.stdout != expected or result.stderr != "":
             failures.append(label)
             print(f"{gate} FAIL {label}: exit={result.returncode} "
@@ -119,7 +153,7 @@ def main():
             if category:
                 expected = "".join(f"{name}\t{answer}\n" for name, answer in answers)
                 if not invoke(f"{variant}/kernel-emit",
-                              [root / "_bend2/test/prelude_runtime.exe", source,
+                              [root / "_tcc/prelude_runtime", source,
                                work, *(name for name, _ in answers)], expected, timeout=210):
                     continue
                 hosts.add("kernel")

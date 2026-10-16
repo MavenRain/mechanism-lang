@@ -97,7 +97,7 @@ def main() -> int:
     baseline = json.loads(baseline_path.read_text())
     if len(baseline['cases']) != evidence['baseline']['unresolved_attempts']:
         raise ValueError('unresolved baseline inventory mismatch')
-    driver = (args.driver or root/'_bend2/test/surface_check_driver.exe').resolve()
+    driver = (args.driver or root/'_tcc/surface_check_driver').resolve()
     command = ['node', '--stack-size=16384', str(driver)] if driver.suffix == '.js' else [str(driver)]
     command += args.driver_arg
     if driver.suffix == '.js':

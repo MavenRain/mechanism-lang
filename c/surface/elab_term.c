@@ -2526,7 +2526,9 @@ static Comp check_field_annotation_after_agrees(Heap *heap, void *ctx, void *val
 
 static Comp check_field_annotation_after_actual(Heap *heap, void *ctx, void *value) {
   CaseFrame *f = ctx;
-  return bind_case(heap, check_engine_conv_type(heap, f->ctx, value, f->expected_value), check_field_annotation_after_agrees, f);
+  /* D-269a: a top-level conversion entry (scratch query under the D-261a guard). */
+  return bind_case(heap, check_engine_conv_type_entry(heap, f->ctx, value, f->expected_value),
+                   check_field_annotation_after_agrees, f);
 }
 
 static Comp check_field_annotation_after_level(Heap *heap, void *ctx, void *value) {

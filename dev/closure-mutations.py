@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import runpy
 import shutil
@@ -12,51 +13,85 @@ import sys
 
 ROOT = Path(__file__).resolve().parent.parent
 bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
-SOURCES = ["bend2/wasm/link.bend", "bend2/wasm/emit.bend",
-           "bend2/tests/cli_core.bend", "dev/bend2-mutation-build.py",
+SOURCES = ["c/wasm/link.c", "c/wasm/emit.c",
            "test/prenex_runtime.py",
            "test/fixtures/prelude/dependent-closure-runtime.mech"]
+BUILD_TARGET = "_tcc/bin/mech"
 
 # This control reinstates static call_ref dispatch from the former backend.
 # The production path dispatches using the closure's stored runtime arity.
-STATIC_HELPER = """@unsafe def mutation_static(+c:Ctx,+env:List<&2,Binding>,+tail:Bool,head:List<&2,G.Instr>,r:E.Repr,+args:List<&2,E.Ktm>,+m:Nat) -> S.Comp(List<&2,G.Instr>):
-  do S.Comp<List<&2,G.Instr>>:
-    cast : List<&2,G.Instr> <- S.lift(List<&2,G.Instr>,coerce(layout(c),r,E.RFunc{E.Tid{L.fn_key(m)}}))
-    +ci : U32 <- S.lift(U32,L.type_index(layout(c),"clos"))
-    +fti : U32 <- S.lift(U32,L.type_index(layout(c),L.fn_key(m)))
-    +idx : U32 <- S.alloc(G.Ref{G.HType{ci}})
-    ia : List<&2,G.Instr> <- each(c,env,List.take(&2,E.Ktm,args,m))
-    steps(c,env,tail,cats([head,cast,[G.Local_set{idx},G.Local_get{idx},G.Struct_get{ci,2}],ia,[G.Local_get{idx},G.Struct_get{ci,1},G.Ref_cast{G.HType{fti}},G.Call_ref{fti}]]),L.any_repr(),List.drop(&2,E.Ktm,args,m))
-
-@unsafe def mutation_dispatch(use_static:Bool,c:Ctx,env:List<&2,Binding>,tail:Bool,head:List<&2,G.Instr>,r:E.Repr,args:List<&2,E.Ktm>,m:Nat) -> S.Comp(List<&2,G.Instr>):
-  match use_static:
-    case True{}: mutation_static(c,env,tail,head,r,args,m)
-    case False{}: steps_apply(c,env,tail,head,r,args)
+# The helper is the C form of the Bend 2 mutation_static (bend2/wasm/emit.bend
+# steps_type); it is spliced in front of emit_steps_type in c/wasm/emit.c.
+STATIC_HELPER = """/* mutation_static(c, env, tail, head, r, args, m): the former backend's static call_ref dispatch */
+static Result emit_steps_static(Heap *heap, WasmState *st, const EmitCtx *c, const Vec *env, bool tail,
+                                const Vec *head, Repr r, const Vec *args, Nat m) {
+  Result cast = emit_coerce(heap, emit_layout(c), r, eterm_rfunc(eterm_tid(link_fn_key(heap, m))));
+  if (cast.kind == RESULT_FAIL) return cast;
+  Result ci = link_type_index(heap, emit_layout(c), str_lit("clos"));
+  if (ci.kind == RESULT_FAIL) return ci;
+  Result fti = link_type_index(heap, emit_layout(c), link_fn_key(heap, m));
+  if (fti.kind == RESULT_FAIL) return fti;
+  Result idx = alloc_local(heap, st, gc_valtype_ref(gc_heaptype(GC_HEAP_TYPE, index_of(ci))));
+  if (idx.kind == RESULT_FAIL) return idx;
+  Vec taken = take_vec(heap, args, (size_t)u32_of(m));
+  Result ia = emit_each(heap, st, c, env, &taken);
+  if (ia.kind == RESULT_FAIL) return ia;
+  Vec rest = drop_vec(heap, args, (size_t)u32_of(m));
+  Vec save = seq(heap, at(heap, GC_LOCAL_SET, index_of(idx)), at(heap, GC_LOCAL_GET, index_of(idx)),
+                 gc_instr_struct_get(heap, index_of(ci), 2), &stop);
+  Vec call = seq(heap, at(heap, GC_LOCAL_GET, index_of(idx)), gc_instr_struct_get(heap, index_of(ci), 1),
+                 gc_instr_ref_cast(heap, gc_heaptype(GC_HEAP_TYPE, index_of(fti))),
+                 at(heap, GC_CALL_REF, index_of(fti)), &stop);
+  Vec front = emit_cat(heap, head, (const Vec *)cast.value);
+  Vec saved = emit_cat(heap, &front, &save);
+  Vec loaded = emit_cat(heap, &saved, (const Vec *)ia.value);
+  Vec called = emit_cat(heap, &loaded, &call);
+  return emit_steps(heap, st, c, env, tail, &called, link_any_repr(), &rest);
+}
 
 """
-EMPTY_HELPER = """@unsafe def mutation_empty(c:Ctx,env:List<&2,Binding>,tail:Bool,head:List<&2,G.Instr>,r:E.Repr,args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):
-  match args:
-    case Nil{}: S.pure(List<&2,G.Instr>,head)
-    case Con{x,xs}: steps(c,env,tail,head,r,x <> xs)
-
-"""
+STATIC_ANCHOR = "/* steps_type(c, env, tail, head, r, args): only a function or union head applies */"
+# Each control is the C form of the Bend 2 control of the same name:
+# M1 bend2/wasm/emit.bend steps_type (static dispatch when 0 < m <= |args|),
+# M2 bend2/wasm/link.bend nullary_closure (always False),
+# M3 bend2/wasm/link.bend steps_result at 0n (the nullary closure keeps its
+# function repr), M4 bend2/wasm/emit.bend apply_kind HValue (mutation_empty:
+# no args returns the head without the steps call).
 CONTROLS = [
-    ("C-CLOS-M1", "bend2/wasm/emit.bend",
-     """        m : Nat <- S.lift(Nat,L.arity_of_fn(t))
-        steps_apply(c,env,tail,head,r,args)""",
-     """        +m : Nat <- S.lift(Nat,L.arity_of_fn(t))
-        mutation_dispatch(Nat.is_lt(0n,m) && Nat.is_le(m,List.length(&2,E.Ktm,args)),c,env,tail,head,r,args,m)""",
+    ("C-CLOS-M1", "c/wasm/emit.c",
+     """      m = link_arity_of_fn(heap, r.tid.name);
+      if (m.kind == RESULT_FAIL) return m;
+      return emit_steps_apply(heap, st, c, env, tail, head, r, args);
+""",
+     """      m = link_arity_of_fn(heap, r.tid.name);
+      if (m.kind == RESULT_FAIL) return m;
+      if (!nat_is_zero(*(const Nat *)m.value)
+          && nat_cmp(*(const Nat *)m.value, nat_of_u64(heap->arena, args->len)) <= 0)
+        return emit_steps_static(heap, st, c, env, tail, head, r, args, *(const Nat *)m.value);
+      return emit_steps_apply(heap, st, c, env, tail, head, r, args);
+""",
      "partialPayload"),
-    ("C-CLOS-M2", "bend2/wasm/link.bend",
-     "case E.RFunc{E.Tid{t}}: String.eq(t,fn_key(0n))",
-     "case E.RFunc{E.Tid{t}}: False{}", "nullaryPayload"),
-    ("C-CLOS-M3", "bend2/wasm/link.bend",
-     "case E.RFunc{E.Tid{+t}} 0n: Done{choose(E.Repr,String.eq(t,fn_key(0n)),any_repr(),E.RFunc{E.Tid{t}})}",
-     "case E.RFunc{E.Tid{+t}} 0n: Done{E.RFunc{E.Tid{t}}}", "nonTailPayload"),
-    ("C-CLOS-M4", "bend2/wasm/emit.bend",
-     "        steps(c,env,tail,ih,hr,args)\n",
-     "        mutation_empty(c,env,tail,ih,hr,args)\n", "nullaryPayload"),
+    ("C-CLOS-M2", "c/wasm/link.c",
+     "  return r.kind == REPR_FUNC && str_eq(r.tid.name, link_fn_key(heap, nat_zero()));\n",
+     "  (void)heap;\n  (void)r;\n  return false;\n", "nullaryPayload"),
+    ("C-CLOS-M3", "c/wasm/link.c",
+     "    if (link_nullary_closure(heap, r)) return link_done(eterm_repr_new(heap, link_any_repr()));\n"
+     "    return link_done(eterm_repr_new(heap, r));\n",
+     "    return link_done(eterm_repr_new(heap, r));\n", "nonTailPayload"),
+    ("C-CLOS-M4", "c/wasm/emit.c",
+     "      return emit_steps(heap, st, c, env, tail, (const Vec *)ih.value, *(const Repr *)hr.value, args);\n",
+     "      if (args->len == 0) return ih;\n"
+     "      return emit_steps(heap, st, c, env, tail, (const Vec *)ih.value, *(const Repr *)hr.value, args);\n",
+     "nullaryPayload"),
 ]
+
+
+def mutant_text(name, original, before, after):
+    """The mutated source of one control; M1 also splices its static helper."""
+    mutant = original.replace(before, after)
+    if name == "C-CLOS-M1":
+        mutant = mutant.replace(STATIC_ANCHOR, STATIC_HELPER + STATIC_ANCHOR, 1)
+    return mutant
 
 BUILD_TIMEOUT = 300
 SUITE_TIMEOUT = 120
@@ -79,14 +114,11 @@ def main():
     work.mkdir(parents=True, exist_ok=False)
     copy = work / "copy"
     shutil.copytree(ROOT, copy, ignore=shutil.ignore_patterns(
-        ".git", "_build", "_bend2", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
+        ".git", "_build", "_bend2", "_tcc", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
     environment = dict(os.environ)
-    backend = environment.get("BEND_MUTATION_BACKEND",
-                              "javascript" if environment.get("BEND_MUTATION_PACKAGED_CLI")
-                              else environment.get("BEND_TEST_BACKEND", "javascript"))
     originals = {path: (copy / path).read_text() for path in SOURCES}
+    executable = copy / BUILD_TARGET
     report = {
-        "backend": backend,
         "sources": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
                     for path in SOURCES},
         "controls": [],
@@ -106,12 +138,29 @@ def main():
             capture(label, expiry.stdout, expiry.stderr)
             raise
         capture(label, result.stdout, result.stderr)
+        if environment.get("MEMCAP"):
+            # Raw logs retain telemetry. Only complete cap records are excluded from diagnostics.
+            record = (r"memcap cmd=.+ exit=-?\d+ signal=\d+ peakMB=\d+ footMB=\d+ capMB=\d+ "
+                      r"killed_mem=[01] killed_time=[01] killed_orphan=[01] secs=\d+\.\d+ "
+                      r"polls_ok=\d+ polls_failed=\d+ foot_ok=\d+\n?")
+            result.stderr = "".join(line for line in result.stderr.splitlines(keepends=True)
+                                    if re.fullmatch(record, line) is None)
         return result
 
     def build(label):
-        result = run(label, [sys.executable, "-P", "dev/bend2-mutation-build.py", "cli"], BUILD_TIMEOUT)
-        return (result.returncode == 0
-                and "BEND2 MUTATION BUILD PASS cli\n" in result.stdout)
+        # The C build of the copy: a stale binary never stands in for a failed build.
+        if executable.exists():
+            executable.unlink()
+        result = run(label, ["make", "-C", str(copy), BUILD_TARGET], BUILD_TIMEOUT)
+        built = result.returncode == 0 and os.access(executable, os.X_OK)
+        if label == "baseline-build":
+            report["c_build"] = {
+                "target": BUILD_TARGET,
+                "exit_code": result.returncode,
+                "binary_sha256": (hashlib.sha256(executable.read_bytes()).hexdigest()
+                                  if built else None),
+            }
+        return built
 
     def suite(label):
         return run(label, [sys.executable, "-P", "test/prenex_runtime.py",
@@ -133,14 +182,7 @@ def main():
                 print(f"CLOSURE-MUTATIONS FAIL {name} anchor count")
                 return 1
             target = copy / path
-            mutant = originals[path].replace(before, after)
-            if name == "C-CLOS-M1":
-                mutant = mutant.replace("@unsafe def steps_type(", STATIC_HELPER + "@unsafe def steps_type(", 1)
-                mutant = mutant.replace("+r:E.Repr,args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):\n  match r:",
-                                        "+r:E.Repr,+args:List<&2,E.Ktm>) -> S.Comp(List<&2,G.Instr>):\n  match r:", 1)
-            if name == "C-CLOS-M4":
-                mutant = mutant.replace("@unsafe def apply_kind(", EMPTY_HELPER + "@unsafe def apply_kind(", 1)
-            target.write_text(mutant)
+            target.write_text(mutant_text(name, originals[path], before, after))
             try:
                 built = build(f"{name}-build")
                 result = suite(name) if built else None

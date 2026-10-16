@@ -661,7 +661,99 @@ static Comp ensure_after_conv(Heap *heap, void *ctx, void *value) {
   return check_engine_ensure_result(heap, kernel_bool_unbox(value), f->ctx, f->value, f->value2);
 }
 
+/* D-261a (host only, no Bend counterpart): the chunk size of the scratch arena of one query. */
+#define ENSURE_SCRATCH_CHUNK ((size_t)64 * 1024)
+
+/* D-269a (host only, no Bend counterpart): the two forms of a top-level conversion query. */
+typedef enum { CONV_FORM_TYPED, CONV_FORM_TYPE } ConvForm;
+
+/* D-269a: what the outer machine does with the verdict of a scratch query. It reads only the
+ * bool and the outer values (ctx, a, b), never the scratch heap. */
+typedef Comp (*ConvScratchVerdict)(Heap *heap, bool same, Ctx ctx, const Value *a, const Value *b);
+
+static Comp conv_form_comp(Heap *heap, ConvForm form, Ctx ctx, const Value *ty, const Value *a, const Value *b) {
+  switch (form) {
+    case CONV_FORM_TYPED:
+      return check_engine_conv(heap, ctx, ty, a, b);
+    case CONV_FORM_TYPE:
+      return check_engine_conv_type(heap, ctx, a, b);
+  }
+  return comp_oom();
+}
+
+/* D-261a, generalized by D-269a (host only, no Bend counterpart): runs one conversion query to
+ * the end in a scratch arena and frees the arena after the query. Conversion is pure and reads
+ * only the outer values. Its verdict is a static bool box, read before the free. A failure is
+ * copied to the outer heap with compact_error and raised again at the same point of the outer
+ * machine. Both runs are unlimited, so no poll count changes. The verdict step runs on the
+ * outer heap, as the bind_frame continuation does. D-271a: the scratch heap carries the flag too,
+ * so a check_engine_ensure or a routed entry reached inside the query (its run is unlimited) takes
+ * its own scratch query and frees it, instead of growing this arena until the query ends. */
+static Comp conv_scratch(Heap *heap, ConvForm form, Ctx ctx, const Value *ty, const Value *a, const Value *b,
+                         ConvScratchVerdict verdict) {
+  Arena scratch = arena_new(ENSURE_SCRATCH_CHUNK);
+  Heap sh = heap_new(&scratch);
+  sh.conv_scratch = true;
+  Result r = budget_run(&sh, conv_form_comp(&sh, form, ctx, ty, a, b), budget_unlimited());
+  bool scratch_oom = sh.oom;
+  switch (r.kind) {
+    case RESULT_DONE: {
+      bool same = kernel_bool_unbox(r.value);
+      arena_free(&scratch);
+      if (scratch_oom) {
+        heap->oom = true;
+        return comp_oom();
+      }
+      return verdict(heap, same, ctx, a, b);
+    }
+    case RESULT_FAIL: {
+      if (scratch_oom) {
+        arena_free(&scratch);
+        heap->oom = true;
+        return comp_oom();
+      }
+      Error copied = compact_error(heap, r.error);
+      arena_free(&scratch);
+      if (heap->oom) return comp_oom();
+      return budget_failed(copied);
+    }
+  }
+  arena_free(&scratch);
+  return comp_oom();
+}
+
+/* D-269a: the verdict step of the routed entries: the bool box their continuations unbox. */
+static Comp conv_scratch_bool(Heap *heap, bool same, Ctx ctx, const Value *a, const Value *b) {
+  (void)heap;
+  (void)ctx;
+  (void)a;
+  (void)b;
+  return budget_pure(kernel_bool_box(same));
+}
+
+/* D-261a, D-269a: only the compact-path heaps under an unlimited budget take the scratch query. */
+static bool conv_scratch_applies(const Heap *heap, Ctx ctx) {
+  return heap->conv_scratch && ctx.budget.kind == BUDGET_UNLIMITED;
+}
+
+/* D-269a (host only): the top-level typed conversion entry; outside the guard it is
+ * check_engine_conv. */
+Comp check_engine_conv_entry(Heap *heap, Ctx ctx, const Value *ty, const Value *a, const Value *b) {
+  if (conv_scratch_applies(heap, ctx)) return conv_scratch(heap, CONV_FORM_TYPED, ctx, ty, a, b, conv_scratch_bool);
+  return check_engine_conv(heap, ctx, ty, a, b);
+}
+
+/* D-269a (host only): the top-level type conversion entry; outside the guard it is
+ * check_engine_conv_type. */
+Comp check_engine_conv_type_entry(Heap *heap, Ctx ctx, const Value *a, const Value *b) {
+  if (conv_scratch_applies(heap, ctx)) return conv_scratch(heap, CONV_FORM_TYPE, ctx, NULL, a, b, conv_scratch_bool);
+  return check_engine_conv_type(heap, ctx, a, b);
+}
+
 Comp check_engine_ensure(Heap *heap, Ctx ctx, const Value *got, const Value *expected) {
+  /* D-261a: ensure_result prints got and expected from the outer heap, as the bind_frame path does. */
+  if (conv_scratch_applies(heap, ctx))
+    return conv_scratch(heap, CONV_FORM_TYPE, ctx, NULL, got, expected, check_engine_ensure_result);
   Frame *f = frame_new_upto(heap, FRAME_UPTO(value2));
   if (f == NULL) return comp_oom();
   f->ctx = ctx;
@@ -2339,7 +2431,8 @@ static Comp index_loop_after_got(Heap *heap, void *ctx, void *value) {
   Frame *f = ctx;
   const Value *got = value;
   f->value2 = got;
-  return bind_frame(heap, check_engine_conv(heap, f->ctx, f->value3, got, f->value), index_loop_after_conv, f);
+  /* D-269a: a top-level conversion entry (scratch query under the D-261a guard). */
+  return bind_frame(heap, check_engine_conv_entry(heap, f->ctx, f->value3, got, f->value), index_loop_after_conv, f);
 }
 
 static Comp index_loop_after_ty(Heap *heap, void *ctx, void *value) {
@@ -3516,12 +3609,13 @@ static Comp fhc_eval_after_cod_ok(Heap *heap, void *ctx, void *value) {
 static Comp fhc_eval_after_cod(Heap *heap, void *ctx, void *value) {
   Frame *f = ctx;
   f->value5 = value;
+  /* D-269a: a top-level conversion entry (scratch query under the D-261a guard). */
   return bind_frame(heap,
-                    check_engine_conv_type(heap,
-                                           context_bind(heap, check_engine_point_name(f->point),
-                                                        check_engine_point_q(f->point),
-                                                        check_engine_point_dom(f->point), f->ctx),
-                                           f->value5, f->value),
+                    check_engine_conv_type_entry(heap,
+                                                 context_bind(heap, check_engine_point_name(f->point),
+                                                              check_engine_point_q(f->point),
+                                                              check_engine_point_dom(f->point), f->ctx),
+                                                 f->value5, f->value),
                     fhc_eval_after_cod_ok, f);
 }
 
@@ -3537,7 +3631,8 @@ static Comp fhc_eval_after_dom_ok(Heap *heap, void *ctx, void *value) {
 static Comp fhc_eval_after_grow(Heap *heap, void *ctx, void *value) {
   Frame *f = ctx;
   (void)value;
-  return bind_frame(heap, check_engine_conv_type(heap, f->ctx, check_engine_point_dom(f->point), f->value4),
+  /* D-269a: a top-level conversion entry (scratch query under the D-261a guard). */
+  return bind_frame(heap, check_engine_conv_type_entry(heap, f->ctx, check_engine_point_dom(f->point), f->value4),
                     fhc_eval_after_dom_ok, f);
 }
 
@@ -4149,7 +4244,8 @@ static Comp mpc_join_after_rest(Heap *heap, void *ctx, void *value) {
   Frame *f = ctx;
   const Inferred *rest = value;
   f->inferred2 = *rest;
-  return bind_frame(heap, check_engine_conv_type(heap, f->ctx, check_engine_inferred_ty(f->inferred2), f->value),
+  /* D-269a: a top-level conversion entry (scratch query under the D-261a guard). */
+  return bind_frame(heap, check_engine_conv_type_entry(heap, f->ctx, check_engine_inferred_ty(f->inferred2), f->value),
                     mpc_join_after_same, f);
 }
 

@@ -44,7 +44,7 @@ The adapter retrieval receipt is in
 | Translation | 613 |
 | Import pipeline | 1,118 |
 | Parser | 261 |
-| Surface checker | 926 |
+| Surface checker | 938 |
 | Erasure | 80 |
 | CLI and publication | 37 |
 | Core CLI, Wasm bytes and runtime hosts | 28 |
@@ -169,9 +169,23 @@ With more than one worker, an interrupt or a termination signal stops new
 observations, and the runner waits for the running observations to end. Each
 running observation can use its full timeout.
 
-The surface corpus also references 18 unresolved historical attempts in
-`dev/bend2/surface-baseline-unresolved.json`. Those attempts retain their
-unresolved status and are outside the passing case inventory.
+The surface corpus also references 19 unresolved attempts in
+`dev/bend2/surface-baseline-unresolved.json`: 18 historical reference
+timeouts, and `veil/test/agreement/agreement-natAdd.kan`, which did not
+finish under the live `_bend2` surface driver in 900 s. Those attempts retain
+their unresolved status and are outside the passing case inventory.
+
+On 2026-10-14, the expected results of 110 surface cases were refreshed from
+the live `_bend2` surface driver output. The frozen results were older than
+the `SArg` output change and the prelude `Nat` declaration. Each refreshed
+case keeps its id and aliases and has an `expected_provenance` record.
+
+The active corpus also includes 13 review regressions checked against both
+the live Bend surface driver and the C driver on 2026-10-16. Eleven use the
+normalized erasure fixture sources, so duplicate historical `Nat` declarations
+cannot mask their positive surface checks. Two bounded agreement cases check
+three additions and reject an unequal result. The original large agreement
+timeout remains recorded in the unresolved baseline.
 
 Run only the OCaml comparison with
 `make bend2-reference-check REFERENCE="$REFERENCE"`. Each run

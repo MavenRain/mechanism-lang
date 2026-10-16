@@ -2,8 +2,8 @@
  * identities remain decimal strings, including values beyond UInt32. The Bend T is threaded linearly
  * through the visitors, so the one heap-boxed Translated is updated in place (with_* are the table_put
  * calls of commit_level, commit_expr and add_declaration). The Bend id sets are persistent values that
- * cached summaries share, so set_add, set_insert_all and union return fresh sets and never mutate an
- * input. Every message text is the Bend text, byte for byte. */
+ * cached summaries share, so extensions of cached sets first copy them. Linear accumulators may
+ * use set_add in place. Every message text is the Bend text, byte for byte. */
 #include "import.h"
 #include <string.h>
 
@@ -240,10 +240,14 @@ static TranslateIdSet set_copy(Heap *heap, TranslateIdSet set) {
 }
 
 /* set_add(set, key) */
+/* Consumes a linear set accumulator. Cached expression summaries must be copied before use.
+ * The fold accumulators report_canonical_constant, mapping_add_external and mapping_add_display
+ * never read the input set again. The copy per add was quadratic in the arena: hop 335 profiled
+ * `mech map-inventory` on the uat export at 13.4M table_put calls under set_copy (2.4 GB of
+ * 2.5 GB before the memcap kill; footMB 3806-3831 in hops 330-333). */
 TranslateIdSet translate_set_add(Heap *heap, TranslateIdSet set, Str key) {
-  TranslateIdSet out = set_copy(heap, set);
-  table_put(heap, &out.values, key, &unit_row);
-  return out;
+  table_put(heap, &set.values, key, &unit_row);
+  return set;
 }
 
 /* set_has(set, key) */
@@ -584,7 +588,7 @@ static size_t decl_arity(DeclEntry declaration) { return declaration.level_param
 
 /* add_constant(summary, identity) */
 static TranslateSummary add_constant(Heap *heap, TranslateSummary summary, Str identity) {
-  summary.constants = translate_set_add(heap, summary.constants, identity);
+  summary.constants = translate_set_add(heap, set_copy(heap, summary.constants), identity);
   return summary;
 }
 

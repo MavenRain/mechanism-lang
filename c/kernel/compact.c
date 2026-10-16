@@ -178,9 +178,11 @@ Literal compact_literal(Heap *heap, Literal lit) {
  * as two equal copies and the output bytes do not change. */
 #define COMPACT_MEMO_FIRST 4096u
 
+/* Keys and values are const Term * or, for the erased-term copies (D-265a), const Ktm *. Both are
+ * only compared as addresses, and one source object maps to one copy of its own type. */
 typedef struct {
-  const Term *key;
-  const Term *value;
+  const void *key;
+  const void *value;
 } CompactMemoSlot;
 
 struct CompactMemo {
@@ -189,7 +191,7 @@ struct CompactMemo {
   CompactMemoSlot *slots;
 };
 
-static size_t compact_memo_hash(const Term *key) {
+static size_t compact_memo_hash(const void *key) {
   uint64_t bits = (uint64_t)(uintptr_t)key >> 3;
   bits = bits ^ (bits >> 29);
   bits = bits * UINT64_C(0x9E3779B97F4A7C15);
@@ -198,7 +200,7 @@ static size_t compact_memo_hash(const Term *key) {
 
 /* The slot that holds key, or the empty slot where key goes. The table is never full (load <= 1/2),
  * and the mask keeps every probe inside slots[0 .. capacity). */
-static CompactMemoSlot *compact_memo_slot(const CompactMemo *memo, const Term *key) {
+static CompactMemoSlot *compact_memo_slot(const CompactMemo *memo, const void *key) {
   size_t mask = memo->capacity - 1;
   size_t at = compact_memo_hash(key) & mask;
   for (;;) {
@@ -251,12 +253,12 @@ void compact_memo_close(Heap *heap, bool opened) {
   heap->memo = NULL;
 }
 
-static const Term *compact_memo_find(const Heap *heap, const Term *term) {
+static const void *compact_memo_find(const Heap *heap, const void *term) {
   if (heap->memo == NULL) return NULL;
   return compact_memo_slot(heap->memo, term)->value;
 }
 
-static void compact_memo_record(Heap *heap, const Term *term, const Term *copy) {
+static void compact_memo_record(Heap *heap, const void *term, const void *copy) {
   CompactMemo *memo = heap->memo;
   CompactMemoSlot *slot;
   if (memo == NULL) return;
@@ -493,5 +495,101 @@ Globals compact_globals(Heap *heap, Globals globals) {
   CompactRemap remap = {heap, out.entries, out.families};
   out.entry_index = index_copy(heap, globals.entry_index, compact_remap_entry, &remap);
   out.family_index = index_copy(heap, globals.family_index, compact_remap_family, &remap);
+  return out;
+}
+
+/* ---- erased terms (D-265a) ----
+ * c/tests/runtime_reachable.c erases each reachable entry on its own step arena and copies the
+ * EraseEntry into the caller heap before it frees that arena. Ktm values are immutable after
+ * construction, so inside a pass with the memo open a shared subterm keeps one copy, and the static
+ * KErased node of eterm_kerased stays the same node. Every field is copied whatever the kind (the
+ * fields a kind does not use are zero, and a zero field copies to zero). */
+static Tid compact_tid(Heap *heap, Tid tid) { return eterm_tid(compact_str(heap, tid.name)); }
+
+static Fid compact_fid(Heap *heap, Fid fid) { return eterm_fid(compact_str(heap, fid.name)); }
+
+static Repr compact_repr(Heap *heap, Repr repr) {
+  Repr out = repr;
+  out.tid = compact_tid(heap, repr.tid);
+  return out;
+}
+
+static void *compact_tid_item(Heap *heap, const void *item) {
+  Tid *out = heap_alloc(heap, sizeof(Tid));
+  if (out == NULL) return NULL;
+  *out = compact_tid(heap, *(const Tid *)item);
+  return out;
+}
+
+static void *compact_repr_item(Heap *heap, const void *item) {
+  Repr *out = heap_alloc(heap, sizeof(Repr));
+  if (out == NULL) return NULL;
+  *out = compact_repr(heap, *(const Repr *)item);
+  return out;
+}
+
+static void *compact_ktm_item(Heap *heap, const void *item) { return (void *)compact_ktm(heap, item); }
+
+static void *compact_ktm_branch_item(Heap *heap, const void *item) {
+  const KtmBranch *branch = item;
+  KtmBranch *out = heap_alloc(heap, sizeof(KtmBranch));
+  if (out == NULL) return NULL;
+  out->tag = compact_nat(heap, branch->tag);
+  out->arity = compact_nat(heap, branch->arity);
+  out->body = compact_ktm(heap, branch->body);
+  return out;
+}
+
+const Ktm *compact_ktm(Heap *heap, const Ktm *term) {
+  const Ktm *seen;
+  Ktm *out;
+  if (term == NULL || term == eterm_kerased()) return term;
+  seen = compact_memo_find(heap, term);
+  if (seen != NULL) return seen;
+  out = heap_alloc(heap, sizeof(Ktm));
+  if (out == NULL) return eterm_kerased();
+  out->kind = term->kind;
+  out->index = compact_nat(heap, term->index);
+  out->lit = compact_literal(heap, term->lit);
+  out->name = compact_str(heap, term->name);
+  out->value = compact_ktm(heap, term->value);
+  out->body = compact_ktm(heap, term->body);
+  out->fid = compact_fid(heap, term->fid);
+  out->arity = compact_nat(heap, term->arity);
+  out->captures = compact_vec_with(heap, &term->captures, compact_ktm_item);
+  out->head = compact_ktm(heap, term->head);
+  out->args = compact_vec_with(heap, &term->args, compact_ktm_item);
+  out->tid = compact_tid(heap, term->tid);
+  out->fields = compact_vec_with(heap, &term->fields, compact_ktm_item);
+  out->tag = compact_nat(heap, term->tag);
+  out->scrut = compact_ktm(heap, term->scrut);
+  out->branches = compact_vec_with(heap, &term->branches, compact_ktm_branch_item);
+  compact_memo_record(heap, term, out);
+  return out;
+}
+
+Kdecl compact_kdecl(Heap *heap, Kdecl decl) {
+  Kdecl out;
+  out.kind = decl.kind;
+  out.fid = compact_fid(heap, decl.fid);
+  out.params = compact_vec_with(heap, &decl.params, compact_repr_item);
+  out.result = compact_repr(heap, decl.result);
+  out.body = compact_ktm(heap, decl.body);
+  out.tids = compact_vec_with(heap, &decl.tids, compact_tid_item);
+  return out;
+}
+
+static void *compact_kdecl_item(Heap *heap, const void *item) {
+  Kdecl *out = heap_alloc(heap, sizeof(Kdecl));
+  if (out == NULL) return NULL;
+  *out = compact_kdecl(heap, *(const Kdecl *)item);
+  return out;
+}
+
+EraseEntry compact_erase_entry(Heap *heap, EraseEntry entry) {
+  EraseEntry out;
+  out.kind = entry.kind;
+  out.repr = compact_repr(heap, entry.repr);
+  out.decls = compact_vec_with(heap, &entry.decls, compact_kdecl_item);
   return out;
 }

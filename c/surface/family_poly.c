@@ -76,7 +76,8 @@ typedef struct {
   FamilyMaybeVec maybe_exports;
   const FamilyGroupState *group; /* group member split (host only) */
   const FamilyComposeState *compose; /* composition member split (host only) */
-  bool split;          /* instantiate: stop after install_imports (host only) */
+  bool split;          /* instantiate: stop before map_members (host only, D-264a) */
+  bool head_only;      /* compose_dependency: stop before the k8 schema check (host only, D-256a) */
 } Frame;
 
 static Comp comp_oom(void) { return budget_failed(error_host_oom()); }
@@ -1927,6 +1928,50 @@ Comp family_check_schema(Heap *heap, FamilyScheme scheme) {
                     check_schema_k1, frame);
 }
 
+/* check_schema up to scope_members (host only, no Bend counterpart; D-256a): the same map_imports,
+ * install_symbolic and scope_members as check_schema_k0..k2; Done = boxed FamilySchemaOpen (the symbolic
+ * table, the scoped members and the arity). The caller then runs family_check_member per member with the
+ * empty catalog, threading the table: the check_members fold of check_schema_k3. */
+static Comp check_schema_open_k3(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  FamilySchemaOpen open;
+  open.symbolic = frame->symbolic;
+  open.members = *(const Vec *)value;
+  open.arity = frame->arity;
+  return pure_box(heap, &open, sizeof open);
+}
+
+static Comp check_schema_open_k2(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  frame->symbolic = *(const Globals *)value;
+  frame->members = family_schema_members(frame->scheme);
+  return bind_frame(heap, family_scope_members(heap, &frame->members, family_empty(), frame->arity),
+                    check_schema_open_k3, frame);
+}
+
+static Comp check_schema_open_k1(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  frame->imports = *(const Vec *)value;
+  return bind_frame(heap,
+                    family_install_symbolic(heap, &frame->imports, family_schema_table(frame->scheme), family_empty(),
+                                            frame->arity),
+                    check_schema_open_k2, frame);
+}
+
+Comp family_check_schema_open(Heap *heap, FamilyScheme scheme) {
+  Frame *frame = frame_new(heap);
+  if (frame == NULL) return comp_oom();
+  frame->scheme = scheme;
+  frame->arity = family_schema_arity(scheme);
+  frame->families = family_raw_families(heap, scheme);
+  frame->reuse = names_new(heap);
+  return bind_frame(heap,
+                    family_map_imports(heap, &frame->families,
+                                       poly_action(poly_scope_levels(frame->arity), names_new(heap), names_new(heap)),
+                                       &frame->reuse),
+                    check_schema_open_k1, frame);
+}
+
 /* ---- universe arguments ---- */
 
 bool family_scopes(Nat arity, const Vec *levels) {
@@ -2010,6 +2055,23 @@ static Comp compose_dependency_k8(Heap *heap, void *ctx, void *value) {
                     compose_dependency_k9, frame);
 }
 
+/* The k8 of family_compose_dependency_head (host only, D-256a): the same renamed test, then stop with the
+ * frame instead of running the schema check; Done = boxed FamilyDependencyHead. */
+static Comp compose_dependency_head_k8(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  FamilyDependencyHead head;
+  (void)value;
+  frame->renamed = level_distinct_vars(heap, &frame->dependency.levels) &&
+                   global_extended_by(family_schema_table(frame->scheme), frame->globals);
+  head.frame = frame;
+  head.renamed = frame->renamed;
+  head.scheme = frame->scheme;
+  head.members = frame->members;
+  head.action = frame->action;
+  if (heap->oom) return comp_oom();
+  return pure_box(heap, &head, sizeof head);
+}
+
 /* definitions <- map_members(schema_members(scheme), action) */
 static Comp compose_dependency_k7(Heap *heap, void *ctx, void *value) {
   Frame *frame = ctx;
@@ -2020,15 +2082,26 @@ static Comp compose_dependency_k7(Heap *heap, void *ctx, void *value) {
   frame->fresh = family_companion_names(heap, &fresh_imports);
   member_names = family_member_names(heap, &frame->definitions);
   frame->generated = names_append(heap, &frame->fresh, &member_names);
-  return bind_frame(heap, family_collision_list(heap, &frame->generated, &frame->state.aliases), compose_dependency_k8,
-                    frame);
+  return bind_frame(heap, family_collision_list(heap, &frame->generated, &frame->state.aliases),
+                    frame->head_only ? compose_dependency_head_k8 : compose_dependency_k8, frame);
 }
 
-/* families <- map_imports(raw_families(scheme), action, reuse) */
+/* families <- map_imports(raw_families(scheme), action, reuse). The head of the split (host only, D-267a)
+ * stops here with the frame, the schema members and the action instead of running map_members. */
 static Comp compose_dependency_k6(Heap *heap, void *ctx, void *value) {
   Frame *frame = ctx;
   frame->imports = *(const Vec *)value;
   frame->members = family_schema_members(frame->scheme);
+  if (frame->head_only) {
+    FamilyDependencyHead head;
+    head.frame = frame;
+    head.renamed = false;
+    head.scheme = frame->scheme;
+    head.members = frame->members;
+    head.action = frame->action;
+    if (heap->oom) return comp_oom();
+    return pure_box(heap, &head, sizeof head);
+  }
   return bind_frame(heap, family_map_members(heap, &frame->members, frame->action), compose_dependency_k7, frame);
 }
 
@@ -2108,6 +2181,39 @@ Comp family_compose_dependency(Heap *heap, FamilyDependency dependency, FamilyCo
   frame->arity = arity;
   frame->root = root;
   return bind_frame(heap, budget_tick(heap), compose_dependency_k0, frame);
+}
+
+/* ---- compose_dependency split (host only, no Bend counterpart; D-256a, D-267a, decision 156) ----
+ * head = k0..k6 up to map_members; Done = boxed FamilyDependencyHead (the frame stays in the head's arena,
+ * members and action = the map_members input). The compact path then maps each member with
+ * family_map_member on its own scratch arena (D-267a: one map_members run held about 3.76 GB of poly frames
+ * on MechHorizontalLaws, hop 267). mapped = k7 (the mapped definitions in order) and the k8 renamed test;
+ * Done = boxed FamilyDependencyHead with renamed set. tail = the k9 body over that frame. Between mapped
+ * and tail the compact path runs the schema re-check of a renamed line on scratch arenas
+ * (family_check_schema_open, then family_check_member per member), so its garbage is freed member by member.
+ * check_schema_k4 drops the check's value, so the check is a pure gate, and map_members maps each member on
+ * its own and in order: under budget_unlimited the Done values and the error order equal
+ * family_compose_dependency. */
+Comp family_compose_dependency_head(Heap *heap, FamilyDependency dependency, FamilyComposed state, Globals globals,
+                                    FamilyCatalog catalog, Nat arity, Str root) {
+  Frame *frame = frame_new(heap);
+  if (frame == NULL) return comp_oom();
+  frame->dependency = dependency;
+  frame->state = state;
+  frame->globals = globals;
+  frame->catalog = catalog;
+  frame->arity = arity;
+  frame->root = root;
+  frame->head_only = true;
+  return bind_frame(heap, budget_tick(heap), compose_dependency_k0, frame);
+}
+
+Comp family_compose_dependency_mapped(Heap *heap, const FamilyDependencyHead *head, const Vec *mapped) {
+  return compose_dependency_k7(heap, head->frame, (void *)mapped);
+}
+
+Comp family_compose_dependency_tail(Heap *heap, const FamilyDependencyHead *head) {
+  return compose_dependency_k9(heap, head->frame, NULL);
 }
 
 /* ---- compose_dependencies: fold over FamilyDependency pointers; Done = boxed FamilyComposed * ---- */
@@ -2410,11 +2516,10 @@ static Comp compose_open_k3(Heap *heap, void *ctx, void *value) {
                     frame);
 }
 
-/* checked <- guard_trusted(trusted, root): finish_composition and declare_nonempty up to install_symbolic */
-static Comp compose_open_k2(Heap *heap, void *ctx, void *value) {
-  Frame *frame = ctx;
+/* finish_composition and declare_nonempty up to install_symbolic; next receives the symbolic table
+ * (compose_open_k3, or compose_open_head_k3 on the split path of D-259a) */
+static Comp compose_open_install(Heap *heap, Frame *frame, Comp (*next)(Heap *heap, void *ctx, void *value)) {
   VecGet head;
-  (void)value;
   frame->families = family_fresh_imports(heap, &frame->state.imports);
   head = vec_get(&frame->families, 0);
   if (head.status != VEC_GET_OK)
@@ -2424,7 +2529,13 @@ static Comp compose_open_k2(Heap *heap, void *ctx, void *value) {
   frame->imports = frame->state.imports;
   frame->trusted = frame->state.trusted;
   return bind_frame(heap, family_install_symbolic(heap, &frame->imports, frame->globals, frame->catalog, frame->arity),
-                    compose_open_k3, frame);
+                    next, frame);
+}
+
+/* checked <- guard_trusted(trusted, root): finish_composition and declare_nonempty up to install_symbolic */
+static Comp compose_open_k2(Heap *heap, void *ctx, void *value) {
+  (void)value;
+  return compose_open_install(heap, ctx, compose_open_k3);
 }
 
 /* checked <- collision_list(companion_names(import_families(imports)), [root]) */
@@ -2434,17 +2545,18 @@ static Comp compose_open_k1(Heap *heap, void *ctx, void *value) {
   return bind_frame(heap, family_guard_trusted(heap, &frame->state.trusted, frame->root), compose_open_k2, frame);
 }
 
-/* composed_group up to its guards, from the Composed value the specialize lines folded (frame->state) */
-static Comp compose_open_from(Heap *heap, Frame *frame) {
+/* composed_group up to its guards, from the Composed value the specialize lines folded (frame->state);
+ * next = compose_open_k1, or compose_open_head_k1 on the split path of D-259a */
+static Comp compose_open_from(Heap *heap, Frame *frame, Comp (*next)(Heap *heap, void *ctx, void *value)) {
   Vec imported;
   if (!frame_group(heap, frame, frame->root)) return comp_oom();
   imported = family_import_families(heap, &frame->state.imports);
   frame->generated = family_companion_names(heap, &imported);
-  return bind_frame(heap, family_collision_list(heap, &frame->generated, &frame->names), compose_open_k1, frame);
+  return bind_frame(heap, family_collision_list(heap, &frame->generated, &frame->names), next, frame);
 }
 
-Comp family_compose_open(Heap *heap, Globals globals, FamilyCatalog catalog, Nat arity, Str name,
-                         const FamilyComposed *composed) {
+static Comp compose_open_frame(Heap *heap, Globals globals, FamilyCatalog catalog, Nat arity, Str name,
+                               const FamilyComposed *composed, Comp (*next)(Heap *heap, void *ctx, void *value)) {
   Frame *frame = frame_new(heap);
   if (frame == NULL) return comp_oom();
   frame->globals = globals;
@@ -2452,7 +2564,76 @@ Comp family_compose_open(Heap *heap, Globals globals, FamilyCatalog catalog, Nat
   frame->arity = arity;
   frame->root = name;
   frame->state = *composed;
-  return compose_open_from(heap, frame);
+  return compose_open_from(heap, frame, next);
+}
+
+Comp family_compose_open(Heap *heap, Globals globals, FamilyCatalog catalog, Nat arity, Str name,
+                         const FamilyComposed *composed) {
+  return compose_open_frame(heap, globals, catalog, arity, name, composed, compose_open_k1);
+}
+
+/* ---- composition open split (host only, no Bend counterpart; D-259a, decision 156) ----
+ * family_compose_open cut around scope_members, so the compact path can scope each trusted member on its
+ * own scratch arena: on MechHorizontalAssociativity the one scope_members map over 752 trusted members
+ * grew past the 3800 MB cap (hop 259). head = collision_list, guard_trusted, the nonempty guard and
+ * install_symbolic (Done = a FamilyComposeState whose group.members are the trusted members NOT yet
+ * scoped and whose group.symbolic is the install_symbolic table); each member is then scoped by
+ * family_map_member with ONE family_scope_action, in order, as map_list does; tail = add_members over the
+ * scoped members and the compose_open_k5 value. Under budget_unlimited the three runs give the Done value
+ * and the error order of family_compose_open. */
+static Comp compose_open_head_k3(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  FamilyComposeState *out = heap_alloc(heap, sizeof *out);
+  if (out == NULL) return comp_oom();
+  out->group.globals = frame->globals;
+  out->group.symbolic = *(const Globals *)value;
+  out->group.catalog = frame->catalog;
+  out->group.arity = frame->arity;
+  out->group.raw = frame->raw;
+  out->group.companions = frame->companions;
+  out->group.members = frame->trusted;
+  out->name = frame->root;
+  out->pending = frame->state.members;
+  return budget_pure(out);
+}
+
+static Comp compose_open_head_k2(Heap *heap, void *ctx, void *value) {
+  (void)value;
+  return compose_open_install(heap, ctx, compose_open_head_k3);
+}
+
+static Comp compose_open_head_k1(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  (void)value;
+  return bind_frame(heap, family_guard_trusted(heap, &frame->state.trusted, frame->root), compose_open_head_k2, frame);
+}
+
+Comp family_compose_open_head(Heap *heap, Globals globals, FamilyCatalog catalog, Nat arity, Str name,
+                              const FamilyComposed *composed) {
+  return compose_open_frame(heap, globals, catalog, arity, name, composed, compose_open_head_k1);
+}
+
+PolyAction family_scope_action(Heap *heap, FamilyCatalog catalog, Nat arity) {
+  return scope_action(heap, catalog, arity);
+}
+
+static Comp compose_open_tail_k(Heap *heap, void *ctx, void *value) {
+  Frame *frame = ctx;
+  FamilyComposeState *out = heap_alloc(heap, sizeof *out);
+  if (out == NULL) return comp_oom();
+  *out = *frame->compose;
+  out->group.symbolic = *(const Globals *)value;
+  out->group.members = frame->trusted;
+  return budget_pure(out);
+}
+
+Comp family_compose_open_tail(Heap *heap, const FamilyComposeState *head, const Vec *scoped) {
+  Frame *frame = frame_new(heap);
+  if (frame == NULL) return comp_oom();
+  frame->compose = head;
+  frame->trusted = *scoped;
+  return bind_frame(heap, family_add_members(heap, &frame->trusted, head->group.catalog, head->group.symbolic),
+                    compose_open_tail_k, frame);
 }
 
 /* checked <- require_fresh(occupied(globals, catalog, name), name): the Done value is the start state, the
@@ -2616,8 +2797,8 @@ static Comp instantiate_k8(Heap *heap, void *ctx, void *value) {
   return family_check_members(heap, &frame->members, frame->catalog, nat_zero(), frame->globals);
 }
 
-/* The split end of instantiate (host only): the installed table and the members still to check, for the
- * compact path's per-member arena reset (USER ruling 2026-10-12 (e)). */
+/* The end of the instantiate open tail (host only, D-264a): the installed table and the mapped members still
+ * to check, for the compact path's per-member arena reset (USER ruling 2026-10-12 (e)). */
 static Comp instantiate_begin_k8(Heap *heap, void *ctx, void *value) {
   Frame *frame = ctx;
   FamilyInstantiateStart start;
@@ -2630,19 +2811,25 @@ static Comp instantiate_begin_k8(Heap *heap, void *ctx, void *value) {
 static Comp instantiate_k7(Heap *heap, void *ctx, void *value) {
   Frame *frame = ctx;
   frame->members = *(const Vec *)value;
-  if (frame->split) {
-    return bind_frame(heap, family_install_imports(heap, &frame->imports, frame->globals, frame->catalog),
-                      instantiate_begin_k8, frame);
-  }
   return bind_frame(heap, family_install_imports(heap, &frame->imports, frame->globals, frame->catalog), instantiate_k8,
                     frame);
 }
 
-/* families <- map_imports(raw_families(scheme), action, reuse) */
+/* families <- map_imports(raw_families(scheme), action, reuse); the split head (D-264a) stops here with the
+ * table, the catalog, the action, the mapped imports and the schema members still to map. */
 static Comp instantiate_k6(Heap *heap, void *ctx, void *value) {
   Frame *frame = ctx;
   frame->imports = *(const Vec *)value;
   frame->members = family_schema_members(frame->scheme);
+  if (frame->split) {
+    FamilyInstantiateHead head;
+    head.globals = frame->globals;
+    head.catalog = frame->catalog;
+    head.action = frame->action;
+    head.imports = frame->imports;
+    head.members = frame->members;
+    return pure_box(heap, &head, sizeof head);
+  }
   return bind_frame(heap, family_map_members(heap, &frame->members, frame->action), instantiate_k7, frame);
 }
 
@@ -2728,9 +2915,22 @@ Comp family_instantiate_comp(Heap *heap, Globals globals, FamilyCatalog catalog,
   return instantiate_start(heap, globals, catalog, name, levels, as_name, reuse, exports, false);
 }
 
-Comp family_instantiate_begin(Heap *heap, Globals globals, FamilyCatalog catalog, Str name, const Vec *levels,
-                              Str as_name, const Vec *reuse, FamilyMaybeVec exports) {
+/* The instantiate open split (host only, D-264a): the head stops before map_members (instantiate_k6); the
+ * compact path maps each schema member with family_map_member and head.action on its own arena, in order,
+ * then runs the tail. map_members maps each member on its own, so under budget_unlimited the head, the
+ * member maps and the tail give the Done value and the error order of instantiate up to install_imports. */
+Comp family_instantiate_open_head(Heap *heap, Globals globals, FamilyCatalog catalog, Str name, const Vec *levels,
+                                  Str as_name, const Vec *reuse, FamilyMaybeVec exports) {
   return instantiate_start(heap, globals, catalog, name, levels, as_name, reuse, exports, true);
+}
+
+/* install_imports(families, globals, catalog) over the head, then instantiate_begin_k8 with the mapped members. */
+Comp family_instantiate_open_tail(Heap *heap, const FamilyInstantiateHead *head, const Vec *mapped) {
+  Frame *frame = frame_new(heap);
+  if (frame == NULL) return comp_oom();
+  frame->members = *mapped;
+  return bind_frame(heap, family_install_imports(heap, &head->imports, head->globals, head->catalog),
+                    instantiate_begin_k8, frame);
 }
 
 Result family_instantiate(Heap *heap, Globals globals, FamilyCatalog catalog, Budget budget, Str name, const Vec *levels,

@@ -101,8 +101,8 @@ def comparable(name: str, observation: dict) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(__doc__)
-    parser.add_argument("--mech", type=Path, default=ROOT / "_bend2/bin/mech.exe")
-    parser.add_argument("--cert", type=Path, default=ROOT / "_bend2/bin/mech_cert.exe")
+    parser.add_argument("--mech", type=Path, default=ROOT / "_tcc/bin/mech")
+    parser.add_argument("--cert", type=Path, default=ROOT / "_tcc/bin/mech_cert")
     parser.add_argument("--combined", type=Path)
     parser.add_argument("--record-reference", type=Path)
     args = parser.parse_args()

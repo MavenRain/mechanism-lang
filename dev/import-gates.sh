@@ -19,18 +19,24 @@ if [[ $actual != $SHA ]]; then
   exit 1
 fi
 
+# Hop 330 (D-329a, USER ruling 1): when MEMCAP names the memcap wrapper the
+# drivers below run as `MEMCAP 3800 <secs> driver...` (<secs> = MEMCAP_SECONDS,
+# default 900), so the cap sits on the driver.  Unset MEMCAP = bare commands.
+cap=()
+if [[ -n ${MEMCAP:-} ]]; then cap=("$MEMCAP" 3800 "${MEMCAP_SECONDS:-900}"); fi
+
 case ${1:-} in
   grammar)
-    "$ROOT/_bend2/test/import.exe" --corpus "$EXPORT"
-    types=$("$ROOT/_bend2/test/import_types.exe")
+    $cap "$ROOT/_tcc/import_protocol" --corpus "$EXPORT"
+    types=$($cap "$ROOT/_tcc/import_types_protocol")
     print -r -- "$types"
     print -r -- "$types" | rg -q '^IMPORT-TYPES-OK$'
     ;;
   corpus)
-    bash "$CORPUS/dev/lean-parity/check-corpus.sh"
+    $cap bash "$CORPUS/dev/lean-parity/check-corpus.sh"
     ;;
   counts)
-    out=$("$ROOT/_bend2/bin/mech.exe" diff-parity --export "$EXPORT")
+    out=$($cap "$ROOT/_tcc/bin/mech" diff-parity --export "$EXPORT")
     print -r -- "$out"
     print -r -- "$out" | rg -q '^IMPORT-COUNTS declarations=3202 external_referenced=2477 external_declared=2543 const_names=3017$'
     for row in 'axiom 3' 'def 1176' 'thm 1649' 'opaque 1' 'quot 4' 'inductive 112' 'constructor 143' 'recursor 114'; do

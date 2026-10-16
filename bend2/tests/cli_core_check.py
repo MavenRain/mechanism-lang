@@ -115,7 +115,7 @@ def observe(command: list[str], case: dict, cwd: Path = ROOT, timeout: float = 3
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--driver", type=Path, default=ROOT / "_bend2/bin/mech.exe")
+    parser.add_argument("--driver", type=Path, default=ROOT / "_tcc/bin/mech")
     options = parser.parse_args()
     driver = options.driver.resolve()
     command = ["node", "--stack-size=16384", str(driver), "--"] if driver.suffix == ".js" else [str(driver)]

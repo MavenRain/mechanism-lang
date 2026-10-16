@@ -7,6 +7,36 @@ import subprocess
 import sys
 import tempfile
 
+# Hop 335 (D-329a, memcap rule): when MEMCAP names W/memcap, every driver call runs
+# as `MEMCAP 3800 <secs> driver...`, so the cap sits on the driver, not on python3.
+# memcap prints its record line on the driver's stdout; uncapped() moves such
+# lines to this harness's stderr so the stdout checks stay.  Without MEMCAP the
+# commands are unchanged.
+MEMCAP = os.environ.get("MEMCAP")
+MEMCAP_SECONDS = int(os.environ.get("MEMCAP_SECONDS", "900"))
+
+
+def capped(command, seconds=None):
+    budget = MEMCAP_SECONDS if seconds is None else max(1, int(seconds) - 1)
+    prefix = [MEMCAP, "3800", str(budget)] if MEMCAP else []
+    return prefix + [str(part) for part in command]
+
+
+def uncapped(result):
+    stdout = getattr(result, "stdout", None)
+    if not MEMCAP or stdout is None:
+        return result
+    marker = "memcap " if isinstance(stdout, str) else b"memcap "
+    lines = stdout.splitlines(keepends=True)
+    moved = [line for line in lines if line.startswith(marker)]
+    kept = [line for line in lines if not line.startswith(marker)]
+    if moved:
+        text = marker[:0].join(moved)
+        sys.stderr.write(text if isinstance(text, str) else text.decode("utf-8", "replace"))
+        sys.stderr.flush()
+    result.stdout = marker[:0].join(kept)
+    return result
+
 
 def fixture():
     return [
@@ -47,8 +77,8 @@ def main():
         return condition
 
     def invoke(*arguments):
-        return subprocess.run([executable, *map(str, arguments)],
-                              capture_output=True, text=True, timeout=15)
+        return uncapped(subprocess.run(capped([executable, *map(str, arguments)], 15),
+                                       capture_output=True, text=True, timeout=15))
 
     def write(path, rows):
         path.write_text("".join(json.dumps(row) + "\n" for row in rows))

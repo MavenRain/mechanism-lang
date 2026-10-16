@@ -1,0 +1,24 @@
+$ runner
+expected a test mode
+rc=64
+$ runner nope
+unknown test mode: nope
+rc=64
+$ runner unit
+expected one fixture or unit name
+rc=64
+$ runner unit nope
+unknown unit: nope
+rc=64
+$ runner unit kernel-numbers extra
+expected one fixture or unit name
+rc=64
+$ runner fixture
+expected one fixture or unit name
+rc=64
+$ runner fixture nope
+unknown fixture: nope
+rc=64
+$ runner unit surface-lexer
+PASS surface_lexer
+rc=0

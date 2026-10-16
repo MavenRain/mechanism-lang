@@ -29,6 +29,12 @@ typedef struct {
 
 Policy negatives_prefix(size_t minimum, bool distinct, bool common);
 Policy negatives_digest(size_t minimum, uint32_t limit, const Vec *full, bool distinct, bool nominal);
+/* prefix_of_all(prefix, others), distinct_from(pin, others, digest_mode) and oracle_valid(pin, all,
+ * policy), exported for the relational_oracle drivers (others and all: Vec of Pin *). */
+bool negatives_prefix_of_all(Str prefix, const Vec *others);
+bool negatives_distinct_from(const Pin *pin, const Vec *others, bool digest_mode);
+bool negatives_oracle_valid(const Pin *pin, const Vec *all, Policy policy);
+Task negatives_message(Heap *heap, Result result, Str name, Str *text);
 Task negatives_run(Heap *heap, Str root, Str directory, const Vec *names, Globals globals, Policy policy);
 
 #endif

@@ -208,37 +208,26 @@ def execute(root, work, protocols, controls, *, suite_timeout=300, build_timeout
     work.mkdir(parents=True)
     copy = work / "copy"
     shutil.copytree(root, copy, ignore=shutil.ignore_patterns(
-        ".git", "_build", "_bend2", "build", ".gatework", ".kanon-exec", ".kanon-wait",
+        ".git", "_build", "_bend2", "_tcc", "build", ".gatework", ".kanon-exec", ".kanon-wait",
         ".kanonx", ".kanon-replies", "__pycache__"))
     env = dict(os.environ)
-    backend = env.get("BEND_MUTATION_BACKEND", env.get("BEND_TEST_BACKEND", "javascript"))
-    if backend not in {"javascript", "native"}:
-        raise SystemExit("BEND_MUTATION_BACKEND must be javascript or native")
-    configured_bend = env.get("BEND", str(Path.home() / ".bend/bin/bend"))
-    bend = str(Path(shutil.which(configured_bend) or configured_bend).resolve())
-    node = shutil.which("node")
-    if node is None and backend == "javascript":
-        raise SystemExit("Node is required for the official Bend JavaScript target")
-    node = str(Path(node).resolve()) if node else None
-    version = subprocess.check_output([bend, "version"], env=env, text=True).strip()
-    if version != "bend 2.0.27":
-        raise SystemExit(f"expected bend 2.0.27, got {version}")
-    native = NativeCache(copy, env.get("BEND_MUTATION_CACHE", root / "build/bend2-native-mutations"), bend, env) if backend == "native" else None
-    tool_paths = [Path(bend), Path(shutil.which("zsh"))]
-    tool_paths += list(map(Path, native.identity["tools"])) if native else [Path(node)]
+    located_tcc = shutil.which(env.get("TCC", "tcc"))
+    if located_tcc is None:
+        raise SystemExit("tcc is required for the C build")
+    located_make = shutil.which("make")
+    if located_make is None:
+        raise SystemExit("make is required for the C build")
+    tcc = str(Path(located_tcc).resolve())
+    make = str(Path(located_make).resolve())
+    version = subprocess.check_output([tcc, "-v"], env=env, text=True).strip()
+    tool_paths = [Path(tcc), Path(make)]
     tools = {str(path): sha(path) for path in tool_paths}
-    identity = {**native.identity, "tools": tools} if native else {
-                "backend": "javascript", "bend": bend, "bend_version": version,
-                "node": node, "node_version": subprocess.check_output([node, "--version"], text=True).strip(), "tools": tools}
+    identity = {"backend": "c", "tcc": tcc, "tcc_version": version, "make": make, "tools": tools}
     (work / "toolchain.json").write_text(json.dumps(identity, indent=2) + "\n")
-    resolver = runpy.run_path(str(copy / "dev/bend2-build.py"))["source_graph"]
-    base = Path(bend).parent.parent / "bend2/base.bend"
 
     def fixture_inputs():
         paths = [path for directory in [copy / "prelude", copy / "test"]
                  for path in directory.rglob("*") if path.is_file()]
-        paths += [path for directory in [base.parent, Path.home() / ".bend/bend2"]
-                  for path in directory.rglob("*") if path.is_file()]
         return {str(path): sha(path) for path in sorted(set(paths))}
 
     fixtures = fixture_inputs()
@@ -253,48 +242,51 @@ def execute(root, work, protocols, controls, *, suite_timeout=300, build_timeout
     builds = []
     artifacts = {}
     fixture_overrides = {}
+    c_build = {}
 
     def expected_fixtures():
         return {**fixtures, **fixture_overrides}
-    source_manifest = {str(path.relative_to(copy)): sha(path)
-                       for path in sorted((copy / "bend2").rglob("*.bend"))}
+
+    def c_sources():
+        return {str(path.relative_to(copy)): sha(path)
+                for path in sorted((copy / "c").rglob("*")) if path.is_file() and path.suffix in {".c", ".h"}}
+
+    source_manifest = c_sources()
     (work / "source-manifest.json").write_text(json.dumps(source_manifest, indent=2) + "\n")
 
+    def target_of(protocol):
+        return "_tcc/" + Path(protocols[protocol][0]).stem
+
     def run(label, command, timeout):
-        command = ["zsh", "-c", 'ulimit -s "$(ulimit -Hs)"; exec "$@"', "bend2-mutation", *command]
         result = bounded_run(command, cwd=copy, env=env, capture_output=True, timeout=timeout)
         (work / f"{label}.stdout").write_bytes(result.stdout)
         (work / f"{label}.stderr").write_bytes(result.stderr)
         return result
 
     def build(label, protocol):
-        source, marker, *arguments = protocols[protocol]
+        target = target_of(protocol)
         guard_tools()
-        inputs = resolver(copy / source, base)
+        inputs = c_sources()
         current_fixtures = fixture_inputs()
         if current_fixtures != expected_fixtures():
             raise SystemExit(f"{label}: fixture inputs changed outside the intended mutation")
-        if native:
-            native_receipt, reused = native.build(source, timeout=build_timeout)
-            artifact = Path(native_receipt["artifact"])
-            (work / f"{label}.stdout").write_bytes(b"")
-            (work / f"{label}.stderr").write_bytes(b"")
-        else:
-            artifact = work / (protocol + ".js")
-            result = run(label, [bend, str(copy / source), "-o", str(artifact)], build_timeout)
-            if result.returncode != 0 or not artifact.is_file():
-                raise SystemExit(f"{label}: build failed; this is not a killed mutation")
+        artifact = copy / target
+        artifact.unlink(missing_ok=True)
+        result = run(label, [make, "-C", str(copy), target], build_timeout)
+        # make 3.81 compares mtimes to the second: keep every later edit at least one second after this compile.
+        time.sleep(1.05)
+        if result.returncode != 0 or not artifact.is_file() or not os.access(artifact, os.X_OK):
+            raise SystemExit(f"{label}: build failed; this is not a killed mutation")
         guard_tools()
-        if resolver(copy / source, base) != inputs:
+        if c_sources() != inputs:
             raise SystemExit(f"{label}: source inputs changed during compilation")
-        metadata = {"inputs": inputs, "artifact_sha256": sha(artifact), "fixtures": current_fixtures,
+        metadata = {"target": target, "inputs": inputs, "artifact_sha256": sha(artifact), "fixtures": current_fixtures,
+                    "build_exit_code": result.returncode,
                     "build_timeout_seconds": build_timeout,
                     "toolchain_sha256": sha(work / "toolchain.json"),
                     "fixture_inputs_sha256": sha(work / "fixture-inputs.json"),
                     "build_stdout_sha256": sha(work / f"{label}.stdout"),
                     "build_stderr_sha256": sha(work / f"{label}.stderr")}
-        if native:
-            metadata.update(native=native_receipt, cache_reused=reused)
         receipt = work / f"{label}.build.json"
         receipt.write_text(json.dumps(metadata, indent=2) + "\n")
         builds.append({"label": label, "receipt": str(receipt), "sha256": sha(receipt)})
@@ -310,19 +302,17 @@ def execute(root, work, protocols, controls, *, suite_timeout=300, build_timeout
         def guard_inputs():
             guard_tools()
             if (sha(artifact) != metadata["artifact_sha256"] or
-                    resolver(copy / source, base) != metadata["inputs"] or fixture_inputs() != metadata["fixtures"] or
-                    (native and not native.valid(metadata["native"], source))):
+                    c_sources() != metadata["inputs"] or fixture_inputs() != metadata["fixtures"]):
                 raise SystemExit(f"{label}: frozen inputs or artifact changed")
 
         guard_inputs()
         started = time.monotonic()
-        command = [str(artifact), *arguments] if native else [node, "--stack-size=16384", str(artifact), *arguments]
-        result = run(label, command, suite_timeout)
+        result = run(label, [str(artifact), *arguments], suite_timeout)
         elapsed = time.monotonic() - started
         guard_inputs()
         receipt = {"artifact_sha256": metadata["artifact_sha256"], "exit_code": result.returncode,
-                    "seconds": elapsed, "timeout_seconds": suite_timeout,
-                    "stdout_sha256": sha(work / f"{label}.stdout"),
+                   "seconds": elapsed, "timeout_seconds": suite_timeout,
+                   "stdout_sha256": sha(work / f"{label}.stdout"),
                    "stderr_sha256": sha(work / f"{label}.stderr"), "inputs_unchanged": True}
         (work / f"{label}.runtime.json").write_text(json.dumps(receipt, indent=2) + "\n")
         return result
@@ -331,6 +321,8 @@ def execute(root, work, protocols, controls, *, suite_timeout=300, build_timeout
         for protocol, descriptor in protocols.items():
             source, marker, *arguments = descriptor
             artifact = build(f"{stage}-{protocol}-build", protocol)
+            c_build[f"{stage}-{protocol}"] = {"target": target_of(protocol), "exit_code": 0,
+                                              "binary_sha256": sha(artifact)}
             result = suite(f"{stage}-{protocol}", protocol, artifact)
             if result.returncode != 0 or marker.encode() not in result.stdout.splitlines() or result.stderr:
                 raise SystemExit(f"{stage} failed: {protocol}")
@@ -381,10 +373,11 @@ def execute(root, work, protocols, controls, *, suite_timeout=300, build_timeout
     report = {"passed": passed, "controls": observations, "source_manifest": source_manifest,
               "suite_timeout_seconds": suite_timeout,
               "build_timeout_seconds": build_timeout,
-              "toolchain": identity, "builds": builds, "baselines": baselines,
+              "toolchain": identity, "c_build": c_build, "builds": builds, "baselines": baselines,
               "fixture_inputs_sha256": sha(work / "fixture-inputs.json"),
               "protocols": {name: {"source": descriptor[0], "source_sha256": sha(copy / descriptor[0]),
-                                    "marker": descriptor[1]} for name, descriptor in protocols.items()}}
+                                    "target": target_of(name), "marker": descriptor[1]}
+                            for name, descriptor in protocols.items()}}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"passed": passed, "killed": sum(row["killed"] for row in observations),
                       "controls": len(observations)}))

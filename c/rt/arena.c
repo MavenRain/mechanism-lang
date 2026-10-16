@@ -14,7 +14,12 @@ Arena arena_new(size_t chunk_size) {
   Arena arena;
   arena.head = NULL;
   arena.chunk_size = chunk_size < 4096 ? 4096 : chunk_size;
+  arena.reserved = 0;
   return arena;
+}
+
+size_t arena_reserved(const Arena *arena) {
+  return arena->reserved;
 }
 
 static size_t arena_round(size_t size) {
@@ -35,6 +40,7 @@ static ArenaChunk *arena_grow(Arena *arena, size_t need) {
   chunk->used = 0;
   chunk->size = size;
   arena->head = chunk;
+  arena->reserved = size > SIZE_MAX - arena->reserved ? SIZE_MAX : arena->reserved + size;
   return chunk;
 }
 
@@ -59,4 +65,5 @@ void arena_free(Arena *arena) {
     chunk = next;
   }
   arena->head = NULL;
+  arena->reserved = 0;
 }

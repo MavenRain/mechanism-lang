@@ -1768,6 +1768,7 @@ Result elab_check_in(Heap *heap, Globals globals, Budget budget, Str source) {
  * reclaimed it by garbage collection). Only the prelude drivers call it. The Done value is an
  * ElabChecked * in the caller's arena, as for check_in; a failure is copied into the caller's arena. */
 #define COMPACT_CHUNK (1 << 20)
+#define COMPACT_GROWTH ((size_t)256 << 20)
 
 static Result compact_host_oom(Heap *heap, Arena *live) {
   arena_free(live);
@@ -1860,11 +1861,20 @@ static Comp group_open_comp(Heap *heap, ElabProgram state, const SDecl *decl) {
                   group_open_after_catalogs, f);
 }
 
+/* D-261a (host only): every heap of the compact path below. Its runs use budget_unlimited(), so
+ * check_engine_ensure runs each conversion query in a scratch arena and frees it after the query.
+ * The copy-target heaps carry the flag too; only check_engine_ensure reads it. */
+static Heap compact_heap_new(Arena *arena) {
+  Heap heap = heap_new(arena);
+  heap.conv_scratch = true;
+  return heap;
+}
+
 /* Copies the survivors of a group step into a fresh arena and frees the old one. The origin table and the
  * catalog are shared between the program state and the group state, so they are copied once. */
 static bool compact_group_swap(Arena *live, CompactGroup *cg) {
   Arena next = arena_new(COMPACT_CHUNK);
-  Heap dst = heap_new(&next);
+  Heap dst = compact_heap_new(&next);
   bool memo = compact_memo_open(&dst);
   CompactGroup copied;
   copied.group = compact_family_group_state(&dst, &cg->group);
@@ -1883,7 +1893,7 @@ static bool compact_group_swap(Arena *live, CompactGroup *cg) {
  * like the Done value of elab_program_step); a failure has already freed the live arena. */
 static Result compact_group_entry(Heap *heap, Arena *live, ElabProgram *state, const SDecl *decl) {
   CompactGroup cg;
-  Heap work = heap_new(live);
+  Heap work = compact_heap_new(live);
   Result run = budget_run(&work, group_open_comp(&work, *state, decl), budget_unlimited());
   size_t i = 0;
   if (work.oom) return compact_host_oom(heap, live);
@@ -1900,7 +1910,7 @@ static Result compact_group_entry(Heap *heap, Arena *live, ElabProgram *state, c
     VecGet got = vec_get(&decl->helpers, i);
     FamilyMemberElaborator callback;
     if (got.status != VEC_GET_OK) break;
-    work = heap_new(live);
+    work = compact_heap_new(live);
     callback = elab_member_callback(&work, got.value, decl->universes);
     run = budget_run(&work, family_group_member(&work, &cg.group, callback), budget_unlimited());
     if (work.oom) return compact_host_oom(heap, live);
@@ -1914,7 +1924,7 @@ static Result compact_group_entry(Heap *heap, Arena *live, ElabProgram *state, c
     if (!compact_group_swap(live, &cg)) return compact_host_oom(heap, live);
     i = i + 1;
   }
-  work = heap_new(live);
+  work = compact_heap_new(live);
   run = budget_run(&work, family_group_close(&work, &cg.group), budget_unlimited());
   if (work.oom) return compact_host_oom(heap, live);
   switch (run.kind) {
@@ -1941,6 +1951,7 @@ typedef struct {
   ElabProgram state;
   FamilyComposeStart start;
   FamilyComposeState compose;
+  size_t mark; /* bytes live reserved right after the last swap (D-334a) */
 } CompactCompose;
 
 static Comp compose_open_after_ctors(Heap *heap, void *ctx, void *value) {
@@ -1986,7 +1997,7 @@ static Comp compose_open_comp(Heap *heap, ElabProgram state, const SDecl *decl) 
 
 static bool compact_compose_swap(Arena *live, CompactCompose *cc) {
   Arena next = arena_new(COMPACT_CHUNK);
-  Heap dst = heap_new(&next);
+  Heap dst = compact_heap_new(&next);
   bool memo = compact_memo_open(&dst);
   CompactCompose copied;
   copied.compose = compact_family_compose_state(&dst, &cc->compose);
@@ -1998,6 +2009,7 @@ static bool compact_compose_swap(Arena *live, CompactCompose *cc) {
   arena_free(live);
   *live = next;
   *cc = copied;
+  cc->mark = arena_reserved(live);
   return !dst.oom;
 }
 
@@ -2005,7 +2017,7 @@ static bool compact_compose_swap(Arena *live, CompactCompose *cc) {
  * rows; cc->compose is not in use yet. */
 static bool compact_compose_swap_start(Arena *live, CompactCompose *cc) {
   Arena next = arena_new(COMPACT_CHUNK);
-  Heap dst = heap_new(&next);
+  Heap dst = compact_heap_new(&next);
   bool memo = compact_memo_open(&dst);
   FamilyComposeStart start = compact_family_compose_start(&dst, &cc->start);
   ElabProgram state;
@@ -2018,16 +2030,191 @@ static bool compact_compose_swap_start(Arena *live, CompactCompose *cc) {
   *live = next;
   cc->start = start;
   cc->state = state;
+  cc->mark = arena_reserved(live);
   return !dst.oom;
 }
 
-/* One specialize line of a composition entry; Done = cc->start.composed holds the folded and compacted value. */
+/* Frees the scratch arenas of compact_check_schema: the member arena (when given), the keep arena (when kept)
+ * and the base arena of the open step. */
+static void compact_schema_free(Arena *step, Arena *keep, bool keeping, Arena *base) {
+  if (step != NULL) arena_free(step);
+  if (keeping) arena_free(keep);
+  arena_free(base);
+}
+
+/* The delta of one family_check_member step, copied into keep (D-257a). The step is global_add of one fresh
+ * name (require_fresh rules out a present name), so after = before with one row consed at the head of the
+ * entries and one index path; only that entry is deep-copied, and global_add on keep rebuilds the same row
+ * and path over before. The symbolic table is never copied. A result of any other shape is copied whole. */
+static Globals compact_member_delta(Heap *keep, Globals before, Globals after, Str name) {
+  bool memo = compact_memo_open(keep);
+  bool head_only = after.entries != NULL && after.entries->rest == before.entries &&
+                   after.families == before.families && str_eq(after.entries->name, name);
+  Globals out = head_only ? global_add(keep, name, compact_entry(keep, after.entries->entry), before)
+                          : compact_globals(keep, after);
+  compact_memo_close(keep, memo);
+  return out;
+}
+
+/* The schema re-check of a renamed specialize line (host only; D-256a, decision 156). In the Bend order it
+ * runs inside family_compose_dependency (k8) as one check_members fold in one arena, and its garbage grew past
+ * the 3800 MB cap on MechHorizontalAssociativity (hop 256). Here open runs on a base scratch arena and each
+ * member on its own scratch arena; only the entry each member adds is copied into one keep arena
+ * (compact_member_delta, D-257a), and the member arena is freed. live is only read. Done = NULL; a failure is
+ * copied into the caller's heap first, then every arena is freed (live by compact_failure). */
+static Result compact_check_schema(Heap *heap, Arena *live, FamilyScheme scheme) {
+  Arena base = arena_new(COMPACT_CHUNK);
+  Heap open_heap = compact_heap_new(&base);
+  Result run = budget_run(&open_heap, family_check_schema_open(&open_heap, scheme), budget_unlimited());
+  FamilySchemaOpen open;
+  Arena keep_arena;
+  Heap keep;
+  Globals globals;
+  size_t i = 0;
+  if (open_heap.oom) {
+    compact_schema_free(NULL, &keep_arena, false, &base);
+    return compact_host_oom(heap, live);
+  }
+  switch (run.kind) {
+  case RESULT_FAIL: {
+    Result failed = compact_failure(heap, live, run.error);
+    compact_schema_free(NULL, &keep_arena, false, &base);
+    return failed;
+  }
+  case RESULT_DONE:
+    break;
+  }
+  open = *(const FamilySchemaOpen *)run.value;
+  globals = open.symbolic;
+  keep_arena = arena_new(COMPACT_CHUNK);
+  keep = compact_heap_new(&keep_arena);
+  for (;;) {
+    VecGet got = vec_get(&open.members, i);
+    Arena step_arena;
+    Heap step;
+    Decl decl;
+    if (got.status != VEC_GET_OK) break;
+    decl = *(const Decl *)got.value;
+    step_arena = arena_new(COMPACT_CHUNK);
+    step = compact_heap_new(&step_arena);
+    run = budget_run(&step, family_check_member(&step, decl, family_empty(), open.arity, globals), budget_unlimited());
+    if (step.oom) {
+      compact_schema_free(&step_arena, &keep_arena, true, &base);
+      return compact_host_oom(heap, live);
+    }
+    switch (run.kind) {
+    case RESULT_FAIL: {
+      Result failed = compact_failure(heap, live, run.error);
+      compact_schema_free(&step_arena, &keep_arena, true, &base);
+      return failed;
+    }
+    case RESULT_DONE:
+      break;
+    }
+    globals = compact_member_delta(&keep, globals, *(const Globals *)run.value, poly_decl_name(decl));
+    arena_free(&step_arena);
+    if (keep.oom) {
+      compact_schema_free(NULL, &keep_arena, true, &base);
+      return compact_host_oom(heap, live);
+    }
+    i = i + 1;
+  }
+  compact_schema_free(NULL, &keep_arena, true, &base);
+  return budget_result_done(NULL);
+}
+
+/* D-267a (host only): the map_members of one specialize line (compose_dependency k6), the D-264a pattern.
+ * Each member is mapped on its own step arena with the head's action; only the mapped Decl is deep-copied
+ * into live through work (compact_decl), and the step arena is freed. The one-run map held about 3.76 GB of
+ * poly frames on MechHorizontalLaws (hop 267, killed at the 3800 MB cap). map_members maps each member on
+ * its own and in order, and the copies are deep (decision 156), so the mapped list and the error order
+ * equal the one-run map under budget_unlimited. Done = Vec * of Decl * in live; on a failure or a host oom
+ * every arena is freed (live by compact_failure or compact_host_oom). */
+static Result compact_dependency_members(Heap *heap, Arena *live, Heap *work, const FamilyDependencyHead *head) {
+  Vec *mapped = heap_alloc(work, sizeof *mapped);
+  Result run;
+  size_t i = 0;
+  if (mapped == NULL) return compact_host_oom(heap, live);
+  *mapped = vec_new(work->arena);
+  for (;;) {
+    VecGet got = vec_get(&head->members, i);
+    Arena step_arena;
+    Heap step;
+    bool memo;
+    Decl *copy;
+    if (got.status != VEC_GET_OK) break;
+    step_arena = arena_new(COMPACT_CHUNK);
+    step = compact_heap_new(&step_arena);
+    run = budget_run(&step, family_map_member(&step, *(const Decl *)got.value, head->action), budget_unlimited());
+    if (step.oom) {
+      arena_free(&step_arena);
+      return compact_host_oom(heap, live);
+    }
+    switch (run.kind) {
+    case RESULT_FAIL: {
+      Result failed = compact_failure(heap, live, run.error);
+      arena_free(&step_arena);
+      return failed;
+    }
+    case RESULT_DONE:
+      break;
+    }
+    memo = compact_memo_open(work);
+    copy = heap_alloc(work, sizeof *copy);
+    if (copy != NULL) *copy = compact_decl(work, *(const Decl *)run.value);
+    compact_memo_close(work, memo);
+    arena_free(&step_arena);
+    if (copy == NULL || work->oom || !vec_push(mapped, copy)) return compact_host_oom(heap, live);
+    i = i + 1;
+  }
+  return budget_result_done(mapped);
+}
+
+/* One specialize line of a composition entry; Done = cc->start.composed holds the folded and compacted value.
+ * The line runs as head, the member maps (compact_dependency_members, D-267a), mapped, the schema re-check of
+ * a renamed line (compact_check_schema) and tail (D-256a); the Done value and the error order equal
+ * family_compose_dependency under budget_unlimited. */
 static Result compact_compose_dependency(Heap *heap, Arena *live, CompactCompose *cc, FamilyDependency dependency,
                                          const SDecl *decl, Heap *work) {
+  FamilyDependencyHead head;
   Result run = budget_run(work,
-                          family_compose_dependency(work, dependency, cc->start.composed, cc->state.globals,
-                                                    cc->state.families, decl->universes, decl->name),
+                          family_compose_dependency_head(work, dependency, cc->start.composed, cc->state.globals,
+                                                         cc->state.families, decl->universes, decl->name),
                           budget_unlimited());
+  if (work->oom) return compact_host_oom(heap, live);
+  switch (run.kind) {
+  case RESULT_FAIL:
+    return compact_failure(heap, live, run.error);
+  case RESULT_DONE:
+    break;
+  }
+  head = *(const FamilyDependencyHead *)run.value;
+  run = compact_dependency_members(heap, live, work, &head);
+  switch (run.kind) {
+  case RESULT_FAIL:
+    return run;
+  case RESULT_DONE:
+    break;
+  }
+  run = budget_run(work, family_compose_dependency_mapped(work, &head, (const Vec *)run.value), budget_unlimited());
+  if (work->oom) return compact_host_oom(heap, live);
+  switch (run.kind) {
+  case RESULT_FAIL:
+    return compact_failure(heap, live, run.error);
+  case RESULT_DONE:
+    break;
+  }
+  head = *(const FamilyDependencyHead *)run.value;
+  if (head.renamed) {
+    run = compact_check_schema(heap, live, head.scheme);
+    switch (run.kind) {
+    case RESULT_FAIL:
+      return run;
+    case RESULT_DONE:
+      break;
+    }
+  }
+  run = budget_run(work, family_compose_dependency_tail(work, &head), budget_unlimited());
   if (work->oom) return compact_host_oom(heap, live);
   switch (run.kind) {
   case RESULT_FAIL:
@@ -2040,7 +2227,17 @@ static Result compact_compose_dependency(Heap *heap, Arena *live, CompactCompose
   return budget_result_done(NULL);
 }
 
-/* One member step of a composition entry; Done = *cc holds the stepped and compacted state. */
+/* Swap pacing for the member steps (D-334a, the D-254a idiom): the swap deep-copies the whole composition
+ * state, so one swap per member cost 56 percent of the symbolic reuse kernel-emit (hop 334 sample: 18177 of
+ * 32369 samples under compact_compose_swap, 55 s against the harness's 50 s call limit). A member whose
+ * garbage stays under COMPACT_GROWTH since the last swap keeps its state in live; the garbage between two
+ * swaps is bounded by COMPACT_GROWTH, so the peak grows by at most that much over one swap per member. */
+static bool compact_compose_due(const Arena *live, const CompactCompose *cc) {
+  size_t now = arena_reserved(live);
+  return now > cc->mark && now - cc->mark >= COMPACT_GROWTH;
+}
+
+/* One member step of a composition entry; Done = *cc holds the stepped state, compacted when the swap is due. */
 static Result compact_compose_member(Heap *heap, Arena *live, CompactCompose *cc, FamilyMemberElaborator callback,
                                      Heap *work) {
   Result run = budget_run(work, family_compose_member(work, &cc->compose, callback), budget_unlimited());
@@ -2052,7 +2249,100 @@ static Result compact_compose_member(Heap *heap, Arena *live, CompactCompose *cc
     break;
   }
   cc->compose = *(const FamilyComposeState *)run.value;
-  if (!compact_compose_swap(live, cc)) return compact_host_oom(heap, live);
+  if (compact_compose_due(live, cc) && !compact_compose_swap(live, cc)) return compact_host_oom(heap, live);
+  return budget_result_done(NULL);
+}
+
+/* The open of a composition entry (host only; D-259a, decision 156). In the Bend order family_compose_open
+ * runs scope_members over every trusted member as one map in one arena, and its garbage grew past the 3800 MB
+ * cap on MechHorizontalAssociativity (hop 259: 752 trusted members). Here the head (up to install_symbolic)
+ * runs on work over live, each trusted member is scoped on its own scratch arena with one scope action, only
+ * the scoped Decl is deep-copied into one keep arena (compact_decl), and the member arena is freed; the tail
+ * (add_members) runs on keep and compact_compose_swap copies the state into a fresh live. Done = NULL with
+ * cc->compose set; the Done value and the error order equal family_compose_open under budget_unlimited. A
+ * failure is copied into the caller's heap first, then every arena is freed (live by compact_failure). */
+static Result compact_compose_open(Heap *heap, Arena *live, CompactCompose *cc, const SDecl *decl, Heap *work) {
+  Result run = budget_run(work,
+                          family_compose_open_head(work, cc->state.globals, cc->state.families, decl->universes,
+                                                   decl->name, &cc->start.composed),
+                          budget_unlimited());
+  FamilyComposeState head;
+  Arena keep_arena;
+  Heap keep;
+  PolyAction action;
+  Vec scoped;
+  bool ok;
+  size_t i = 0;
+  if (work->oom) return compact_host_oom(heap, live);
+  switch (run.kind) {
+  case RESULT_FAIL:
+    return compact_failure(heap, live, run.error);
+  case RESULT_DONE:
+    break;
+  }
+  head = *(const FamilyComposeState *)run.value;
+  keep_arena = arena_new(COMPACT_CHUNK);
+  keep = compact_heap_new(&keep_arena);
+  action = family_scope_action(&keep, head.group.catalog, head.group.arity);
+  scoped = vec_new(&keep_arena);
+  if (keep.oom) {
+    arena_free(&keep_arena);
+    return compact_host_oom(heap, live);
+  }
+  for (;;) {
+    VecGet got = vec_get(&head.group.members, i);
+    Arena step_arena;
+    Heap step;
+    bool memo;
+    Decl *copy;
+    if (got.status != VEC_GET_OK) break;
+    step_arena = arena_new(COMPACT_CHUNK);
+    step = compact_heap_new(&step_arena);
+    run = budget_run(&step, family_map_member(&step, *(const Decl *)got.value, action), budget_unlimited());
+    if (step.oom) {
+      arena_free(&step_arena);
+      arena_free(&keep_arena);
+      return compact_host_oom(heap, live);
+    }
+    switch (run.kind) {
+    case RESULT_FAIL: {
+      Result failed = compact_failure(heap, live, run.error);
+      arena_free(&step_arena);
+      arena_free(&keep_arena);
+      return failed;
+    }
+    case RESULT_DONE:
+      break;
+    }
+    memo = compact_memo_open(&keep);
+    copy = heap_alloc(&keep, sizeof *copy);
+    if (copy != NULL) *copy = compact_decl(&keep, *(const Decl *)run.value);
+    compact_memo_close(&keep, memo);
+    arena_free(&step_arena);
+    if (copy == NULL || keep.oom || !vec_push(&scoped, copy)) {
+      arena_free(&keep_arena);
+      return compact_host_oom(heap, live);
+    }
+    i = i + 1;
+  }
+  run = budget_run(&keep, family_compose_open_tail(&keep, &head, &scoped), budget_unlimited());
+  if (keep.oom) {
+    arena_free(&keep_arena);
+    return compact_host_oom(heap, live);
+  }
+  switch (run.kind) {
+  case RESULT_FAIL: {
+    Result failed = compact_failure(heap, live, run.error);
+    arena_free(&keep_arena);
+    return failed;
+  }
+  case RESULT_DONE:
+    break;
+  }
+  cc->compose = *(const FamilyComposeState *)run.value;
+  ok = compact_compose_swap(live, cc);
+  arena_free(&keep_arena);
+  if (!ok) return compact_host_oom(heap, live);
   return budget_result_done(NULL);
 }
 
@@ -2060,7 +2350,7 @@ static Result compact_compose_member(Heap *heap, Arena *live, CompactCompose *cc
  * one swap per specialize line, open, one swap per member, close. */
 static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state, const SDecl *decl) {
   CompactCompose cc;
-  Heap work = heap_new(live);
+  Heap work = compact_heap_new(live);
   Result run = budget_run(&work, compose_open_comp(&work, *state, decl), budget_unlimited());
   size_t i = 0;
   if (work.oom) return compact_host_oom(heap, live);
@@ -2076,7 +2366,7 @@ static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state,
   for (;;) {
     VecGet got = vec_get(&cc.start.dependencies, i);
     if (got.status != VEC_GET_OK) break;
-    work = heap_new(live);
+    work = compact_heap_new(live);
     run = compact_compose_dependency(heap, live, &cc, *(const FamilyDependency *)got.value, decl, &work);
     switch (run.kind) {
     case RESULT_FAIL:
@@ -2086,25 +2376,19 @@ static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state,
     }
     i = i + 1;
   }
-  work = heap_new(live);
-  run = budget_run(&work,
-                   family_compose_open(&work, cc.state.globals, cc.state.families, decl->universes, decl->name,
-                                       &cc.start.composed),
-                   budget_unlimited());
-  if (work.oom) return compact_host_oom(heap, live);
+  work = compact_heap_new(live);
+  run = compact_compose_open(heap, live, &cc, decl, &work);
   switch (run.kind) {
   case RESULT_FAIL:
-    return compact_failure(heap, live, run.error);
+    return run;
   case RESULT_DONE:
     break;
   }
-  cc.compose = *(const FamilyComposeState *)run.value;
-  if (!compact_compose_swap(live, &cc)) return compact_host_oom(heap, live);
   i = 0;
   for (;;) {
     VecGet got = vec_get(&cc.compose.pending, i);
     if (got.status != VEC_GET_OK) break;
-    work = heap_new(live);
+    work = compact_heap_new(live);
     run = compact_compose_member(heap, live, &cc, family_raw_elaborator(got.value), &work);
     switch (run.kind) {
     case RESULT_FAIL:
@@ -2118,7 +2402,7 @@ static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state,
   for (;;) {
     VecGet got = vec_get(&decl->helpers, i);
     if (got.status != VEC_GET_OK) break;
-    work = heap_new(live);
+    work = compact_heap_new(live);
     run = compact_compose_member(heap, live, &cc, elab_member_callback(&work, got.value, decl->universes), &work);
     switch (run.kind) {
     case RESULT_FAIL:
@@ -2128,7 +2412,7 @@ static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state,
     }
     i = i + 1;
   }
-  work = heap_new(live);
+  work = compact_heap_new(live);
   run = budget_run(&work, family_compose_close(&work, &cc.compose), budget_unlimited());
   if (work.oom) return compact_host_oom(heap, live);
   switch (run.kind) {
@@ -2143,9 +2427,10 @@ static Result compact_compose_entry(Heap *heap, Arena *live, ElabProgram *state,
 
 /* ---- instantiate member split (host only; USER ruling 2026-10-12 (e)) ----
  * A `specialize F (...) as X` entry whose template is a family (SDECL_SPECIALIZE on the family branch of
- * specialize_kind) runs as begin, one step per schema member and close, each in its own arena with
- * compact_instantiate_swap between them. begin = the two elab_program_step reservations, lower_levels and
- * family_instantiate_begin (instantiate up to install_imports); member = family_check_member on the head of
+ * specialize_kind) runs as begin, one step per schema member and close; each member runs on its own
+ * step arena and only its delta is kept (D-263a, compact_instantiate_entry). begin = the two elab_program_step reservations, lower_levels and
+ * the instantiate open split up to install_imports (D-264a: family_instantiate_open_head, one map step per
+ * schema member in compact_instantiate_open, family_instantiate_open_tail); member = family_check_member on the head of
  * the remaining members; close = specialize_kind_after_installed (the instance names and the rows). A
  * `specialize` of a poly definition stays a plain entry. */
 typedef struct {
@@ -2164,8 +2449,8 @@ static Comp instantiate_open_after_levels(Heap *heap, void *ctx, void *value) {
   Frame3 *f = ctx;
   const Vec *levels = value;
   const SSpecialization *spec = &f->decl->specialization;
-  return family_instantiate_begin(heap, f->globals, f->families, spec->template, levels, spec->name, &spec->names,
-                                  specialization_exports(f->decl));
+  return family_instantiate_open_head(heap, f->globals, f->families, spec->template, levels, spec->name,
+                                      &spec->names, specialization_exports(f->decl));
 }
 
 static Comp instantiate_open_after_ctors(Heap *heap, void *ctx, void *value) {
@@ -2183,8 +2468,8 @@ static Comp instantiate_open_after_catalogs(Heap *heap, void *ctx, void *value) 
   return bind_ctx(heap, elab_reserve_ctors(heap, names, f->globals), instantiate_open_after_ctors, f);
 }
 
-/* elab_program_step for a family SPECIALIZE decl up to install_imports (the reservations, the lowered levels
- * and family_instantiate_begin): the Done value is a FamilyInstantiateStart *. */
+/* elab_program_step for a family SPECIALIZE decl up to map_members (the reservations, the lowered levels and
+ * family_instantiate_open_head, D-264a): the Done value is a FamilyInstantiateHead *. */
 static Comp instantiate_open_comp(Heap *heap, ElabProgram state, const SDecl *decl) {
   Frame3 *f = frame3_new(heap);
   Vec *names;
@@ -2214,7 +2499,7 @@ static Comp instantiate_close_comp(Heap *heap, ElabProgram state, const SDecl *d
  * (the catalog check_member reads is state.families) and the start value from member `from` on. */
 static bool compact_instantiate_swap(Arena *live, CompactInstantiate *ci, size_t from) {
   Arena next = arena_new(COMPACT_CHUNK);
-  Heap dst = heap_new(&next);
+  Heap dst = compact_heap_new(&next);
   bool memo = compact_memo_open(&dst);
   CompactInstantiate copied;
   copied.state = compact_program(&dst, &ci->state);
@@ -2226,12 +2511,88 @@ static bool compact_instantiate_swap(Arena *live, CompactInstantiate *ci, size_t
   return !dst.oom;
 }
 
-/* One family SPECIALIZE entry at member granularity (compact_group_entry precedent): begin, one swap per
- * schema member (the head of the remaining list each time), close. */
+/* D-264a (host only): the instantiate open split (D-259a compose-open precedent). The head (instantiate_open_comp,
+ * up to map_members) has run on live; here each schema member is mapped on its own step arena with the head's
+ * action, only the mapped Decl is deep-copied into the keep arena (compact_decl), and the step arena is freed;
+ * the tail (install_imports) then runs on keep. The old open mapped every member in one run on live (hop 263:
+ * 752 members of MechHorizontalAssociativity at about 8 MB of map frames each, killed at the 3800 MB cap).
+ * map_members maps each member on its own and in order, and the copies are deep (decision 156), so the mapped
+ * members, the Done value and the error order equal the one-run open under budget_unlimited. Done =
+ * FamilyInstantiateStart * in *keep_arena (the caller frees it after the swap); on a failure or a host oom
+ * every arena is freed (live by compact_failure or compact_host_oom). */
+static Result compact_instantiate_open(Heap *heap, Arena *live, Arena *keep_arena, const FamilyInstantiateHead *head) {
+  Heap keep = compact_heap_new(keep_arena);
+  Vec mapped = vec_new(keep_arena);
+  Result run;
+  size_t i = 0;
+  for (;;) {
+    VecGet got = vec_get(&head->members, i);
+    Arena step_arena;
+    Heap step;
+    bool memo;
+    Decl *copy;
+    if (got.status != VEC_GET_OK) break;
+    step_arena = arena_new(COMPACT_CHUNK);
+    step = compact_heap_new(&step_arena);
+    run = budget_run(&step, family_map_member(&step, *(const Decl *)got.value, head->action), budget_unlimited());
+    if (step.oom) {
+      arena_free(&step_arena);
+      arena_free(keep_arena);
+      return compact_host_oom(heap, live);
+    }
+    switch (run.kind) {
+    case RESULT_FAIL: {
+      Result failed = compact_failure(heap, live, run.error);
+      arena_free(&step_arena);
+      arena_free(keep_arena);
+      return failed;
+    }
+    case RESULT_DONE:
+      break;
+    }
+    memo = compact_memo_open(&keep);
+    copy = heap_alloc(&keep, sizeof *copy);
+    if (copy != NULL) *copy = compact_decl(&keep, *(const Decl *)run.value);
+    compact_memo_close(&keep, memo);
+    arena_free(&step_arena);
+    if (copy == NULL || keep.oom || !vec_push(&mapped, copy)) {
+      arena_free(keep_arena);
+      return compact_host_oom(heap, live);
+    }
+    i = i + 1;
+  }
+  run = budget_run(&keep, family_instantiate_open_tail(&keep, head, &mapped), budget_unlimited());
+  if (keep.oom) {
+    arena_free(keep_arena);
+    return compact_host_oom(heap, live);
+  }
+  switch (run.kind) {
+  case RESULT_FAIL: {
+    Result failed = compact_failure(heap, live, run.error);
+    arena_free(keep_arena);
+    return failed;
+  }
+  case RESULT_DONE:
+    break;
+  }
+  return run;
+}
+
+/* One family SPECIALIZE entry at member granularity (compact_group_entry precedent): begin, one swap, then
+ * each schema member in order, close. D-263a (host only): a member runs on its own step arena and only the
+ * entry it adds is copied into live (compact_member_delta, the compact_check_schema pattern of D-256a and
+ * D-257a); the step arena is then freed. The old per-member swap copied the whole program state (about
+ * 750 MB after MechHorizontalAssociativity, hop 262) once per member. The copies are deep (decision 156),
+ * so the values, the check order and the error order do not change. A swap runs again only when live grew
+ * by COMPACT_GROWTH since the last one (D-254a), so a fallback delta that copies a whole table stays bounded. */
 static Result compact_instantiate_entry(Heap *heap, Arena *live, ElabProgram *state, const SDecl *decl) {
   CompactInstantiate ci;
-  Heap work = heap_new(live);
+  Heap work = compact_heap_new(live);
   Result run = budget_run(&work, instantiate_open_comp(&work, *state, decl), budget_unlimited());
+  Arena keep_arena;
+  bool ok;
+  size_t mark;
+  size_t i = 0;
   if (work.oom) return compact_host_oom(heap, live);
   switch (run.kind) {
   case RESULT_FAIL:
@@ -2239,28 +2600,60 @@ static Result compact_instantiate_entry(Heap *heap, Arena *live, ElabProgram *st
   case RESULT_DONE:
     break;
   }
+  keep_arena = arena_new(COMPACT_CHUNK);
+  run = compact_instantiate_open(heap, live, &keep_arena, (const FamilyInstantiateHead *)run.value);
+  switch (run.kind) {
+  case RESULT_FAIL:
+    return run;
+  case RESULT_DONE:
+    break;
+  }
   ci.state = *state;
   ci.start = *(const FamilyInstantiateStart *)run.value;
-  if (!compact_instantiate_swap(live, &ci, 0)) return compact_host_oom(heap, live);
+  ok = compact_instantiate_swap(live, &ci, 0);
+  arena_free(&keep_arena);
+  if (!ok) return compact_host_oom(heap, live);
+  mark = arena_reserved(live);
   for (;;) {
-    VecGet got = vec_get(&ci.start.members, 0);
+    VecGet got = vec_get(&ci.start.members, i);
+    Arena step_arena;
+    Heap step;
+    Heap keep;
+    Decl member;
+    size_t now;
     if (got.status != VEC_GET_OK) break;
-    work = heap_new(live);
-    run = budget_run(&work,
-                     family_check_member(&work, *(const Decl *)got.value, ci.state.families, nat_zero(),
-                                         ci.start.installed),
+    member = *(const Decl *)got.value;
+    step_arena = arena_new(COMPACT_CHUNK);
+    step = compact_heap_new(&step_arena);
+    run = budget_run(&step, family_check_member(&step, member, ci.state.families, nat_zero(), ci.start.installed),
                      budget_unlimited());
-    if (work.oom) return compact_host_oom(heap, live);
+    if (step.oom) {
+      arena_free(&step_arena);
+      return compact_host_oom(heap, live);
+    }
     switch (run.kind) {
-    case RESULT_FAIL:
-      return compact_failure(heap, live, run.error);
+    case RESULT_FAIL: {
+      Result failed = compact_failure(heap, live, run.error);
+      arena_free(&step_arena);
+      return failed;
+    }
     case RESULT_DONE:
       break;
     }
-    ci.start.installed = *(const Globals *)run.value;
-    if (!compact_instantiate_swap(live, &ci, 1)) return compact_host_oom(heap, live);
+    keep = compact_heap_new(live);
+    ci.start.installed =
+        compact_member_delta(&keep, ci.start.installed, *(const Globals *)run.value, poly_decl_name(member));
+    arena_free(&step_arena);
+    if (keep.oom) return compact_host_oom(heap, live);
+    i = i + 1;
+    now = arena_reserved(live);
+    if (now > mark && now - mark >= COMPACT_GROWTH) {
+      if (!compact_instantiate_swap(live, &ci, i)) return compact_host_oom(heap, live);
+      i = 0;
+      mark = arena_reserved(live);
+    }
   }
-  work = heap_new(live);
+  work = compact_heap_new(live);
   run = budget_run(&work, instantiate_close_comp(&work, ci.state, decl, ci.start.installed), budget_unlimited());
   if (work.oom) return compact_host_oom(heap, live);
   switch (run.kind) {
@@ -2275,7 +2668,7 @@ static Result compact_instantiate_entry(Heap *heap, Arena *live, ElabProgram *st
 
 /* Every other declaration kind: one elab_program_step in the live arena. */
 static Result compact_plain_entry(Heap *heap, Arena *live, ElabProgram *state, const SDecl *decl) {
-  Heap work = heap_new(live);
+  Heap work = compact_heap_new(live);
   Result stepped = budget_run(&work, elab_program_step(&work, *state, decl), budget_unlimited());
   if (work.oom) return compact_host_oom(heap, live);
   switch (stepped.kind) {
@@ -2314,6 +2707,7 @@ static Result compact_decl_entry(Heap *heap, Arena *live, ElabProgram *state, co
 static Result compact_decls(Heap *heap, Globals globals, const Vec *decls) {
   ElabProgram state = program_make(globals, poly_empty(), family_empty(), vec_new(heap->arena));
   Arena live = arena_new(COMPACT_CHUNK);
+  size_t mark = 0;
   size_t i = 0;
   for (;;) {
     VecGet got = vec_get(decls, i);
@@ -2321,6 +2715,7 @@ static Result compact_decls(Heap *heap, Globals globals, const Vec *decls) {
     Arena next;
     Heap dst;
     Result entry;
+    size_t now;
     if (got.status != VEC_GET_OK) break;
     entry = compact_decl_entry(heap, &live, &state, decl);
     switch (entry.kind) {
@@ -2329,12 +2724,18 @@ static Result compact_decls(Heap *heap, Globals globals, const Vec *decls) {
     case RESULT_DONE:
       break;
     }
-    next = arena_new(COMPACT_CHUNK);
-    dst = heap_new(&next);
-    state = compact_program(&dst, &state);
-    arena_free(&live);
-    live = next;
-    if (dst.oom) return compact_host_oom(heap, &live);
+    /* D-254a (host only): the copy below is deep (decision 156), so skipping it changes no value; it runs
+     * only when the live arena grew by COMPACT_GROWTH since the last copy, which keeps the cost linear. */
+    now = arena_reserved(&live);
+    if (now > mark && now - mark >= COMPACT_GROWTH) {
+      next = arena_new(COMPACT_CHUNK);
+      dst = compact_heap_new(&next);
+      state = compact_program(&dst, &state);
+      arena_free(&live);
+      live = next;
+      if (dst.oom) return compact_host_oom(heap, &live);
+      mark = arena_reserved(&live);
+    }
     i = i + 1;
   }
   return compact_finish(heap, &live, state);
@@ -2362,6 +2763,14 @@ Result elab_elab_program_in_compact(Heap *heap, Globals globals, const Vec *decl
 /* check_text (607-608) */
 Result elab_check_text(Heap *heap, Globals globals, Budget budget, Str source) {
   return elab_result_rows(elab_check_in(heap, globals, budget, source));
+}
+
+/* check_text_compact (host only, no Bend counterpart): check_text under budget_unlimited over
+ * check_in_compact, so each declaration's checker garbage is freed after the step (the Bend bundle
+ * reclaimed it by garbage collection). The rows and the error text equal those of check_text with
+ * budget_unlimited (decision 156). The surface check driver calls it. */
+Result elab_check_text_compact(Heap *heap, Globals globals, Str source) {
+  return elab_result_rows(elab_check_in_compact(heap, globals, source));
 }
 
 /* ---- chunk 4 (Bend 609-779): checked form, axiom names and disclosures ---- */

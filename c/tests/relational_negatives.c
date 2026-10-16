@@ -96,7 +96,7 @@ static Task load(Heap *heap, const Vec *names, Str root, Str directory, Policy p
 }
 
 /* prefix_of_all(prefix, others) */
-static bool prefix_of_all(Str prefix, const Vec *others) {
+bool negatives_prefix_of_all(Str prefix, const Vec *others) {
   for (size_t i = 0; i < others->len; i++) {
     const Pin *other = at_pin(others, i);
     if (other == NULL || !str_starts_with(other->prefix, prefix)) return false;
@@ -127,19 +127,19 @@ static bool distinct_fields(Str name, Str prefix, Str digest, const Vec *others,
 }
 
 /* distinct_from(pin, others, digest_mode) */
-static bool distinct_from(const Pin *pin, const Vec *others, bool digest_mode) {
+bool negatives_distinct_from(const Pin *pin, const Vec *others, bool digest_mode) {
   return distinct_fields(pin->name, pin->prefix, pin->digest, others, digest_mode);
 }
 
 /* oracle_valid(pin, all, policy) */
-static bool oracle_valid(const Pin *pin, const Vec *all, Policy policy) {
+bool negatives_oracle_valid(const Pin *pin, const Vec *all, Policy policy) {
   bool long_enough = char_length(pin->prefix) > policy.minimum;
   switch (policy.kind) {
     case POLICY_PREFIX:
-      return long_enough && (!policy.distinct || distinct_from(pin, all, false)) &&
-             (!policy.common || !prefix_of_all(pin->prefix, all));
+      return long_enough && (!policy.distinct || negatives_distinct_from(pin, all, false)) &&
+             (!policy.common || !negatives_prefix_of_all(pin->prefix, all));
     case POLICY_DIGEST:
-      return long_enough && char_length(pin->digest) == 32 && (!policy.distinct || distinct_from(pin, all, true));
+      return long_enough && char_length(pin->digest) == 32 && (!policy.distinct || negatives_distinct_from(pin, all, true));
   }
   return false;
 }
@@ -154,6 +154,9 @@ static Task message(Heap *heap, Result result, Str name, Str *text) {
   }
   return task_fail(name);
 }
+
+/* Neg.message for the drivers that record refusal texts (prelude_left_kan_laws --record-cocone-equality-oracles). */
+Task negatives_message(Heap *heap, Result result, Str name, Str *text) { return message(heap, result, name, text); }
 
 /* check_digest(policy, name, message, digest): the MD5 of the message (whole when the name is in full). */
 static Task check_digest(Heap *heap, Policy policy, Str name, Str text, Str digest, bool *ok) {
@@ -188,7 +191,7 @@ static bool nominal_ok(Heap *heap, Policy policy, Str name, Str text) {
 static Task check_one(Heap *heap, const Pin *pin, const Vec *all, Globals globals, Policy policy) {
   Str actual = str_empty();
   bool hash_ok = false;
-  RELATIONAL_TRY(relational_require(oracle_valid(pin, all, policy), cat(heap, pin->name, str_lit(": invalid refusal oracle"))));
+  RELATIONAL_TRY(relational_require(negatives_oracle_valid(pin, all, policy), cat(heap, pin->name, str_lit(": invalid refusal oracle"))));
   RELATIONAL_TRY(message(heap, elab_check_in(heap, globals, budget_unlimited(), pin->source), pin->name, &actual));
   RELATIONAL_TRY(check_digest(heap, policy, pin->name, actual, pin->digest, &hash_ok));
   return relational_require(str_starts_with(actual, pin->prefix) && hash_ok && nominal_ok(heap, policy, pin->name, actual),

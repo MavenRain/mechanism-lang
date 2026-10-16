@@ -33,13 +33,55 @@ static SliceResult kernel(Heap *heap, Result result) {
   return slice_done(result.value);
 }
 
+/* D-265a (host only): each entry is erased on its own step arena. The erasure of a large entry
+ * builds gigabytes of checker frames that are garbage once its EraseEntry exists (hop 265:
+ * assocLeftAt, about 3.4 GB on the main heap); the Bend bundle reclaimed them by garbage
+ * collection, the main arena never frees. erase_entry runs under budget_unlimited, so the step heap
+ * also takes the D-261a scratch query for each conversion check. The Done entry (or the error text)
+ * is deep copied into the caller heap (decision 156) before the step arena is freed, so the rows,
+ * the messages and the visit order do not change. */
+#define REACH_STEP_CHUNK (1 << 20)
+
+static SliceResult erased_copy(Heap *heap, Heap *work, Result result) {
+  if (work->oom) heap->oom = true;
+  switch (result.kind) {
+    case RESULT_FAIL: {
+      Str text = compact_str(heap, error_to_string(work, result.error));
+      return slice_fail(text);
+    }
+    case RESULT_DONE: {
+      const EraseEntry *boxed = result.value;
+      bool memo;
+      EraseEntry copied;
+      if (boxed == NULL) return slice_done(NULL);
+      memo = compact_memo_open(heap);
+      copied = compact_erase_entry(heap, *boxed);
+      compact_memo_close(heap, memo);
+      return slice_done(erase_entry_new(heap, copied));
+    }
+  }
+  return slice_done(NULL);
+}
+
+static SliceResult erased_step(Heap *heap, Globals globals, Str name, Entry entry) {
+  Arena step = arena_new(REACH_STEP_CHUNK);
+  Heap work = heap_new(&step);
+  Result result;
+  SliceResult out;
+  work.conv_scratch = true;
+  result = erase_entry(&work, globals, name, entry);
+  out = erased_copy(heap, &work, result);
+  arena_free(&step);
+  return out;
+}
+
 /* Bend 16-19: erased */
 static SliceResult erased(Heap *heap, MaybeEntry found, Globals globals, Str name) {
   if (!found.some) {
     Str message = heap_str_cat(heap, str_lit("missing runtime dependency: "), name);
     return slice_fail(message);
   }
-  return kernel(heap, erase_entry(heap, globals, name, found.value));
+  return erased_step(heap, globals, name, found.value);
 }
 
 /* Bend 21-47: visit (law), visit_new and visit_seen */

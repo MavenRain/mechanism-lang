@@ -63,7 +63,7 @@ class KernelCheck:
 
 def kernel_check(source: str, root: Path, exports: tuple[str, ...] = ()) -> KernelCheck:
     require(len(source.encode()) <= 32 * 1024 * 1024, "mechanism certificate exceeds the 32 MiB limit")
-    compiler = root / "_bend2/bin/mech_cert.exe"
+    compiler = root / "_tcc/bin/mech_cert"
     require(compiler.is_file(), "build the certificate checker first: make build")
     with tempfile.TemporaryDirectory(prefix="mech-cuopt-cert-") as temporary:
         path = Path(temporary) / "certificate.mech"

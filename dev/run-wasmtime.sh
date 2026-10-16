@@ -35,8 +35,18 @@ clean () {
 trap clean EXIT INT TERM
 
 # "status" is read only in zsh, so the exit code carries another name.
-wasmtime run -C cache=n --invoke "$name" "$file" > "$out" 2> "$err"
+# The caller may cap this shell, but Wasmtime allocates in a separate process.
+# Put the memory cap on that process too, retaining the shell's output normalization.
+runner=()
+if [[ -n ${MEMCAP:-} ]]; then
+  runner=("$MEMCAP" 3800 "${MEMCAP_SECONDS:-900}")
+fi
+"${runner[@]}" wasmtime run -C cache=n --invoke "$name" "$file" > "$out" 2> "$err"
 code=$?
+if [[ $code -ne 0 && -n ${MEMCAP:-} ]]; then
+  # Keep the cap record visible even when the host was killed or refused the module.
+  rg -N '^memcap ' "$out"
+fi
 
 # The trap text follows "wasm trap: ";  the invalid text is the first
 # stderr line that is not the warning.

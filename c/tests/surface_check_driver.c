@@ -11,13 +11,13 @@ static int respond(Heap *heap, Result result) {
 
 /* run_empty(valid, source) */
 static int run_empty(Heap *heap, bool valid, Str source) {
-  if (valid) return respond(heap, elab_check_text(heap, global_empty(), budget_unlimited(), source));
+  if (valid) return respond(heap, elab_check_text_compact(heap, global_empty(), source));
   return driver_die(2, "expected SOURCE or --empty SOURCE");
 }
 
 /* run(args): argv[1..] are the IO.args() list. */
 static int run(Heap *heap, int argc, char **argv) {
-  if (argc == 2) return respond(heap, elab_check_text(heap, global_initial(heap), budget_unlimited(), str_lit(argv[1])));
+  if (argc == 2) return respond(heap, elab_check_text_compact(heap, global_initial(heap), str_lit(argv[1])));
   if (argc == 3) return run_empty(heap, str_eq(str_lit(argv[1]), str_lit("--empty")), str_lit(argv[2]));
   return driver_die(2, "expected SOURCE or --empty SOURCE");
 }

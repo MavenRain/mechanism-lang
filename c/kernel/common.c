@@ -8,6 +8,7 @@ Heap heap_new(Arena *arena) {
   heap.oom = false;
   memset(heap.small_blocks, 0, sizeof heap.small_blocks);
   heap.memo = NULL;
+  heap.conv_scratch = false;
   return heap;
 }
 

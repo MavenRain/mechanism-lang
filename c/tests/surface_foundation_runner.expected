@@ -1,0 +1,6 @@
+$ surface_foundation_runner
+expected foundation protocol mode
+rc=2
+$ surface_foundation_runner nope
+expected foundation protocol mode
+rc=2

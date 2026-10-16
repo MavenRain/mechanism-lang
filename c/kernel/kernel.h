@@ -19,6 +19,10 @@ typedef struct {
   void *small_blocks[HEAP_SMALL_CLASSES];
   /* NULL outside a compact pass; inside one, compact_term returns the same copy for the same source. */
   CompactMemo *memo;
+  /* D-261a (host only): true on the compact-path work heaps of c/surface/elab.c. There, under an
+   * unlimited budget, check_engine_ensure runs each conversion query in a scratch arena that it
+   * frees after the query. heap_new sets it false, so the Bend path does not change. */
+  bool conv_scratch;
 } Heap;
 
 Heap heap_new(Arena *arena);
@@ -1824,6 +1828,11 @@ Comp check_engine_check_uses(Heap *heap, Ctx ctx, Quantity mode, const Term *ter
 Comp check_engine_infer_univ(Heap *heap, Ctx ctx, const Term *term);
 Comp check_engine_conv(Heap *heap, Ctx ctx, const Value *ty, const Value *a, const Value *b);
 Comp check_engine_conv_type(Heap *heap, Ctx ctx, const Value *a, const Value *b);
+/* D-269a (host only, no Bend counterpart): the top-level conversion entries. On a compact-path
+ * heap (conv_scratch) under an unlimited budget they run the query in a scratch arena (D-261a);
+ * otherwise they are check_engine_conv and check_engine_conv_type. The value is a bool box. */
+Comp check_engine_conv_entry(Heap *heap, Ctx ctx, const Value *ty, const Value *a, const Value *b);
+Comp check_engine_conv_type_entry(Heap *heap, Ctx ctx, const Value *a, const Value *b);
 Comp check_engine_form(Heap *heap, Ctx ctx, bool left, Shape shape, const Term *diagram, MaybeLevelVar expected);
 Comp check_engine_intro_sec(Heap *heap, Ctx ctx, Quantity mode, Shape shape, const Vec *legs, const Value *expected);
 Comp check_engine_intro_in(Heap *heap, Ctx ctx, Quantity mode, Shape shape, Addr addr, const Vec *args,
@@ -2835,5 +2844,10 @@ Error compact_error(Heap *heap, Error error);
 const EntryRows *compact_entry_rows(Heap *heap, const EntryRows *rows);
 const FamilyRows *compact_family_rows(Heap *heap, const FamilyRows *rows);
 Globals compact_globals(Heap *heap, Globals globals);
+/* D-265a: the erased-term copies (c/tests/runtime_reachable.c copies each erased entry out of its
+ * step arena). Inside a pass with the memo open, a shared Ktm keeps one copy. */
+const Ktm *compact_ktm(Heap *heap, const Ktm *term);
+Kdecl compact_kdecl(Heap *heap, Kdecl decl);
+EraseEntry compact_erase_entry(Heap *heap, EraseEntry entry);
 
 #endif

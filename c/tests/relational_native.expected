@@ -1,0 +1,6 @@
+$ relational_native
+expected protocol mode and arguments
+rc=2
+$ relational_native nope
+expected category, heterogeneous-functor, template-cost or surface-check mode
+rc=2

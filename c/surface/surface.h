@@ -833,11 +833,52 @@ typedef struct {
   Globals installed;
   Vec members;
 } FamilyInstantiateStart;
-/* instantiate up to install_imports (k0..k7 and the imports); Done = FamilyInstantiateStart *. */
-Comp family_instantiate_begin(Heap *heap, Globals globals, FamilyCatalog catalog, Str name, const Vec *levels,
-                              Str as_name, const Vec *reuse, FamilyMaybeVec exports);
+/* instantiate open split (host only, D-264a): head = instantiate up to map_members (k0..k5 and map_imports;
+ * Done = FamilyInstantiateHead *: the table, the catalog, the instance action, the mapped imports and the
+ * schema members still to map), one family_map_member per schema member with head.action, in order, tail =
+ * install_imports over head.imports (Done = FamilyInstantiateStart * with the mapped members). */
+typedef struct {
+  Globals globals;
+  FamilyCatalog catalog;
+  PolyAction action;
+  Vec imports;
+  Vec members;
+} FamilyInstantiateHead;
+Comp family_instantiate_open_head(Heap *heap, Globals globals, FamilyCatalog catalog, Str name, const Vec *levels,
+                                  Str as_name, const Vec *reuse, FamilyMaybeVec exports);
+Comp family_instantiate_open_tail(Heap *heap, const FamilyInstantiateHead *head, const Vec *mapped);
 /* One check_members item (tick, require_fresh, kernel check, global_add); Done = Globals *. */
 Comp family_check_member(Heap *heap, Decl decl, FamilyCatalog catalog, Nat arity, Globals globals);
+/* compose_dependency split (host only, no Bend counterpart; D-256a, D-267a): head = k0..k6 up to map_members,
+ * Done = FamilyDependencyHead * (frame = the opaque compose_dependency frame, in the head's arena; members and
+ * action = the map_members input); one family_map_member per member with head.action, in order; mapped =
+ * k7 over the mapped Decl * list and the renamed test, Done = FamilyDependencyHead * with renamed set;
+ * tail = the k9 body, Done = FamilyComposed *. check_schema_open = check_schema up to scope_members,
+ * Done = FamilySchemaOpen *; the check_members fold is then one family_check_member per member. */
+typedef struct {
+  void *frame;
+  bool renamed;
+  FamilyScheme scheme;
+  Vec members;
+  PolyAction action;
+} FamilyDependencyHead;
+typedef struct {
+  Globals symbolic;
+  Vec members;
+  Nat arity;
+} FamilySchemaOpen;
+Comp family_compose_dependency_head(Heap *heap, FamilyDependency dependency, FamilyComposed state, Globals globals,
+                                    FamilyCatalog catalog, Nat arity, Str root);
+Comp family_compose_dependency_mapped(Heap *heap, const FamilyDependencyHead *head, const Vec *mapped);
+Comp family_compose_dependency_tail(Heap *heap, const FamilyDependencyHead *head);
+Comp family_check_schema_open(Heap *heap, FamilyScheme scheme);
+/* composition open split (host only, D-259a): head = family_compose_open up to install_symbolic (Done =
+ * FamilyComposeState * with the trusted members not yet scoped), one family_map_member per trusted member
+ * with one family_scope_action, tail = add_members over the scoped members (Done = FamilyComposeState *). */
+Comp family_compose_open_head(Heap *heap, Globals globals, FamilyCatalog catalog, Nat arity, Str name,
+                              const FamilyComposed *composed);
+PolyAction family_scope_action(Heap *heap, FamilyCatalog catalog, Nat arity);
+Comp family_compose_open_tail(Heap *heap, const FamilyComposeState *head, const Vec *scoped);
 
 /* ---- elab (bend2/surface/elab.bend): the program pass ---- */
 /* Rows = List<Common.Pair<String, Global.Entry>> is a Vec of CheckRow pointers (check.c). */
@@ -969,6 +1010,7 @@ Result elab_check_in(Heap *heap, Globals globals, Budget budget, Str source);
 Result elab_check_in_compact(Heap *heap, Globals globals, Str source);
 Result elab_elab_program_in_compact(Heap *heap, Globals globals, const Vec *decls);
 Result elab_check_text(Heap *heap, Globals globals, Budget budget, Str source);
+Result elab_check_text_compact(Heap *heap, Globals globals, Str source);
 
 
 /* ---- elab chunk 4 (Bend 609-779): checked form, axiom names and disclosures ---- */

@@ -20,10 +20,12 @@ COPY = WORK / "copy"
 if not VERIFY:
     WORK.mkdir(parents=True)
     shutil.copytree(ROOT, COPY, ignore=shutil.ignore_patterns(
-        ".git", "_build", "_bend2", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
+        ".git", "_build", "_bend2", "_tcc", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs",
+        "__pycache__"))
 ENV = dict(os.environ)
 ENV.pop("OPAM_SWITCH_PREFIX", None)
 ENV.pop("CAML_LD_LIBRARY_PATH", None)
+TARGET = "_tcc/prelude_category"
 
 
 def run(name, command):
@@ -34,68 +36,56 @@ def run(name, command):
 
 
 def build(name):
-    result = run(name, [sys.executable, "-I", str(COPY / "dev/bend2-mutation-build.py"), "category"])
-    if result.returncode or b"BEND2 MUTATION BUILD PASS category" not in result.stdout:
+    binary = COPY / TARGET
+    binary.unlink(missing_ok=True)
+    result = run(name, ["make", "-C", str(COPY), TARGET])
+    if result.returncode or not os.access(binary, os.X_OK):
         raise SystemExit(f"{name}: build failed; this is not a killed mutation")
+    return {"target": TARGET, "exit_code": result.returncode,
+            "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()}
 
 
 def suite(name):
-    return run(name, [str(COPY / "_bend2/test/prelude_category.exe"), str(COPY)])
+    return run(name, [str(COPY / TARGET), str(COPY)])
 
 
 controls = [('C-CAT-M1',
-  'bend2/surface/elab_term.bend',
-  'Quantity.QOne{}, Some{Term.Motive{None{}, [], "self", domain}}, proj_branch(point_q(point), 0n)',
-  'Quantity.QOne{}, None{}, proj_branch(point_q(point), 0n)',
+  'c/surface/elab_term.c',
+  '  MaybeMotive motive = term_motive_some(term_motive(str_none(), empty(heap), str_lit("self"), value));\n'
+  '  StuckElim data = value_stuck_elim(f->shape, QUANTITY_ONE, motive,',
+  '  MaybeMotive motive = term_motive_none();\n'
+  '  (void)value;\n'
+  '  StuckElim data = value_stuck_elim(f->shape, QUANTITY_ONE, motive,',
   'PRELUDE-CATEGORY-FAIL cannot infer: an elimination without a motive needs an expected type'),
  ('C-CAT-M2',
-  'bend2/kernel/check_engine.bend',
-  'eq : Bool <- conv(ctx, tyv, got, want)',
-  'eq : Bool <- conv_type(ctx, got, want)',
+  'c/kernel/check_engine.c',
+  'check_engine_conv_entry(heap, f->ctx, f->value3, got, f->value)',
+  'check_engine_conv_type(heap, f->ctx, got, f->value)',
   'PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Small gives the index'),
  ('C-CAT-M3',
-  'bend2/kernel/eval.bend',
-  '    case Con{Value.SElim{Value.StuckElim{shape, q, motive, branches, +env}}, rest}:\n'
-  '      do Result<&2, &2, Error.T, Term.T>:\n'
-  '        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)\n'
-  '        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(motive, globals, env, size)\n'
-  '        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- '
-  'quote_branches(branches, globals, env, size)\n'
-  '        quote_frames(rest, globals, size, Term.Elim{Term.ElimData{s, head, q, mo, bs}})',
-  '    case Con{Value.SElim{Value.StuckElim{shape, q, +motive, branches, +env}}, rest}:\n'
-  '      do Result<&2, &2, Error.T, Term.T>:\n'
-  '        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)\n'
-  '        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(motive, globals, env, size)\n'
-  '        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- '
-  'quote_branches(branches, globals, env, size)\n'
-  '        quote_frames(rest, globals, size, Term.Elim{Term.ElimData{s, head, q, motive, bs}})',
+  'c/kernel/eval.c',
+  'current = term_elim(heap, term_elim_data(s.value, current, data.scrut_q, mo.value, bs.value));',
+  'current = term_elim(heap, term_elim_data(s.value, current, data.scrut_q, data.motive, bs.value));',
   'PRELUDE-CATEGORY-FAIL universe:'),
+ # C-CAT-M4: the Bend anchor put the raw Value branches into the quoted Term.Elim (bend2/kernel/eval.bend
+ # quote_frames, `+branches` ownership flip); the typed C port cannot express that confusion, so the C
+ # control drops the read-back branches of the stuck eliminator instead (same rule: the quoted eliminator
+ # must carry its read-back branches); the diagnostic follows the C port (hop 312, decision 279).
  ('C-CAT-M4',
-  'bend2/kernel/eval.bend',
-  '    case Con{Value.SElim{Value.StuckElim{shape, q, motive, branches, +env}}, rest}:\n'
-  '      do Result<&2, &2, Error.T, Term.T>:\n'
-  '        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)\n'
-  '        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(motive, globals, env, size)\n'
-  '        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- '
-  'quote_branches(branches, globals, env, size)\n'
-  '        quote_frames(rest, globals, size, Term.Elim{Term.ElimData{s, head, q, mo, bs}})',
-  '    case Con{Value.SElim{Value.StuckElim{shape, q, motive, +branches, +env}}, rest}:\n'
-  '      do Result<&2, &2, Error.T, Term.T>:\n'
-  '        s : Shape.T<Term.T> <- quote_shape(shape, globals, size)\n'
-  '        mo : Maybe<&2, Term.Motive<Term.T>> <- quote_motive(motive, globals, env, size)\n'
-  '        bs : List<&2, Common.Pair<Term.Addr<Term.T>, Term.Leg<Term.T>>> <- '
-  'quote_branches(branches, globals, env, size)\n'
-  '        quote_frames(rest, globals, size, Term.Elim{Term.ElimData{s, head, q, mo, branches}})',
-  'PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 2 is outside the context'),
+  'c/kernel/eval.c',
+  '        VecResult bs = eval_quote_branches(heap, mode, &data.branches, globals, data.env, size);',
+  '        Vec none = vec_new(heap->arena);\n'
+  '        VecResult bs = eval_quote_branches(heap, mode, &none, globals, data.env, size);',
+  'PRELUDE-CATEGORY-FAIL missing branch: an elimination at the point shape has one branch'),
  ('C-CAT-M5',
-  'bend2/kernel/check_engine.bend',
-  'index_loop(ts, rs, ws, ctx, name, ctor, env, want <> index_env)',
-  'index_loop(ts, rs, ws, ctx, name, ctor, env, index_env)',
+  'c/kernel/check_engine.c',
+  'f->vec4, cons(heap, (void *)f->value, &f->vec5));',
+  'f->vec4, f->vec5);',
   'PRELUDE-CATEGORY-FAIL unbound: de Bruijn index 0 is outside the environment'),
  ('C-CAT-M6',
-  'bend2/kernel/check_engine.bend',
-  'ok : Unit <- index_equal_result(eq,ctx,ctor,name,got,want)',
-  'ok : Unit <- index_equal_result(Bool.or(eq, True{}),ctx,ctor,name,got,want)',
+  'c/kernel/check_engine.c',
+  'check_engine_index_equal_result(heap, kernel_bool_unbox(value), f->ctx, f->name2, f->name, f->value2,',
+  'check_engine_index_equal_result(heap, kernel_bool_unbox(value) || true, f->ctx, f->name2, f->name, f->value2,',
   'PRELUDE-CATEGORY-FAIL unequal-endpoint: expected refusal'),
  ('C-CAT-M7',
   'prelude/cat/category.mech',
@@ -108,16 +98,20 @@ controls = [('C-CAT-M1',
   '(fun (n : Tiny) => zero) (fun (n : Tiny) => next n) (next zero)',
   'PRELUDE-CATEGORY-FAIL wrong computation: compositionValue ='),
  ('C-CAT-M9',
-  'bend2/kernel/check_engine.bend',
-  'conv_project(ctx,s,q,Q.QOne{},Some{Term.Motive{None{},[],"self",domain}},0n,Value.var(C.size_of(ctx)))',
-  'conv_project(ctx,s,q,Q.QOne{},None{},0n,Value.var(C.size_of(ctx)))',
+  'c/kernel/check_engine.c',
+  'check_engine_conv_project(heap, f->ctx, f->shape, f->q, QUANTITY_ONE, conv_self_motive(heap, value),',
+  'check_engine_conv_project(heap, f->ctx, f->shape, f->q, QUANTITY_ONE, term_motive_none(),',
   'PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Up gives the index c'),
+ # C-CAT-M10: the Bend anchor reversed the fresh variables of quote_motive (bend2/kernel/eval.bend); the
+ # motive quoted by this driver has arity 1 on C, where the reverse is the identity, so the C control
+ # reverses the fresh variables at the leg site (eval_quote_leg; same rule: fresh variables are opened in
+ # binder order during read-back); the diagnostic follows the C port (hop 312, decision 279).
  ('C-CAT-M10',
-  'bend2/kernel/eval.bend',
-  'open_closure(globals, Value.close(env, body), fresh_vars(arity, size))',
-  'open_closure(globals, Value.close(env, body), List.reverse(&2, Value.T, fresh_vars(arity, '
-  'size)))',
-  'PRELUDE-CATEGORY-FAIL mismatch: the term has type (Lan SMu IndexedValue [Ty; value]')]
+  'c/kernel/eval.c',
+  '  Result value = eval_open_closure(heap, globals, leg.clo, eval_fresh_vars(heap, arity, size));',
+  '  Vec fresh = eval_fresh_vars(heap, arity, size);\n'
+  '  Result value = eval_open_closure(heap, globals, leg.clo, vec_reverse(heap->arena, &fresh));',
+  'PRELUDE-CATEGORY-FAIL mismatch: the term has type (Lan SPi w identity')]
 
 if VERIFY:
     report = json.loads((WORK / "results.json").read_text())
@@ -152,17 +146,13 @@ for name, relative, old, new, diagnostic in controls:
     try:
         path.write_text(source.replace(old, new))
         mutant_hash = hashlib.sha256(path.read_bytes()).hexdigest()
-        build(name + "-build")
+        c_build = build(name + "-build")
         result = suite(name)
-        artifacts = list((COPY / "_bend2/mutation").glob("category*.build.json"))
-        if len(artifacts) != 1:
-            raise SystemExit("missing unique native build evidence")
-        native_build = json.loads(artifacts[0].read_text())
         killed = result.returncode == 1 and not result.stderr and result.stdout.startswith(diagnostic.encode())
         reports.append({"name": name, "path": relative, "old": old, "new": new,
                         "source_sha256": hashlib.sha256(original).hexdigest(),
                         "mutant_sha256": mutant_hash, "exit_code": result.returncode,
-                        "diagnostic": diagnostic, "killed": killed, "bend_build": native_build})
+                        "diagnostic": diagnostic, "killed": killed, "c_build": c_build})
         print(json.dumps({"control": name, "killed": killed}), flush=True)
     finally:
         path.write_bytes(original)

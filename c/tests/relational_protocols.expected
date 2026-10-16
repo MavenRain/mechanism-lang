@@ -1,0 +1,6 @@
+$ relational_protocols
+expected relational protocol mode and root
+rc=1
+$ relational_protocols nope
+unknown relational protocol: nope
+rc=1
