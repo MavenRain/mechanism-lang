@@ -1,0 +1,447 @@
+{
+  "format": 1,
+  "review_status": "reviewed",
+  "language": "C (tcc)",
+  "runtime": "C port compiled with tcc; native test drivers under _tcc/",
+  "origin_pin": "a7534cedeac82d396de8e23058ee6bc990560f65",
+  "reason": "C migration inventory. Hashes and physical line counts do not approve larger trust limits or R3 performance.",
+  "r3_status": "unmeasured",
+  "shape_modules": {
+    "c/kernel/check.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/check_engine.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/circuit.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/erase.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/erase_repr.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/eval.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/kernel.h": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/order.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/positivity.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/pp.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/rules.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/shape.c": "C port of the reviewed kernel shape representation and operations.",
+    "c/kernel/term.c": "C port of the reviewed kernel shape representation and operations."
+  },
+  "sources": {
+    "c/cli/cert.c": {
+      "sha256": "1fc4642b598d36a731b8e361568a66ccff34e7ed2f94fdc1dbefc7c51dd07e30",
+      "lines": 181
+    },
+    "c/cli/cli.h": {
+      "sha256": "183ae869341c4428bb742a83c091d02a4cc1059f385f42e9bdfc9bab8999d199",
+      "lines": 263
+    },
+    "c/cli/host.c": {
+      "sha256": "7c2b0e7190ffbd1ff1cad8da14e7b6eee6b864736e287ad173cad2184f8789aa",
+      "lines": 369
+    },
+    "c/cli/host_fs.c": {
+      "sha256": "30c1227a664c946848cb89d2ea40a1afd60c29596f90bfbe951dc44f8c88b72c",
+      "lines": 64
+    },
+    "c/cli/io.c": {
+      "sha256": "d3e714f5ebc2f748f94ffedee164d3fbd70e07bcc4588a61257ac0b532d4be7c",
+      "lines": 198
+    },
+    "c/cli/kanon.c": {
+      "sha256": "10b492135a7e6b0c7432d286b4c8e5b1b99eaa7566981a8839be1808232209b2",
+      "lines": 700
+    },
+    "c/cli/main.c": {
+      "sha256": "b952885857455c1cef07afed4f67b7f769ff4ffa1858c3c95488ae80c57f6ace",
+      "lines": 68
+    },
+    "c/cli/mech.c": {
+      "sha256": "5d130a62cb8eb7970a37024ed1ea0390669c64b4429db619bba8249be273ad1c",
+      "lines": 274
+    },
+    "c/cli/mech_cert.c": {
+      "sha256": "ab5402f2d92dea71d27a34a7df5b066fe10d0de1ed8cd7e74902339ff436a758",
+      "lines": 29
+    },
+    "c/cli/mech_main.c": {
+      "sha256": "b8b94bf4e683c7cc6b66c3802769d5779834867090c686b654b332ec996dfcdc",
+      "lines": 29
+    },
+    "c/cli/output.c": {
+      "sha256": "0ed47d285b0cbc00e270c23972f50113fd8b9d58983b941cec8bfda031dfec84",
+      "lines": 32
+    },
+    "c/cli/rust_in.c": {
+      "sha256": "9343efedeb9b28fa9871d835245e2b00247d21b33819b27dc20b9fb4b8979434",
+      "lines": 659
+    },
+    "c/cli/rust_out.c": {
+      "sha256": "0cc1aee0b548708d2e81a5d608f85ad1c80ef91b268af0ccbbaa47da135cc054",
+      "lines": 1243
+    },
+    "c/import/decls.c": {
+      "sha256": "bf787dcebd6773956938731df2b6331cc79934ba30d8fa65a854969d232a9403",
+      "lines": 975
+    },
+    "c/import/export.c": {
+      "sha256": "47d2536b2e8104c83dc5583326f6fbad553bb1777ae5e23f94db6744b25cd8b9",
+      "lines": 862
+    },
+    "c/import/exprs.c": {
+      "sha256": "8bbd96cf262df04c881c2475f9a99e648728c6c111bbfa4320f744a435ddf112",
+      "lines": 352
+    },
+    "c/import/import.h": {
+      "sha256": "443d366ed75f807ca1b53b14d220aceff097f7528e710aa1599bab0e7d9f739f",
+      "lines": 889
+    },
+    "c/import/levels.c": {
+      "sha256": "1f46f0be8ea0dda4c927b10f0e461b073908baadfd9230795568e257d6b8b9f3",
+      "lines": 141
+    },
+    "c/import/lower.c": {
+      "sha256": "90d4659bd2c68e1142f76c5fa736eb8be10d3501c547e74d565a350ff9300c6b",
+      "lines": 527
+    },
+    "c/import/mapping.c": {
+      "sha256": "3abf87b1c843721700bd678331fac7f23ff90a0b38a2a85e09a0b2f8e9d32d94",
+      "lines": 503
+    },
+    "c/import/names.c": {
+      "sha256": "99b4400714b3d6bcd3f55eeddbc59cd25b538b1a72135f1c6777a7162df742c4",
+      "lines": 102
+    },
+    "c/import/ndjson.c": {
+      "sha256": "67bf723c8fe10efdba763961a8aeeb43c0fa58ff606cb26f8f136dde731d3b60",
+      "lines": 1296
+    },
+    "c/import/render.c": {
+      "sha256": "deecfb3ca4e6001b053c1a857c4b033374bc2332472348034106f003b5609501",
+      "lines": 293
+    },
+    "c/import/report.c": {
+      "sha256": "e8144dcd53c76064e5439fb40a76b68ae1e78302e9aebd2d11289752d3acdef7",
+      "lines": 464
+    },
+    "c/import/table.c": {
+      "sha256": "752455b175f6a225df2ea72f2bcfb3b6b4e38ae7eed0118b2fc0bfe522ce7a4d",
+      "lines": 116
+    },
+    "c/import/translate.c": {
+      "sha256": "185d11af3d035b5e68ac7519d59213e7a48a98f41ab7a5219b56d87f1ef17a05",
+      "lines": 888
+    },
+    "c/kernel/bignum.c": {
+      "sha256": "65e305c12e2a550cf32bf91363150c362921d0166310acf0b3f0aa8cd03dd91f",
+      "lines": 483
+    },
+    "c/kernel/budget.c": {
+      "sha256": "140cef2c440809a0cd3e04d97860ab5c576973a11180b0d00f408beb7a8f2d5e",
+      "lines": 535
+    },
+    "c/kernel/check.c": {
+      "sha256": "32f6ce3b82f6782b9e2f4e83a00a15a17128f401d7b412e88fbd81514a004ca5",
+      "lines": 977
+    },
+    "c/kernel/check_engine.c": {
+      "sha256": "9b140787c0ec1502ea6ea2d9e61f6d3455d112d0ff2f0eb96f04876000b516b7",
+      "lines": 6048
+    },
+    "c/kernel/circuit.c": {
+      "sha256": "84dff79877327c90de58c47264b8b2b4b4d6752e7932e50123cb5d6aa5f6c0c7",
+      "lines": 1056
+    },
+    "c/kernel/common.c": {
+      "sha256": "b955f877e9df52fbf0793466e26f7e517e23994be164260b3e06b6098c620a80",
+      "lines": 110
+    },
+    "c/kernel/compact.c": {
+      "sha256": "753c50d5916ca30c426adc896efbfd8dcd0574bfa8bfd0517a9de98be768e4c6",
+      "lines": 1071
+    },
+    "c/kernel/context.c": {
+      "sha256": "d908ab122354ff55f5162a5e37fafb1668582b93b48797297b0d03a2fa5ef6d8",
+      "lines": 318
+    },
+    "c/kernel/conv.c": {
+      "sha256": "992991247ed87bbb1219eac7cf7a6a72aeeb00fbbcc0b18623d9a15011620380",
+      "lines": 28
+    },
+    "c/kernel/erase.c": {
+      "sha256": "3a1b181b2a4454ee3ea2f2f575d498357c4e3ff4ca8a98efc00b12f7286fb263",
+      "lines": 3714
+    },
+    "c/kernel/erase_repr.c": {
+      "sha256": "73fb2cf078700848fb77e59eacab440c4e1dec0f4e8b18f059b232a0b11f5822",
+      "lines": 1133
+    },
+    "c/kernel/erase_util.c": {
+      "sha256": "88b9bb3f6c98f502072dba12a7fb0ab98c89b056a71c426257f7a70d6332b576",
+      "lines": 747
+    },
+    "c/kernel/error.c": {
+      "sha256": "e7d12d6af4583f2628c6b0d0c57512bdf81042a0ce22ee77700c42865163fa0c",
+      "lines": 96
+    },
+    "c/kernel/eterm.c": {
+      "sha256": "7ac2c9e4a028408f65490df24446d7f05a09f2723dd03945cc5ce567145338d8",
+      "lines": 662
+    },
+    "c/kernel/eval.c": {
+      "sha256": "1eda441e94fd8f39062fa88384519f8e3606aaa34c32254cc1daeaf99b6e0cff",
+      "lines": 996
+    },
+    "c/kernel/global.c": {
+      "sha256": "239e5bac2011834e43de358a6389f22efe6c511898b1aadd843445ce9e352df5",
+      "lines": 451
+    },
+    "c/kernel/kernel.h": {
+      "sha256": "7ffa60d327ed7b625e0c9de5367c00b01c7f3a76a91c0bde81f5fd8c4535c14a",
+      "lines": 2853
+    },
+    "c/kernel/level.c": {
+      "sha256": "cada57546d3ac8af0d52313fddb8a483aff92dc605862d49870cc632271d0415",
+      "lines": 119
+    },
+    "c/kernel/level_eq.c": {
+      "sha256": "b1254a639b3ecec18489b1a87e51d85bb80c40390210504261b452c97f30c231",
+      "lines": 707
+    },
+    "c/kernel/level_scope.c": {
+      "sha256": "2fb2b9d20af664e81d4126972707241a995a0d791c41793f4b49ecbcfbe1199a",
+      "lines": 74
+    },
+    "c/kernel/level_var.c": {
+      "sha256": "35f999337952d2ca82bdc4034eb8818f605b234c64dcbec1f59e85e398b4fe1c",
+      "lines": 162
+    },
+    "c/kernel/literal.c": {
+      "sha256": "2395d9a182625f77f094eedb70e642b9b4092269f46fe9143c76231aa54b279a",
+      "lines": 48
+    },
+    "c/kernel/order.c": {
+      "sha256": "c3446f83a95970e94e629bf1afc52b1b4968e96ce00a61764687c7992e85c47b",
+      "lines": 748
+    },
+    "c/kernel/positivity.c": {
+      "sha256": "938dd2ca7e1b11da6afd90810ce14876fae73e04e6d80bd9997437fb4e1bcd4a",
+      "lines": 267
+    },
+    "c/kernel/pp.c": {
+      "sha256": "092a3158fea3702abae89e5a4a4f2b990d03d5018f1473ce936b5e11ee66af30",
+      "lines": 449
+    },
+    "c/kernel/prim.c": {
+      "sha256": "836b88ce4c41840293d873fd511c26588cd30374d391543442cc5e05ee7d82ac",
+      "lines": 138
+    },
+    "c/kernel/quantity.c": {
+      "sha256": "af3f43f5cd685292bb40dce96fbd21667f446e9e5e90bcb2efcc1a93596eb2b1",
+      "lines": 315
+    },
+    "c/kernel/rules.c": {
+      "sha256": "285db11c74c6586efd29478ed1995b42586201e72c96ee263bbe8763cc219f0e",
+      "lines": 416
+    },
+    "c/kernel/shape.c": {
+      "sha256": "c95cd79b2d2199d181571d35a3fe3e836f65c331e3c14f28ba38aea8db730fa3",
+      "lines": 182
+    },
+    "c/kernel/spec_count.c": {
+      "sha256": "89d207b72995f63e0424f44eb57e8b8cc59b59f0ed53a17a6c4ffd1731ca0479",
+      "lines": 128
+    },
+    "c/kernel/term.c": {
+      "sha256": "82f5a5aad725492706b6227e80dc5bb2d17b8081958be3fd294ef393968bcebb",
+      "lines": 661
+    },
+    "c/kernel/totality.c": {
+      "sha256": "72355b889632ec30ced3eae8cbc6b53949978820edbe9c8da4f4a8def559b6dd",
+      "lines": 177
+    },
+    "c/kernel/value.c": {
+      "sha256": "8a7268672ac4bdc4f94027b08251488de0d772f7541fd49fb5b9d0c35ca24798",
+      "lines": 209
+    },
+    "c/prelude/congruence.c": {
+      "sha256": "ebb678bc1b88e0a728cebec032fc8cb89680119d0826de42ee06028ebc2a4bce",
+      "lines": 139
+    },
+    "c/prelude/dependent.c": {
+      "sha256": "6f29f2ab7e0255338f48376c71e8ad379ed495253833266f61d6e60b31c17373",
+      "lines": 294
+    },
+    "c/prelude/equality.c": {
+      "sha256": "91d4e0ba7b75d59cce3314f7e4baed6fa59235fa9436d759e9e5ed2823261e9b",
+      "lines": 286
+    },
+    "c/prelude/families.c": {
+      "sha256": "270f601f54024a1ba794abec88dcea1182bf8e006f2eb52da96da70a1c95d53e",
+      "lines": 84
+    },
+    "c/prelude/prelude.h": {
+      "sha256": "2ad747dbf0b157fefd7c0adb7075e2d56e62ac1305e0038e0423565fd3737b88",
+      "lines": 84
+    },
+    "c/rt/arena.c": {
+      "sha256": "020871911460aaa382c8834c351c8888d28f1f96151b939acfae1789b3da36ea",
+      "lines": 69
+    },
+    "c/rt/bignat.c": {
+      "sha256": "b6fc72086169b7731b0ecf5327be1953fb9f18fa6c9a9fe79567cbe731f43ae2",
+      "lines": 234
+    },
+    "c/rt/effects.c": {
+      "sha256": "6ad0572f1416c9c31de4afe76b295afb871473ffb2a714e769ce5ba605a7c2f0",
+      "lines": 353
+    },
+    "c/rt/main.c": {
+      "sha256": "ee4d5f09e85bfed13818df0167262450bbc7aecd98a7ee0cf72fec9d5cde83bd",
+      "lines": 38
+    },
+    "c/rt/map.c": {
+      "sha256": "d7f0bb4dabf403979b1a38f002337d397a805e4822d1d3ad090fe83ea0643ea5",
+      "lines": 117
+    },
+    "c/rt/rt.h": {
+      "sha256": "b364f8910783cde248918bc94b9cfc2a706fbcb2a9cbd723f9b2405c1f5e0ec1",
+      "lines": 202
+    },
+    "c/rt/str.c": {
+      "sha256": "c2228a84ea9e726a2ca012db17cf4f0d000cc24b9c057baf765d163af966dfc0",
+      "lines": 161
+    },
+    "c/rt/vec.c": {
+      "sha256": "1e9698efed18ffce4310e8c6f9c536def1ff774141588e09b168831a4a7b148d",
+      "lines": 89
+    },
+    "c/rust/ast.c": {
+      "sha256": "409dc67cd2943aff6c3ad36230edaee1b8b1ffcc900fbb85754c3e5c0bbfadb2",
+      "lines": 768
+    },
+    "c/rust/emit.c": {
+      "sha256": "0141d61439b73c081caa09df3dcc216428eb083c0abbfcd42fa26e469ce42352",
+      "lines": 320
+    },
+    "c/rust/erase_typed.c": {
+      "sha256": "bd473ce999e4216b622c2ce1aa1a64ddf1d05098f7397965e2344f164d1a6fdb",
+      "lines": 3389
+    },
+    "c/rust/fragment.c": {
+      "sha256": "0289b2ee6338478d1f950439d5dd2e5d37d705afdc1222068419f48e3713e491",
+      "lines": 383
+    },
+    "c/rust/infer.c": {
+      "sha256": "7b80e5fe04f0cf79f913198b0c62628fb5c4360668afa37f9e517375e22b7f78",
+      "lines": 1399
+    },
+    "c/rust/lexer.c": {
+      "sha256": "b7c8bd21c517ca10f2027ead117ad81f0c0d19ef7da8eb3ef3d51c124d15f6ad",
+      "lines": 522
+    },
+    "c/rust/lift.c": {
+      "sha256": "663a783bc650b17b73e9abe303250955afaa43ef20574be01672d3050e5f3a52",
+      "lines": 1458
+    },
+    "c/rust/lower.c": {
+      "sha256": "1a39d155a2be5cfa466f57dc3007af6650b1b9f765d4bcd013ce0393eb45fbd3",
+      "lines": 1019
+    },
+    "c/rust/parser.c": {
+      "sha256": "b638c714c6e48025ecf67e9d4a4e636bc2410fd2a3380baa427a173890be7592",
+      "lines": 2724
+    },
+    "c/rust/print.c": {
+      "sha256": "86b1d1edad79282ea922b776e4ed3369a59684d1495e7e5b3e15eb4d704eaff7",
+      "lines": 1394
+    },
+    "c/rust/resolve.c": {
+      "sha256": "081608f0805243753c6c0b39b732c780a4a5c1eea52ae6cba37e5ccea6a4e557",
+      "lines": 1352
+    },
+    "c/rust/rir.c": {
+      "sha256": "0a0ea1170aa3418b1256814f3dbb31c53e4777ada6a81f51494a80f3fdee2de7",
+      "lines": 275
+    },
+    "c/rust/roundtrip.c": {
+      "sha256": "1e27341e02fac704a08932a129bd06d1ae185c8edcb6c02cfa7d5acf55753d46",
+      "lines": 229
+    },
+    "c/rust/rust.h": {
+      "sha256": "3d9f4b92a3451fb73a74be99777f008b18148a165499c7c267b2e73dd8654a2b",
+      "lines": 918
+    },
+    "c/rust/token.c": {
+      "sha256": "14cbd51ad2254dfb1dc517b28d1b3846704670de745b92499d4e0295e17b9a3d",
+      "lines": 89
+    },
+    "c/surface/compact.c": {
+      "sha256": "f561e7d2e6e7146a207b485037ba74c503ed33910404ee4bd0b4864dda659090",
+      "lines": 211
+    },
+    "c/surface/elab.c": {
+      "sha256": "4dc1de61e0f7d13e173f6089cd9b3185146e4f9269fd547c113cef043279901b",
+      "lines": 3065
+    },
+    "c/surface/elab_term.c": {
+      "sha256": "c6acbe24694927800e7f8190324af3ca983bcde073cf6a97d44537451e075c21",
+      "lines": 3507
+    },
+    "c/surface/family_poly.c": {
+      "sha256": "a91369c542c39e35cd94179543dcf973d4920489f6d6054484bce95acda7bd40",
+      "lines": 2939
+    },
+    "c/surface/lexer.c": {
+      "sha256": "96ae023b44465379ae7bd8be4ec4fc038abbb9c7fca5f1f5d112505953545dd2",
+      "lines": 392
+    },
+    "c/surface/parser.c": {
+      "sha256": "4f953db674b8dd6455b07117bab9a2886e1be416b518253c2749d860e85d42cd",
+      "lines": 2137
+    },
+    "c/surface/poly.c": {
+      "sha256": "2c2aa9030d5933475cc2e42ecc172a5cca788f253187e0b70240862bd4c9444b",
+      "lines": 897
+    },
+    "c/surface/surface.h": {
+      "sha256": "39a791c048e45f14c2493a305dc9ed556f86a2eacb8f3047734195662d0fb6cf",
+      "lines": 1052
+    },
+    "c/surface/syntax.c": {
+      "sha256": "c7cb34f87efc0937deca1c5e79d48e24fb86694a13c54aa553cbe7831efa03ce",
+      "lines": 1149
+    },
+    "c/surface/token.c": {
+      "sha256": "cc1935d1c67a1193defa12ff822114fd8463e5ef8b5eafcb7f2935588f256770",
+      "lines": 213
+    },
+    "c/surface/universe.c": {
+      "sha256": "9fe9323410a6ec792742ab1af3b3f60b62ccdbbde4c011f334d757c445102c50",
+      "lines": 113
+    },
+    "c/wasm/emit.c": {
+      "sha256": "0648600b577d2f0e0f1cbcd54b97d773315ab62c882c5aed8992f04aa5614d96",
+      "lines": 1730
+    },
+    "c/wasm/gc_encode.c": {
+      "sha256": "a082875959f293a7896fe3ecad30e818c2abda4b5e7f62fa8b67dc840750e547",
+      "lines": 681
+    },
+    "c/wasm/link.c": {
+      "sha256": "ac0facdc11144f4dc6cdb02a035f12880c638f4875b31473c12d3128e9e363b3",
+      "lines": 2443
+    },
+    "c/wasm/nat_runtime.c": {
+      "sha256": "91a207df57fe279350b17d1e6e0c875eed2e89c5aacf2bbfe3f842bc4ca097f6",
+      "lines": 477
+    },
+    "c/wasm/state.c": {
+      "sha256": "9aef7c122b8de9185ce7f922cf3bd8ddb3a91be5fd442afccb29a38fbde70243",
+      "lines": 149
+    },
+    "c/wasm/wasm.h": {
+      "sha256": "dc6a89f1030c3d9198e60399fe7e217f5c871364b165af4c29eb53ff2980901e",
+      "lines": 847
+    }
+  },
+  "scope_review": {
+    "date": "2026-10-18",
+    "verdict": "C source inventory and shape scope recorded during staged migration review",
+    "limits": "Existing 9000/900 source-line ceilings are unchanged. The C kernel exceeds the kernel ceiling. R3 remains unmeasured."
+  }
+}

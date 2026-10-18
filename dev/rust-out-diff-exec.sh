@@ -1,7 +1,7 @@
 #!/bin/zsh
 # DIFF-EXEC gate of `mech rust-out`.
 #
-# The gate builds the driver bend2/tests/rust_emit.bend to JavaScript, writes
+# The gate builds the C driver _tcc/rust_emit (c/tests/rust_emit.c), writes
 # the crate of prelude/init.mech + prelude/mechanism/second-price.mech, and
 # compares it with the goldens in test/rust/emit. Then it adds the probes (the
 # generated probes and test/rust/emit/probes.mech) as a third module, and
@@ -14,13 +14,11 @@
 # in a copy of the crate. The gate is green only if the copy is RED.
 #
 # Use: dev/rust-out-diff-exec.sh [emit]. `emit` stops before the cargo steps.
-# BEND gives the Bend compiler (default: $HOME/.bend/bin/bend). NODE gives
-# node. The driver runs with the stack of dev/BEND2-BASELINE.json.
+# make builds the driver; it runs on the 1 GiB thread stack of the C runtime.
 set -u
 ulimit -s "$(ulimit -Hs)"
 root=${0:A:h:h}
-bend=${BEND:-$HOME/.bend/bin/bend}
-node=(${NODE:-node} --stack-size=16384)
+re=$root/_tcc/rust_emit
 stage=${1:-all}
 G=$root/test/rust/emit
 O=${TMPDIR:-/tmp}/mech-diff-exec
@@ -32,21 +30,21 @@ fail() { print -r -- "FAIL $1"; rc=1 }
 stop() { print -r -- "FAIL $1"; [[ -n ${2:-} ]] && head -n 12 $2 | cut -c1-200; print -r -- "DIFF-EXEC-FAIL"; exit 1 }
 golden() { if diff $G/$1 $2 > /dev/null 2>&1; then pass "golden $1"; else fail "golden $1"; fi }
 
-$bend $root/bend2/tests/rust_emit.bend -o $O/re.js > $O/build.log 2>&1 || stop "driver build" $O/build.log
+make -C $root _tcc/rust_emit > $O/build.log 2>&1 || stop "driver build" $O/build.log
 cp $root/prelude/init.mech $root/prelude/mechanism/second-price.mech $R/
 cd -q $R
-$node $O/re.js crate init.mech second-price.mech plain > plain.out 2> plain.err || stop "crate write" plain.err
+$re crate init.mech second-price.mech plain > plain.out 2> plain.err || stop "crate write" plain.err
 for f in Cargo.toml mech-carrier.mech src/lib.rs src/init.rs src/nat.rs src/second_price.rs; do
   golden crate/$f plain/$f
 done
-$node $O/re.js probes init.mech second-price.mech > generated.mech 2> generated.err || stop "probe generation" generated.err
+$re probes init.mech second-price.mech > generated.mech 2> generated.err || stop "probe generation" generated.err
 golden generated-probes.mech generated.mech
 cat generated.mech $G/probes.mech > probes.mech
-$node $O/re.js values init.mech second-price.mech probes.mech > values.txt 2> values.err || stop "kernel values" values.err
+$re values init.mech second-price.mech probes.mech > values.txt 2> values.err || stop "kernel values" values.err
 golden values.txt values.txt
-$node $O/re.js crate init.mech second-price.mech probes.mech out > out.out 2> out.err || stop "probe crate write" out.err
+$re crate init.mech second-price.mech probes.mech out > out.out 2> out.err || stop "probe crate write" out.err
 mkdir out/src/bin
-$node $O/re.js bin init.mech second-price.mech probes.mech > out/src/bin/diff_exec.rs 2> bin.err || stop "diff_exec.rs" bin.err
+$re bin init.mech second-price.mech probes.mech > out/src/bin/diff_exec.rs 2> bin.err || stop "diff_exec.rs" bin.err
 if [[ $stage == emit ]]; then
   print -r -- "run directory: $R"
   exit $rc

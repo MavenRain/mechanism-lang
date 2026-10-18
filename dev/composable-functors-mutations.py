@@ -11,7 +11,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 PRELUDE = "prelude/cat/composable-functors.mech"
 FIXTURE = "test/fixtures/prelude/composable-functors-runtime.mech"
 GENERIC = "test/fixtures/prelude/composable-functors.mech"

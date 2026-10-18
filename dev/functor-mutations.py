@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 # The replay is not a gate leg.  It runs the SLOW suite six times, and the
 # same suite has taken several minutes under load, so each run gets 600
 # seconds.  A shorter cap reports a failure that no control caused.
@@ -22,10 +22,14 @@ def main():
     work = Path(sys.argv[1]).resolve()
     if work.exists() or work == ROOT or ROOT in work.parents:
         raise SystemExit("the output directory must be new and outside the repository")
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'functor')
-    executable = ROOT / "_bend2/test/prelude_functor.exe"
-    if not executable.is_file():
+    target = "_tcc/prelude_functor"
+    executable = ROOT / target
+    executable.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(executable, os.X_OK):
         raise SystemExit("build the functor checker before replay")
+    build_evidence = {"target": target, "exit_code": built.returncode,
+                      "binary_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     copy = work / "source"
     files = [ROOT / "prelude/cat/category.mech", ROOT / "test/fixtures/prelude/functor.mech"]
     files.extend(sorted((ROOT / "test/neg/functor").iterdir()))
@@ -91,7 +95,7 @@ def main():
             path.write_bytes(original)
     restored = passed(suite("restored"))
     success = restored and all(row["killed"] for row in reports)
-    report = {"bend_build": build_evidence, "passed": success, "restored": restored, "sources": sources,
+    report = {"c_build": build_evidence, "passed": success, "restored": restored, "sources": sources,
               "checker_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
               "controls": reports}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")

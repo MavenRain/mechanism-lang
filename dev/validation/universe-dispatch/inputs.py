@@ -5,7 +5,7 @@ import sys
 
 DIRECTORY = Path(__file__).resolve().parent
 ROOT = DIRECTORY.parents[2]
-EXTENSIONS = {'.bend', '.part', '.c', '.js', '.mjs', '.mech', '.json', '.py'}
+EXTENSIONS = {'.bend', '.part', '.c', '.h', '.js', '.mjs', '.mech', '.json', '.py'}
 
 
 def digest(path):
@@ -13,8 +13,8 @@ def digest(path):
 
 
 def bundle():
-    paths = [p for d in ['bend2', 'prelude', 'test/fixtures'] for p in (ROOT / d).rglob('*') if p.is_file() and p.suffix in EXTENSIONS]
-    paths.extend([ROOT / 'dev/bend2-build.py', ROOT / 'dev/bend2/test-manifest.json'])
+    paths = [p for d in ['c', 'prelude', 'test/fixtures'] for p in (ROOT / d).rglob('*') if p.is_file() and p.suffix in EXTENSIONS]
+    paths.extend([ROOT / 'Makefile', ROOT / 'dev/cases/test-manifest.json', ROOT / 'dev/c-build.py'])
     hashes = {str(p.relative_to(ROOT)): digest(p) for p in sorted(set(paths))}
     return dict(files=len(hashes), sha256=hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest())
 

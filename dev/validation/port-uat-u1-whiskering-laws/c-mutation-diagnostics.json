@@ -1,0 +1,9 @@
+{
+  "left-identity-proof": "1b1c72f8e898c3f2328458ed78a61479ff31e6f177efa767fd4bdcf8d67aa475",
+  "left-composition-proof": "4fa5465af226e475540049e603c20dbb21d89a76eade623ff7eb49260562ff2d",
+  "left-congruence-proof": "85497234c5e959579a01a4344dc3a34bd6235204e97dcfcaec9e1c156f397028",
+  "right-congruence-proof": "f2ace194ff04a2dc1e851724e3d08d78a942b4fc311d2b0420505ae2b9553a63",
+  "right-composition-order": "5c8dcdbda8383af759c35cfdb7f4f0ae87c2d4cb93aa57be82e74062de1dda0d",
+  "shared-target": "5b81888e9c46d296db7b7b3d7d32207c7d0ff14b323f46c8c7f834bd27a54dda",
+  "right-identity-target": "1c845957fbd40c941eba2c6c5f6a6c79a4ba4b1cc38c40d97947fb3d824e08f1"
+}

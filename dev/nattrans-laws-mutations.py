@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import runpy
 import shutil
 import subprocess
@@ -9,44 +10,46 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 OK = "PRELUDE-NATTRANS-LAWS-OK entries=234 families=10 computations=12 negatives=6\n"
 FAIL = "PRELUDE-NATTRANS-LAWS-FAIL "
 TEMPLATE = "prelude/cat/nattrans-laws.mech"
 RUNTIME = "test/fixtures/prelude/nattrans-laws-runtime.mech"
 NEGATIVE = "test/neg/nattrans-laws/false-components.mech"
 EXPECT_RELATION_ENDPOINT = (
-    "mismatch: the term has type (Lan SMu Ops_Base_Target [(Out SPi"
-    " w x C (APt w x) (Elim SPi w app (Ran SPi w x C (Out SPi 0 y D"
-    " (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ "
-    "C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y =>"
-    " x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi"
-    " w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) wi"
-    "th | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 x D (Ran "
-    "SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi 0 x D (Ran"
-    " SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y => x)))) alpha "
-    "as self return (Ran SPi")
+    "mismatch: the term has type (Lan SMu Ops_Base_Target [(Out S"
+    "Arg w x (APt w x) (Elim SPi w app (Ran SPi w x C (Out SArg 0"
+    " y (APt 0 (Out SArg w _ (APt w x) (Elim SPi w obj (Ran SPi w"
+    " _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x"
+    " y => x))) (Out SArg 0 x (APt 0 (Out SArg w _ (APt w x) (Eli"
+    "m SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ "
+    "C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 "
+    "x D (Ran SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi"
+    " 0 x D (Ran SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y =>"
+    " x)))) alpha as self return (Ran SPi")
 EXPECT_IDENTITY_PROOF = (
-    "mismatch: the constructor categoryRefl of Ops_Base_Target give"
-    "s the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C "
-    "(APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self return ("
-    "Ran SP")
+    "mismatch: the constructor categoryRefl of Ops_Base_Target gi"
+    "ves the index (Out SArg w _ (APt w (Out SArg w x (APt w x) ("
+    "Elim SPi w app (Ran SPi w x C (Out SArg 0 y (APt 0 (Out SArg"
+    " w _ (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self r"
+    "eturn (Ran SPi w _ C D) with ")
 EXPECT_ASSOCIATIVITY_PROOF = (
-    "mismatch: the constructor categoryRefl of Ops_Base_Target give"
-    "s the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C "
-    "(APt w x) (Elim SPi w obj (Ran SPi w _ C D) I as self return ("
-    "Ran SP")
+    "mismatch: the constructor categoryRefl of Ops_Base_Target gi"
+    "ves the index (Out SArg w _ (APt w (Out SArg w x (APt w x) ("
+    "Elim SPi w app (Ran SPi w x C (Out SArg 0 y (APt 0 (Out SArg"
+    " w _ (APt w x) (Elim SPi w obj (Ran SPi w _ C D) I as self r"
+    "eturn (Ran SPi w _ C D) with ")
 EXPECT_CONGRUENCE_PROOF = (
-    "mismatch: the term has type (Lan SMu Ops_Base_Target [(Out SPi"
-    " w x C (APt w x) (Elim SPi w app (Ran SPi w x C (Out SPi 0 y D"
-    " (APt 0 (Out SPi w _ C (APt w x) (Elim SPi w obj (Ran SPi w _ "
-    "C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x y =>"
-    " x))) (Out SPi 0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim SPi"
-    " w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ C D) wi"
-    "th | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 x D (Ran "
-    "SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi 0 x D (Ran"
-    " SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y => x)))) alpha2"
-    " as self return (Ran SP")
+    "mismatch: the term has type (Lan SMu Ops_Base_Target [(Out S"
+    "Arg w x (APt w x) (Elim SPi w app (Ran SPi w x C (Out SArg 0"
+    " y (APt 0 (Out SArg w _ (APt w x) (Elim SPi w obj (Ran SPi w"
+    " _ C D) G as self return (Ran SPi w _ C D) with | (ALeg 0) x"
+    " y => x))) (Out SArg 0 x (APt 0 (Out SArg w _ (APt w x) (Eli"
+    "m SPi w obj (Ran SPi w _ C D) F as self return (Ran SPi w _ "
+    "C D) with | (ALeg 0) x y => x))) (Elim SPi w hom (Ran SPi 0 "
+    "x D (Ran SPi 0 y D Type (u3 + 1))) d as self return (Ran SPi"
+    " 0 x D (Ran SPi 0 y D Type (u3 + 1))) with | (ALeg 0) x y =>"
+    " x)))) alpha2 as self return (Ran SP")
 EXPECT_SHARING = (
     "mismatch: the term has type (Lan SPi w hom (Ran SPi 0 x (L")
 CONTROLS = [
@@ -97,8 +100,14 @@ def main():
         destination = copy / name
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, destination)
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'nattrans-laws')
-    exe = ROOT / "_bend2/test/prelude_nattrans_laws.exe"
+    build_target = "_tcc/prelude_nattrans_laws"
+    exe = ROOT / build_target
+    exe.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), build_target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(exe, os.X_OK):
+        print("NATTRANS-LAWS-MUTATIONS FAIL c build", file=sys.stderr)
+        return 1
+    build_evidence = {"target": build_target, "exit_code": built.returncode, "binary_sha256": digest(exe)}
     hashes = {name: digest(copy / name) for name in files}
     rows = []
 
@@ -108,7 +117,7 @@ def main():
         result = bounded_run(command, cwd=work, capture_output=True, text=True, timeout=290)
         (work / f"{label}.stdout").write_text(result.stdout)
         (work / f"{label}.stderr").write_text(result.stderr)
-        row = {"id": label, "command": ["_bend2/test/prelude_nattrans_laws.exe", "COPY"],
+        row = {"id": label, "command": [build_target, "COPY"],
                "exit": result.returncode, "seconds": round(time.monotonic() - started, 3),
                "stdout_sha256": digest(work / f"{label}.stdout"),
                "stderr_sha256": digest(work / f"{label}.stderr")}
@@ -141,9 +150,9 @@ def main():
                     for name, sha in hashes.items())
     killed = sum(row.get("killed", False) for row in rows)
     passed = baseline_row["passed"] and restored_row["passed"] and unchanged and killed == len(CONTROLS)
-    report = {"bend_build": build_evidence, "passed": passed, "killed": killed, "controls": len(CONTROLS),
+    report = {"c_build": build_evidence, "passed": passed, "killed": killed, "controls": len(CONTROLS),
               "sources_unchanged": unchanged, "source_sha256": hashes,
-              "suite_source_sha256": digest(ROOT / "bend2/tests/prelude_nattrans_laws.bend"),
+              "suite_source_sha256": digest(ROOT / "c/tests/prelude_nattrans_laws.c"),
               "executable_sha256": digest(exe), "rows": rows}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"passed": passed, "killed": killed, "controls": len(CONTROLS)}))

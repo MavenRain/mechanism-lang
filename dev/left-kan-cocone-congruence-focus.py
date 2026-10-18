@@ -18,8 +18,8 @@ parser.add_argument('--contracts', action='store_true')
 args = parser.parse_args()
 
 root = Path(__file__).resolve().parents[1]
-harness = (root / 'bend2/tests/prelude_left_kan_laws.bend').read_text()
-templates = re.search(r'R\.read_all\(root,\s*\[([^\]]*)\]\)', harness)
+harness = (root / 'c/tests/prelude_left_kan_laws.c').read_text()
+templates = re.search(r'TEMPLATE_PATHS\[\]\s*=\s*\{([^}]*)\}', harness)
 if templates is None:
     raise ValueError('missing left Kan template inventory')
 paths = re.findall(r'"([^"]+\.mech)"', templates.group(1))

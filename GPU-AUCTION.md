@@ -12,10 +12,10 @@ No CLI command provisions hardware or transfers money.
 
 ## Quick start
 
-Install Bend 2.0.25, Node 23.10, and Python 3.11 or newer. The full Wasm checks
-also use Binaryen 130 and Wasmtime 48.0.1. Set `BEND` if the compiler is outside
-`PATH`. See [the build guide](README.md) and
-[migration status](MIGRATION-BEND2.md) for the current validation state.
+Install TinyCC 0.9.28rc (`tcc`), Node 23.10, and Python 3.11 or newer. The full
+Wasm checks also use Binaryen 130 and Wasmtime 48.0.1. Set `TCC` if the compiler
+is outside `PATH`. See [the build guide](README.md) and
+[migration status](MIGRATION-C.md) for the current validation state.
 
 From this repository:
 
@@ -36,7 +36,7 @@ no third-party runtime dependencies. Python 3.11 or newer is required.
 You can also use `python3 -P dev/mech-cuopt.py` in place of `mech-cuopt` without
 installing the package. The Python wheel can run the GPU worker alone; the
 exporter and verifier additionally need this source checkout and its built
-`_bend2/bin/mech_cert.exe`.
+`_tcc/bin/mech_cert`.
 
 In the example, A offers 12 for all eight slices, B offers 9 for the first four,
 and C offers 7 for the last four. B and C jointly win with welfare 16. B pays 5,

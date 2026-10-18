@@ -21,8 +21,6 @@ set -u
 
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
-BEND=${BEND:-$HOME/.bend/bin/bend}
-NODE=${NODE:-node}
 CRATE=$ROOT/test/rust/emit/crate
 IMPORT=$ROOT/test/rust/import
 EXPECTED=$IMPORT/refuse/EXPECTED.tsv
@@ -30,8 +28,8 @@ MIN_REFUSED=8
 
 WORK=$(mktemp -d ${TMPDIR:-/tmp}/rust-in-gate.XXXXXX)
 trap 'rm -rf $WORK' EXIT
-JS=$WORK/rust_import.js
-RE=$WORK/rust_emit.js
+RI=$ROOT/_tcc/rust_import
+RE=$ROOT/_tcc/rust_emit
 ulimit -s "$(ulimit -Hs)" 2> /dev/null
 
 pass=0
@@ -57,9 +55,9 @@ finish() {
   exit 1
 }
 
-# build <driver name> <out js>
+# build <driver name>: make builds _tcc/<driver name> from c/tests/<driver name>.c
 build() {
-  if ! $BEND $ROOT/bend2/tests/$1.bend -o $2 > $WORK/build.log 2>&1; then
+  if ! make -C $ROOT _tcc/$1 > $WORK/build.log 2>&1; then
     tail -n 20 $WORK/build.log
     bad "build $1"
     finish
@@ -77,7 +75,7 @@ text() {
 # stdout to $WORK/o, stderr to $WORK/e.
 rc=0
 imp() {
-  $NODE --stack-size=16384 $JS "$@" > $WORK/o 2> $WORK/e < /dev/null
+  $RI "$@" > $WORK/o 2> $WORK/e < /dev/null
   rc=$?
 }
 
@@ -86,7 +84,7 @@ imp() {
 emit() {
   local dir=$1 out=$2
   shift 2
-  (cd -q $dir && $NODE --stack-size=16384 $RE crate "$@" $out > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
+  (cd -q $dir && $RE crate "$@" $out > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
 }
 
 # edit <file> <old> <new>: replace each <old>; fail if the file has no <old>.
@@ -100,8 +98,8 @@ sys.exit(0 if old in text else 1)
 EOF
 }
 
-build rust_import $JS
-build rust_emit $RE
+build rust_import
+build rust_emit
 ok "build (importer driver, emitter driver)"
 
 # The modules of the golden crate, in the order of src/lib.rs.

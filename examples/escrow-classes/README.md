@@ -52,8 +52,8 @@ root:
 
 ```sh
 { cat prelude/init.mech; for f in examples/escrow-o1/O1.mech examples/escrow-o14/O14.mech examples/escrow-classes/Classes.mech examples/escrow-classes/O1C.mech examples/escrow-classes/O14C.mech; do printf '\n'; cat "$f"; done; } > /tmp/escrow-classes.mech
-_bend2/bin/mech.exe check /tmp/escrow-classes.mech
-_bend2/bin/mech.exe axioms /tmp/escrow-classes.mech
+_tcc/bin/mech check /tmp/escrow-classes.mech
+_tcc/bin/mech axioms /tmp/escrow-classes.mech
 ```
 
 Both commands exit with 0 and write no output.

@@ -2,11 +2,12 @@
 
 Usage: python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY
 
-Each control edits the native Bend shape traversal in an isolated copy.
+Each control edits the C shape traversal (c/surface/poly.c) in an isolated copy.
 The complete hidden-shape metadata suite tests scope and specialization
 for zk, fhc, mpc parties and access. Build failures never count as kills.
 """
 
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -16,7 +17,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 if len(sys.argv) != 2:
     raise SystemExit("usage: python3 -I dev/veil-mutations.py NEW_WORK_DIRECTORY")
 WORK = Path(sys.argv[1]).resolve()
@@ -25,35 +26,26 @@ if WORK.exists() or WORK == ROOT or ROOT in WORK.parents:
 WORK.mkdir(parents=True)
 COPY = WORK / "copy"
 shutil.copytree(ROOT, COPY, ignore=shutil.ignore_patterns(
-    ".git", "_build", "_bend2", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs", "__pycache__"))
+    ".git", "_build", "_bend2", "_tcc", ".gatework", ".kanon-exec", ".kanon-wait", ".kanon-replies", "build", "logs",
+    "__pycache__"))
 ENV = dict(os.environ)
-BACKEND = ENV.get("BEND_MUTATION_BACKEND", ENV.get("BEND_TEST_BACKEND", "javascript"))
+TARGET = "_tcc/surface_shape_metadata"
 
-SOURCE = "bend2/surface/poly.bend"
+# The C forms of the former Bend map_term controls (decision 279): each one drops or discards
+# the same traversal result and keeps the control name and the kill messages.
+SOURCE = "c/surface/poly.c"
 CONTROLS = [
     ("C-VEIL-M1", SOURCE,
-     "        access : Term.T <- map_term(action, access)\n",
-     "",
+     "  return bind_frame(heap, poly_map_term(heap, frame->action, frame->shape.access), shape_body_mpc_k2, frame);\n",
+     "  return shape_body_mpc_k2(heap, frame, (void *)frame->shape.access);\n",
      "drop the traversal of the second SMpc argument"),
     ("C-VEIL-M2", SOURCE,
-     """    case Shape.SZk{q, name, domain}:
-      do Budget.Comp<Shape.T<Term.T>>:
-        domain : Term.T <- map_term(action, domain)
-        return Shape.SZk{q, name, domain}""",
-     """    case Shape.SZk{q, name, +domain}:
-      do Budget.Comp<Shape.T<Term.T>>:
-        mapped_domain : Term.T <- map_term(action, domain)
-        return Shape.SZk{q, name, domain}""",
+     "shape_szk(frame->shape.quantity, frame->shape.name, value)",
+     "shape_szk(frame->shape.quantity, frame->shape.name, (void *)frame->shape.domain)",
      "keep the old SZk payload, so the level substitution is lost"),
     ("C-VEIL-M3", SOURCE,
-     """    case Shape.SFhc{level}:
-      do Budget.Comp<Shape.T<Term.T>>:
-        level : Term.T <- map_term(action, level)
-        return Shape.SFhc{level}""",
-     """    case Shape.SFhc{+level}:
-      do Budget.Comp<Shape.T<Term.T>>:
-        mapped_level : Term.T <- map_term(action, level)
-        return Shape.SFhc{level}""",
+     "  (void)ctx;\n  return pure_shape(heap, shape_sfhc(value));\n",
+     "  (void)value;\n  return pure_shape(heap, shape_sfhc((void *)((Frame *)ctx)->shape.level));\n",
      "keep the old SFhc payload, so a free universe stays inside the shape"),
 ]
 
@@ -68,9 +60,14 @@ def capture(name, command):
 
 
 def build(name):
-    result = capture(f"{name}-build", [sys.executable, "-P", "dev/bend2-mutation-build.py", "shape"])
-    if result.returncode != 0 or b"BEND2 MUTATION BUILD PASS shape" not in result.stdout:
+    # make -B: make 3.81 compares mtimes to the second, so an edit and its rebuild in the
+    # same second would keep the stale object.
+    binary = COPY / TARGET
+    binary.unlink(missing_ok=True)
+    result = capture(f"{name}-build", ["make", "-B", "-C", str(COPY), TARGET])
+    if result.returncode != 0 or not os.access(binary, os.X_OK):
         raise SystemExit(f"{name}: build failed; this is not a killed mutation")
+    return hashlib.sha256(binary.read_bytes()).hexdigest()
 
 
 def edit(path, old, new):
@@ -82,21 +79,19 @@ def edit(path, old, new):
 
 
 def suite(name):
-    if BACKEND == "native":
-        return capture(name, [str(COPY / "_bend2/mutation/shape-native"), "--"])
-    return capture(name, [os.environ.get("NODE", "node"), "--stack-size=16384",
-                         str(COPY / "_bend2/mutation/shape.js"), "--"])
+    return capture(name, [str(COPY / TARGET)])
 
 
 def control(name, path, old, new, note):
     original = (COPY / path).read_text()
     edit(path, old, new)
     try:
-        build(name)
+        binary_sha256 = build(name)
         result = suite(name)
         return {"control": name, "file": path, "suite": "surface_shape_metadata",
-                "change": note, "exit_code": result.returncode,
+                "change": note, "exit_code": result.returncode, "binary_sha256": binary_sha256,
                 "stdout": result.stdout.decode(errors="replace").strip(),
+                "stderr": result.stderr.decode(errors="replace").strip(),
                 "killed": result.returncode == 1 and any(message in result.stderr for message in (
                     b"crypto shape payload",
                     b"universe: universe level is outside the global parameter scope"))}
@@ -105,8 +100,7 @@ def control(name, path, old, new, note):
 
 
 def main():
-    report = {"passed": False, "rows": [],
-              "backend": BACKEND}
+    report = {"passed": False, "rows": [], "target": TARGET}
     try:
         build("C-VEIL-BASE")
         baseline = suite("baseline")

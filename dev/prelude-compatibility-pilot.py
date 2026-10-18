@@ -336,7 +336,7 @@ def equality_inputs(name):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export", type=Path, default=Path("/Users/oobi/Documents/kanon-m2-corpus/corpus/lean-parity/uat/uat.export"))
-    parser.add_argument("--mech", type=Path, default=ROOT / "_bend2/bin/mech.exe")
+    parser.add_argument("--mech", type=Path, default=ROOT / "_tcc/bin/mech")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
     args = parser.parse_args()
@@ -349,8 +349,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=False)
     imported = args.out / "import"
     try:
-        binaries = {str(args.mech): digest(args.mech),
-                    str(args.mech.parent / "mechanism-native"): digest(args.mech.parent / "mechanism-native")}
+        binaries = {str(args.mech): digest(args.mech)}
         process = subprocess.run([str(args.mech), "import", str(args.export), "--out", str(imported)],
                                  capture_output=True, text=True, timeout=args.timeout, cwd=ROOT)
         (args.out / "import.stdout").write_text(process.stdout)
@@ -411,7 +410,7 @@ def main():
                   "mech_sha256": digest(args.mech.resolve()), "map_sha256": digest(ROOT / "map/prelude.map.tsv"),
                   "prelude_sha256": digest(ROOT / "prelude/init.mech"),
                   "inputs": input_hashes,
-                  "native_sha256": digest(args.mech.resolve().parent / "mechanism-native"),
+                  "native_sha256": digest(args.mech.resolve()),
                   "candidates": results, "support": support, "u1_records": records,
                   "counts": dict(collections.Counter(row["status"] for row in results)),
                   "support_counts": dict(collections.Counter(row["status"] for row in support)),

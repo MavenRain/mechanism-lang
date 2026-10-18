@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 VERIFY = len(sys.argv) == 3 and sys.argv[1] == "--verify"
 if len(sys.argv) != 2 and not VERIFY:
     raise SystemExit("usage: python3 -I dev/category-mutations.py [--verify] WORK_DIRECTORY")

@@ -171,9 +171,13 @@ static Task suite(Heap *heap, void *ctx, Str *fields) {
   negatives = STRINGS(heap, NEGATIVES);
   RELATIONAL_TRY(negatives_run(heap, root, str_lit("test/neg/heterogeneous-left-kan"), &negatives, globals,
                                negatives_prefix(9, true, false)));
+  /* D-353a (host only, the D-352a form): Bend checks this source with check_in under Budget.unlimited.
+   * The compact entry is the same check under budget_unlimited (decision 156, D-254a), but its work
+   * heaps run each conversion query in a scratch arena (D-261a), so the refusal no longer keeps the
+   * garbage of the whole elaboration in the caller arena. The refusal value and its text do not change. */
   RELATIONAL_TRY(relational_refuse_exact(
       heap,
-      elab_check_in(heap, global_empty(), budget_unlimited(), cat(heap, source, str_lit("specialize MechHeterogeneousLeftKan (0, 1, 2, 3, 4) as Bad\n"))),
+      elab_check_in_compact(heap, global_empty(), cat(heap, source, str_lit("specialize MechHeterogeneousLeftKan (0, 1, 2, 3, 4) as Bad\n"))),
       str_lit("universe: the family schema MechHeterogeneousLeftKan expects 6 universe arguments, got 5\n"), str_lit("universe arity")));
   RELATIONAL_TRY(relational_budget_refusal(heap, source));
   *fields = str_lit("entries=294 instances=3 computations=4 negatives=15");

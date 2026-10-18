@@ -46,7 +46,7 @@ The complete host comparisons have not passed. This pending mode is opt-in;
 the registered gates cover the passing native suite and extraction guard.
 
 ```sh
-BEND=/path/to/bend-2.0.27 python3 -P dev/bend2-build.py --target tests --test-mode prelude-left-kan-solution-transport --backend native
+make _tcc/prelude_left_kan_solution_transport
 python3 -I test/left_kan_solution_transport.py
 python3 -I dev/left-kan-solution-transport-focus-test.py
 python3 -I test/left_kan_laws_runtime.py --solution-transport

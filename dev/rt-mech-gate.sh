@@ -5,7 +5,7 @@
 #   RT-RUST     E(I(E(S))) is equal to E(S), file for file.
 #   FIXPOINT    I(E(I(E(S)))) is equal to I(E(S)), file for file.
 #   RT-MECH     S and I(E(S)) have the same checked rows up to bound names
-#               (mode `rt-mech` of bend2/tests/rust_import.bend).
+#               (mode `rt-mech` of the C driver c/tests/rust_import.c).
 # Controls, on the seed 01_enum_match:
 #   GREEN  a copy of the seed with each binder renamed passes RT-MECH.
 #   RED    two branch bodies swapped in the imported text: RT-MECH fails.
@@ -26,16 +26,15 @@
 # ROUND-TRIP-FAIL (exit 1). All outputs stay in $RT_WORK.
 set -u
 ROOT=${0:A:h:h}
-BEND=${BEND:-$HOME/.bend/bin/bend}
 SEED=$ROOT/test/rust/seed
 CTRL=$ROOT/test/rust/seed-control
 WORK=${RT_WORK:-$TMPDIR/rt-mech-gate}
 mkdir -p $WORK
-JS=$WORK/rust_import.js
-RE=$WORK/rust_emit.js
+RI=$ROOT/_tcc/rust_import
+RE=$ROOT/_tcc/rust_emit
 ulimit -s "$(ulimit -Hs)" 2> /dev/null
-$BEND $ROOT/bend2/tests/rust_import.bend -o $JS > $WORK/build-i.log 2>&1 || { print "FAIL build rust_import"; tail -n 5 $WORK/build-i.log; print ROUND-TRIP-FAIL; exit 1 }
-$BEND $ROOT/bend2/tests/rust_emit.bend -o $RE > $WORK/build-e.log 2>&1 || { print "FAIL build rust_emit"; tail -n 5 $WORK/build-e.log; print ROUND-TRIP-FAIL; exit 1 }
+make -C $ROOT _tcc/rust_import > $WORK/build-i.log 2>&1 || { print "FAIL build rust_import"; tail -n 5 $WORK/build-i.log; print ROUND-TRIP-FAIL; exit 1 }
+make -C $ROOT _tcc/rust_emit > $WORK/build-e.log 2>&1 || { print "FAIL build rust_emit"; tail -n 5 $WORK/build-e.log; print ROUND-TRIP-FAIL; exit 1 }
 
 pass=0
 fail=0
@@ -51,10 +50,10 @@ step() {
 emit() {
   local dir=$1 out=$2
   shift 2
-  (cd -q $dir && node --stack-size=16384 $RE crate "$@" $out > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
+  (cd -q $dir && $RE crate "$@" $out > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
 }
 imp() {
-  node --stack-size=16384 $JS run $1 $2 > $WORK/imp.out 2> $WORK/imp.err < /dev/null
+  $RI run $1 $2 > $WORK/imp.out 2> $WORK/imp.err < /dev/null
 }
 # The text of a program: its files in manifest order, a newline after each.
 joined() {
@@ -65,7 +64,7 @@ joined() {
   done
 }
 mode() {
-  node --stack-size=16384 $JS "$@" 2> $WORK/mode.err < /dev/null
+  $RI "$@" 2> $WORK/mode.err < /dev/null
 }
 
 for p in $SEED/*(/); do
@@ -233,7 +232,7 @@ for n in ${(ok)want}; do
   [[ $rc == 0 && $out == "MECH-CHECK-OK "<1->" rows axioms=0" ]]
   step $? "SEED-CHECK $n" $out
   rm -rf $WORK/ref-$n
-  (cd -q $CTRL && node --stack-size=16384 $RE crate $n.mech $WORK/ref-$n > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
+  (cd -q $CTRL && $RE crate $n.mech $WORK/ref-$n > $WORK/emit.out 2> $WORK/emit.err < /dev/null)
   rc=$?
   got="$(head -n 1 $WORK/emit.err)"
   [[ $rc == 65 && $got == "$want[$n]" && ! -e $WORK/ref-$n && ! -L $WORK/ref-$n ]]

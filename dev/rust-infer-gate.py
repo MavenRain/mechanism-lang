@@ -70,7 +70,8 @@ POSITIVES = [
 
 
 def run(driver, mode, lib, modules):
-    args = ["node", "--stack-size=16384", str(driver), mode, lib]
+    prefix = ["node", "--stack-size=16384"] if Path(driver).suffix == ".js" else []
+    args = [*prefix, str(driver), mode, lib]
     for name, source in modules:
         args.extend([name, source])
     result = subprocess.run(args, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=60)
@@ -136,17 +137,14 @@ def check(driver, golden, baseline):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--driver", type=Path, help="reuse a compiled JS rust_import driver")
+    parser.add_argument("--driver", type=Path, help="reuse a compiled rust_import driver")
     parser.add_argument("--baseline-driver", type=Path, help="also compare golden output with the original staged driver")
     parser.add_argument("--golden-dir", type=Path, default=ROOT / "test/rust/emit/crate/src")
-    parser.add_argument("--bend", type=Path, default=Path.home() / ".bend/bin/bend")
     args = parser.parse_args()
     if args.driver is not None:
         return check(args.driver.resolve(), args.golden_dir, args.baseline_driver)
-    with tempfile.TemporaryDirectory(prefix="rust-infer-") as work:
-        driver = Path(work) / "rust_import.js"
-        subprocess.run([str(args.bend), str(ROOT / "bend2/tests/rust_import.bend"), "-o", str(driver)], check=True, timeout=180)
-        return check(driver, args.golden_dir, args.baseline_driver)
+    subprocess.run(["make", "_tcc/rust_import"], cwd=ROOT, check=True, timeout=180)
+    return check(ROOT / "_tcc/rust_import", args.golden_dir, args.baseline_driver)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # PIN delta
 
 The PIN-DELTA leg of dev/gates.sh runs dev/pin-delta.sh.  The script
-reads dev/BEND2-BASELINE.json.  It compares origin_pin with the
+reads dev/C-BASELINE.json.  It compares origin_pin with the
 contents of PIN.  It finds each production source under bend2/ with
 the suffix .bend, .c or .js, outside a tests directory.  For each
 source, it compares the sha256 and the physical line count with the

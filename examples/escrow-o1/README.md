@@ -15,8 +15,8 @@ a newline and check the result. From the repository root:
 
 ```sh
 { cat prelude/init.mech; printf '\n'; cat examples/escrow-o1/O1.mech; } > /tmp/escrow-o1.mech
-_bend2/bin/mech.exe check /tmp/escrow-o1.mech
-_bend2/bin/mech.exe axioms /tmp/escrow-o1.mech
+_tcc/bin/mech check /tmp/escrow-o1.mech
+_tcc/bin/mech axioms /tmp/escrow-o1.mech
 ```
 
 The check exits with 0. `examples/gpu-auction/category-bridge.mech` is checked
@@ -27,7 +27,7 @@ the Kan round trip on the rule and unit, and a ballot permutation:
 
 ```sh
 { cat prelude/init.mech; printf '\n'; cat examples/escrow-o1/O1.mech; printf '\n'; cat examples/escrow-o1/Regression.mech; } > /tmp/escrow-o1-regression.mech
-_bend2/bin/mech.exe check /tmp/escrow-o1-regression.mech
+_tcc/bin/mech check /tmp/escrow-o1-regression.mech
 ```
 
 ## Notes

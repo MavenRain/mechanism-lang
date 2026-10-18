@@ -155,7 +155,7 @@ def reused_support(graph, directory, mech, report_path):
     for path, expected_hash in report["inputs"].items():
         if pilot.digest(ROOT / path) != expected_hash:
             return None
-    for path in (mech, mech.parent / "mechanism-native"):
+    for path in (mech,):
         if report["binaries"].get(str(path)) != pilot.digest(path):
             return None
     rows = copy.deepcopy(report["support"] + report["signatures"])
@@ -267,10 +267,8 @@ def closed_instance(prelude, fixture, directory, mech, timeout):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export", type=Path, default=Path("/Users/oobi/Documents/kanon-m2-corpus/corpus/lean-parity/uat/uat.export"))
-    parser.add_argument("--mech", type=Path, default=ROOT / "_bend2/bin/mech.exe")
-    parser.add_argument("--audit", type=Path, default=ROOT / "_bend2/test/prelude.exe")
-    parser.add_argument("--audit-artifact", type=Path,
-                        default=ROOT / "_bend2/test/bend_protocol.js")
+    parser.add_argument("--mech", type=Path, default=ROOT / "_tcc/bin/mech")
+    parser.add_argument("--audit", type=Path, default=ROOT / "_tcc/prelude_protocol")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--support-report", type=Path,
@@ -279,7 +277,7 @@ def main():
     if args.timeout < 1:
         parser.error("timeout must be positive")
     args.export, args.mech, args.out = args.export.resolve(), args.mech.resolve(), args.out.resolve()
-    args.audit, args.audit_artifact = args.audit.resolve(), args.audit_artifact.resolve()
+    args.audit = args.audit.resolve()
     expected = json.loads((ROOT / "dev/denominators.json").read_text())["uat_export_sha256"]
     if pilot.digest(args.export) != expected:
         parser.error("export differs from the frozen UAT denominator")
@@ -287,7 +285,7 @@ def main():
     try:
         input_hashes = {path: pilot.digest(ROOT / path) for path in inputs()}
         binaries = {str(path): pilot.digest(path) for path in
-                    (args.mech, args.mech.parent / "mechanism-native", args.audit, args.audit_artifact)}
+                    (args.mech, args.audit)}
         imported = args.out / "import"
         result = subprocess.run([str(args.mech), "import", str(args.export), "--out", str(imported)],
                                 capture_output=True, text=True, timeout=args.timeout, cwd=ROOT)

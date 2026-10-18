@@ -192,7 +192,11 @@ static Task check_one(Heap *heap, const Pin *pin, const Vec *all, Globals global
   Str actual = str_empty();
   bool hash_ok = false;
   RELATIONAL_TRY(relational_require(negatives_oracle_valid(pin, all, policy), cat(heap, pin->name, str_lit(": invalid refusal oracle"))));
-  RELATIONAL_TRY(message(heap, elab_check_in(heap, globals, budget_unlimited(), pin->source), pin->name, &actual));
+  /* D-352a (host only): Bend checks the pin with check_in under Budget.unlimited. The compact entry is
+   * the same check under budget_unlimited (decision 156, D-254a), but its work heaps run each
+   * conversion query in a scratch arena (D-261a), so a refusal no longer keeps the garbage of every
+   * conversion step in the caller arena. The refusal value and its text do not change. */
+  RELATIONAL_TRY(message(heap, elab_check_in_compact(heap, globals, pin->source), pin->name, &actual));
   RELATIONAL_TRY(check_digest(heap, policy, pin->name, actual, pin->digest, &hash_ok));
   return relational_require(str_starts_with(actual, pin->prefix) && hash_ok && nominal_ok(heap, policy, pin->name, actual),
                             cat3(heap, pin->name, str_lit(": wrong refusal: "), actual));

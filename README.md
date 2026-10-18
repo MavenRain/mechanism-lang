@@ -3,9 +3,10 @@
 mechanism-lang is a dependently typed language for mechanism design, and a
 sibling of kanon. Its Bend 2 kernel derives from Veil at
 `a7534cedeac82d396de8e23058ee6bc990560f65`, the source revision in `PIN`.
-The compiler lives in `bend2/`; `test/veil/` preserves the pinned fixtures and
-their active overlays. The importer reads lean4export, and the prelude states
-its mapping targets in `map/prelude.map.tsv`.
+The compiler lives in `c/` (C sources, built under `_tcc/`); `test/veil/`
+preserves the pinned fixtures and their active overlays. The importer reads
+lean4export, and the prelude states its mapping targets in
+`map/prelude.map.tsv`.
 
 The driver is `mech` and the source extension is `.mech`.
 
@@ -24,7 +25,7 @@ establish this target. The M1 warm per-kloc and M3 full-corpus gates retain
 their milestones, with Bend 2 as the comparator.
 
 `ROADMAP.md` records the Bend 2 comparator at both milestones. The migration
-design and preparation log are in `dev/BEND2-GATES.md`; the historical
+design and preparation log are in `dev/C-GATES.md`; the historical
 denominator file remains unchanged.
 
 The [combinatorial GPU auction](GPU-AUCTION.md) is a complete reservation-auction
@@ -125,7 +126,7 @@ Veil supplies the SZk, SFhc and SMpc shapes, circuit checking and their
 surface syntax and Wasm erasure. See `dev/VEIL-KERNEL.md` for migration
 scope and validation.
 Prenex definitions and individual recursive families use textual binders
-or the Bend Poly and FamilyPoly APIs.  Ordered family groups and their
+or the Poly and FamilyPoly APIs.  Ordered family groups and their
 members also have source syntax.  The importer
 retains their universe arguments for checked resolver integration.
 A template is checked universally and every explicit closed specialization
@@ -141,8 +142,8 @@ forms.  See `dev/M0-STAGE-C-DEPENDENT.md` for signatures and validation.
 Build the driver, then run:
 
 ```sh
-_bend2/bin/mech.exe import path/to/uat.export --out imported-types
-_bend2/bin/mech.exe diff-parity --export path/to/uat.export
+_tcc/bin/mech import path/to/uat.export --out imported-types
+_tcc/bin/mech diff-parity --export path/to/uat.export
 ```
 
 The reader accepts lean4export format 3.1.0 and checks every record and
@@ -196,8 +197,8 @@ constructors use their expected family type to determine parameters.
 The external-name inventory is reproducible:
 
 ```sh
-_bend2/bin/mech.exe map-inventory --export path/to/uat.export
-_bend2/bin/mech.exe map-inventory --export path/to/uat.export --never
+_tcc/bin/mech map-inventory --export path/to/uat.export
+_tcc/bin/mech map-inventory --export path/to/uat.export --never
 ```
 
 These commands print `map/prelude.map.tsv` and `map/NEVER.tsv` respectively
@@ -211,13 +212,13 @@ The checker permits erased data indices in Prop families while preserving
 its constructor-field and large-elimination restrictions.  The runtime
 gate compares transport on the kernel, Node and Wasmtime hosts.
 
-The programmatic prelude catalog in `bend2/prelude/families.bend` supplies
+The programmatic prelude catalog in `c/prelude/families.c` supplies
 universe-polymorphic Eq and Sum families.  Each template checks universally,
 and each closed instance checks again before source clients can use it.
 PRELUDE-POLY checks casts and sums at multiple universes without postulates.
 See `dev/M0-STAGE-C-FAMILIES.md` for the API and validation scope.
 
-The catalog in `bend2/prelude/equality.bend` adds universally checked transport
+The catalog in `c/prelude/equality.c` adds universally checked transport
 and type cast.  Family templates can carry ordered definitions, which
 specialize to fresh names and check again before entering ordinary globals.
 FAMILY-MEMBERS and PRELUDE-TRANSPORT test this path, including independent
@@ -385,11 +386,10 @@ The equality mapping candidates are NAME_ONLY at their stated universes.
 See `dev/M0-STAGE-C-EQUALITY.md` for the equality change and its limits.
 See `dev/M0-STAGE-C.md` for the remaining work and validation contract.
 
-The replacement compiler uses [Bend 2.0.27](https://github.com/bendlang/bend/releases/tag/v2.0.27)
-and Python 3.11 or newer. CI pins Node 23.10.0, Binaryen 130 and Wasmtime
-48.0.1 for JavaScript execution and Wasm validation. Set `BEND` if the compiler
-is outside `PATH`. For a local Make configuration, add `export BEND ?= /path/to/bend`
-to the ignored `.bend2-local.mk` file.
+The replacement compiler is written in C and builds with TinyCC 0.9.28rc
+(`tcc`). It also uses Python 3.11 or newer. CI pins Node 23.10.0, Binaryen 130
+and Wasmtime 48.0.1 for JavaScript execution and Wasm validation. Set `TCC` if
+the compiler is outside `PATH`, for example `make TCC=/path/to/tcc`.
 
 ```sh
 make build
@@ -397,35 +397,36 @@ make test
 make test-import
 ```
 
-To rebuild one test while investigating an acceptance failure, use `--test-mode`
-with its launcher mode. Unit names start with `unit-`, fixture names start with
-`fixture-`, and drivers use their manifest name. Each selected case gets a separate
-source entry and build artifact:
+To rerun one test while investigating an acceptance failure, build its driver
+under `_tcc/` and run it from the repository root. The test manifest
+`dev/cases/test-manifest.json` names each case. A unit with a standalone driver
+runs as `_tcc/<mode>`, with each `-` in the mode changed to `_`. The other units
+run as `_tcc/runner unit <mode>`, and fixtures run as `_tcc/runner fixture <mode>`:
 
 ```sh
-python3 -P dev/bend2-build.py --target tests --backend native --test-mode unit-surface-prelude
-_bend2/test/unit_surface-prelude.exe
+make _tcc/surface_prelude
+./_tcc/surface_prelude
+make _tcc/runner
+./_tcc/runner fixture nat
 ```
 
-Use `--test-shard` to rebuild an existing group of cases. Both selectors require
-`--target tests` and support `--check`. The default build and acceptance suite
-use the complete test manifest.
+`dev/c-test.py` runs the complete test manifest. Its `--suite` option selects
+`all`, `import` or `extras`, and `--no-build` uses the `_tcc/` binaries that are
+already built. The `--backend` option stays for older callers; the C build has
+one backend.
 
-The default build uses JavaScript test shards and a native production CLI,
-compiled with `CC` (Clang by default) at `-O1`. The test runner uses this mixed
-build by default. Its explicit `--backend javascript` and `--backend native`
-options select uniform builds; `make build-native` also builds everything
-natively. The build records source, toolchain and artifact fingerprints and
-caches separate test executables. For a native production-only build, use
-`python3 dev/bend2-build.py --target production --backend native`.
+`make c-build` compiles the production CLI, `_tcc/bin/mech` and
+`_tcc/bin/mech_cert`, and every test driver with `tcc`. `make build` and
+`make build-native` run the same build. To build only the production CLI, run
+`make _tcc/bin/mech _tcc/bin/mech_cert`.
 
-`make acceptance-build` prepares the ordinary tools and 21 native protocol
-drivers used by `dev/gates.sh`. It also prepares the guarded native mutation
-artifacts before timed checks. `make test-native` runs the test suite with these
-drivers; `make native-tests` refreshes just this native test setup. These targets
-require Clang, honor `CC`, and retain the original gate time limits.
+`make acceptance-build` builds the tools and the native protocol drivers that
+`dev/gates.sh` uses. `make test` runs `dev/c-test.py --no-build` with these
+binaries; `make native-tests` builds them and does not run the tests. These
+targets use `tcc` and honor `TCC`. `dev/gates.sh` keeps the original gate time
+limits.
 
-The migration is still in progress. [MIGRATION-BEND2.md](MIGRATION-BEND2.md)
+The migration is still in progress. [MIGRATION-C.md](MIGRATION-C.md)
 records completed checks and remaining runtime, mutation and integration work.
 
 Left Kan cocone postcomposition preserves identity and vertical composition

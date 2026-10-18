@@ -39,7 +39,7 @@ reference function and checks that the extraction guard refuses it.
 Run the dedicated native driver and runtime check with:
 
 ```sh
-python3 -P dev/bend2-build.py --target tests --test-mode prelude-left-kan-roundtrip --backend native
+make _tcc/prelude_left_kan_roundtrip
 python3 -I test/left_kan_roundtrip.py
 python3 -I dev/left-kan-roundtrip-focus-test.py
 python3 -I test/left_kan_laws_runtime.py --roundtrip

@@ -153,9 +153,12 @@ static Checked checked_result(Heap *heap, Result r) {
   return checked_fail(error_to_string(heap, r.error));
 }
 
-/* checked (18-19) */
+/* checked (18-19): Elab.check_in under budget_unlimited, run as elab_check_in_compact (the same globals
+ * and error text by decision 156, one arena reset per declaration). The Bend bundle reclaimed each
+ * declaration's checker garbage by GC; without the reset `--audit` of a compatibility projection
+ * fixture grew past 3.8 GB (hop 381, D-381a). */
 static Checked checked(Heap *heap, Globals globals, Str source) {
-  return checked_result(heap, elab_check_in(heap, globals, budget_unlimited(), source));
+  return checked_result(heap, elab_check_in_compact(heap, globals, source));
 }
 
 /* entry_le (21-23): String.is_le on the names (byte order = code point order in UTF-8). */

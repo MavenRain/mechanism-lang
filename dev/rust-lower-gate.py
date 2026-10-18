@@ -69,8 +69,9 @@ def invoke(driver, mode, lib, modules):
 
 
 def oracle(driver, mode, paths, cwd=None):
+    prefix = ["node", "--stack-size=16384"] if Path(driver).suffix == ".js" else []
     result = subprocess.run(
-        ["node", "--stack-size=16384", str(driver), mode, *map(str, paths)],
+        [*prefix, str(driver), mode, *map(str, paths)],
         cwd=cwd, stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=60,
     )
     if result.returncode or result.stderr:
@@ -181,17 +182,16 @@ def check(driver, emitter, work):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--driver", type=Path, help="reuse a compiled JS rust_import driver")
-    parser.add_argument("--emitter", type=Path, help="reuse a compiled JS rust_emit driver")
-    parser.add_argument("--bend", type=Path, default=Path.home() / ".bend/bin/bend")
+    parser.add_argument("--driver", type=Path, help="reuse a compiled rust_import driver")
+    parser.add_argument("--emitter", type=Path, help="reuse a compiled rust_emit driver")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="rust-lower-") as temp:
         work = Path(temp)
         drivers = []
         for existing, name in ((args.driver, "rust_import"), (args.emitter, "rust_emit")):
-            driver = existing.resolve() if existing else work / f"{name}.js"
+            driver = existing.resolve() if existing else ROOT / "_tcc" / name
             if existing is None:
-                subprocess.run([str(args.bend), str(ROOT / f"bend2/tests/{name}.bend"), "-o", str(driver)], check=True, timeout=180)
+                subprocess.run(["make", "_tcc/" + name], cwd=ROOT, check=True, timeout=180)
             drivers.append(driver)
         return check(*drivers, work)
 

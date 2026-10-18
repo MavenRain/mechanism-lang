@@ -40,7 +40,7 @@ of names that mechanism-lang refuses to map (R-V5).
 The user ruling of 2026-09-21 replaces both OCaml compilation targets with
 Bend 2. Compilation includes parsing, elaboration, kernel checking, erasure,
 Wasm emission and validation. The design and preparation log are recorded in
-`dev/BEND2-GATES.md`. Historical OCaml denominators remain frozen in
+`dev/C-GATES.md`. Historical OCaml denominators remain frozen in
 `dev/denominators.json`; they do not establish either current R3 gate.
 
 Out of M0, each with its milestone: Auto and instance resolution,

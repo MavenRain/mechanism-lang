@@ -34,7 +34,7 @@ the focused dependency closure. A mutation gate substitutes a reference
 for a certified export and requires the extraction guard to refuse it.
 
 ```sh
-python3 -P dev/bend2-build.py --target tests --test-mode prelude-left-kan-mediator-equality --backend native
+make _tcc/prelude_left_kan_mediator_equality
 python3 -I test/left_kan_mediator_equality.py
 python3 -I dev/left-kan-mediator-equality-focus-test.py
 python3 -I test/left_kan_laws_runtime.py --mediator-equality

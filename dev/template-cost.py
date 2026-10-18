@@ -1,7 +1,7 @@
-"""Compare Bend template checking in two trees with identical inputs.
+"""Compare C template checking in two trees with identical inputs.
 
-Poll counts and monotonic elapsed milliseconds are measured by the Bend driver.
-OCaml GC-word allocation and process CPU counters have no Bend counterpart here.
+Poll counts and monotonic elapsed milliseconds are measured by the C driver.
+OCaml GC-word allocation and process CPU counters have no C driver counterpart here.
 """
 
 import argparse
@@ -11,32 +11,30 @@ import os
 from pathlib import Path
 import runpy
 import subprocess
-import sys
 import time
 
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+EXECUTABLE = Path("_tcc/template_cost")
+
+
 def build_tree(env, root):
     """Build the benchmark driver in one tree, so the timing uses its sources."""
-    result = bounded_run([sys.executable, "-I", str(root / "dev/bend2-mutation-build.py"),
-                             "template-cost"], cwd=root,
-                            env=env, capture_output=True, text=True, timeout=3600,
-                            check=True)
-    if "BEND2 MUTATION BUILD PASS template-cost" not in result.stdout:
+    executable = root / EXECUTABLE
+    executable.unlink(missing_ok=True)
+    result = bounded_run(["make", "-C", str(root), str(EXECUTABLE)], cwd=root,
+                            env=env, capture_output=True, text=True, timeout=3600)
+    if result.returncode or not os.access(executable, os.X_OK):
         raise SystemExit(f"the driver does not build cleanly in {root}")
-    backend = env.get("BEND_MUTATION_BACKEND", env.get("BEND_TEST_BACKEND", "javascript"))
-    suffix = "-native" if backend == "native" else ""
-    metadata = json.loads((root / f"_bend2/mutation/template-cost{suffix}.build.json").read_text())
-    if digest(root / metadata["artifact"]) != metadata["artifact_sha256"]:
-        raise ValueError("the built benchmark artifact changed")
-    return metadata
+    return {"target": str(EXECUTABLE), "exit_code": result.returncode,
+            "artifact": str(EXECUTABLE), "artifact_sha256": digest(executable)}
 
 
 def tree_state(env, root, executable):
@@ -62,11 +60,11 @@ def main():
     if args.output.exists():
         parser.error("the output must be a new file")
 
-    paths = ["prelude/cat/category.mech", "bend2/tests/template_cost.bend"]
+    paths = ["prelude/cat/category.mech", "c/tests/template_cost.c"]
     for path in paths:
         if digest(baseline / path) != digest(ROOT / path):
             parser.error(f"the two trees have different benchmark input: {path}")
-    executable = Path("_bend2/test/template_cost.exe")
+    executable = EXECUTABLE
     env = dict(os.environ)
     env.pop("OPAM_SWITCH_PREFIX", None)
     env.pop("CAML_LD_LIBRARY_PATH", None)
@@ -78,7 +76,7 @@ def main():
             parser.error(f"the benchmark driver is missing in {root}")
 
     report = {
-        "runtime": "Bend 2.0.27",
+        "runtime": "C compiled with tcc",
         "unsupported_metrics": ["allocated_words", "cpu_seconds"],
         "source_sha256": digest(ROOT / paths[0]),
         "driver_sha256": digest(ROOT / paths[1]),

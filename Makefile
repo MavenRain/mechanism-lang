@@ -1,18 +1,12 @@
-.PHONY: build build-native native-tests acceptance-build check test test-native test-import auction-check auction-check-all auction-gpu-check bend2-build-production
+.PHONY: build build-native native-tests acceptance-build check test test-native test-import auction-check auction-check-all auction-gpu-check
 
 PYTHON ?= python3
--include .bend2-local.mk
 
 build:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 
 build-native:
 	$(MAKE) --no-print-directory c-build
-
-# The R0 count and provenance gates still inspect the Bend production artifact.
-bend2-build-production:
-	$(PYTHON) dev/bend2-build.py --target production --backend native
 
 native-tests:
 	$(MAKE) --no-print-directory c-build
@@ -21,51 +15,47 @@ acceptance-build: build
 	$(MAKE) native-tests
 
 check:
-	$(PYTHON) dev/bend2-build.py --check
+	$(MAKE) --no-print-directory c-build
 
 test: test-native
 
 test-native: acceptance-build
-	BEND_NATIVE_TEST_ROOT="$(CURDIR)" $(PYTHON) dev/bend2-test.py --no-build
+	$(PYTHON) dev/c-test.py --no-build
 
 test-import:
-	$(PYTHON) dev/bend2-test.py --suite import
+	$(PYTHON) dev/c-test.py --suite import
 
 .PHONY: prelude-compatibility-test
 prelude-compatibility-test:
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 	$(PYTHON) -P dev/prelude-compatibility-gates.py
 
 .PHONY: prelude-category-compatibility-test
 prelude-category-compatibility-test:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 	$(PYTHON) -P dev/prelude-category-compatibility.py --out "$$(mktemp -d)/evidence"
 
 .PHONY: prelude-functor-compatibility-test
 prelude-functor-compatibility-test:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 	$(PYTHON) -P dev/prelude-functor-compatibility.py --out "$$(mktemp -d)/evidence"
 
 .PHONY: prelude-nattrans-compatibility-test
 prelude-nattrans-compatibility-test:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 	$(PYTHON) -P dev/prelude-nattrans-compatibility.py --out "$$(mktemp -d)/evidence"
 
 LEFT_KAN_TIMEOUT ?= 900
 .PHONY: prelude-left-kan-compatibility-test
 prelude-left-kan-compatibility-test:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+	$(MAKE) --no-print-directory c-build
 	$(PYTHON) -P dev/prelude-left-kan-compatibility.py --out "$$(mktemp -d)/evidence" --timeout $(LEFT_KAN_TIMEOUT)
 
 .PHONY: reference-check reference-test require-ocaml-reference
 
-reference-check: bend2-reference-check
+reference-check: c-reference-check
 
-reference-test: bend2-reference-test
+reference-test: c-reference-test
 
 require-ocaml-reference:
 	@test -n "$(strip $(REFERENCE))" || { printf '%s\n' 'Set REFERENCE to an OCaml checkout for live comparisons.' >&2; exit 2; }
@@ -79,45 +69,31 @@ auction-check-all: build
 auction-gpu-check: build
 	$(PYTHON) -P dev/gpu-auction-check.py --gpu
 
-.PHONY: bend2-build bend2-check bend2-test
+# Live OCaml comparison and evidence: dev/C-REFERENCE.md
+.PHONY: c-reference-check c-reference-test c-diff
 
--include .bend2-local.mk
+c-reference-check: require-ocaml-reference
+	$(PYTHON) -P dev/c-reference-check.py --reference "$(REFERENCE)" $(BEND2_REFERENCE_ARGS)
 
-bend2-build:
-	$(PYTHON) dev/bend2-build.py --target tests --backend javascript
-	$(PYTHON) dev/bend2-build.py --target production --backend native
+c-reference-test: require-ocaml-reference
+	$(PYTHON) -P dev/c-reference-test.py --reference "$(REFERENCE)"
+	$(PYTHON) -P dev/c-equality-runtime-test.py --reference "$(REFERENCE)"
+	$(PYTHON) -P dev/c-composition-runtime-test.py --reference "$(REFERENCE)"
+	$(PYTHON) -P dev/c-reuse-runtime-test.py --reference "$(REFERENCE)"
 
-bend2-check:
-	$(PYTHON) dev/bend2-build.py --check
-
-bend2-test:
-	$(PYTHON) dev/bend2-test.py --suite extras
-
-# Live OCaml comparison and evidence: dev/BEND2-REFERENCE.md
-.PHONY: bend2-reference-check bend2-reference-test bend2-diff
-
-bend2-reference-check: require-ocaml-reference
-	$(PYTHON) -P dev/bend2-reference-check.py --reference "$(REFERENCE)" $(BEND2_REFERENCE_ARGS)
-
-bend2-reference-test: require-ocaml-reference
-	$(PYTHON) -P dev/bend2-reference-test.py --reference "$(REFERENCE)"
-	$(PYTHON) -P dev/bend2-equality-runtime-test.py --reference "$(REFERENCE)"
-	$(PYTHON) -P dev/bend2-composition-runtime-test.py --reference "$(REFERENCE)"
-	$(PYTHON) -P dev/bend2-reuse-runtime-test.py --reference "$(REFERENCE)"
-
-bend2-diff: bend2-reference-check bend2-build _tcc/surface_check_driver
-	$(PYTHON) -P dev/bend2-json-check.py
-	$(PYTHON) -P dev/bend2-export-check.py
-	$(PYTHON) -P dev/bend2-translate-check.py
-	$(PYTHON) -P dev/bend2-pipeline-check.py
-	$(PYTHON) -P dev/bend2-parser-check.py
-	$(PYTHON) -P dev/bend2-surface-check.py --driver _tcc/surface_check_driver
-	$(PYTHON) -P dev/bend2-erase-check.py
-	$(PYTHON) -P dev/bend2-cli-check.py
-	$(PYTHON) -P bend2/tests/cli_core_check.py
-	$(PYTHON) -P dev/bend2-equality-runtime-check.py
-	$(PYTHON) -P dev/bend2-composition-runtime-check.py
-	$(PYTHON) -P dev/bend2-reuse-runtime-check.py
+c-diff: c-reference-check c-build _tcc/surface_check_driver
+	$(PYTHON) -P dev/c-json-check.py
+	$(PYTHON) -P dev/c-export-check.py
+	$(PYTHON) -P dev/c-translate-check.py
+	$(PYTHON) -P dev/c-pipeline-check.py
+	$(PYTHON) -P dev/c-parser-check.py
+	$(PYTHON) -P dev/c-surface-check.py --driver _tcc/surface_check_driver
+	$(PYTHON) -P dev/c-erase-check.py
+	$(PYTHON) -P dev/c-cli-check.py
+	$(PYTHON) -P test/protocols/cli_core_check.py
+	$(PYTHON) -P dev/c-equality-runtime-check.py
+	$(PYTHON) -P dev/c-composition-runtime-check.py
+	$(PYTHON) -P dev/c-reuse-runtime-check.py
 
 # C port compiled with TinyCC: sources under c/, outputs under _tcc/ (see MIGRATION notes in W/PLAN.md)
 TCC ?= tcc
@@ -139,7 +115,7 @@ C_RUST_OBJECTS := $(patsubst c/rust/%.c,_tcc/rust/%.o,$(C_RUST_SOURCES))
 # Kernel test drivers: one binary per bend2/tests/<driver>.bend ported to c/tests/<driver>.c.
 # Checks print PASS or die; probes print lines that c-test compares with c/tests/<driver>.expected.
 C_KERNEL_CHECKS := kernel_budget_callback_check kernel_budget_callbacks kernel_budget_dag kernel_check kernel_conversion kernel_declarations kernel_eval kernel_global_lookup kernel_head_ty_invalid_level kernel_numbers kernel_projection_motive kernel_quantity levels_budget levels_checker levels_exact levels_regression runtime_slice surface_equality wasm_circuit wasm_order
-# Checks that take the manifest arguments (dev/bend2/test-manifest.json) on the command line.
+# Checks that take the manifest arguments (dev/cases/test-manifest.json) on the command line.
 C_KERNEL_ARG_CHECKS := kernel_global_index kernel_usage_native
 C_KERNEL_PROBES := kernel_quantity_native_probe kernel_term_native_probe kernel_pp_native_probe kernel_linear_check_probe kernel_spec_count
 C_KERNEL_DRIVERS := $(C_KERNEL_CHECKS) $(C_KERNEL_ARG_CHECKS) $(C_KERNEL_PROBES)
@@ -161,12 +137,8 @@ C_LEVELS_LIBS := _tcc/levels_regression_lib.o _tcc/levels_protocol_lib.o _tcc/ke
 # prerequisite list, which make expands when it reads the rule, sees them.
 C_RELATIONAL_HEADERS := c/tests/relational_fs.h c/tests/relational_common.h c/tests/relational_text.h c/tests/relational_program.h c/tests/relational_digest.h c/tests/relational_negatives.h
 C_RELATIONAL_LIBS := _tcc/relational_fs.o _tcc/relational_common.o _tcc/relational_text.o _tcc/relational_program.o _tcc/relational_digest.o _tcc/relational_negatives.o
-C_PRELUDE_CHECKS := prelude_category prelude_functor prelude_heterogeneous_functor prelude_heterogeneous_nattrans prelude_heterogeneous_whiskering prelude_shared_nattrans prelude_nattrans_laws surface_family_poly prelude_left_kan prelude_composable_functors prelude_nattrans
+C_PRELUDE_CHECKS := prelude_category prelude_functor prelude_heterogeneous_functor prelude_heterogeneous_nattrans prelude_heterogeneous_whiskering prelude_shared_nattrans prelude_nattrans_laws surface_family_poly prelude_left_kan prelude_composable_functors prelude_nattrans prelude_heterogeneous_left_kan prelude_left_kan_laws prelude_horizontal_associativity prelude_horizontal_laws prelude_iterated_whiskering prelude_whiskering_laws prelude_shared_left_kan prelude_nattrans_units prelude_left_kan_roundtrip prelude_left_kan_cocone_action prelude_left_kan_mediator_equality prelude_left_kan_solution_transport
 C_PRELUDE_BINARIES := $(addprefix _tcc/,$(C_PRELUDE_CHECKS))
-# The ported prelude drivers that are not in C_PRELUDE_CHECKS (they cross the memcap caps; figures above
-# c-test-prelude below). c-build compiles them, and c-test-dispatch runs three of them on a missing root.
-C_PRELUDE_DEFERRED := prelude_horizontal_associativity prelude_horizontal_laws prelude_iterated_whiskering prelude_whiskering_laws prelude_shared_left_kan prelude_heterogeneous_left_kan prelude_nattrans_units prelude_left_kan_laws prelude_left_kan_roundtrip prelude_left_kan_cocone_action prelude_left_kan_mediator_equality prelude_left_kan_solution_transport
-C_PRELUDE_DEFERRED_BINARIES := $(addprefix _tcc/,$(C_PRELUDE_DEFERRED))
 # memcap (c/tests/memcap.c) reads the footprint of the child through libproc, so the Makefile builds it on
 # Darwin only. MEMCAP defaults to it there and to nothing elsewhere: an empty MEMCAP runs the capped drivers
 # directly. A wrapper with the same argv (capMB seconds cmd args) can replace it: `make MEMCAP=<path> c-test`.
@@ -186,7 +158,7 @@ C_WASM_CHECKS := wasm_link
 C_WASM_CLI := wasm_encode wasm_layout wasm_nat_runtime wasm_emit wasm_reactor wasm_wide_metadata wasm_oracle
 C_WASM_BINARIES := $(addprefix _tcc/,$(C_WASM_CHECKS) $(C_WASM_CLI))
 # CLI component (S5): c/cli ports bend2/host_fs.bend, bend2/io.bend and bend2/cli (cert.c links c/surface). io_driver runs under
-# dev/bend2-io-check.py in c-test (its oracle calls ran in a temporary directory that no longer exists).
+# dev/c-io-check.py in c-test (its oracle calls ran in a temporary directory that no longer exists).
 # kanon.c (bend2/cli/kanon.bend) needs c/wasm, so it is kept out of C_CLI_SOURCES and linked only by
 # the kanon drivers (C_KANON_CLI). The production programs (C_CLI_MAINS: bend2/mech_cert.bend) hold main,
 # so they are kept out too and each links only into its own _tcc/bin/ binary.
@@ -233,7 +205,7 @@ $(C_CLI_WASM_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_CLI_SOURCES) $
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/wasm -I c/cli -o $@ $< $(C_CLI_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 # The kanon drivers link c/cli/kanon.c over c/cli + wasm + surface + kernel. cli_core (bend2/tests/cli_core.bend)
 # is built by c-build; it writes temporary files and spawns node and wasmtime, so its live oracle replay
-# (the corpus kanon label) and bend2/tests/cli_core_check.py gate it outside c-test. The kanon drivers go to
+# (the corpus kanon label) and test/protocols/cli_core_check.py gate it outside c-test. The kanon drivers go to
 # _tcc/bin/ as the Bend binaries go to _bend2/bin/: Host.root (bend2/cli/host.bend) is the third dirname of
 # the executable, and kanon run finds dev/run-node.mjs and dev/run-wasmtime.sh under that root.
 C_KANON_CLI := cli_core
@@ -242,7 +214,7 @@ $(C_KANON_BINARIES): _tcc/bin/%: c/tests/%.c $(C_CLI_KANON) $(C_TEST_HEADERS) $(
 	@mkdir -p _tcc/bin
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/wasm -I c/cli -o $@ $< $(C_CLI_KANON) $(C_CLI_SOURCES) $(C_WASM_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 # mech_cert (bend2/mech_cert.bend) is c/cli/mech_cert.c over c/cli (cert.c) + surface + kernel. c-build builds
-# it to _tcc/bin/ beside the kanon drivers; dev/bend2-cli-check.py --cert _tcc/bin/mech_cert gates its 13
+# it to _tcc/bin/ beside the kanon drivers; dev/c-cli-check.py --cert _tcc/bin/mech_cert gates its 13
 # cert cases (it writes temporary files, so it runs outside c-test).
 C_CERT_BINARIES := _tcc/bin/mech_cert
 $(C_CERT_BINARIES): _tcc/bin/%: c/cli/%.c $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
@@ -279,7 +251,7 @@ C_DISPATCH_BINARIES := $(addprefix _tcc/,$(C_DISPATCH))
 $(C_DISPATCH_BINARIES): _tcc/%: c/tests/%.c c/tests/dispatch.h
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -o $@ $<
-c-build: $(C_DISPATCH_BINARIES) _tcc/dispatch_probe $(C_PRELUDE_DEFERRED_BINARIES) $(C_MEMCAP_BINARY)
+c-build-artifacts: $(C_DISPATCH_BINARIES) _tcc/dispatch_probe $(C_MEMCAP_BINARY)
 # The prelude drivers that the dispatch_same legs below run directly (a dispatcher run against a direct run).
 C_DISPATCH_DIRECT := prelude_category prelude_left_kan prelude_composable_functors prelude_shared_nattrans prelude_horizontal_laws prelude_horizontal_associativity prelude_nattrans_units prelude_nattrans
 _tcc/dispatch_path: c/tests/dispatch_path.c c/tests/dispatch.h
@@ -345,8 +317,11 @@ c-test-dispatch: c-dispatch-actual c-dispatch-probe _tcc/dispatch_path
 	@$(call dispatch_same,relational_protocols,nattrans /nonexistent,prelude_nattrans,/nonexistent)
 	@echo "DISPATCH-OK dispatchers=10 legs=26 same=8"
 
-.PHONY: c-build c-test c-test-prelude
-c-build: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) _tcc/rust_emit _tcc/rust_frontend _tcc/rust_let _tcc/rust_import _tcc/rust_lexer_lines _tcc/rust_lower_under
+.PHONY: c-build c-build-artifacts c-test c-test-prelude
+c-build:
+	+$(PYTHON) dev/c-build.py --tcc "$(TCC)" --cflags="$(CFLAGS)" --ldflags="$(LDFLAGS)"
+
+c-build-artifacts: _tcc/rt_test _tcc/rt_regression_test _tcc/rt_oom_test $(C_KERNEL_BINARIES) $(C_KERNEL_FAULT_BINARIES) $(C_SURFACE_BINARIES) $(C_LEVELS_BINARIES) $(C_IMPORT_BINARIES) $(C_WASM_BINARIES) $(C_IO_BINARIES) $(C_CLI_FAULT_BINARIES) $(C_IMPORT_IO_BINARIES) $(C_CLI_WASM_BINARIES) $(C_KANON_BINARIES) $(C_CERT_BINARIES) $(C_CLI_RUNTIME_BINARIES) $(C_RELATIONAL_IO_BINARIES) $(C_SURFACE_LIBS) _tcc/runtime_reachable.o _tcc/relational_syntax_equal.o $(C_LEVELS_LIBS) $(C_RELATIONAL_LIBS) $(C_PRELUDE_BINARIES) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) _tcc/rust_emit _tcc/rust_frontend _tcc/rust_let _tcc/rust_import _tcc/rust_lexer_lines _tcc/rust_lower_under
 
 # The c/rust objects (S6, bend2/rust): c-build compiles them; the S6 drivers and c/cli link them.
 $(C_RUST_OBJECTS): _tcc/rust/%.o: c/rust/%.c $(C_RUST_HEADERS) $(C_CLI_HEADERS) $(C_KERNEL_HEADERS) $(C_RT_HEADERS) $(C_SURFACE_HEADERS)
@@ -397,7 +372,7 @@ C_RUST_FAULT_CHECKS := rust_resolve_oom rust_infer_oom rust_emit_oom rust_print_
 C_RUST_FAULT_BINARIES := $(addprefix _tcc/,$(C_RUST_FAULT_CHECKS))
 $(C_RUST_FAULT_BINARIES): _tcc/%: c/tests/%.c $(C_TEST_HEADERS) $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_RUST_HEADERS) $(C_CLI_SOURCES) $(C_CLI_HEADERS) $(C_SURFACE_SOURCES) $(C_SURFACE_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS) _tcc/arena_fault.o
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/rust -I c/cli -I c/tests -o $@ $< $(C_RUST_OBJECTS) $(C_CLI_RUST_OBJECTS) $(C_CLI_SOURCES) $(C_SURFACE_SOURCES) $(C_KERNEL_SOURCES) $(filter-out c/rt/arena.c,$(C_RT_SOURCES)) _tcc/arena_fault.o $(LDFLAGS) -lpthread
-c-build: $(C_RUST_FAULT_BINARIES)
+c-build-artifacts: $(C_RUST_FAULT_BINARIES)
 
 # The mech and mechanism-driver programs (bend2/mech.bend, bend2/main.bend; S6.13): c/cli/mech_main.c
 # and c/cli/main.c over c/cli/mech.c (bend2/cli/mech.bend), kanon.c, rust_out.o, rust_in.o, c/rust,
@@ -411,7 +386,7 @@ _tcc/bin/mech: c/cli/mech_main.c $(C_MECH_LINK) $(C_MECH_HEADERS)
 _tcc/bin/main: c/cli/main.c $(C_MECH_LINK) $(C_MECH_HEADERS)
 	@mkdir -p _tcc/bin
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/import -I c/wasm -I c/rust -I c/cli -o $@ c/cli/main.c $(C_MECH_LINK) $(LDFLAGS) -lpthread
-c-build: $(C_MECH_BINARIES)
+c-build-artifacts: $(C_MECH_BINARIES)
 
 # bend2/tests/runtime_reachable.bend is a library module with no main: c-build compiles its port and
 # prelude_runtime (S5.1) links it and runs its self test.
@@ -435,7 +410,7 @@ $(C_RELATIONAL_LIBS): _tcc/%.o: c/tests/%.c $(C_RELATIONAL_HEADERS) $(C_TEST_HEA
 # Prelude drivers (bend2/tests/prelude_<x>.bend ported to c/tests/prelude_<x>.c): each takes the repository
 # root as argv[1], links the relational support objects and prints PRELUDE-<X>-OK fields or PRELUDE-<X>-FAIL.
 # C_PRELUDE_CHECKS, C_PRELUDE_BINARIES and C_PRELUDE_LINK are defined with the relational lists above c-build.
-$(C_PRELUDE_BINARIES) $(C_PRELUDE_DEFERRED_BINARIES): _tcc/%: c/tests/%.c $(C_PRELUDE_LINK) $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
+$(C_PRELUDE_BINARIES): _tcc/%: c/tests/%.c $(C_PRELUDE_LINK) $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -o $@ $< $(C_PRELUDE_LINK) $(C_KERNEL_SOURCES) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
 
@@ -449,7 +424,7 @@ C_FOUNDATION_BINARIES := $(addprefix _tcc/,$(C_FOUNDATION_CHECKS)) _tcc/surface_
 C_FOUNDATION_LIBS := _tcc/surface_prelude_poly_lib.o _tcc/surface_prelude_congruence_lib.o
 C_FOUNDATION_OBJS := _tcc/surface_raw_common.o _tcc/surface_foundation_common.o _tcc/surface_foundation_data.o
 C_FOUNDATION_COMMON := _tcc/surface_foundation_common.o _tcc/surface_foundation_data.o _tcc/surface_prelude_poly_lib.o
-c-build: $(C_FOUNDATION_BINARIES) _tcc/surface_raw_common.o
+c-build-artifacts: $(C_FOUNDATION_BINARIES) _tcc/surface_raw_common.o
 
 $(C_FOUNDATION_LIBS): _tcc/%_lib.o: c/tests/%.c $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_HEADERS)
 	@mkdir -p _tcc
@@ -477,7 +452,7 @@ C_PRENEX_BINARIES := $(addprefix _tcc/,$(C_PRENEX_CHECKS))
 C_PRENEX_LIBS := _tcc/surface_prenex_lib.o _tcc/surface_prenex_exports_lib.o
 C_PRENEX_OBJS := _tcc/surface_prenex_common.o _tcc/surface_prenex_data.o
 C_PRENEX_COMMON := $(C_PRENEX_OBJS) _tcc/surface_raw_common.o $(C_FOUNDATION_COMMON)
-c-build: $(C_PRENEX_BINARIES) $(C_PRENEX_LIBS)
+c-build-artifacts: $(C_PRENEX_BINARIES) $(C_PRENEX_LIBS)
 
 $(C_PRENEX_LIBS): _tcc/%_lib.o: c/tests/%.c $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_HEADERS)
 	@mkdir -p _tcc
@@ -501,7 +476,7 @@ $(C_PRENEX_BINARIES): _tcc/%: c/tests/%.c $(C_PRELUDE_LINK) $(C_PRENEX_LIBS) $(C
 C_SL_CHECKS := surface_sl
 C_SL_BINARIES := $(addprefix _tcc/,$(C_SL_CHECKS))
 C_SL_OBJS := _tcc/surface_sl_data.o
-c-build: $(C_SL_BINARIES)
+c-build-artifacts: $(C_SL_BINARIES)
 
 $(C_SL_OBJS): _tcc/%.o: c/tests/%.c c/tests/%.h
 	@mkdir -p _tcc
@@ -518,7 +493,7 @@ C_FAMILY_CHECKS := surface_family_groups surface_family_members
 C_FAMILY_BINARIES := $(addprefix _tcc/,$(C_FAMILY_CHECKS))
 C_FAMILY_LIBS := _tcc/surface_family_groups_lib.o
 C_FAMILY_COMMON := _tcc/surface_raw_common.o $(C_FOUNDATION_COMMON)
-c-build: $(C_FAMILY_BINARIES) $(C_FAMILY_LIBS)
+c-build-artifacts: $(C_FAMILY_BINARIES) $(C_FAMILY_LIBS)
 
 $(C_FAMILY_LIBS): _tcc/%_lib.o: c/tests/%.c c/tests/%.h $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_HEADERS)
 	@mkdir -p _tcc
@@ -534,7 +509,7 @@ _tcc/surface_family_members: _tcc/surface_family_groups_lib.o
 # two plain library modules: surface_template_data (generated tables, rows typed by surface_prenex_data.h) and
 # surface_template_common.
 C_TEMPLATE_OBJS := _tcc/surface_template_common.o _tcc/surface_template_data.o
-c-build: $(C_TEMPLATE_OBJS)
+c-build-artifacts: $(C_TEMPLATE_OBJS)
 
 $(C_TEMPLATE_OBJS): _tcc/%.o: c/tests/%.c c/tests/%.h $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_HEADERS) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_HEADERS)
 	@mkdir -p _tcc
@@ -546,7 +521,7 @@ $(C_TEMPLATE_OBJS): _tcc/%.o: c/tests/%.c c/tests/%.h $(C_RELATIONAL_HEADERS) $(
 C_TEMPLATE_CHECKS := surface_template_reuse surface_template_symbolic_reuse surface_template_composition
 C_TEMPLATE_BINARIES := $(addprefix _tcc/,$(C_TEMPLATE_CHECKS))
 C_TEMPLATE_COMMON := $(C_TEMPLATE_OBJS) $(C_PRENEX_COMMON) _tcc/surface_prenex_exports_lib.o
-c-build: $(C_TEMPLATE_BINARIES)
+c-build-artifacts: $(C_TEMPLATE_BINARIES)
 _tcc/surface_template_composition: C_TEMPLATE_LINK := _tcc/surface_family_groups_lib.o
 _tcc/surface_template_composition: _tcc/surface_family_groups_lib.o
 
@@ -559,7 +534,7 @@ $(C_TEMPLATE_BINARIES): _tcc/%: c/tests/%.c c/tests/surface_template_common.h c/
 # relational-oracle captures); the other two have none and run against frozen c/tests/<driver>.expected files.
 C_RELATIONAL_CHECKS := relational_oracle relational_oracle_native_probe relational_support
 C_RELATIONAL_BINARIES := $(addprefix _tcc/,$(C_RELATIONAL_CHECKS))
-c-build: $(C_RELATIONAL_BINARIES)
+c-build-artifacts: $(C_RELATIONAL_BINARIES)
 $(C_RELATIONAL_BINARIES): _tcc/%: c/tests/%.c $(C_PRELUDE_LINK) $(C_RELATIONAL_HEADERS) $(C_TEST_HEADERS) $(C_KERNEL_SOURCES) $(C_KERNEL_HEADERS) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_SURFACE_HEADERS) $(C_PRELUDE_HEADERS) $(C_RT_SOURCES) $(C_RT_HEADERS)
 	@mkdir -p _tcc
 	$(TCC) $(CFLAGS) -Wall -Werror -I c/rt -I c/kernel -I c/surface -I c/prelude -o $@ $< $(C_PRELUDE_LINK) $(C_KERNEL_SOURCES) $(C_SURFACE_SOURCES) $(C_PRELUDE_SOURCES) $(C_RT_SOURCES) $(LDFLAGS) -lpthread
@@ -648,7 +623,7 @@ c-test: c-build
 	$(foreach d,$(C_LEVELS_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_IMPORT_CHECKS),./_tcc/$(d) &&) true
 	$(foreach d,$(C_WASM_CHECKS),./_tcc/$(d) &&) true
-	$(PYTHON) -P dev/bend2-io-check.py --driver _tcc/io_driver
+	$(PYTHON) -P dev/c-io-check.py --driver _tcc/io_driver
 	$(foreach d,$(C_CLI_FAULT_CHECKS),./_tcc/$(d) &&) true
 	./_tcc/prelude_runtime --slice-self-test
 	./_tcc/template_cost prelude/cat/category.mech --through Hom > /dev/null
@@ -689,32 +664,43 @@ c-test: c-build
 
 # Prelude drivers (C_PRELUDE_CHECKS) elaborate the whole prelude per entry, so each runs under the memcap tool:
 # footprint cap MEMCAP_MB (3500 MB, the 4 GB rule), time cap MEMCAP_SECS (120 s) or the per-driver
-# MEMCAP_SECS_<driver> override (prelude_shared_nattrans instantiates 42 entries and needs about 245 s), SIGKILL
-# at either cap. memcap exits with the driver's status. c-test-prelude is not a c-test dependency until every
-# listed driver measures under the cap.
-# Six ported drivers live in c/tests but are not in C_PRELUDE_CHECKS: each one is killed under memcap 3500 120
-# inside a single compact entry (the two traced drivers die in top-level declaration 7), so sharding the entry
-# list does not help. Kill figures (footMB = phys_footprint at the kill, wall seconds):
-#   prelude_horizontal_associativity  memory  foot 3504 MB   26.6 s
-#   prelude_horizontal_laws           memory  foot 3522 MB   26.7 s
-#   prelude_iterated_whiskering       time    foot 2714 MB  120.1 s (still rising)
-#   prelude_whiskering_laws           memory  foot 3519 MB   32.6 s
-#   prelude_shared_left_kan           memory  foot 3541 MB   30.2 s
-#   prelude_heterogeneous_left_kan    memory  foot 3506 MB   62.0 s
-# c-build builds them (C_PRELUDE_DEFERRED; one alone: `make _tcc/prelude_<x>`); a driver joins C_PRELUDE_CHECKS once the
-# compact path splits that entry per member and it measures under the cap.
-# Six more ported drivers are not in C_PRELUDE_CHECKS: each one is killed under memcap 3800 900 (usage leg
-# rc 64 is green; the record leg is `ROOT --record-oracles`, or `ROOT --record-cocone-equality-oracles` for
-# left_kan_laws, and the full leg is `ROOT`). Kill figures (footMB at the kill, wall seconds):
-#   prelude_nattrans_units                full    foot 3820 MB  389.2 s (inside relational_elaborated)
-#   prelude_left_kan_laws                 record  foot 3857 MB  230.7 s, full  foot 3837 MB  301.3 s
-#   prelude_left_kan_roundtrip            record  foot 3894 MB   92.3 s, full  foot 3882 MB   88.9 s
-#   prelude_left_kan_cocone_action        record  foot 3851 MB   98.8 s, full  foot 3897 MB   95.9 s
-#   prelude_left_kan_mediator_equality    record  foot 3918 MB  106.6 s, full  foot 3810 MB  109.6 s
-#   prelude_left_kan_solution_transport   record  foot 3974 MB  111.7 s, full  foot 3845 MB  112.8 s
+# MEMCAP_SECS_<driver> override (600 s for each driver whose full leg measures over 120 s; figures below;
+# prelude_shared_nattrans instantiates 42 entries and needs about 245 s), SIGKILL at either cap. memcap exits
+# with the driver's status. c-build builds every driver (one alone: `make _tcc/prelude_<x>`).
+# c-test-prelude is not a c-test dependency until every listed driver measures under the cap.
+# Twelve drivers joined C_PRELUDE_CHECKS after the structural sharing of the compact path (D-348a in
+# c/kernel/compact.c) and the compact refusal checks (D-352a in relational_negatives.c, D-353a in
+# prelude_heterogeneous_left_kan.c, D-355a in prelude_left_kan_laws.c, D-360a in the four
+# prelude_left_kan_<x>.c contract drivers). Full leg `ROOT` alone under memcap 3800 900 (footMB =
+# phys_footprint peak, wall seconds; the old kill figures in parentheses):
+#   prelude_heterogeneous_left_kan        rc 0  foot  312 MB   24.8 s (killed, foot 3506 MB at 62.0 s)
+#   prelude_left_kan_laws                 rc 0  foot 1814 MB  181.2 s (killed, foot 3837 MB at 301.3 s)
+#   prelude_horizontal_associativity      rc 0  foot 1308 MB  188.7 s (killed, foot 3504 MB at 26.6 s)
+#   prelude_horizontal_laws               rc 0  foot 2084 MB  303.1 s (killed, foot 3522 MB at 26.7 s)
+#   prelude_iterated_whiskering           rc 0  foot  791 MB   63.6 s (killed, foot 2714 MB at 120.1 s)
+#   prelude_whiskering_laws               rc 0  foot 1302 MB  140.7 s (killed, foot 3519 MB at 32.6 s)
+#   prelude_shared_left_kan               rc 0  foot 1322 MB   85.9 s (killed, foot 3541 MB at 30.2 s)
+#   prelude_nattrans_units                rc 0  foot  255 MB  120.3 s (killed, foot 3820 MB at 389.2 s)
+#   prelude_left_kan_roundtrip            rc 0  foot 1579 MB  101.7 s (killed, foot 3882 MB at 88.9 s)
+#   prelude_left_kan_cocone_action        rc 0  foot 1579 MB  158.2 s (killed, foot 3897 MB at 95.9 s)
+#   prelude_left_kan_mediator_equality    rc 0  foot 1567 MB  188.2 s (killed, foot 3810 MB at 109.6 s)
+#   prelude_left_kan_solution_transport   rc 0  foot 1592 MB  147.3 s (killed, foot 3845 MB at 112.8 s)
+# Record legs (not run by c-test-prelude) print the tracked test/neg pins: prelude_left_kan_laws
+# `ROOT --record-cocone-equality-oracles` the 5 left-kan-laws/cocone-eq-*.err pins byte for byte (rc 0, foot
+# 1571 MB, 76.7 s), and the four contract drivers `ROOT --record-oracles` their left-kan-<x> pins by the pin
+# policy of each directory (full text for roundtrip and cocone_action, prefix + .digest for mediator_equality
+# and solution_transport): rc 0, foot 1539 to 1597 MB, 92.8 to 104.3 s. prelude_nattrans_units has no record leg.
 # The contract drivers read _bend2/left-kan-<x>-contracts/focused-source.mech under ROOT (the
 # dev/left-kan-cocone-congruence-focus.py output); mediator_equality and solution_transport need a ROOT
 # that holds their focused sources.
 MEMCAP_SECS_prelude_shared_nattrans := 600
+MEMCAP_SECS_prelude_left_kan_laws := 600
+MEMCAP_SECS_prelude_horizontal_associativity := 600
+MEMCAP_SECS_prelude_horizontal_laws := 600
+MEMCAP_SECS_prelude_whiskering_laws := 600
+MEMCAP_SECS_prelude_nattrans_units := 600
+MEMCAP_SECS_prelude_left_kan_cocone_action := 600
+MEMCAP_SECS_prelude_left_kan_mediator_equality := 600
+MEMCAP_SECS_prelude_left_kan_solution_transport := 600
 c-test-prelude: $(C_PRELUDE_BINARIES) $(C_MEMCAP_BINARY)
 	$(foreach d,$(C_PRELUDE_CHECKS),$(call capped,$(or $(MEMCAP_SECS_$(d)),$(MEMCAP_SECS))) ./_tcc/$(d) $(CURDIR) &&) true

@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import runpy
 import shutil
 import subprocess
@@ -10,33 +11,40 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 PRELUDE = "prelude/cat/heterogeneous-nattrans.mech"
 FIXTURE = "test/fixtures/prelude/heterogeneous-nattrans-runtime.mech"
 GENERIC = "test/fixtures/prelude/heterogeneous-nattrans.mech"
 NEGATIVE = "test/neg/heterogeneous-nattrans/missing-law.mech"
 PREFIX = "PRELUDE-HETEROGENEOUS-NATTRANS-FAIL "
 
-EXPECT_IDENTITY_PROOF = ('mismatch: the constructor categoryRefl of Base_Target gives '
-    'the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C '
-    '(APt w y) (Elim SPi w obj (Ran SPi w _ C D) F as self return '
-    '(Ran SPi w _ C D) with | (ALeg 0) x y => x)')
-EXPECT_FIRST_NATURALITY = ('mismatch: the constructor categoryRefl of Base_Target gives '
-    'the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C '
-    '(APt w y) (Elim SPi w obj (Ran SPi w _ C D) G as self return '
-    '(Ran SPi w _ C D) with | (ALeg 0) x y => x)')
-EXPECT_SECOND_NATURALITY = ('mismatch: the constructor categoryRefl of Base_Target gives '
-    'the index (Out SPi w _ (Out SPi 0 y D (APt 0 (Out SPi w _ C '
-    '(APt w y) (Elim SPi w obj (Ran SPi w _ C D) H as self return '
-    '(Ran SPi w _ C D) with | (ALeg 0) x y => x)')
-EXPECT_COMPONENT_ORDER = ('mismatch: the term has type (Out SPi 0 y D (APt 0 (Out SPi w _'
-    ' C (APt w x) (Elim SPi w obj (Ran SPi w _ C D) H as self '
-    'return (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SPi '
-    '0 x D (APt 0 (Out SPi w _ C (APt w x) (Elim')
-EXPECT_SOURCE_HOM_UNIVERSE = ('mismatch: the term has type (Ran SPi 0 Obj Type 5 (Ran SPi w '
-    'category (Lan SPi w hom (Ran SPi 0 x Obj (Ran SPi 0 y Obj Type'
-    ' 4)) (Lan SPi w identity (Ran SPi 0 x Obj (Out SPi 0 y Obj '
-    '(APt 0 x) (Out SPi 0 x Obj (APt 0 x) hom))')
+EXPECT_IDENTITY_PROOF = (
+    "mismatch: the constructor categoryRefl of Base_Target gives "
+    "the index (Out SArg w _ (APt w (Out SArg 0 x (APt 0 (Out SAr"
+    "g w _ (APt w y) (Elim SPi w obj (Ran SPi w _ C D) F as self "
+    "return (Ran SPi w _ C D) with ")
+EXPECT_FIRST_NATURALITY = (
+    "mismatch: the constructor categoryRefl of Base_Target gives "
+    "the index (Out SArg w _ (APt w (Out SArg w x (APt w y) (Elim"
+    " SPi w app (Ran SPi w x C (Out SArg 0 y (APt 0 (Out SArg w _"
+    " (APt w x) (Elim SPi w obj (Ran SPi w _ C D) G as self retur"
+    "n (Ran SPi w _ C D) with ")
+EXPECT_SECOND_NATURALITY = (
+    "mismatch: the constructor categoryRefl of Base_Target gives "
+    "the index (Out SArg w _ (APt w (Out SArg w x (APt w y) (Elim"
+    " SPi w app (Ran SPi w x C (Out SArg 0 y (APt 0 (Out SArg w _"
+    " (APt w x) (Elim SPi w obj (Ran SPi w _ C D) H as self retur"
+    "n (Ran SPi w _ C D) with ")
+EXPECT_COMPONENT_ORDER = (
+    "mismatch: the term has type (Out SArg 0 y (APt 0 (Out SArg w"
+    " _ (APt w x) (Elim SPi w obj (Ran SPi w _ C D) H as self ret"
+    "urn (Ran SPi w _ C D) with | (ALeg 0) x y => x))) (Out SArg "
+    "0 x (APt 0 (Out SArg w _ (APt w x) (Elim")
+EXPECT_SOURCE_HOM_UNIVERSE = (
+    "mismatch: the term has type (Ran SPi 0 Obj Type 5 (Ran SPi w"
+    " category (Lan SPi w hom (Ran SPi 0 x Obj (Ran SPi 0 y Obj T"
+    "ype 4)) (Lan SPi w identity (Ran SPi 0 x Obj (Out SArg 0 y ("
+    "APt 0 x) (Out SArg 0 x (APt 0 x) hom))")
 CONTROLS = [
     ("identity-proof", PRELUDE,
      "(Base_Target_compId D d (F.1 x) (F.1 y) (Base_functorMap C D c d F x y f))",
@@ -74,10 +82,17 @@ def main():
     if destination.exists():
         print("refusing to overwrite mutation evidence", file=sys.stderr)
         return 64
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'heterogeneous-nattrans')
-    executable = ROOT / "_bend2/test/prelude_heterogeneous_nattrans.exe"
-    report = {"bend_build": build_evidence, "version": 1, "passed": False, "controls": [],
-              "executable_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
+    target = "_tcc/prelude_heterogeneous_nattrans"
+    executable = ROOT / target
+    executable.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(executable, os.X_OK):
+        print("HETEROGENEOUS-NATTRANS-MUTATIONS FAIL c build", file=sys.stderr)
+        return 1
+    build_evidence = {"target": target, "exit_code": built.returncode,
+                      "binary_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
+    report = {"c_build": build_evidence, "version": 1, "passed": False, "controls": [],
+              "executable_sha256": build_evidence["binary_sha256"]}
     with tempfile.TemporaryDirectory(prefix="mechanism-heterogeneous-controls-") as directory:
         work = Path(directory)
         sources = ["prelude/cat/category-core.mech", "prelude/cat/heterogeneous-functor.mech",

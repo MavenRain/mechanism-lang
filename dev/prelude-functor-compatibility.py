@@ -81,8 +81,8 @@ def write_report(path, report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export", type=Path, default=Path("/Users/oobi/Documents/kanon-m2-corpus/corpus/lean-parity/uat/uat.export"))
-    parser.add_argument("--mech", type=Path, default=ROOT / "_bend2/bin/mech.exe")
-    parser.add_argument("--audit", type=Path, default=ROOT / "_bend2/test/prelude.exe")
+    parser.add_argument("--mech", type=Path, default=ROOT / "_tcc/bin/mech")
+    parser.add_argument("--audit", type=Path, default=ROOT / "_tcc/prelude_protocol")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=180)
     args = parser.parse_args()
@@ -96,9 +96,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=False)
     try:
         input_hashes = {path: pilot.digest(ROOT / path) for path in inputs()}
-        binaries = {str(path): pilot.digest(path) for path in
-                    (args.mech, args.mech.parent / "mechanism-native",
-                     args.audit, args.audit.parent / "bend_protocol.js")}
+        binaries = {str(path): pilot.digest(path) for path in (args.mech, args.audit)}
         imported = args.out / "import"
         result = subprocess.run([str(args.mech), "import", str(args.export), "--out", str(imported)],
                                 capture_output=True, text=True, timeout=args.timeout, cwd=ROOT)

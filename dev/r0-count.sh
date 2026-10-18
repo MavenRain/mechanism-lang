@@ -10,7 +10,7 @@ unfunction chpwd 2>/dev/null
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
 SPEC=$ROOT/SPEC.md
-DRIVER=$ROOT/_bend2/bin/mech.exe
+DRIVER=$ROOT/_tcc/bin/mech
 WORK=$ROOT/.gatework/r0
 rm -rf $WORK
 mkdir -p $WORK

@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 flags = {(): 'base', ('--families',): 'families', ('--groups',): 'groups', ('--exports',): 'exports'}
 if len(sys.argv) < 2 or tuple(sys.argv[2:]) not in flags:
     raise SystemExit("usage: python3 -I dev/prenex-mutations.py NEW_WORK_DIRECTORY [--families|--groups|--exports]")
-spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/bend2-mutation.py")
+spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/c-mutation.py")
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 protocols = {

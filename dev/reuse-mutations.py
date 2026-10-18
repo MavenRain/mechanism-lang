@@ -5,7 +5,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--symbolic"):
     raise SystemExit("usage: python3 -I dev/reuse-mutations.py NEW_WORK_DIRECTORY [--symbolic]")
-spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/bend2-mutation.py")
+spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/c-mutation.py")
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 # Each control names its Bend anchor (HEAD 7a28534) and the rule the C mutation breaks; the diagnostics are

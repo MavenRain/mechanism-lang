@@ -36,8 +36,6 @@ SELF=${0:A}
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
 export BEND_TEST_BACKEND=native
-export BEND_NATIVE_TEST_ROOT=$ROOT
-export BEND_MUTATION_CACHE=${BEND_MUTATION_CACHE:-$ROOT/build/bend2-native-mutations}
 WORK=$ROOT/.gatework/gates
 MEASURE_FILE=$WORK/measure.txt
 mkdir -p $WORK
@@ -172,7 +170,7 @@ leg () {
 
 # The legs, in the order of plan section 9.  BUILD ends the run when it
 # fails, because every later leg reads the build it makes.
-if ! leg SLOW BUILD '^BEND2 BUILD PASS$' zsh -c 'make -C "$1" c-build bend2-build-production && print -r -- "BEND2 BUILD PASS"' bend-build $ROOT; then
+if ! leg SLOW BUILD '^BEND2 BUILD PASS$' zsh -c 'make -C "$1" c-build && print -r -- "BEND2 BUILD PASS"' bend-build $ROOT; then
   print -r -- ""
   cat $MEASURE_FILE
   print -r -- ""
@@ -308,7 +306,7 @@ leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
 # Additional Bend checks include compiler refusals for signed arities that
 # the original protocol constructors could represent at runtime.
 leg BEND_EXTRA BEND2-EXTRAS '^BEND2 EXTRAS PASS$' \
-  python3 -I $ROOT/dev/bend2-test.py --suite extras --no-build
+  python3 -I $ROOT/dev/c-test.py --suite extras --no-build
 leg SLOW VEIL-KERNEL '^VEIL-KERNEL OK shapes=3 hosts=2$' python3 -I $ROOT/dev/veil-gates.py
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \
   python3 -P $ROOT/dev/wasm-gates.py

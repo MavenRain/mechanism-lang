@@ -11,7 +11,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 REPLAY = 600
 
 
@@ -21,10 +21,14 @@ def main():
     work = Path(sys.argv[1]).resolve()
     if work.exists() or work == ROOT or ROOT in work.parents:
         raise SystemExit("the output directory must be new and outside the repository")
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'left-kan')
-    executable = ROOT / "_bend2/test/prelude_left_kan.exe"
-    if not executable.is_file():
-        raise SystemExit("build the left Kan extension checker before replay")
+    build_target = "_tcc/prelude_left_kan"
+    executable = ROOT / build_target
+    executable.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), build_target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(executable, os.X_OK):
+        raise SystemExit("LEFT-KAN-MUTATIONS FAIL c build")
+    build_evidence = {"target": build_target, "exit_code": built.returncode,
+                      "binary_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     copy = work / "source"
     files = [ROOT / "prelude/cat/category.mech"]
     files.extend(ROOT / f"test/fixtures/prelude/{name}.mech" for name in
@@ -77,11 +81,14 @@ def main():
          "(lanUniq J C D j c d K F H G eta alpha s beta2 h2 y)",
          "(lanUniq J C D j c d K F H G eta alpha s beta1 h1 y)",
          "PRELUDE-LEFT-KAN-FAIL mismatch: the term has type "
-         "(Lan SMu MechCategory [(Out SPi w x C (APt w y)"),
+         "(Lan SMu MechCategory [(Out SArg w x (APt w y)"),
         ("U1-LAN-M5", "prelude/cat/category.mech",
          "(eta.1 x) (beta.1 (K.1 x))", "(beta.1 (K.1 x)) (eta.1 x)",
          "PRELUDE-LEFT-KAN-FAIL mismatch: the term has type "
-         "(Out SPi 0 y D"),
+         "(Out SArg 0 y (APt 0 (Out SArg w _ (APt w (Out SArg w _ (APt"
+         " w x) (Elim SPi w obj (Ran SPi w _ J C) K as self return (Ra"
+         "n SPi w _ J C) with | (ALeg 0) x y => x))) (Elim SPi w obj ("
+         "Ran SPi w _ C D) G as self return (Ran SPi w _ C D) with "),
         ("U1-LAN-M6", "test/fixtures/prelude/left-kan.mech",
          "((fun (n : Tiny) => next n), (fun (n : Tiny) => n))).2 (next zero)",
          "((fun (n : Tiny) => n), (fun (n : Tiny) => n))).2 (next zero)",
@@ -118,7 +125,7 @@ def main():
         captures[label] = {
             stream: hashlib.sha256((work / f"{label}.{stream}").read_bytes()).hexdigest()
             for stream in ["stdout", "stderr"]}
-    report = {"bend_build": build_evidence, "passed": success, "baseline": True, "restored": restored,
+    report = {"c_build": build_evidence, "passed": success, "baseline": True, "restored": restored,
               "sources": sources, "capture_sha256": captures,
               "checker_sha256": hashlib.sha256(executable.read_bytes()).hexdigest(),
               "controls": reports}

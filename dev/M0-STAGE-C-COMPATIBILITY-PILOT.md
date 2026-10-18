@@ -5,7 +5,7 @@ Date: 2026-10-02.  Base: 18477c9.  The user requested the pilot for the
 
 ## Contract
 
-The pilot imports the frozen UAT export through the production Bend CLI.
+The pilot imports the frozen UAT export through the production CLI.
 Its digest must equal the unchanged denominator.  The imported graph must
 contain 3,202 declarations.  The map must contain the 19 existing
 NAME_ONLY candidates.
@@ -109,8 +109,9 @@ Generic reflexivity witnesses check that constructing a record and projecting
 Hom, identity and composition recovers the supplied fields. The
 `storedFieldOrder` witness projects the fourth stored component at the `comp_id`
 law type. These witnesses are checked symbolically and at (0, 0), (1, 0) and (0,
-1). `mech axioms` reports no axioms, and the empty-environment `prelude.exe
---audit` reports `PRELUDE-AXIOMS OK`. The eight controls require every signature
+1). `mech axioms` reports no axioms, and the empty-environment
+`_tcc/prelude_protocol --audit` reports `PRELUDE-AXIOMS OK`. The eight
+controls require every signature
 and the projection audit to pass. They reject a consistent stored-field reorder
 through the stored-field order witness, a consistent nested-binder erasure
 through the imported `Category.mk` signature, and swapped universe levels
@@ -124,7 +125,7 @@ witnesses fail with kernel mismatches.
 
 Run `make prelude-category-compatibility-test`, or reuse prepared production and
 test builds with `python3 -P dev/prelude-category-compatibility.py --mech
-_bend2/bin/mech.exe --out /absolute/path/to/new-evidence`. The report records
+_tcc/bin/mech --out /absolute/path/to/new-evidence`. The report records
 the export, imported graph, checker, input and fixture hashes. It marks
 `gate_passed` only after all eight controls and the final immutability checks
 pass. Evidence is retained in `dev/validation/prelude-category-compatibility/`.
@@ -209,7 +210,7 @@ field order and count. Four bare-constant witnesses pin the outer quantities,
 which the imported signature checker does not compare. A level witness pins
 the source hom level `v`, which the four signature rows cannot detect. The
 fixture checks at symbolic levels and three closed tuples, and runs through
-`mech axioms` and the empty-environment `prelude.exe --audit`.
+`mech axioms` and the empty-environment `_tcc/prelude_protocol --audit`.
 
 The controls require all four signatures and eleven support rows, reject
 unproven and unmapped dependencies before acceptance, and reject erased outer

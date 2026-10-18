@@ -12,7 +12,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parent.parent
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 SOURCES = ["c/wasm/link.c", "c/wasm/emit.c",
            "test/prenex_runtime.py",
            "test/fixtures/prelude/dependent-closure-runtime.mech"]

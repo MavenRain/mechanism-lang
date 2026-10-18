@@ -34,13 +34,13 @@ The independent arithmetic oracles distinguish the composition orders.
 The dedicated native driver is selected with:
 
 ```sh
-python3 -P dev/bend2-build.py --target tests --test-mode prelude-left-kan-cocone-action --backend native
+make _tcc/prelude_left_kan_cocone_action
 python3 -I test/left_kan_cocone_action.py
 python3 -I test/left_kan_laws_runtime.py --cocone-action
 ```
 
 The runtime command also requires the native `prelude-runtime` driver.
-The standard Bend test runner reads the driver's `prepare` entry and generates
+The standard test runner (`dev/c-test.py`) reads the driver's `prepare` entry and generates
 the focused contracts before invoking its check, including with `--no-build`.
 The extractor keeps the declared template inventory, includes the action
 fixture only for this selection, and retains definition bodies verbatim.

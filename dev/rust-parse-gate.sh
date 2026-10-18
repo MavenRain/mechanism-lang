@@ -7,9 +7,7 @@ set -u
 
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
-BEND=${BEND:-$HOME/.bend/bin/bend}
-NODE=${NODE:-node}
-DRIVER=$ROOT/bend2/tests/rust_frontend.bend
+BIN=$ROOT/_tcc/rust_frontend
 PARSE=$ROOT/test/rust/parse
 REFUSE=$ROOT/test/rust/refuse
 EXPECTED=$REFUSE/EXPECTED.tsv
@@ -18,7 +16,6 @@ MIN_REFUSED=20
 
 WORK=$(mktemp -d ${TMPDIR:-/tmp}/rust-parse-gate.XXXXXX)
 trap 'rm -rf $WORK' EXIT
-BIN=$WORK/rust_frontend.js
 
 pass=0
 fail=0
@@ -49,7 +46,7 @@ finish() {
 run_check() {
   local src
   src="$(cat $1; print -rn -- x)"
-  $NODE $BIN check "${src%x}" > $WORK/out 2> $WORK/err < /dev/null
+  $BIN check "${src%x}" > $WORK/out 2> $WORK/err < /dev/null
 }
 
 check_accepted() {
@@ -72,11 +69,9 @@ check_refused() {
 
 [[ -f $EXPECTED ]] || { bad expected "missing $EXPECTED"; finish }
 
-# One JavaScript build of the driver (about one minute); each run with node
-# needs about one second. The interpreter needs about one minute for each run,
-# and a native build needs 8 to 20 minutes.
-whence -p $NODE > /dev/null || { bad build "no $NODE on the PATH"; finish }
-if ! $BEND $DRIVER -o $BIN > $WORK/build.log 2>&1; then
+# One tcc build of the C driver c/tests/rust_frontend.c (make does nothing
+# when _tcc/rust_frontend is current); each run needs less than one second.
+if ! make -C $ROOT _tcc/rust_frontend > $WORK/build.log 2>&1; then
   bad build "the driver did not build"
   head -20 $WORK/build.log
   finish

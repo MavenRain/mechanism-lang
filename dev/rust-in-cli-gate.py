@@ -22,8 +22,9 @@ def snapshot(directory):
 
 
 def invoke(program, arguments):
+    prefix = ["node"] if Path(program[0]).suffix == ".js" else []
     return subprocess.run(
-        ["node", str(program[0]), program[1], *map(str, arguments)],
+        [*prefix, str(program[0]), program[1], *map(str, arguments)],
         capture_output=True, text=True, timeout=30,
     )
 
@@ -107,20 +108,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--driver", type=Path)
     parser.add_argument("--cli", type=Path)
-    parser.add_argument("--bend", type=Path, default=Path.home() / ".bend/bin/bend")
     args = parser.parse_args()
     failures = []
     with tempfile.TemporaryDirectory(prefix="rust-in-cli-") as directory:
         work = Path(directory)
         for existing, source, verb in (
-            (args.driver, "tests/rust_import.bend", "run"),
-            (args.cli, "mech.bend", "rust-in"),
+            (args.driver, "_tcc/rust_import", "run"),
+            (args.cli, "_tcc/bin/mech", "rust-in"),
         ):
-            program = existing.resolve() if existing else work / f"{verb}.js"
+            program = existing.resolve() if existing else ROOT / source
             if existing is None:
                 subprocess.run(
-                    [str(args.bend), str(ROOT / "bend2" / source), "-o", str(program)],
-                    check=True, timeout=180,
+                    ["make", source], cwd=ROOT, check=True, timeout=180,
                 )
             failures.extend(check((program, verb), work / verb))
     print("RUST-IN-CLI-FAIL" if failures else "RUST-IN-CLI-OK")

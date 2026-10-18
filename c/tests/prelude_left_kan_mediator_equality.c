@@ -113,7 +113,11 @@ static Task oracles(Heap *heap, Str root, const Vec *names, Globals globals, Str
     Str message = str_empty();
     RELATIONAL_TRY(relational_read(heap, root, cat(heap, cat(heap, str_lit("test/neg/left-kan-mediator-equality/"), name),
                                                    str_lit(".mech")), &source));
-    RELATIONAL_TRY(negatives_message(heap, elab_check_in(heap, globals, budget_unlimited(), source), name, &message));
+    /* D-360a (host only, the D-355a form): Bend checks each source with check_in under Budget.unlimited.
+     * The compact entry is the same check under budget_unlimited (decision 156, D-254a), but its work
+     * heaps run each conversion query in a scratch arena (D-261a), so a refusal no longer keeps the
+     * garbage of the whole elaboration in the caller arena. The refusal value and its text do not change. */
+    RELATIONAL_TRY(negatives_message(heap, elab_check_in_compact(heap, globals, source), name, &message));
     out = cat(heap, out, cat(heap, cat(heap, cat(heap, name, str_lit("\t")), message), str_lit("\n")));
   }
   *text = out;

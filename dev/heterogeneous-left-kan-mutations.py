@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import runpy
 import shutil
 import subprocess
@@ -10,7 +11,7 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 CONTROLS = [('uniqueness-proof',
   'prelude/cat/heterogeneous-left-kan.mech',
   [('    Base_Base_Target_eqTrans (Base_Base_Target_Hom D d (H.1 y) (G.1 y))\n'
@@ -87,9 +88,16 @@ def main():
     if destination.exists():
         print("refusing to overwrite mutation evidence", file=sys.stderr)
         return 64
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'heterogeneous-left-kan')
-    executable = ROOT / "_bend2/test/prelude_heterogeneous_left_kan.exe"
-    report = {"bend_build": build_evidence, "version": 1, "passed": False, "controls": [],
+    build_target = "_tcc/prelude_heterogeneous_left_kan"
+    executable = ROOT / build_target
+    executable.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), build_target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(executable, os.X_OK):
+        print("HETEROGENEOUS-LEFT-KAN-MUTATIONS FAIL c build", file=sys.stderr)
+        return 1
+    build_evidence = {"target": build_target, "exit_code": built.returncode,
+                      "binary_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
+    report = {"c_build": build_evidence, "version": 1, "passed": False, "controls": [],
               "executable_sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     with tempfile.TemporaryDirectory(prefix="mechanism-left-kan-controls-") as directory:
         work = Path(directory)
@@ -97,7 +105,7 @@ def main():
                    "prelude/cat/heterogeneous-whiskering.mech", "prelude/cat/heterogeneous-left-kan.mech",
                    "test/fixtures/prelude/heterogeneous-left-kan.mech",
                    "test/fixtures/prelude/heterogeneous-left-kan-runtime.mech",
-                   "bend2/tests/prelude_heterogeneous_left_kan.bend",
+                   "c/tests/prelude_heterogeneous_left_kan.c",
                    "dev/heterogeneous-left-kan-mutations.py"]
         sources += [str(path.relative_to(ROOT)) for path in
                     sorted((ROOT / "test/neg/heterogeneous-left-kan").iterdir()) if path.is_file()]

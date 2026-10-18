@@ -102,7 +102,7 @@ class KernelControls(unittest.TestCase):
         for path, expected in report["inputs"].items():
             if pilot.digest(ROOT / path) != expected:
                 raise AssertionError("pilot input changed: " + path)
-        if pilot.digest(MECH.resolve().parent / "mechanism-native") != report["native_sha256"]:
+        if pilot.digest(MECH.resolve()) != report["native_sha256"]:
             raise AssertionError("native checker changed after the pilot")
 
     def test_all_candidates_and_support_match(self):

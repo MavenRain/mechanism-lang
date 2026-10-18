@@ -2,16 +2,17 @@
 
 ## R0 counts
 
-The block below is inherited from Veil at PIN
-(a7534cedeac82d396de8e23058ee6bc990560f65). The kernel migration adds
-Veil's three private-computation shapes. `mech spec-count` prints this
+The block below starts from Veil at PIN
+(a7534cedeac82d396de8e23058ee6bc990560f65). The kernel migration includes
+Veil's three private-computation shapes and the C argument-projection
+representation `SArg`. `mech spec-count` prints this
 block and dev/r0-count.sh diffs the two. Any unrecorded change fails
 the R0-COUNT gate leg.
 
 ```
 formers 2: Lan Ran
 schema constructors 4: In Elim Sec Out
-shapes declared 8: SPi SColl SPar SMu SNu SZk SFhc SMpc
+shapes declared 9: SPi SArg SColl SPar SMu SNu SZk SFhc SMpc
 shapes admitted 6: SPi SColl SMu SZk SFhc SMpc
 named rules declared 6: proof-irrelevance subsingleton-large-elimination literal-fast-path zk-fhc zk-mpc fhc-mpc
 named rules present 3: proof-irrelevance subsingleton-large-elimination literal-fast-path
@@ -20,6 +21,12 @@ no eta 9: Lan-SColl Ran-SMu Lan-SMu Ran-SZk Lan-SZk Ran-SFhc Lan-SFhc Ran-SMpc L
 ```
 
 Every number in the block is the length of the list printed after it.
+
+The C frontend emits `SArg` for function argument projections. It carries
+the argument quantity and binder name without the `SPi` domain payload.
+The C kernel's existing shape metadata and specification-count test include
+this representation. The admitted-shape, named-rule and eta lists stay as
+printed above.
 
 The Veil pin replaces the original Kanon count baseline. SPar remains
 unadmitted. Its planned admission for Quot at M2 would move shapes
@@ -85,7 +92,7 @@ the active overlay replaces the corresponding pinned implementation.
 Additional local kernel implementations and interfaces count once each.
 This corrects Stage 0's double-counting of replaced files.
 dev/PIN-DELTA.md keeps the retired OCaml overlay record, and
-dev/BEND2-BASELINE.json records the current Bend sources.
+dev/C-BASELINE.json records the current C sources.
 The template catalog is outside the kernel: every specialization is
 rechecked, just as inherited surface elaboration is rechecked.
 

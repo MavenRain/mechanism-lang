@@ -21,7 +21,7 @@ def main():
     (copy / "dev").mkdir(parents=True)
     shutil.copy2(source / "dev/wasm-gates.py", copy / "dev/wasm-gates.py")
     (copy / "dev/run-node.mjs").symlink_to(source / "dev/run-node.mjs")
-    (copy / "_bend2").symlink_to(source / "_bend2", target_is_directory=True)
+    (copy / "_tcc").symlink_to(source / "_tcc", target_is_directory=True)
     shutil.copytree(source / "test/golden/wasm", copy / "test/golden/wasm")
     (copy / "test/veil").symlink_to(source / "test/veil", target_is_directory=True)
     golden = copy / "test/golden/wasm/d06-closure-capture.wat"

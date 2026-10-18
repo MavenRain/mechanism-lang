@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import runpy
 import shutil
 import subprocess
@@ -9,7 +10,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-bounded_run = runpy.run_path(str(ROOT / "dev/bend2-process.py"))["run"]
+bounded_run = runpy.run_path(str(ROOT / "dev/c-process.py"))["run"]
 OK = "PRELUDE-SHARED-LEFT-KAN-OK entries=944 families=13 computations=6 negatives=7\n"
 FAIL = "PRELUDE-SHARED-LEFT-KAN-FAIL "
 TEMPLATE = "prelude/cat/shared-left-kan.mech"
@@ -56,8 +57,14 @@ def main():
         destination = copy / name
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, destination)
-    build_evidence = runpy.run_path(str(ROOT / "dev/bend2-mutation-build.py"))["compile_protocol"](ROOT, 'shared-left-kan')
-    exe = ROOT / "_bend2/test/prelude_shared_left_kan.exe"
+    build_target = "_tcc/prelude_shared_left_kan"
+    exe = ROOT / build_target
+    exe.unlink(missing_ok=True)
+    built = bounded_run(["make", "-C", str(ROOT), build_target], cwd=ROOT, capture_output=True, text=True, timeout=600)
+    if built.returncode or not os.access(exe, os.X_OK):
+        print("SHARED-LEFT-KAN-MUTATIONS FAIL c build", file=sys.stderr)
+        return 1
+    build_evidence = {"target": build_target, "exit_code": built.returncode, "binary_sha256": digest(exe)}
     hashes = {name: digest(copy / name) for name in files}
     rows = []
 
@@ -67,7 +74,7 @@ def main():
         result = bounded_run(command, cwd=work, capture_output=True, text=True, timeout=840)
         (work / f"{label}.stdout").write_text(result.stdout)
         (work / f"{label}.stderr").write_text(result.stderr)
-        row = {"id": label, "command": ["_bend2/test/prelude_shared_left_kan.exe", "COPY"],
+        row = {"id": label, "command": [build_target, "COPY"],
                "exit": result.returncode, "seconds": round(time.monotonic() - started, 3),
                "stdout_sha256": digest(work / f"{label}.stdout"),
                "stderr_sha256": digest(work / f"{label}.stderr")}
@@ -100,9 +107,9 @@ def main():
                     for name, sha in hashes.items())
     killed = sum(row.get("killed", False) for row in rows)
     passed = baseline_row["passed"] and restored_row["passed"] and unchanged and killed == len(CONTROLS)
-    report = {"bend_build": build_evidence, "passed": passed, "killed": killed, "controls": len(CONTROLS),
+    report = {"c_build": build_evidence, "passed": passed, "killed": killed, "controls": len(CONTROLS),
               "sources_unchanged": unchanged, "source_sha256": hashes,
-              "suite_source_sha256": digest(ROOT / "bend2/tests/prelude_shared_left_kan.bend"),
+              "suite_source_sha256": digest(ROOT / "c/tests/prelude_shared_left_kan.c"),
               "executable_sha256": digest(exe), "rows": rows}
     (work / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"passed": passed, "killed": killed, "controls": len(CONTROLS)}))

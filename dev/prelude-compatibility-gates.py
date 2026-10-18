@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mech", type=Path, default=ROOT / "_bend2/bin/mech.exe")
+    parser.add_argument("--mech", type=Path, default=ROOT / "_tcc/bin/mech")
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
     output = args.out.resolve() if args.out else Path(tempfile.mkdtemp(prefix="mechanism-compatibility-")) / "evidence"

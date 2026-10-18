@@ -85,12 +85,12 @@ static void *compact_term_item(Heap *heap, const void *item) { return (void *)co
 
 Vec compact_term_vec(Heap *heap, const Vec *vec) { return compact_vec_with(heap, vec, compact_term_item); }
 
-/* Shape payload pointers inside a Term are const Term * (kernel.h, term section comment). */
-Shape compact_shape_term(Heap *heap, Shape shape) {
+/* Shape payload pointers inside a Term are const Term * (kernel.h, term section comment). The copy
+ * has two halves (D-348a): the Term children and the args vector, then the name and count. The
+ * consing path of compact_term copies the second half only when the shape belongs to a new node. */
+static Shape compact_shape_children(Heap *heap, Shape shape) {
   Shape out = shape;
-  out.name = compact_str(heap, shape.name);
   out.domain = (void *)compact_term(heap, shape.domain);
-  out.count = compact_big(heap, shape.count);
   out.left = (void *)compact_term(heap, shape.left);
   out.right = (void *)compact_term(heap, shape.right);
   out.args = compact_term_vec(heap, &shape.args);
@@ -100,13 +100,31 @@ Shape compact_shape_term(Heap *heap, Shape shape) {
   return out;
 }
 
-Addr compact_addr(Heap *heap, Addr addr) {
+static Shape compact_shape_scalars(Heap *heap, Shape shape) {
+  Shape out = shape;
+  out.name = compact_str(heap, shape.name);
+  out.count = compact_big(heap, shape.count);
+  return out;
+}
+
+Shape compact_shape_term(Heap *heap, Shape shape) {
+  return compact_shape_scalars(heap, compact_shape_children(heap, shape));
+}
+
+static Addr compact_addr_children(Heap *heap, Addr addr) {
   Addr out = addr;
   out.arg = compact_term(heap, addr.arg);
+  return out;
+}
+
+static Addr compact_addr_scalars(Heap *heap, Addr addr) {
+  Addr out = addr;
   out.index = compact_big(heap, addr.index);
   out.name = compact_str(heap, addr.name);
   return out;
 }
+
+Addr compact_addr(Heap *heap, Addr addr) { return compact_addr_scalars(heap, compact_addr_children(heap, addr)); }
 
 static void *compact_binder_item(Heap *heap, const void *item) {
   const Binder *binder = item;
@@ -185,10 +203,19 @@ typedef struct {
   const void *value;
 } CompactMemoSlot;
 
+/* One canonical copy of the pass with its structural hash (D-348a); term == NULL marks an empty slot. */
+typedef struct {
+  uint64_t hash;
+  const Term *term;
+} CompactConsSlot;
+
 struct CompactMemo {
   size_t capacity; /* a power of two */
   size_t count;
   CompactMemoSlot *slots;
+  size_t cons_capacity; /* a power of two */
+  size_t cons_count;
+  CompactConsSlot *cons_slots;
 };
 
 static size_t compact_memo_hash(const void *key) {
@@ -210,11 +237,12 @@ static CompactMemoSlot *compact_memo_slot(const CompactMemo *memo, const void *k
   }
 }
 
+/* larger starts as a copy of *memo, so the structural table fields (cons_*) pass through unchanged
+ * when *memo = larger replaces the pointer table (D-348a, hop 350). */
 static bool compact_memo_grow(CompactMemo *memo) {
-  CompactMemo larger;
+  CompactMemo larger = *memo;
   size_t i = 0;
   larger.capacity = memo->capacity * 2;
-  larger.count = memo->count;
   larger.slots = calloc(larger.capacity, sizeof(CompactMemoSlot));
   if (larger.slots == NULL) return false;
   for (; i < memo->capacity; i = i + 1) {
@@ -237,7 +265,12 @@ bool compact_memo_open(Heap *heap) {
   memo->capacity = COMPACT_MEMO_FIRST;
   memo->count = 0;
   memo->slots = calloc(memo->capacity, sizeof(CompactMemoSlot));
-  if (memo->slots == NULL) {
+  memo->cons_capacity = COMPACT_MEMO_FIRST;
+  memo->cons_count = 0;
+  memo->cons_slots = calloc(memo->cons_capacity, sizeof(CompactConsSlot));
+  if (memo->slots == NULL || memo->cons_slots == NULL) {
+    free(memo->slots);
+    free(memo->cons_slots);
     free(memo);
     heap->oom = true;
     return false;
@@ -249,6 +282,7 @@ bool compact_memo_open(Heap *heap) {
 void compact_memo_close(Heap *heap, bool opened) {
   if (!opened || heap->memo == NULL) return;
   free(heap->memo->slots);
+  free(heap->memo->cons_slots);
   free(heap->memo);
   heap->memo = NULL;
 }
@@ -272,18 +306,460 @@ static void compact_memo_record(Heap *heap, const void *term, const void *copy) 
   slot->value = copy;
 }
 
-/* Terms are built by term_new (zeroed) plus the fields of one constructor; the payloads overlay
- * in unions (kernel.h), so the copy reads only the fields of the term's own kind. Inside a pass
- * with a memo, a source term already copied returns its first copy. */
-const Term *compact_term(Heap *heap, const Term *term) {
-  const Term *seen;
+/* ---- structural sharing (D-348a) ----
+ * The pointer memo shares a copy only where the source already shared it. The state that family
+ * instantiation builds is a tree (hop 347: up to 3.46M copied Terms per pass with under 4k memo
+ * hits), so inside a pass each new Term is also looked up by structure: a node whose kind, scalars
+ * and child copies equal those of a node already copied in the same pass returns that copy. The
+ * children are canonical copies first, so child pointers compare by address, while strings,
+ * naturals, bignums and levels compare by content. Terms are immutable and no code outside this file
+ * compares Term addresses, so a shared copy reads the same as two equal copies and the output bytes
+ * do not change. The table lives in malloc memory next to the pointer memo and dies with it. */
+static uint64_t cons_mix(uint64_t hash, uint64_t value) {
+  uint64_t bits = (hash ^ value) * UINT64_C(0x9E3779B97F4A7C15);
+  return bits ^ (bits >> 29);
+}
+
+static uint64_t cons_ptr(uint64_t hash, const void *ptr) { return cons_mix(hash, (uint64_t)(uintptr_t)ptr); }
+
+static uint64_t cons_bytes(uint64_t hash, const void *data, size_t len) {
+  const unsigned char *bytes = data;
+  uint64_t fnv = UINT64_C(0xCBF29CE484222325);
+  size_t i = 0;
+  for (; i < len; i = i + 1) fnv = (fnv ^ bytes[i]) * UINT64_C(0x100000001B3);
+  return cons_mix(cons_mix(hash, (uint64_t)len), fnv);
+}
+
+static uint64_t cons_str(uint64_t hash, Str s) { return cons_bytes(hash, s.data, s.len); }
+
+static uint64_t cons_nat(uint64_t hash, Nat n) { return cons_bytes(hash, n.limbs, n.len * sizeof(uint32_t)); }
+
+static uint64_t cons_big(uint64_t hash, Big b) {
+  return cons_bytes(cons_mix(hash, b.negative ? 2u : 1u), b.digits.items, b.digits.len * sizeof(uint32_t));
+}
+
+static bool cons_bytes_eq(const void *a, const void *b, size_t len) { return len == 0 || memcmp(a, b, len) == 0; }
+
+static bool cons_str_eq(Str a, Str b) { return a.len == b.len && cons_bytes_eq(a.data, b.data, a.len); }
+
+static bool cons_nat_eq(Nat a, Nat b) {
+  return a.len == b.len && cons_bytes_eq(a.limbs, b.limbs, a.len * sizeof(uint32_t));
+}
+
+static bool cons_big_eq(Big a, Big b) {
+  return a.negative == b.negative && a.digits.len == b.digits.len &&
+         cons_bytes_eq(a.digits.items, b.digits.items, a.digits.len * sizeof(uint32_t));
+}
+
+static uint64_t cons_level(uint64_t hash, const LevelVar *level) {
+  if (level == NULL) return cons_mix(hash, 0);
+  return cons_nat(cons_level(cons_level(cons_level(cons_big(cons_mix(hash, (uint64_t)level->kind + 1), level->amount),
+                                                   level->base),
+                                        level->left),
+                             level->right),
+                  level->index);
+}
+
+static bool cons_level_eq(const LevelVar *a, const LevelVar *b) {
+  if (a == b) return true;
+  if (a == NULL || b == NULL) return false;
+  return a->kind == b->kind && cons_big_eq(a->amount, b->amount) && cons_nat_eq(a->index, b->index) &&
+         cons_level_eq(a->base, b->base) && cons_level_eq(a->left, b->left) && cons_level_eq(a->right, b->right);
+}
+
+/* Vectors of canonical Term pointers compare item by item by address. */
+static uint64_t cons_ptr_vec(uint64_t hash, const Vec *vec) {
+  uint64_t out = cons_mix(hash, (uint64_t)vec->len);
+  size_t i = 0;
+  for (; i < vec->len; i = i + 1) out = cons_ptr(out, vec->items[i]);
+  return out;
+}
+
+static bool cons_ptr_vec_eq(const Vec *a, const Vec *b) {
+  return a->len == b->len && cons_bytes_eq(a->items, b->items, a->len * sizeof(void *));
+}
+
+static uint64_t cons_str_vec(uint64_t hash, const Vec *vec) {
+  uint64_t out = cons_mix(hash, (uint64_t)vec->len);
+  size_t i = 0;
+  for (; i < vec->len; i = i + 1) {
+    const Str *item = vec->items[i];
+    out = item == NULL ? cons_mix(out, 0) : cons_str(out, *item);
+  }
+  return out;
+}
+
+static bool cons_str_vec_eq(const Vec *a, const Vec *b) {
+  size_t i = 0;
+  if (a->len != b->len) return false;
+  for (; i < a->len; i = i + 1) {
+    const Str *x = a->items[i];
+    const Str *y = b->items[i];
+    if (x != y && (x == NULL || y == NULL || !cons_str_eq(*x, *y))) return false;
+  }
+  return true;
+}
+
+static uint64_t cons_binders(uint64_t hash, const Vec *vec) {
+  uint64_t out = cons_mix(hash, (uint64_t)vec->len);
+  size_t i = 0;
+  for (; i < vec->len; i = i + 1) {
+    const Binder *item = vec->items[i];
+    out = item == NULL ? cons_mix(out, 0) : cons_str(cons_mix(out, (uint64_t)item->quantity + 1), item->name);
+  }
+  return out;
+}
+
+static bool cons_binders_eq(const Vec *a, const Vec *b) {
+  size_t i = 0;
+  if (a->len != b->len) return false;
+  for (; i < a->len; i = i + 1) {
+    const Binder *x = a->items[i];
+    const Binder *y = b->items[i];
+    if (x != y && (x == NULL || y == NULL || x->quantity != y->quantity || !cons_str_eq(x->name, y->name))) return false;
+  }
+  return true;
+}
+
+static uint64_t cons_leg(uint64_t hash, const Leg *leg) { return cons_ptr(cons_binders(hash, &leg->binders), leg->body); }
+
+static bool cons_leg_eq(const Leg *a, const Leg *b) {
+  return a->body == b->body && cons_binders_eq(&a->binders, &b->binders);
+}
+
+static uint64_t cons_legs(uint64_t hash, const Vec *vec) {
+  uint64_t out = cons_mix(hash, (uint64_t)vec->len);
+  size_t i = 0;
+  for (; i < vec->len; i = i + 1) {
+    const Leg *item = vec->items[i];
+    out = item == NULL ? cons_mix(out, 0) : cons_leg(out, item);
+  }
+  return out;
+}
+
+static bool cons_legs_eq(const Vec *a, const Vec *b) {
+  size_t i = 0;
+  if (a->len != b->len) return false;
+  for (; i < a->len; i = i + 1) {
+    const Leg *x = a->items[i];
+    const Leg *y = b->items[i];
+    if (x != y && (x == NULL || y == NULL || !cons_leg_eq(x, y))) return false;
+  }
+  return true;
+}
+
+/* Every Shape field is compared, as compact_shape_term copies every field whatever the kind. */
+static uint64_t cons_shape(uint64_t hash, const Shape *s) {
+  uint64_t out = cons_str(cons_mix(cons_mix(hash, (uint64_t)s->kind + 1), (uint64_t)s->quantity + 1), s->name);
+  out = cons_big(cons_ptr(out, s->domain), s->count);
+  out = cons_ptr_vec(cons_ptr(cons_ptr(out, s->left), s->right), &s->args);
+  return cons_ptr(cons_ptr(cons_ptr(out, s->level), s->parties), s->access);
+}
+
+static bool cons_shape_eq(const Shape *a, const Shape *b) {
+  return a->kind == b->kind && a->quantity == b->quantity && a->domain == b->domain && a->left == b->left &&
+         a->right == b->right && a->level == b->level && a->parties == b->parties && a->access == b->access &&
+         cons_str_eq(a->name, b->name) && cons_big_eq(a->count, b->count) && cons_ptr_vec_eq(&a->args, &b->args);
+}
+
+static uint64_t cons_addr(uint64_t hash, const Addr *a) {
+  uint64_t out = cons_ptr(cons_mix(cons_mix(hash, (uint64_t)a->kind + 1), (uint64_t)a->quantity + 1), a->arg);
+  return cons_str(cons_big(out, a->index), a->name);
+}
+
+static bool cons_addr_eq(const Addr *a, const Addr *b) {
+  return a->kind == b->kind && a->quantity == b->quantity && a->arg == b->arg && cons_big_eq(a->index, b->index) &&
+         cons_str_eq(a->name, b->name);
+}
+
+static uint64_t cons_motive(uint64_t hash, const Motive *m) {
+  uint64_t out = cons_mix(hash, m->ind.some ? 2u : 1u);
+  out = m->ind.some ? cons_str(out, m->ind.value) : out;
+  return cons_ptr(cons_str(cons_str_vec(out, &m->indices), m->self), m->body);
+}
+
+static bool cons_motive_eq(const Motive *a, const Motive *b) {
+  return a->ind.some == b->ind.some && (!a->ind.some || cons_str_eq(a->ind.value, b->ind.value)) &&
+         cons_str_vec_eq(&a->indices, &b->indices) && cons_str_eq(a->self, b->self) && a->body == b->body;
+}
+
+static uint64_t cons_branches(uint64_t hash, const Vec *vec) {
+  uint64_t out = cons_mix(hash, (uint64_t)vec->len);
+  size_t i = 0;
+  for (; i < vec->len; i = i + 1) {
+    const Branch *item = vec->items[i];
+    out = item == NULL ? cons_mix(out, 0) : cons_leg(cons_addr(out, &item->addr), &item->leg);
+  }
+  return out;
+}
+
+static bool cons_branches_eq(const Vec *a, const Vec *b) {
+  size_t i = 0;
+  if (a->len != b->len) return false;
+  for (; i < a->len; i = i + 1) {
+    const Branch *x = a->items[i];
+    const Branch *y = b->items[i];
+    if (x != y && (x == NULL || y == NULL || !cons_addr_eq(&x->addr, &y->addr) || !cons_leg_eq(&x->leg, &y->leg)))
+      return false;
+  }
+  return true;
+}
+
+static uint64_t cons_elim(uint64_t hash, const ElimData *d) {
+  uint64_t out;
+  if (d == NULL) return cons_mix(hash, 0);
+  out = cons_mix(cons_ptr(cons_shape(hash, &d->shape), d->scrut), (uint64_t)d->scrut_q + 1);
+  out = cons_mix(out, d->motive.some ? 2u : 1u);
+  out = d->motive.some ? cons_motive(out, &d->motive.value) : out;
+  return cons_branches(out, &d->branches);
+}
+
+static bool cons_elim_eq(const ElimData *a, const ElimData *b) {
+  if (a == b) return true;
+  if (a == NULL || b == NULL) return false;
+  return a->scrut == b->scrut && a->scrut_q == b->scrut_q && a->motive.some == b->motive.some &&
+         cons_shape_eq(&a->shape, &b->shape) && (!a->motive.some || cons_motive_eq(&a->motive.value, &b->motive.value)) &&
+         cons_branches_eq(&a->branches, &b->branches);
+}
+
+static uint64_t cons_literal(uint64_t hash, const Literal *lit) {
+  return cons_big(cons_str(cons_mix(hash, (uint64_t)lit->kind + 1), lit->string), lit->integer);
+}
+
+static bool cons_literal_eq(const Literal *a, const Literal *b) {
+  return a->kind == b->kind && cons_str_eq(a->string, b->string) && cons_big_eq(a->integer, b->integer);
+}
+
+/* The fields compared per kind are the fields compact_term copies for that kind. */
+static uint64_t cons_term(const Term *t) {
+  uint64_t hash = cons_mix(UINT64_C(0x6A09E667F3BCC908), (uint64_t)t->kind + 1);
+  switch (t->kind) {
+  case TERM_VAR:
+    return cons_nat(hash, t->index);
+  case TERM_UNIV:
+    return cons_level(hash, t->level);
+  case TERM_LAN:
+  case TERM_RAN:
+    return cons_ptr(cons_shape(hash, &t->shape), t->body);
+  case TERM_IN:
+    return cons_ptr_vec(cons_addr(cons_shape(hash, &t->shape), &t->addr), &t->args);
+  case TERM_ELIM:
+    return cons_elim(hash, t->data);
+  case TERM_SEC:
+    return cons_legs(cons_shape(hash, &t->shape), &t->legs);
+  case TERM_OUT:
+    return cons_ptr(cons_addr(cons_shape(hash, &t->shape), &t->addr), t->head);
+  case TERM_LET:
+    return cons_ptr(cons_ptr(cons_ptr(cons_str(hash, t->name), t->ty), t->value), t->body);
+  case TERM_ANN:
+    return cons_ptr(cons_ptr(hash, t->body), t->ty);
+  case TERM_GLOBAL:
+    return cons_str(hash, t->name);
+  case TERM_LIT:
+    return cons_literal(hash, &t->lit);
+  case TERM_AUTO:
+    return hash;
+  }
+  return hash;
+}
+
+static bool cons_term_eq(const Term *a, const Term *b) {
+  if (a->kind != b->kind) return false;
+  switch (a->kind) {
+  case TERM_VAR:
+    return cons_nat_eq(a->index, b->index);
+  case TERM_UNIV:
+    return cons_level_eq(a->level, b->level);
+  case TERM_LAN:
+  case TERM_RAN:
+    return a->body == b->body && cons_shape_eq(&a->shape, &b->shape);
+  case TERM_IN:
+    return cons_ptr_vec_eq(&a->args, &b->args) && cons_addr_eq(&a->addr, &b->addr) && cons_shape_eq(&a->shape, &b->shape);
+  case TERM_ELIM:
+    return cons_elim_eq(a->data, b->data);
+  case TERM_SEC:
+    return cons_legs_eq(&a->legs, &b->legs) && cons_shape_eq(&a->shape, &b->shape);
+  case TERM_OUT:
+    return a->head == b->head && cons_addr_eq(&a->addr, &b->addr) && cons_shape_eq(&a->shape, &b->shape);
+  case TERM_LET:
+    return a->ty == b->ty && a->value == b->value && a->body == b->body && cons_str_eq(a->name, b->name);
+  case TERM_ANN:
+    return a->body == b->body && a->ty == b->ty;
+  case TERM_GLOBAL:
+    return cons_str_eq(a->name, b->name);
+  case TERM_LIT:
+    return cons_literal_eq(&a->lit, &b->lit);
+  case TERM_AUTO:
+    return true;
+  }
+  return false;
+}
+
+static size_t cons_home(uint64_t hash, size_t capacity) { return (size_t)(hash ^ (hash >> 32)) & (capacity - 1); }
+
+/* The slot that holds a Term equal to key, or the empty slot where key goes (load <= 1/2, so the
+ * probe ends; the mask keeps it inside cons_slots[0 .. cons_capacity)). */
+static CompactConsSlot *compact_cons_slot(const CompactMemo *memo, const Term *key, uint64_t hash) {
+  size_t mask = memo->cons_capacity - 1;
+  size_t at = cons_home(hash, memo->cons_capacity);
+  for (;;) {
+    CompactConsSlot *slot = memo->cons_slots + at;
+    if (slot->term == NULL || (slot->hash == hash && cons_term_eq(slot->term, key))) return slot;
+    at = (at + 1) & mask;
+  }
+}
+
+static bool compact_cons_grow(CompactMemo *memo) {
+  size_t capacity = memo->cons_capacity * 2;
+  CompactConsSlot *slots = calloc(capacity, sizeof(CompactConsSlot));
+  size_t i = 0;
+  if (slots == NULL) return false;
+  for (; i < memo->cons_capacity; i = i + 1) {
+    const CompactConsSlot *old = memo->cons_slots + i;
+    size_t at = cons_home(old->hash, capacity);
+    if (old->term == NULL) continue;
+    while (slots[at].term != NULL) at = (at + 1) & (capacity - 1);
+    slots[at] = *old;
+  }
+  free(memo->cons_slots);
+  memo->cons_slots = slots;
+  memo->cons_capacity = capacity;
+  return true;
+}
+
+/* NULL after an allocation failure (heap->oom set); the node is then copied without sharing. */
+static CompactConsSlot *compact_cons_find(Heap *heap, const Term *key, uint64_t hash) {
+  CompactMemo *memo = heap->memo;
+  if (heap->oom) return NULL;
+  if ((memo->cons_count + 1) * 2 > memo->cons_capacity && !compact_cons_grow(memo)) {
+    heap->oom = true;
+    return NULL;
+  }
+  return compact_cons_slot(memo, key, hash);
+}
+
+/* The scalar half of a node copy (names, indices, levels, literals, shape name and count): run only
+ * for a node that the structural lookup did not find. */
+static Term compact_term_scalars(Heap *heap, Term key) {
+  Term out = key;
+  switch (key.kind) {
+  case TERM_VAR:
+    out.index = compact_nat(heap, key.index);
+    break;
+  case TERM_UNIV:
+    out.level = compact_level(heap, key.level);
+    break;
+  case TERM_LAN:
+  case TERM_RAN:
+  case TERM_SEC:
+    out.shape = compact_shape_scalars(heap, key.shape);
+    break;
+  case TERM_IN:
+  case TERM_OUT:
+    out.shape = compact_shape_scalars(heap, key.shape);
+    out.addr = compact_addr_scalars(heap, key.addr);
+    break;
+  case TERM_LET:
+  case TERM_GLOBAL:
+    out.name = compact_str(heap, key.name);
+    break;
+  case TERM_LIT:
+    out.lit = compact_literal(heap, key.lit);
+    break;
+  case TERM_ELIM:
+  case TERM_ANN:
+  case TERM_AUTO:
+    break;
+  }
+  return out;
+}
+
+/* The copy of term inside a pass: the pointer memo, then the children, then the structural lookup.
+ * The key holds the canonical children and the source scalars (equal by content to their copies). */
+static const Term *compact_term_shared(Heap *heap, const Term *term) {
+  const Term *seen = compact_memo_find(heap, term);
+  CompactConsSlot *slot;
+  uint64_t hash;
+  Term key;
   Term *out;
-  if (term == NULL) return NULL;
-  seen = compact_memo_find(heap, term);
   if (seen != NULL) return seen;
+  memset(&key, 0, sizeof key);
+  key.kind = term->kind;
+  switch (term->kind) {
+  case TERM_VAR:
+    key.index = term->index;
+    break;
+  case TERM_UNIV:
+    key.level = term->level;
+    break;
+  case TERM_LAN:
+  case TERM_RAN:
+    key.shape = compact_shape_children(heap, term->shape);
+    key.body = compact_term(heap, term->body);
+    break;
+  case TERM_IN:
+    key.shape = compact_shape_children(heap, term->shape);
+    key.addr = compact_addr_children(heap, term->addr);
+    key.args = compact_term_vec(heap, &term->args);
+    break;
+  case TERM_ELIM:
+    key.data = compact_elim(heap, term->data);
+    break;
+  case TERM_SEC:
+    key.shape = compact_shape_children(heap, term->shape);
+    key.legs = compact_vec_with(heap, &term->legs, compact_leg_item);
+    break;
+  case TERM_OUT:
+    key.shape = compact_shape_children(heap, term->shape);
+    key.addr = compact_addr_children(heap, term->addr);
+    key.head = compact_term(heap, term->head);
+    break;
+  case TERM_LET:
+    key.name = term->name;
+    key.ty = compact_term(heap, term->ty);
+    key.value = compact_term(heap, term->value);
+    key.body = compact_term(heap, term->body);
+    break;
+  case TERM_ANN:
+    key.body = compact_term(heap, term->body);
+    key.ty = compact_term(heap, term->ty);
+    break;
+  case TERM_GLOBAL:
+    key.name = term->name;
+    break;
+  case TERM_LIT:
+    key.lit = term->lit;
+    break;
+  case TERM_AUTO:
+    break;
+  }
+  hash = cons_term(&key);
+  slot = compact_cons_find(heap, &key, hash);
+  if (slot != NULL && slot->term != NULL) {
+    compact_memo_record(heap, term, slot->term);
+    return slot->term;
+  }
   out = heap_alloc(heap, sizeof(Term));
   if (out == NULL) return NULL;
+  *out = compact_term_scalars(heap, key);
+  if (slot != NULL) {
+    slot->hash = hash;
+    slot->term = out;
+    heap->memo->cons_count = heap->memo->cons_count + 1;
+  }
   compact_memo_record(heap, term, out);
+  return out;
+}
+
+/* Terms are built by term_new (zeroed) plus the fields of one constructor; the payloads overlay
+ * in unions (kernel.h), so the copy reads only the fields of the term's own kind. Inside a pass
+ * (heap->memo != NULL) compact_term_shared copies; outside one each call makes a fresh copy. */
+const Term *compact_term(Heap *heap, const Term *term) {
+  Term *out;
+  if (term == NULL) return NULL;
+  if (heap->memo != NULL) return compact_term_shared(heap, term);
+  out = heap_alloc(heap, sizeof(Term));
+  if (out == NULL) return NULL;
   out->kind = term->kind;
   switch (term->kind) {
   case TERM_VAR:

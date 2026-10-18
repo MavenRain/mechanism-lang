@@ -12,7 +12,7 @@ SOURCES = ["prelude/cat/" + name + ".mech" for name in (
     "category-core", "heterogeneous-functor", "composable-functors",
     "heterogeneous-nattrans", "heterogeneous-whiskering", "shared-nattrans",
     "nattrans-laws", "whiskering-laws")]
-DIAGNOSTICS = "dev/validation/port-uat-u1-whiskering-laws/mutation-diagnostics.json"
+DIAGNOSTICS = "dev/validation/port-uat-u1-whiskering-laws/c-mutation-diagnostics.json"
 CONTROLS = [
     ("left-identity-proof", "Ops_Second_Base_functorMapId D E d e H (F.1 x)", "categoryRefl"),
     ("left-composition-proof",
@@ -47,7 +47,7 @@ def main():
     pins = json.loads((ROOT / DIAGNOSTICS).read_text())
     if set(pins) != {label for label, _, _ in CONTROLS}:
         raise ValueError("mutation diagnostic inventory changed")
-    exe = ROOT / "_bend2/bin/mech.exe"
+    exe = ROOT / "_tcc/bin/mech"
     fixture = work / "templates.mech"
     original = sources[TEMPLATE].decode()
     rows = []

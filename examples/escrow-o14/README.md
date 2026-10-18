@@ -26,8 +26,8 @@ the result. From the repository root:
 
 ```sh
 { cat prelude/init.mech; printf '\n'; cat examples/escrow-o1/O1.mech; printf '\n'; cat examples/escrow-o14/O14.mech; } > /tmp/escrow-o14.mech
-_bend2/bin/mech.exe check /tmp/escrow-o14.mech
-_bend2/bin/mech.exe axioms /tmp/escrow-o14.mech
+_tcc/bin/mech check /tmp/escrow-o14.mech
+_tcc/bin/mech axioms /tmp/escrow-o14.mech
 ```
 
 Both commands exit with 0 and write no output.

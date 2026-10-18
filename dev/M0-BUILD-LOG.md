@@ -4632,12 +4632,12 @@ execution). The native entry is reused on an unchanged rebuild. An isolated
 native `import-json` driver passes all 166 frozen JSON observations,
 exercising forwarded runtime arguments. Python syntax and diff whitespace
 checks pass. The selector regression runs in the normal extras and full
-test suites. Evidence is pinned in
-`dev/validation/bend2-focused-builds/checkpoint.json`.
+test suites. Evidence was pinned in
+`checkpoint.json` of the focused-builds receipt (commit 8c90b64).
 
 These checks cover the new build selector and the named focused suites.
 Canonical acceptance, the remaining relational mutation executions and
-the R3 comparison remain outstanding in `MIGRATION-BEND2.md`.
+the R3 comparison remain outstanding in `MIGRATION-C.md`.
 
 ## 2026-09-30: left Kan cocone postcomposition laws
 

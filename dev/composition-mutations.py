@@ -5,7 +5,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 if len(sys.argv) != 2:
     raise SystemExit("usage: python3 -I dev/composition-mutations.py NEW_WORK_DIRECTORY")
-spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/bend2-mutation.py")
+spec = importlib.util.spec_from_file_location("bend2_mutation", ROOT / "dev/c-mutation.py")
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 protocols = {"composition": ("c/tests/surface_template_composition.c", "TEMPLATE-COMPOSITION-OK negatives=24 parser=9 raw=9 type-excluded=negative-arity")}
