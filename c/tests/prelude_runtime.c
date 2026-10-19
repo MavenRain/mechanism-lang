@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_runtime.bend (oracle label prelude-runtime): `[--reachable] SOURCE
+/* Port of tests/prelude_runtime.bend (oracle label prelude-runtime): `[--reachable] SOURCE
  * DIRECTORY EXPORT...` checks SOURCE against the initial globals with an unlimited budget, refuses
  * source axioms and export names that are not plain file names, erases the whole program (or, with
  * --reachable, only the rows reachable from the exports), then for each export in order evaluates it

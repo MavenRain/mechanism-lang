@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/value.bend: evaluated values, closures, stuck eliminators and neutral
+/* Port of kernel/value.bend: evaluated values, closures, stuck eliminators and neutral
  * spines. Same definitions in the same order. The generic containers are only ever instantiated
  * at T, so the payload is a const Value pointer; lists are Vecs of pointers in list order. */
 #include "kernel.h"

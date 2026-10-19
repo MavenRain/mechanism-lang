@@ -1,4 +1,4 @@
-/* Port of the library half of bend2/tests/surface_prenex.bend: the Tiny terms that surface_prenex_families
+/* Port of the library half of tests/surface_prenex.bend: the Tiny terms that surface_prenex_families
  * imports as Prenex.zero, Prenex.succ and Prenex.tiny. _tcc/surface_prenex_lib.o is built from
  * c/tests/surface_prenex.c with -DMECH_DRIVER_LIBRARY (no main). */
 #ifndef MECH_SURFACE_PRENEX_H

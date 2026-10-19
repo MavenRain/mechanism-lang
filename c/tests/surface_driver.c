@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_driver.bend (the native parser driver of dev/c-parser-check.py):
+/* Port of tests/surface_driver.bend (the native parser driver of dev/c-parser-check.py):
  * parses the one program source argument and prints OK, dies with 1 and the error text on a parse
  * error, or dies with 2 on any other argument count. */
 #include "driver.h"

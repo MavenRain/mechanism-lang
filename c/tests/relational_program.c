@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_program.bend (65 lines), same definitions in the same order.
+/* Port of tests/relational_program.bend (65 lines), same definitions in the same order.
  * G.initial() is global_initial(heap) (relational_common.c maps G.empty() to global_empty()); Elab.Rows is a Vec of CheckRow *. */
 #include "relational_program.h"
 

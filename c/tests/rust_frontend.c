@@ -1,4 +1,4 @@
-/* C port of bend2/tests/rust_frontend.bend. Driver: `rust_frontend <lex|parse|print|check|pos>
+/* C port of tests/rust_frontend.bend. Driver: `rust_frontend <lex|parse|print|check|pos>
  * <source text>`. `check` is the full frontend: lex, fragment pass, parse, print; a refused source
  * gives one `REFUSED <line>:<col> <construct>` line per refusal. Each report is built as one Str
  * and written once (the Bend IO.write). A failed allocation sets heap->oom; the driver then exits

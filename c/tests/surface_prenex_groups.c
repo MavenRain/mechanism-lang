@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_groups.bend (74 lines, oracle label surface-prenex-groups): the prenex
+/* Port of tests/surface_prenex_groups.bend (74 lines, oracle label surface-prenex-groups): the prenex
  * groups fixture parses, prints and checks with its member and family inventories in order and no axiom,
  * audits, normalizes seven computations, checks the group instance and the positives, refuses the negatives
  * and parser cases, keeps the group budget below two template checks, refuses a catalog-lifetime

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_common.bend: the shared protocol of the relational test drivers.
+/* Port of tests/relational_common.bend: the shared protocol of the relational test drivers.
  * Task(A) = IO(Result<String, A>) becomes Task {ok, message} with the payload in an out parameter
  * (the IO layer is the direct C call). A library module (no main): the prelude_* and relational_*
  * drivers link it together with relational_fs and relational_syntax_equal. */

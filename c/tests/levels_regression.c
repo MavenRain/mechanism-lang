@@ -1,4 +1,4 @@
-/* Port of bend2/tests/levels_regression.bend (oracle label unit-levels-regression). */
+/* Port of tests/levels_regression.bend (oracle label unit-levels-regression). */
 #include "driver.h"
 #include "levels_regression.h"
 

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_crypto.bend (oracle label unit-surface-crypto): checks the seven veil fixture
+/* Port of tests/surface_crypto.bend (oracle label unit-surface-crypto): checks the seven veil fixture
  * sources (vendor/veil/test, comment lines removed) against the initial globals and prints PASS. */
 #include "driver.h"
 #include "surface.h"

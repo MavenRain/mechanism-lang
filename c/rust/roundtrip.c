@@ -1,4 +1,4 @@
-/* Port of bend2/rust/roundtrip.bend: RT-MECH (unit D) of the Rust importer. Two checked programs
+/* Port of rust/roundtrip.bend: RT-MECH (unit D) of the Rust importer. Two checked programs
  * are equal up to bound names. A kernel term has de Bruijn indices, and each binder keeps its
  * source name for the printer only. So `alpha` is term_equal (c/kernel/term.c) with these names
  * ignored: the name of SPi and SZk, the names of a leg, the `self` name and the index names of a

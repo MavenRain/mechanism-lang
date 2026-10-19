@@ -1,4 +1,4 @@
-/* Port of bend2/wasm/link.bend: the program table built from the erased kernel rows (functions,
+/* Port of wasm/link.bend: the program table built from the erased kernel rows (functions,
  * postulates and mu legs) and the layout of the runtime type ids. Every definition keeps its Bend
  * name and order. Lists are Vecs of pointers, Maybe<String> is LinkMaybeStr, Maybe<MuLeg> is a
  * MuLeg pointer (NULL = None), Result<Err.T, X> is the kernel Result with X boxed on the heap, and

@@ -1,4 +1,4 @@
-/* C port of bend2/rust/print.bend: the Rust pretty printer of the M0 frontend (Pr.file). Bend has one
+/* C port of rust/print.bend: the Rust pretty printer of the M0 frontend (Pr.file). Bend has one
  * self-recursive `pp(Job)` because Bend 2 has no forward references; here each Job constructor is one
  * static function pp_<job>, in the Job type order, with the prototypes up front (design D-186a).
  * JPick and JSel are an if over the computed MaybeStr. The two Jobs passed as a deferred `alt` (JVert

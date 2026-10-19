@@ -1,4 +1,4 @@
-/* C port of bend2/tests/wasm_circuit_bounds.bend: the circuit depth bounds over folds, aliases,
+/* C port of tests/wasm_circuit_bounds.bend: the circuit depth bounds over folds, aliases,
  * cycles, foreign payloads, collection fields and the 63-bit machine-integer depth limit. Each of
  * the 18 cases prints PASS <name> or FAIL <name>; the run ends with CIRCUIT-BOUNDS <passed>/<total>
  * and exits 1 (Out.cli_exit) unless all 18 pass. */

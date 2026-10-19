@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude_transport.bend (85 lines, oracle label surface-prelude-transport): the
+/* Port of tests/surface_prelude_transport.bend (85 lines, oracle label surface-prelude-transport): the
  * polymorphic equality catalog keeps MechEq (arity 2) and MechTypeEq (arity 1) with their members, seven
  * instances install over prelude/init.mech, the fixture client checks, a MechTypeEq instance reuses CastData
  * with exported member names, the library client checks and audits, and five negatives refuse. Prints

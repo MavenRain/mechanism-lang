@@ -1,4 +1,4 @@
-/* C port of bend2/tests/kernel_global_index.bend: global name index boundaries (duplicates, replacement,
+/* C port of tests/kernel_global_index.bend: global name index boundaries (duplicates, replacement,
  * family removal, unicode and NUL keys, 1000 stress keys and the runtime keys from the arguments). */
 #include "global_lookup_common.h"
 

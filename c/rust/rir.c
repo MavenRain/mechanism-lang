@@ -1,4 +1,4 @@
-/* C port of bend2/rust/rir.bend: the erased program IR for `mech rust-out`. Each name is a final Rust
+/* C port of rust/rir.bend: the erased program IR for `mech rust-out`. Each name is a final Rust
  * name. Ownership is in the types: a binder of type TRef is a borrow (quantity many, not Copy), and a
  * binder of any other type owns its value. Each `.clone()`, `&` and `Box::new` is an explicit node,
  * so the emitter adds nothing. A failed allocation sets heap->oom and returns the placeholder of the

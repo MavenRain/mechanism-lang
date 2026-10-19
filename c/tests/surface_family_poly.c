@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_family_poly.bend (oracle label family-poly): universe polymorphic
+/* Port of tests/surface_family_poly.bend (oracle label family-poly): universe polymorphic
  * family templates (Family = surface/family_poly) declare once, instantiate at closed levels, keep
  * Prop singleton elimination, take the maximum of unequal universes, rename recursive metadata,
  * refuse collisions, open levels, foreign templates and nonpositive fields, and spend budget.

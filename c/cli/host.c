@@ -1,4 +1,4 @@
-/* Port of bend2/cli/host.bend (the kanon run host): find the runner beside the executable, spawn it
+/* Port of cli/host.bend (the kanon run host): find the runner beside the executable, spawn it
  * over a Wasm module with stdout and stderr captured to WASM.out and WASM.err, and read the outcome
  * back (a printed number, a trap line or an invalid line), or evaluate the export in the kernel.
  * Strings are byte views: the Bend code walks code points, but every byte it compares is ASCII

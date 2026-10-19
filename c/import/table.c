@@ -1,4 +1,4 @@
-/* Port of bend2/import/table.bend (import "Table"): Table.T<A> = Map<String, Maybe<A>>, the index
+/* Port of import/table.bend (import "Table"): Table.T<A> = Map<String, Maybe<A>>, the index
  * tables of the export reader. Keys are index texts; rows are heap-boxed values held as void*. The
  * Bend table is persistent and threaded linearly through the reader, so the C table is updated in
  * place. Every message text is the Bend text, byte for byte. */

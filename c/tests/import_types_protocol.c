@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_types_protocol.bend with the cases of import_types_protocol_data.bend
+/* Port of tests/import_types_protocol.bend with the cases of import_types_protocol_data.bend
  * folded in as static data (oracle label import-types-protocol, no corpus lines: the gate is the exit
  * code and the PASS lines). Runs every case through Export.read_string, Translate.translate and
  * Lower, prints "PASS import-types NAME" or "FAIL import-types NAME: MESSAGE" per case, then

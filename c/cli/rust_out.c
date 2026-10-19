@@ -1,4 +1,4 @@
-/* C port of bend2/cli/rust_out.bend: `mech rust-out FILE.mech... OUT_DIR`, one Rust module for each
+/* C port of cli/rust_out.bend: `mech rust-out FILE.mech... OUT_DIR`, one Rust module for each
  * input file (file i is checked in the globals of the files before it), `src/lib.rs`, `src/nat.rs`
  * if a module uses the kernel `Nat`, `Cargo.toml` and `mech-carrier.mech`. An output directory that
  * exists is refused.

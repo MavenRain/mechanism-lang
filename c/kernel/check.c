@@ -1,4 +1,4 @@
-/* check (bend2/kernel/check.bend): declarations, families and constructors over the engine. */
+/* check (kernel/check.bend): declarations, families and constructors over the engine. */
 #include "kernel.h"
 #include <string.h>
 

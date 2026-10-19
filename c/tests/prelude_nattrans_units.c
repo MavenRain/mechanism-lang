@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_nattrans_units.bend (122 lines): the nattrans units prelude suite. Reads the prelude
+/* Port of tests/prelude_nattrans_units.bend (122 lines): the nattrans units prelude suite. Reads the prelude
  * layers and the unit fixture clients under argv[1] (default "."), checks the parse roundtrip, the unit heads, the case
  * bindings and the two whisker law statements on the parsed declarations, then the entry inventory, the probes and the
  * negatives, and prints PRELUDE-NATTRANS-UNITS-OK fields or PRELUDE-NATTRANS-UNITS-FAIL message. Same definitions in
@@ -176,7 +176,7 @@ static Task case_pins(Heap *heap, const PinRow *pins, size_t count, const Vec *b
   return task_pure();
 }
 
-/* expected_entries() (bend2/tests/prelude_nattrans_units.bend line 81, 1281 names) */
+/* expected_entries() (tests/prelude_nattrans_units.bend line 81, 1281 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "BetaComponents", "Components", "Constant", "DoubleEnd", "IndexedEnd", "LeftUnit", "PostUnit",
     "PreUnit", "RightUnit", "Run_Base_Functor", "Run_Base_Source_Category", "Run_Base_Source_Hom",

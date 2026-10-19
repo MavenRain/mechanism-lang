@@ -1,4 +1,4 @@
-/* Port of bend2/surface/family_poly.bend: universe-polymorphic family schemas. Chunk 1 (Bend lines
+/* Port of surface/family_poly.bend: universe-polymorphic family schemas. Chunk 1 (Bend lines
  * 1-288): raw traversals over family declarations, the scheme catalog, instance renaming and the
  * export validation that computes instance names.
  * Lists: a Telescope is a Vec of TeleBinder pointers, ctors are CtorDecl pointers, members are Decl

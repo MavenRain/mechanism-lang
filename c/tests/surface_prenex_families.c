@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_families.bend (68 lines, oracle label surface-prenex-families): the
+/* Port of tests/surface_prenex_families.bend (68 lines, oracle label surface-prenex-families): the
  * prenex families fixture parses, prints and checks with its family and entry inventories in order, audits,
  * normalizes five computations, refuses the families negatives, two exhausted budgets, a specialization with
  * no polls left, a catalog-lifetime specialization and a prenex family declaration outside a program catalog.

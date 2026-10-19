@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/level.bend: the universe level API over level_var and level_eq. */
+/* Port of kernel/level.bend: the universe level API over level_var and level_eq. */
 #include "kernel.h"
 
 const LevelVar *level_zero(void) { return level_var_lzero(); }

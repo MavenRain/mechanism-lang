@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_universes.bend (oracle label unit-surface-universes): MechEq
+/* Port of tests/surface_universes.bend (oracle label unit-surface-universes): MechEq
  * specializes at Prop, data and a high universe literal and keeps singleton elimination, and
  * MechSum takes the maximum of two unequal universes in both directions. Imports surface_catalog
  * as Test (c/tests/surface_catalog.h). */

@@ -1,4 +1,4 @@
-/* Port of bend2/rust/resolve.bend: resolve for the Rust importer. It builds the module list of
+/* Port of rust/resolve.bend: resolve for the Rust importer. It builds the module list of
  * lib.rs and its order (CD3), the item table with the mech name of each Rust name (CD5, the inverse
  * of D7), the collision checks, the name check of each body, and the `.mech` file of each module
  * (CD4). `src/nat.rs` is not parsed: it must be the fixed text of the emitter (CD7). The D7

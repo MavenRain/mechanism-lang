@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_budget_dag.bend (oracle label unit-kernel-budget-dag). */
+/* Port of tests/kernel_budget_dag.bend (oracle label unit-kernel-budget-dag). */
 #include "driver.h"
 
 /* level_dag(depth): a level DAG of the given depth, each node sharing one prior node twice. */

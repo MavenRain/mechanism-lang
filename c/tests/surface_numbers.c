@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_numbers.bend (55 lines, oracle label surface-numbers): sixteen numeric surface
+/* Port of tests/surface_numbers.bend (55 lines, oracle label surface-numbers): sixteen numeric surface
  * cases checked against G.initial() with the frozen checked form or refusal text, then a huge-width inj
  * round trip. Prints SURFACE-NUMBERS-OK fields or SURFACE-NUMBERS-FAIL message. No arguments. The case
  * table is generated from the Bend literals by W/hop279-run.sh (byte for byte). */

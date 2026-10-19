@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/literal.bend: string and integer literals. */
+/* Port of kernel/literal.bend: string and integer literals. */
 #include "kernel.h"
 
 Literal literal_lstring(Str value) {

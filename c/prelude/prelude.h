@@ -1,4 +1,6 @@
-/* bend2/prelude ported to C: the trusted prelude catalogs. One section per Bend module
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* prelude ported to C: the trusted prelude catalogs. One section per Bend module
  * (dependent, congruence, equality, families), the same definition names in snake_case with the
  * module as prefix and the same definition order. Comp and Result payloads: a PolyCatalog or a
  * FamilyCatalog (pointer types, the surface precedent); the variable functions carry a
@@ -10,7 +12,7 @@
 #include "kernel.h"
 #include "surface.h"
 
-/* ---- dependent (bend2/prelude/dependent.bend) ---- */
+/* ---- dependent (prelude/dependent.bend) ---- */
 Result dependent_variable(Heap *heap, Nat index);
 const Term *dependent_arrow(Heap *heap, TeleBinder binder, const Term *body);
 const Term *dependent_lambda(Heap *heap, TeleBinder binder, const Term *body);
@@ -38,7 +40,7 @@ Decl dependent_recursor(Heap *heap, const LevelVar *u, const LevelVar *v, const 
 Comp dependent_catalog_comp(Heap *heap, Globals globals);
 Result dependent_catalog(Heap *heap, Globals globals, Budget budget);
 
-/* ---- congruence (bend2/prelude/congruence.bend) ---- */
+/* ---- congruence (prelude/congruence.bend) ---- */
 Result congruence_variable(Heap *heap, Nat index);
 const Term *congruence_eq(Heap *heap, Str name, const Term *carrier, const Term *left, const Term *right);
 FamilyRaw congruence_equality(Heap *heap, Str name, const LevelVar *level);
@@ -47,7 +49,7 @@ Decl congruence_congr(Heap *heap, const LevelVar *u, const LevelVar *v);
 Comp congruence_catalog_comp(Heap *heap, Globals globals);
 Result congruence_catalog(Heap *heap, Globals globals, Budget budget);
 
-/* ---- equality (bend2/prelude/equality.bend) ---- */
+/* ---- equality (prelude/equality.bend) ---- */
 Result equality_variable(Heap *heap, Nat index);
 /* params and indices: Vecs of Term pointers. */
 const Term *equality_family(Heap *heap, Str name, const Vec *params, Vec indices);
@@ -75,7 +77,7 @@ Comp equality_declare_equality(Heap *heap, FamilyRaw raw, Globals globals, const
 Comp equality_catalog_comp(Heap *heap, Globals globals);
 Result equality_catalog(Heap *heap, Globals globals, Budget budget);
 
-/* ---- families (bend2/prelude/families.bend) ---- */
+/* ---- families (prelude/families.bend) ---- */
 Result families_variable(Heap *heap, Nat index);
 Comp families_declare_equality(Heap *heap, FamilyRaw raw, Globals globals);
 Comp families_catalog_comp(Heap *heap, Globals globals);

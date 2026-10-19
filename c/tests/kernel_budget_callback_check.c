@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_budget_callback_check.bend (oracle label unit-kernel-budget-callback-check).
+/* Port of tests/kernel_budget_callback_check.bend (oracle label unit-kernel-budget-callback-check).
  * The Test.* helpers are the statics of c/tests/kernel_budget_callbacks.c (scripted, deadline, refused,
  * next_answer) and Dag.term_dag is the static of c/tests/kernel_budget_dag.c, copied here. */
 #include "driver.h"

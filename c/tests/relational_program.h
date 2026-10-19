@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_program.bend: program-level helpers of the relational test
+/* Port of tests/relational_program.bend: program-level helpers of the relational test
  * drivers (law probes, staged elaboration, entry inventories). A library module (no main). */
 #ifndef MECH_RELATIONAL_PROGRAM_H
 #define MECH_RELATIONAL_PROGRAM_H

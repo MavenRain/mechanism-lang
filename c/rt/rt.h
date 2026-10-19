@@ -1,3 +1,5 @@
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
 /* Mechanism C runtime: arena allocation, byte strings, vectors, maps, big naturals,
  * host effects and the large-stack main wrapper. One header for the whole component. */
 #ifndef MECH_RT_H
@@ -162,7 +164,7 @@ NatDiv nat_divmod(Arena *arena, Nat a, Nat b);
 Str nat_to_decimal(Arena *arena, Nat n);
 NatParse nat_parse_decimal(Arena *arena, Str s);
 
-/* ---- host effects (ports of bend2/effects/fs.c and bend2/cli/effects) ---- */
+/* ---- host effects (ports of effects/fs.c and cli/effects) ---- */
 typedef enum { FS_OK, FS_ERRNO, FS_OOM, FS_BAD_PATH } FsStatus;
 typedef struct {
   FsStatus status;
@@ -191,7 +193,7 @@ typedef struct {
 } ProcessResult;
 
 /* Runs argv (NULL terminated, at most 4 entries used by the Bend host) with stdout and stderr
- * redirected to the named files, as bend2/cli/effects/process.c does. */
+ * redirected to the named files, as cli/effects/process.c does. */
 ProcessResult host_process_run(const char *const *argv, size_t argc, Str stdout_path, Str stderr_path);
 /* Path of the running executable; empty on hosts that cannot tell. */
 Str host_executable_path(Arena *arena);

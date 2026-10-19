@@ -1,4 +1,4 @@
-/* Port of bend2/surface/token.bend: source locations, token kinds, their descriptions and tags.
+/* Port of surface/token.bend: source locations, token kinds, their descriptions and tags.
  * Loc columns are Nats (Error.Parse carries them), advanced by the byte counts the lexer passes. */
 #include "surface.h"
 

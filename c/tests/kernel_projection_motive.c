@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_projection_motive.bend (oracle label unit-kernel-projection-motive). */
+/* Port of tests/kernel_projection_motive.bend (oracle label unit-kernel-projection-motive). */
 #include "driver.h"
 #include "levels_protocol.h"
 

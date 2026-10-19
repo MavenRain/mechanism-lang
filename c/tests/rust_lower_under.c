@@ -1,5 +1,5 @@
 /* C only: the underscore rule of c/rust/lower.c local names, which the Bend gates do not reach.
- * bend2/rust/lower.bend:50-59: is_word(s) is `s != ""`, and under_rest drops the leading `_` of
+ * rust/lower.bend:50-59: is_word(s) is `s != ""`, and under_rest drops the leading `_` of
  * a local spelling when the rest is a word, so the emitter's unused binder `_x` lowers to `x`.
  * Driver: `rust_lower_under`, no arguments. Each case lowers two fns `probe` whose parameter or
  * let binder spellings differ, prints both with syntax_print and compares the bytes: an `_`

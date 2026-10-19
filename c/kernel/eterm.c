@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/eterm.bend: the erased kernel term, its declarations and their printers. */
+/* Port of kernel/eterm.bend: the erased kernel term, its declarations and their printers. */
 #include "kernel.h"
 
 /* Left to right concatenation of the parts. */

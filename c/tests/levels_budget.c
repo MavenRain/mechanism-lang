@@ -1,4 +1,4 @@
-/* Port of bend2/tests/levels_budget.bend (oracle label unit-levels-budget). */
+/* Port of tests/levels_budget.bend (oracle label unit-levels-budget). */
 #include "driver.h"
 
 static bool exhausted(Result result) {

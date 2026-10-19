@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_oracle_native_probe.bend (25 lines): prints the four refusal
+/* Port of tests/relational_oracle_native_probe.bend (25 lines): prints the four refusal
  * oracle answers of relational_negatives for one prefix. The Bend driver has no JS build, no
  * _bend2 wrapper and no harness call, so there is no oracle record: c-test runs it with the
  * prefixes "quantity: alpha" and "mismatch:" and compares the output with

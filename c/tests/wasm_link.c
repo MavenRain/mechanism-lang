@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_link.bend (oracle label unit-wasm-link): ten checks of the link
+/* Port of tests/wasm_link.bend (oracle label unit-wasm-link): ten checks of the link
  * inference over a three-row program table; each prints `PASS name`, and the first mismatch dies
  * with exit 1 and the expected and observed texts. */
 #include <stdarg.h>

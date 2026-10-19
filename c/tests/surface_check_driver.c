@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_check_driver.bend (oracle label surface-check): checks SOURCE against the
+/* Port of tests/surface_check_driver.bend (oracle label surface-check): checks SOURCE against the
  * initial globals, or against the empty globals under --empty, and prints the checked form of the rows. */
 #include "driver.h"
 #include "surface.h"

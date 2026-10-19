@@ -1,5 +1,5 @@
-/* Port of bend2/tests/prelude_left_kan_roundtrip.bend (69 lines): the left Kan cocone and descent round-trip
- * contracts. Reads `_bend2/left-kan-roundtrip-contracts/focused-source.mech` under argv[1] (default "."), checks it
+/* Port of tests/prelude_left_kan_roundtrip.bend (69 lines): the left Kan cocone and descent round-trip
+ * contracts. Reads `_tcc/left-kan-roundtrip-contracts/focused-source.mech` under argv[1] (default "."), checks it
  * from G.initial(), the required round-trip contracts, that no axiom was introduced, the computations and the
  * negatives in test/neg/left-kan-roundtrip, then prints PRELUDE-LEFT-KAN-ROUNDTRIP-OK fields or
  * PRELUDE-LEFT-KAN-ROUNDTRIP-FAIL message. With exactly ROOT --record-oracles it prints the refusal text of each
@@ -71,7 +71,7 @@ static Task checked_contracts(Heap *heap, Str root, const ElabChecked **checked)
   Vec required;
   Vec axioms;
   Vec none = vec_new(heap->arena);
-  RELATIONAL_TRY(relational_read(heap, root, str_lit("_bend2/left-kan-roundtrip-contracts/focused-source.mech"),
+  RELATIONAL_TRY(relational_read(heap, root, str_lit("_tcc/left-kan-roundtrip-contracts/focused-source.mech"),
                                  &source));
   RELATIONAL_TRY(relational_checked(heap, global_initial(heap), source, checked));
   required = STRINGS(heap, REQUIRED);

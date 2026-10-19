@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/error.bend. */
+/* Port of kernel/error.bend. */
 #include "kernel.h"
 
 Error error_make(ErrorKind kind, Str message) {

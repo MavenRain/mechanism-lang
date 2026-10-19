@@ -32,9 +32,9 @@ def main():
                    capture_output=True, text=True, timeout=30)
     with tempfile.TemporaryDirectory(prefix="mechanism-cocone-equality-") as directory:
         work = Path(directory)
-        source = work / "_bend2/left-kan-cocone-equality-contracts/focused-source.mech"
+        source = work / "_tcc/left-kan-cocone-equality-contracts/focused-source.mech"
         source.parent.mkdir(parents=True)
-        shutil.copyfile(ROOT / "_bend2/left-kan-cocone-equality-contracts/focused-source.mech", source)
+        shutil.copyfile(ROOT / "_tcc/left-kan-cocone-equality-contracts/focused-source.mech", source)
         negatives = work / "test/neg/left-kan-laws"
         negatives.mkdir(parents=True)
         for path in (ROOT / "test/neg/left-kan-laws").glob("cocone-eq-*"):

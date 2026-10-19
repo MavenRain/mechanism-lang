@@ -1,4 +1,4 @@
-/* Port of bend2/import/report.bend: the parity report over a translated export. Every declaration
+/* Port of import/report.bend: the parity report over a translated export. Every declaration
  * row is lowered with the missing-prelude resolver and the default budget (prepare), the summary
  * counts the outcomes per declaration kind, and files renders manifest.json, types.ndjson and
  * summary.txt. Every definition keeps its Bend name with the report_ prefix, in Bend order; the

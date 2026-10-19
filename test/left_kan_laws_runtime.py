@@ -62,7 +62,7 @@ def main():
         directory = "left-kan-mediator-equality" if mediator_equality else ("left-kan-roundtrip" if roundtrip else ("left-kan-cocone-action" if action else ("left-kan-cocone-equality" if equality else "left-kan-cocone-congruence")))
         if solution_transport:
             directory = "left-kan-solution-transport"
-        source = (ROOT / "_bend2" / directory / "focused-source.mech").read_text()
+        source = (ROOT / "_tcc" / directory / "focused-source.mech").read_text()
     anchor = "def sharedLanInput : Nat := 37"
     alternate_input = "sharedLanInput41"
     if source.count(anchor) != 1 or re.search(r"\b" + alternate_input + r"\b", source):

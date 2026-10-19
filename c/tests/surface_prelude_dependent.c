@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude_dependent.bend (83 lines, oracle label surface-prelude-dependent): the
+/* Port of tests/surface_prelude_dependent.bend (83 lines, oracle label surface-prelude-dependent): the
  * dependent catalog holds six templates with their arities, an exhausted budget refuses the catalog, 29
  * instances install over prelude/init.mech against their frozen contracts, the fixture client checks and
  * audits, twelve computations normalize and six negatives refuse. Prints PRELUDE-DEPENDENT-OK fields or

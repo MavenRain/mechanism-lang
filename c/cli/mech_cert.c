@@ -1,4 +1,4 @@
-/* Port of bend2/mech_cert.bend: the mech_cert program. The arguments (argv without the program name)
+/* Port of mech_cert.bend: the mech_cert program. The arguments (argv without the program name)
  * go to Cert.arguments (c/cli/cert.c), whose result is the exit code. This file holds main, so the
  * Makefile keeps it out of C_CLI_SOURCES (C_CLI_MAINS) and links it only into _tcc/bin/mech_cert. */
 #include "cli.h"

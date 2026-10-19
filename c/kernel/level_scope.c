@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/level_scope.bend: universe levels stay inside the global parameter scope. */
+/* Port of kernel/level_scope.bend: universe levels stay inside the global parameter scope. */
 #include "kernel.h"
 
 static void push(Heap *heap, Vec *xs, void *item) {

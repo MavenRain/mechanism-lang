@@ -163,7 +163,7 @@ class FunctorControls(unittest.TestCase):
         self.accept(directory, prelude)
         self.accept_computations(directory, prelude, self.without("storedMorphisms"))
         self.reject_computations(directory, prelude,
-                                 "the term has type (Out SPi w y C (APt w y) (Out SPi w x C (APt w x)")
+                                 "the term has type (Out SArg w y (APt w y) (Out SArg w x (APt w x)")
 
     def test_nested_object_quantities_match_export(self):
         erased = self.adapter
@@ -256,9 +256,9 @@ class FunctorControls(unittest.TestCase):
             "        (map C D c d F x y f) (map C D c d F y a g))")
         for label, adapter, projection, needle in (
                 ("symmetric-map-id", identity, "identityProjection",
-                 "the term has type (Lan SMu Proofs [(Out SPi w x C (APt w x) identities)]"),
+                 "the term has type (Lan SMu Proofs [(Out SArg w x (APt w x) identities)]"),
                 ("symmetric-map-comp", composition, "compositionProjection",
-                 "the term has type (Lan SMu Proofs [(Out SPi w g (Out SPi w y C (APt w a)")):
+                 "the term has type (Lan SMu Proofs [(Out SArg w g (APt w g) (Out SArg w f (APt w f)")):
             prelude = self.replace(self.prelude, self.adapter, adapter)
             directory = self.evidence(label)
             self.accept(directory, prelude)

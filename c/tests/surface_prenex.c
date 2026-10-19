@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex.bend (51 lines, oracle label surface-prenex): the prenex fixture parses,
+/* Port of tests/surface_prenex.bend (51 lines, oracle label surface-prenex): the prenex fixture parses,
  * prints and checks without leaking its symbolic templates, audits, keeps its row order, normalizes four
  * computations, refuses the prenex negatives, an exhausted budget and a catalog-lifetime specialization, and
  * checks a large universe literal. Prints PRENEX-OK fields or PRENEX-FAIL message. With

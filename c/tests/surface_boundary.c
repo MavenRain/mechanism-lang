@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_boundary.bend (oracle label unit-surface-boundary): raw family scope,
+/* Port of tests/surface_boundary.bend (oracle label unit-surface-boundary): raw family scope,
  * universality, callback cancellation, nested budgets and inventories. Imports surface_catalog.bend as
  * Test (c/tests/surface_catalog.h). */
 #include "surface_catalog.h"

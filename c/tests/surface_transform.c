@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_transform.bend (oracle label unit-surface-transform): Poly.map_term
+/* Port of tests/surface_transform.bend (oracle label unit-surface-transform): Poly.map_term
  * renames a family and substitutes its level under a 100 poll budget, exhausts a 5 poll budget, and
  * map_levels rejects out-of-scope and unsubstituted level variables. */
 #include "driver.h"

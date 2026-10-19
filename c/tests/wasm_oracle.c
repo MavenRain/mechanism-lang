@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_oracle.bend (oracle label fixture-oracle): 33 static erased snapshots
+/* Port of tests/wasm_oracle.bend (oracle label fixture-oracle): 33 static erased snapshots
  * from the original Wasm fixtures, each emitted by Emit.program with the export "main". One JSON
  * line per snapshot: the name, the original runtime answer as text, and the module bytes as a
  * decimal list; an emit failure dies with exit 1 and "name: error". The rows_N bodies are a

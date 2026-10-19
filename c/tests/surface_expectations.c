@@ -1,6 +1,6 @@
-/* Port of bend2/tests/surface_expectations.bend (oracle label driver-surface-expectations): the
+/* Port of tests/surface_expectations.bend (oracle label driver-surface-expectations): the
  * injection expectation helper and the public elaboration of SInj agree on every width case.
- * R.require and R.finish of bend2/tests/relational_common.bend are inlined here because the rest of
+ * R.require and R.finish of tests/relational_common.bend are inlined here because the rest of
  * that module needs the parser, the elaborator and the cli output (S5.1). */
 #include "driver.h"
 #include "surface.h"

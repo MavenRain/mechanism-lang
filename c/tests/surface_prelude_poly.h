@@ -1,4 +1,4 @@
-/* Library boundary of c/tests/surface_prelude_poly.c (port of bend2/tests/surface_prelude_poly.bend).
+/* Library boundary of c/tests/surface_prelude_poly.c (port of tests/surface_prelude_poly.bend).
  * surface_foundation_common and surface_raw_common import the Bend module as Audit; they link
  * _tcc/surface_prelude_poly_lib.o (built with -DMECH_DRIVER_LIBRARY, which drops main). */
 #ifndef MECH_SURFACE_PRELUDE_POLY_H

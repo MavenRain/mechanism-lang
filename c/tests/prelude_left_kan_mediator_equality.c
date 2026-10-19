@@ -1,5 +1,5 @@
-/* Port of bend2/tests/prelude_left_kan_mediator_equality.bend (69 lines): the left Kan descent reflection and
- * choice equality contracts. Reads `_bend2/left-kan-mediator-equality-contracts/focused-source.mech` under argv[1] (default "."), checks it
+/* Port of tests/prelude_left_kan_mediator_equality.bend (69 lines): the left Kan descent reflection and
+ * choice equality contracts. Reads `_tcc/left-kan-mediator-equality-contracts/focused-source.mech` under argv[1] (default "."), checks it
  * from G.initial(), the required mediator equality contracts, that no axiom was introduced, the computations and the
  * negatives in test/neg/left-kan-mediator-equality (digest policy), then prints PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-OK fields or
  * PRELUDE-LEFT-KAN-MEDIATOR-EQUALITY-FAIL message. With exactly ROOT --record-oracles it prints the refusal text of each
@@ -71,7 +71,7 @@ static Task checked_contracts(Heap *heap, Str root, const ElabChecked **checked)
   Vec required;
   Vec axioms;
   Vec none = vec_new(heap->arena);
-  RELATIONAL_TRY(relational_read(heap, root, str_lit("_bend2/left-kan-mediator-equality-contracts/focused-source.mech"),
+  RELATIONAL_TRY(relational_read(heap, root, str_lit("_tcc/left-kan-mediator-equality-contracts/focused-source.mech"),
                                  &source));
   RELATIONAL_TRY(relational_checked(heap, global_initial(heap), source, checked));
   required = STRINGS(heap, REQUIRED);

@@ -1,4 +1,4 @@
-/* Port of bend2/import/decls.bend: the declaration entries of a lean4export NDJSON stream
+/* Port of import/decls.bend: the declaration entries of a lean4export NDJSON stream
  * (axiom, def, thm, opaque, quot and the inductive groups of types, ctors and recs) with the
  * group consistency checks; every index stays decimal text. */
 #include "import.h"

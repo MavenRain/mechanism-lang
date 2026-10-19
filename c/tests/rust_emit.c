@@ -1,4 +1,4 @@
-/* C port of bend2/tests/rust_emit.bend. Driver: `rust_emit sample <init|second>` or
+/* C port of tests/rust_emit.bend. Driver: `rust_emit sample <init|second>` or
  * `classify <file.mech> [<file.mech>]`.
  * `sample` prints a module from a hand-built IR. Each item of the text must be equal to the same
  * item of the hand-written target crate.

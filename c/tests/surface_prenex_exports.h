@@ -1,4 +1,4 @@
-/* Port of the library half of bend2/tests/surface_prenex_exports.bend: roundtrip, which
+/* Port of the library half of tests/surface_prenex_exports.bend: roundtrip, which
  * surface_prenex_dependency_exports imports as Exports.roundtrip. _tcc/surface_prenex_exports_lib.o is built
  * from c/tests/surface_prenex_exports.c with -DMECH_DRIVER_LIBRARY (no main). */
 #ifndef MECH_SURFACE_PRENEX_EXPORTS_H

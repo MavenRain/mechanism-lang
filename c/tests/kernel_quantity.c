@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_quantity.bend (oracle label unit-kernel-quantity). */
+/* Port of tests/kernel_quantity.bend (oracle label unit-kernel-quantity). */
 #include "driver.h"
 
 static int verify(bool ok) {

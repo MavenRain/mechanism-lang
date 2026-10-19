@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_raw_common.bend (84 lines): refusal and exact compare a refusal with the
+/* Port of tests/surface_raw_common.bend (84 lines): refusal and exact compare a refusal with the
  * expected kernel error (prefix or equal text), collision/budget_error/scope_error build the expected errors,
  * entries/families/same_globals compare two global tables, labeled and run sequence named cases, and
  * measure reads the polls a finite budget spent. Library only: no main. */

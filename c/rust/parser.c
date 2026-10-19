@@ -1,4 +1,4 @@
-/* Port of bend2/rust/parser.bend: the recursive descent parser from Rust tokens to the AST. The
+/* Port of rust/parser.bend: the recursive descent parser from Rust tokens to the AST. The
  * definitions keep the Bend names (prefix rust_parser_) and the Bend order; the C only helpers stand
  * just before their first use.
  *

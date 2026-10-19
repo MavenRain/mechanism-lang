@@ -1,4 +1,4 @@
-/* Port of bend2/surface/parser.bend, chunk 1 = Bend lines 1-422: Parsed, the helpers value..starts_atom,
+/* Port of surface/parser.bend, chunk 1 = Bend lines 1-422: Parsed, the helpers value..starts_atom,
  * PValue, the read_* group, Mode, collection..family_separator and the extended_decl law.
  * Chunk 2 = parse (Bend 423-888), chunk 3 = Bend 888-1155 and the exports; the three chunks are
  * concatenated into c/surface/parser.c in the chunk 3 hop. */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_protocols.bend: the 18 prelude relational protocols P0..P17 and
+/* Port of tests/relational_protocols.bend: the 18 prelude relational protocols P0..P17 and
  * surface-check over the sibling binaries `<dir of argv[0]>/<module>`; the choose_N / selected_N
  * chain of the Bend file is kept definition for definition. */
 #include "dispatch.h"

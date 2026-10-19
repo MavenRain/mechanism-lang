@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/order.bend: the structural recursion certificate. Same definitions in
+/* Port of kernel/order.bend: the structural recursion certificate. Same definitions in
  * the same order. List<Status> is a Vec of pointers to the static status cells, index 0 the
  * head (the innermost binder); List<Step> a Vec of OrderStep pointers, head first; List<Call>
  * a Vec of OrderCall pointers; List<Row> a Vec of OrderRow pointers; the member list a Vec of

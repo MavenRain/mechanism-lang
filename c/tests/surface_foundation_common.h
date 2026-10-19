@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_foundation_common.bend: shared helpers of the foundation prelude drivers
+/* Port of tests/surface_foundation_common.bend: shared helpers of the foundation prelude drivers
  * (congruence, dependent, equality_ops, transport). Library only (no main); _tcc/surface_foundation_common.o
  * links into its importers with _tcc/surface_prelude_poly_lib.o and _tcc/surface_foundation_data.o. */
 #ifndef MECH_SURFACE_FOUNDATION_COMMON_H

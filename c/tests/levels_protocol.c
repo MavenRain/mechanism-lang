@@ -1,4 +1,4 @@
-/* Port of bend2/tests/levels_protocol.bend (oracle label driver-levels-protocol): the universe level
+/* Port of tests/levels_protocol.bend (oracle label driver-levels-protocol): the universe level
  * protocol over the algebra, the checker and the polymorphism catalog. Prints the fixed OK line or
  * dies with 1 and the `name: error` lines joined by newline. arguments(args) ignores argv. */
 #include "driver.h"

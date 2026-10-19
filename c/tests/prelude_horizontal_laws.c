@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_horizontal_laws.bend (41 lines): the horizontal laws prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_horizontal_laws.bend (41 lines): the horizontal laws prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-HORIZONTAL-LAWS-OK fields or PRELUDE-HORIZONTAL-LAWS-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -27,7 +27,7 @@ static void probe(Heap *heap, Vec *out, const char *name, uint32_t payload, uint
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_horizontal_laws.bend line 12, 1205 names) */
+/* expected_entries() (tests/prelude_horizontal_laws.bend line 12, 1205 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Constant", "Delta", "End", "External_Functor", "External_Source_Category",
     "External_Source_Hom", "External_Source_assoc", "External_Source_comp", "External_Source_compId",
@@ -467,13 +467,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "naturalityWitness", "pairCode", "pathTrans", "sharedNatInput", "verticalValue"
 };
 
-/* expected_families() (bend2/tests/prelude_horizontal_laws.bend line 15, 12 names) */
+/* expected_families() (tests/prelude_horizontal_laws.bend line 15, 12 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Mixed_W_Ops_Middle", "Mixed_W_Ops_Source", "Mixed_W_Ops_Target", "Path", "Point", "Run_Middle", "Run_Source",
     "Run_Target", "SeparateTarget", "Wide_W_Ops_Middle", "Wide_W_Ops_Source", "Wide_W_Ops_Target"
 };
 
-/* negatives() (bend2/tests/prelude_horizontal_laws.bend line 18, 7 names) */
+/* negatives() (tests/prelude_horizontal_laws.bend line 18, 7 names) */
 static const char *const NEGATIVES[] = {
     "false-components", "one-component", "erased-object", "missing-first-congruence", "missing-second-congruence",
     "nominal-target", "wrong-endpoint"

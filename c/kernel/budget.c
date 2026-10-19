@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/budget.bend: the poll budget, the Comp continuation monad and its runners.
+/* Port of kernel/budget.bend: the poll budget, the Comp continuation monad and its runners.
  * Bend closures become a function pointer with a heap allocated context; the tail recursive
  * runners (run_step, run_poll_step, run_io_step) become loops over the same states. */
 #include "kernel.h"

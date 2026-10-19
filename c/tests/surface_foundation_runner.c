@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_foundation_runner.bend: the foundation protocol runner. `equality`
+/* Port of tests/surface_foundation_runner.bend: the foundation protocol runner. `equality`
  * calls surface_equality main() (the rest is dropped); every other known mode passes the rest to
  * the module arguments(rest) (surface-check to surface_check_driver run(rest)); no mode or an
  * unknown mode dies 2. Each module is the sibling binary `<dir of argv[0]>/<module>`. */

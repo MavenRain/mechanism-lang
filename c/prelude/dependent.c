@@ -1,4 +1,4 @@
-/* bend2/prelude/dependent.bend: the Pi and Sigma catalog (MechPi, MechSigma, mechSigmaMk,
+/* prelude/dependent.bend: the Pi and Sigma catalog (MechPi, MechSigma, mechSigmaMk,
  * mechSigmaFst, mechSigmaSnd, mechSigmaRec) as a Poly catalog. */
 #include "prelude.h"
 

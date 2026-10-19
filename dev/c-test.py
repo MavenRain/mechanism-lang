@@ -174,7 +174,7 @@ def main() -> int:
                 marker=check.get("marker"), timeout=check.get("timeout", 600))
 
     failures = [result["name"] for result in results if not result["passed"]]
-    acceptance_profile = args.no_build and os.environ.get("BEND_TEST_BACKEND") == "native"
+    acceptance_profile = args.no_build and os.environ.get("MECH_TEST_BACKEND") == "native"
     profile = ("native-acceptance" if acceptance_profile else "existing" if args.no_build else
                "native-cli-js-tests" if args.backend == "mixed" else "uniform")
     report = dict(suite=args.suite, backend="mixed" if acceptance_profile else args.backend,
@@ -182,8 +182,8 @@ def main() -> int:
                   build_backend=None if args.no_build else args.backend, checks=len(results), failures=failures,
                   manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(), results=results)
     (LOG / (args.suite + "-report.json")).write_text(json.dumps(report, indent=2) + "\n")
-    marker = {"all": "BEND2 TESTS", "import": "BEND2 IMPORT TESTS",
-              "extras": "BEND2 EXTRAS"}[args.suite]
+    marker = {"all": "C TESTS", "import": "C IMPORT TESTS",
+              "extras": "C EXTRAS"}[args.suite]
     print(marker + (" FAIL" if failures else " PASS"), flush=True)
     return bool(failures)
 

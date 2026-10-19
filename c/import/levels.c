@@ -1,4 +1,4 @@
-/* Port of bend2/import/levels.bend: the universe level entries of a lean4export NDJSON stream
+/* Port of import/levels.bend: the universe level entries of a lean4export NDJSON stream
  * (LZero, LSucc{index}, LMax{left, right}, LImax{left, right}, LParam{index}); indices stay text. */
 #include "import.h"
 

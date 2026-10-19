@@ -1,4 +1,4 @@
-/* C port of bend2/rust/emit.bend: lowers the erased program IR (rir.c) to the Rust AST of the
+/* C port of rust/emit.bend: lowers the erased program IR (rir.c) to the Rust AST of the
  * frontend (ast.c) and prints it with print.c, which has the rustfmt layout rules. Bend 2 has no
  * mutual recursion, so each Bend walker takes a list and a single value goes through it as a list of
  * one element (`one_ty(tys([t]))`, `one(nodes([e]))`). C has mutual recursion: emit_ty and emit_ex

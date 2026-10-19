@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/check_engine.bend: the bidirectional type checker. Comp values are
+/* Port of kernel/check_engine.bend: the bidirectional type checker. Comp values are
  * Inferred *, Former *, Point *, Usage *, Ctx *, Big *, const Value *, const Term *,
  * const LevelVar *, kernel_unit() and the kernel bool box. The Bend do blocks become
  * budget_bind chains; each continuation keeps its free variables in a heap allocated Frame. */

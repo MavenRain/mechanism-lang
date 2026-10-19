@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/positivity.bend: constructor telescopes, families and the strict
+/* Port of kernel/positivity.bend: constructor telescopes, families and the strict
  * positivity check. Same definitions in the same order. Telescope is a Vec of TeleBinder
  * pointers, List<Ctor> a Vec of Ctor pointers, List<String> a Vec of Str pointers. */
 #include "kernel.h"

@@ -1,4 +1,4 @@
-/* Port of bend2/import/export.bend (import "Export"): the reader of a Lean 4 NDJSON export, format
+/* Port of import/export.bend (import "Export"): the reader of a Lean 4 NDJSON export, format
  * 3.1.0. Line 1 holds the metadata object; every later line is one name, level or expression row
  * (keyed "in", "il" or "ie" next to its tag) or one declaration object. Rows are indexed by the
  * decimal text of their stream index and every reference must name a row read before it. The Bend

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_left_kan.bend (57 lines): the left Kan extension prelude suite. Reads the category
+/* Port of tests/prelude_left_kan.bend (57 lines): the left Kan extension prelude suite. Reads the category
  * prelude and the left Kan fixture clients under argv[1] (default "."), checks the inventory, the required
  * instances, the computations, the negative inventory, the negatives and the budget refusal, then prints
  * PRELUDE-LEFT-KAN-OK fields or PRELUDE-LEFT-KAN-FAIL message. */

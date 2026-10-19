@@ -1,4 +1,4 @@
-/* C port of bend2/kernel/global.bend: the global environment of definitions, axioms, primitives and
+/* C port of kernel/global.bend: the global environment of definitions, axioms, primitives and
  * inductive families. Entries and families are first-match lists with one name index each, and every
  * Globals value is persistent (it stays valid after add, add_family and without_family), as in Bend. */
 #include "kernel.h"

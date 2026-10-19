@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_numbers.bend (oracle label unit-kernel-numbers). */
+/* Port of tests/kernel_numbers.bend (oracle label unit-kernel-numbers). */
 #include "driver.h"
 
 static int verify(bool ok) {

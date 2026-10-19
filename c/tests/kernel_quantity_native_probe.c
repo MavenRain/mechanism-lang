@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_quantity_native_probe.bend. The Bend driver has no JS build, no
+/* Port of tests/kernel_quantity_native_probe.bend. The Bend driver has no JS build, no
  * _bend2 wrapper and no harness call, so there is no oracle record: c-test runs it with level 0
  * and compares the output with c/tests/kernel_quantity_native_probe.expected. Usage: one
  * natural level argument. */

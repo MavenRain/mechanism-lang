@@ -1,4 +1,4 @@
-/* Port of bend2/surface/poly.bend: universe-polymorphic schemes. Defunctionalized level and name
+/* Port of surface/poly.bend: universe-polymorphic schemes. Defunctionalized level and name
  * callbacks (PolyAction) drive one budgeted traversal over kernel terms; a catalog of schemes
  * (PolyCatalog) is declared against the globals and instantiated by level substitution.
  * Comp values: const Term *, Shape *, Addr *, Leg *, Branch *, MaybeMotive *, Vec *, Decl *,

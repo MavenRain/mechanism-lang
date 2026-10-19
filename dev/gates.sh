@@ -35,7 +35,7 @@ zmodload zsh/datetime
 SELF=${0:A}
 ROOT=${0:A:h}/..
 ROOT=${ROOT:A}
-export BEND_TEST_BACKEND=native
+export MECH_TEST_BACKEND=native
 WORK=$ROOT/.gatework/gates
 MEASURE_FILE=$WORK/measure.txt
 mkdir -p $WORK
@@ -68,8 +68,8 @@ MED=30
 SLOW=120
 SUITE=300
 CATEGORY=900
-# Extra Bend regressions include a separate 5400-second frozen corpus replay.
-BEND_EXTRA=7200
+# Extra C regressions include a separate 5400-second frozen corpus replay.
+EXTRA=7200
 
 # gate_timed TIER NAME CMD...
 # Runs one leg under the named tier, records the elapsed wall time in
@@ -170,7 +170,7 @@ leg () {
 
 # The legs, in the order of plan section 9.  BUILD ends the run when it
 # fails, because every later leg reads the build it makes.
-if ! leg SLOW BUILD '^BEND2 BUILD PASS$' zsh -c 'make -C "$1" c-build && print -r -- "BEND2 BUILD PASS"' bend-build $ROOT; then
+if ! leg SLOW BUILD '^C BUILD PASS$' zsh -c 'make -C "$1" c-build && print -r -- "C BUILD PASS"' c-build $ROOT; then
   print -r -- ""
   cat $MEASURE_FILE
   print -r -- ""
@@ -303,9 +303,9 @@ leg SUITE PRELUDE-NATTRANS '^PRELUDE-NATTRANS-OK entries=' \
   $ROOT/_tcc/prelude_nattrans $ROOT
 leg SUITE PRELUDE-LEFT-KAN '^PRELUDE-LEFT-KAN-OK entries=' \
   $ROOT/_tcc/prelude_left_kan $ROOT
-# Additional Bend checks include compiler refusals for signed arities that
+# Additional C checks include compiler refusals for signed arities that
 # the original protocol constructors could represent at runtime.
-leg BEND_EXTRA BEND2-EXTRAS '^BEND2 EXTRAS PASS$' \
+leg EXTRA C-EXTRAS '^C EXTRAS PASS$' \
   python3 -I $ROOT/dev/c-test.py --suite extras --no-build
 leg SLOW VEIL-KERNEL '^VEIL-KERNEL OK shapes=3 hosts=2$' python3 -I $ROOT/dev/veil-gates.py
 leg SUITE SUITE-WASM '^SUITE-WASM OK$' \

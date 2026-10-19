@@ -1,4 +1,4 @@
-/* Port of bend2/import/ndjson.bend: a JSON reader driven by an explicit state machine (one step per
+/* Port of import/ndjson.bend: a JSON reader driven by an explicit state machine (one step per
  * input character or finite reduction, the 512-level nesting bound of the original reader), a compact
  * renderer and the typed field accessors. The Bend version walks a String of codepoints; this version
  * walks the UTF-8 bytes of the Str: every structural character is one ASCII byte, a raw string

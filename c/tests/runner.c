@@ -1,4 +1,4 @@
-/* Port of bend2/tests/runner.bend: the test runner that dispatches a mode word to a driver module.
+/* Port of tests/runner.bend: the test runner that dispatches a mode word to a driver module.
  * `unit NAME` and `fixture NAME` call the module main() (the six Bool mains through boolean(...));
  * the other modes pass the remaining arguments to the module arguments(args) or run(args). Each
  * module is the sibling binary `<dir of argv[0]>/<module>` (see dispatch.h). */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_large_addresses.bend (oracle label unit-kernel-large-addresses). */
+/* Port of tests/kernel_large_addresses.bend (oracle label unit-kernel-large-addresses). */
 #include "driver.h"
 #include "levels_protocol.h"
 

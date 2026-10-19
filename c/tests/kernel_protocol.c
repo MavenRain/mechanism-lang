@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_protocol.bend (SUITE-KERNEL): the fixture groups and raw assertions of Veil
+/* Port of tests/kernel_protocol.bend (SUITE-KERNEL): the fixture groups and raw assertions of Veil
  * test/main.ml over ROOT (default test/veil/test): PARSE round trips, CHECK and ERASE golden forms, NEG and
  * ERASE-NEG exact refusals, the two raw kernel negatives, the recursive values and the migrated erasure
  * fixtures. Each case runs in its own arena; its line is printed before the arena is freed. */
@@ -177,12 +177,12 @@ static Task recursive_values(Heap *heap) {
   return relational_kernel(heap, kernel_recursive_validate(heap, checked), NULL);
 }
 
-/* Erasure.erased(checked) (bend2/tests/kernel_erase_driver.bend 9-11) */
+/* Erasure.erased(checked) (tests/kernel_erase_driver.bend 9-11) */
 static Result erasure_erased(Heap *heap, const ElabChecked *checked) {
   return erase_program(heap, checked->globals, &checked->rows);
 }
 
-/* Erasure.process(source) (bend2/tests/kernel_erase_driver.bend 13-17): the printed rows as a boxed Str. */
+/* Erasure.process(source) (tests/kernel_erase_driver.bend 13-17): the printed rows as a boxed Str. */
 static Result erasure_process(Heap *heap, Str source) {
   Result checked = elab_check_in(heap, global_initial(heap), budget_unlimited(), source);
   if (checked.kind == RESULT_FAIL) return checked;

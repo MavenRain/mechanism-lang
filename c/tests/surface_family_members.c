@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_family_members.bend (264 lines, oracle label surface-family-members): family
+/* Port of tests/surface_family_members.bend (264 lines, oracle label surface-family-members): family
  * schema members, their renaming on specialization, explicit export names and their refusals, family reuse,
  * hidden universe levels, closed rechecking and the member budgets, 35 cases in Bend order. With no argv it runs
  * every case and prints FAMILY-MEMBERS-OK cases=<n> or FAMILY-MEMBERS-FAIL <case>: <message>; argv[1] selects

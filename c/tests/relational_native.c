@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native.bend: category, heterogeneous-functor, template-cost and
+/* Port of tests/relational_native.bend: category, heterogeneous-functor, template-cost and
  * surface-check over the sibling binaries `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"
 

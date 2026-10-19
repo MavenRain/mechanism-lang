@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_catalog.bend (oracle label unit-surface-catalog): raw family catalog trust
+/* Port of tests/surface_catalog.bend (oracle label unit-surface-catalog): raw family catalog trust
  * boundaries. surface_boundary and surface_shape_metadata import it as Test, so the shared definitions
  * carry the catalog_ prefix (c/tests/surface_catalog.h) and main compiles only outside
  * MECH_DRIVER_LIBRARY (the levels_regression precedent). */

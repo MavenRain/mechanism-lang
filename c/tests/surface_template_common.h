@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_template_common.bend: shared helpers of the template drivers
+/* Port of tests/surface_template_common.bend: shared helpers of the template drivers
  * (surface_template_composition, surface_template_reuse, surface_template_symbolic_reuse). Library only (no
  * main); _tcc/surface_template_common.o links into its importers with _tcc/surface_template_data.o,
  * _tcc/surface_prenex_common.o, _tcc/surface_prenex_data.o, _tcc/surface_raw_common.o and

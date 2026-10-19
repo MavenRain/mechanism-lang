@@ -1,4 +1,4 @@
-/* C only: a unit check of the line and column tracking of c/rust/lexer.c (bend2/rust/lexer.bend)
+/* C only: a unit check of the line and column tracking of c/rust/lexer.c (rust/lexer.bend)
  * across comments. The Bend gates do not reach it: the parser stops at the first comment token, so a
  * position after a multi-line comment shows only in the lex and check modes of rust_frontend. Each
  * case lexes a source and compares show_tokens (the `rust_frontend lex` text) with the text that the

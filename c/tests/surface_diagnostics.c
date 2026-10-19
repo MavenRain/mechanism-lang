@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_diagnostics.bend (oracle label unit-surface-diagnostics): the exact
+/* Port of tests/surface_diagnostics.bend (oracle label unit-surface-diagnostics): the exact
  * error text of four rejected programs (family members and a recursive poly definition). */
 #include "driver.h"
 #include "surface.h"

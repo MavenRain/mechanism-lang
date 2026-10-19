@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_text.bend (110 lines), same definitions in the same order.
+/* Port of tests/relational_text.bend (110 lines), same definitions in the same order.
  * Strings are byte strings: every separator and word character tested here is ASCII, so a
  * multi-byte character passes through unchanged exactly as the one Bend Char it was. */
 #include "relational_text.h"

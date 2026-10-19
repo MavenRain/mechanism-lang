@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_digest.c: the same MD5 over the same byte prefix; the result
+/* Port of tests/relational_digest.c: the same MD5 over the same byte prefix; the result
  * string lives in the heap arena instead of the Bend IO string. */
 #include "relational_digest.h"
 

@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/quantity.bend: usage quantities and the per level usage intervals of
+/* Port of kernel/quantity.bend: usage quantities and the per level usage intervals of
  * linear checking. A List<Common.Pair<Nat, Interval>> is a Vec of UsageRow pointers in list
  * order; a List<Nat> is a Vec of Nat pointers. Same definitions in the same order. */
 #include "kernel.h"

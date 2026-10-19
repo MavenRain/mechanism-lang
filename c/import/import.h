@@ -1,4 +1,6 @@
-/* Mechanism import component: C port of the bend2/import .bend files, one .c per .bend file and one
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism import component: C port of the import .bend files, one .c per .bend file and one
  * header for the component. Every function that allocates takes the Heap it allocates from and never
  * aborts: a failed allocation sets heap->oom and returns a well formed placeholder; the program
  * boundary checks heap->oom before it prints any result. */
@@ -7,7 +9,7 @@
 
 #include "kernel.h"
 
-/* ---- ndjson (bend2/import/ndjson.bend): JSON values, the parser and the renderer ---- */
+/* ---- ndjson (import/ndjson.bend): JSON values, the parser and the renderer ---- */
 
 /* T: Null, Boolean, Number (its decimal text), Text, Items, Object. */
 typedef enum { JSON_NULL, JSON_BOOLEAN, JSON_NUMBER, JSON_TEXT, JSON_ITEMS, JSON_OBJECT } JsonKind;

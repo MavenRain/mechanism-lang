@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_erase_driver.bend (oracle label erase): checks SOURCE against the initial
+/* Port of tests/kernel_erase_driver.bend (oracle label erase): checks SOURCE against the initial
  * globals with an unlimited budget, erases the checked program and prints the erased rows. */
 #include "driver.h"
 #include "surface.h"

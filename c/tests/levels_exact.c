@@ -1,4 +1,4 @@
-/* Port of bend2/tests/levels_exact.bend (oracle label unit-levels-exact). */
+/* Port of tests/levels_exact.bend (oracle label unit-levels-exact). */
 #include "driver.h"
 
 static int verify(bool ok) {

@@ -1,4 +1,4 @@
-/* Host effects, ported from bend2/effects/fs.c (ops 0..7) and bend2/cli/effects/{process,executable}.c.
+/* Host effects, ported from effects/fs.c (ops 0..7) and cli/effects/{process,executable}.c.
  * Library code never exits; every failure is a returned sum value. */
 #include "rt.h"
 
@@ -317,7 +317,7 @@ ProcessResult host_process_run(const char *const *argv, size_t argc, Str stdout_
         else result = process_result(PROCESS_RAN, exit_code);
       }
     }
-    /* bend2/cli/effects/process.c: a failed spawn or wait keeps exit 127 and writes one stderr line. */
+    /* cli/effects/process.c: a failed spawn or wait keeps exit 127 and writes one stderr line. */
     if (code != 0) dprintf(err, "invalid: %s: %s\n", argv[0], strerror(code));
   }
   close(out);

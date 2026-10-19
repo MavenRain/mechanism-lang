@@ -1,4 +1,4 @@
-/* Port of bend2/wasm/state.bend: the state monad the emitter threads through one function body.
+/* Port of wasm/state.bend: the state monad the emitter threads through one function body.
  * Comp(A) is a closure from the state to the next state and a Result; the value of a Result is the
  * erased A (a pointer). A failed allocation sets heap->oom and yields a computation that fails with
  * the host oom error, so the program boundary sees heap->oom. */

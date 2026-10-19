@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_syntax_equal.bend: exact field-by-field syntax equality for the
+/* Port of tests/relational_syntax_equal.bend: exact field-by-field syntax equality for the
  * parse/print protocol assertions. Every constructor and field in Syntax and Universe participates.
  * A library module (no main): the S2.4 surface drivers link it. */
 #ifndef MECH_RELATIONAL_SYNTAX_EQUAL_H

@@ -3,7 +3,7 @@
 # Runs CMD once untimed as a warm-up, then RUNS timed runs (RUNS defaults to 5).
 # CMD is one string, run as zsh -c CMD, with stdout and stderr sent to /dev/null.
 # The timer is perf_counter_ns around subprocess.run, so interpreter start-up is
-# outside every measurement. Child shell and Bend/Node startup are included.
+# outside every measurement. Child shell and process startup are included.
 # Success prints exactly one line:
 #   BENCH NAME median_ms=12.345 min_ms=11.000 max_ms=14.200 runs=5
 # A non-zero child exit prints BENCH-ERROR NAME exit=N and exits 1.

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_conversion.bend (oracle label unit-kernel-conversion). */
+/* Port of tests/kernel_conversion.bend (oracle label unit-kernel-conversion). */
 #include "driver.h"
 
 /* result_true(result): Done{ok} -> ok; Fail -> False */

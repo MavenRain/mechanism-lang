@@ -1,4 +1,4 @@
-/* C port of bend2/tests/runtime_reachable.bend (Bend lines 1-100): the on-demand erasure of the
+/* C port of tests/runtime_reachable.bend (Bend lines 1-100): the on-demand erasure of the
  * globals reachable from a set of exports, the source-ordered rows and the self test. The Bend
  * module has no main; c-build compiles this unit with -c and prelude_runtime (S5.1) links it.
  * Definitions keep the Bend order and names. */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_3.bend: shard 3 of the relational protocols (nattrans-laws,
+/* Port of tests/relational_native_3.bend: shard 3 of the relational protocols (nattrans-laws,
  * whiskering-laws, horizontal-laws, iterated-whiskering) over the sibling binaries
  * `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"

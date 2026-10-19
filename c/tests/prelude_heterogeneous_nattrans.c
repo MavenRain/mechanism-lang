@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_heterogeneous_nattrans.bend (46 lines): the heterogeneous natural transformation
+/* Port of tests/prelude_heterogeneous_nattrans.bend (46 lines): the heterogeneous natural transformation
  * prelude suite. Reads the prelude layers and the fixture clients under argv[1] (default "."), checks the inventory
  * against the initial globals, the required instances, the computations, the pinned negatives, the universe arity
  * refusal and the budget refusal, then prints PRELUDE-HETEROGENEOUS-NATTRANS-OK fields or

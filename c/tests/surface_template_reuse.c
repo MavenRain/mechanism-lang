@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_template_reuse.bend (104 lines, oracle label surface-template-reuse): template
+/* Port of tests/surface_template_reuse.bend (104 lines, oracle label surface-template-reuse): template
  * reuse keeps the reused family identities (positive, dependent, partial dependent and level reuse), the reuse
  * refusals and parsers, six raw cases (identity reuse, budget, weakened certificates, a failed reuse), and the
  * category prelude reuse contracts. argv[1] (optional) is the repository root (R.root). Prints

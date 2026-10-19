@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude.bend (oracle label unit-surface-prelude): the four trusted
+/* Port of tests/surface_prelude.bend (oracle label unit-surface-prelude): the four trusted
  * prelude catalogs (dependent, equality, congruence, families) instantiate through Poly and
  * Family, their specializations check and compute, and every catalog honours a zero budget. */
 #include "driver.h"

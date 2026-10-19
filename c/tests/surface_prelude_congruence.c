@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude_congruence.bend (53 lines, oracle label surface-prelude-congruence): the
+/* Port of tests/surface_prelude_congruence.bend (53 lines, oracle label surface-prelude-congruence): the
  * congruence catalog keeps MechCongr (arity 2, member congr) and no Result family, an exhausted budget refuses
  * the catalog, prelude/init.mech checks, eight MechCongr instances install against their frozen contracts
  * without leaking the symbolic names, the fixture client checks and audits, four computations normalize and

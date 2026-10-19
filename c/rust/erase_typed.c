@@ -1,4 +1,4 @@
-/* C port of bend2/rust/erase_typed.bend: typed erasure for `mech rust-out`. Each checked
+/* C port of rust/erase_typed.bend: typed erasure for `mech rust-out`. Each checked
  * declaration gets a class: runtime function, runtime family, proposition, type-valued
  * definition, absurd, or refused with a reason. The sort of a type is read from its shape (a
  * family level, a universe at the end of a telescope, the kind of a bound variable); each other

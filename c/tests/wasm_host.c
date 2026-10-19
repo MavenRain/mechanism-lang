@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_host.bend: the host runner checks of bend2/cli/host.bend (c/cli/host.c).
+/* Port of tests/wasm_host.bend: the host runner checks of cli/host.bend (c/cli/host.c).
  * The number parser, dirname, missing runner and kernel legs run in process; then the driver
  * writes a small module to /private/tmp, runs it under Node and Wasmtime, runs a custom Node
  * runner script over the trap, invalid and bad outputs, and removes every file it wrote. A pass

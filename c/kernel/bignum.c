@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/bignum.bend: signed, canonical base 32768 limbs, least significant first.
+/* Port of kernel/bignum.bend: signed, canonical base 32768 limbs, least significant first.
  * Bend lists become arrays; list recursion becomes the same arithmetic over indices, with the
  * untrimmed shapes of add_digits, sub_digits and mul_digits kept. trim_put, div_small_put and
  * read_chars' per-character step are folded into their callers. */

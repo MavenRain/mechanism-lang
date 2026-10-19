@@ -1,4 +1,4 @@
-/* Port of bend2/rust/lift.bend: lifts the Rust AST of the frontend back to the erased program IR.
+/* Port of rust/lift.bend: lifts the Rust AST of the frontend back to the erased program IR.
  * It is the inverse of each lowering function of emit.bend, so emit_text(lift(f)) is the text of f
  * for each file that emit.bend writes. A shape outside the image of emit.bend is a refusal with the
  * position of the nearest construct that has a Meta (CD13). The definitions keep the Bend names

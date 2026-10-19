@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_foundation_common.bend (103 lines): level builds a successor level, contract
+/* Port of tests/surface_foundation_common.bend (103 lines): level builds a successor level, contract
  * and check_contract check the frozen contract source of an instance, install_families and install_terms
  * instantiate prelude families and polymorphic terms in list order, negatives checks each control and
  * refuses each negative source, exhausted/countdown are finite budget callbacks, budget_refusal expects the

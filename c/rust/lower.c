@@ -1,4 +1,4 @@
-/* Port of bend2/rust/lower.bend: lower of the Rust importer (mech-rust C4, CD6, CD7, CD10, CD11).
+/* Port of rust/lower.bend: lower of the Rust importer (mech-rust C4, CD6, CD7, CD10, CD11).
  * Input: the resolved crate of resolve.c, after infer.c gave no refusal. Output: one `.mech` text
  * for each module in manifest order (the `nat` module has no file, CD7), printed with
  * syntax_print (CD11, C-LEARN L4). Every expression retains its checking type and local typing

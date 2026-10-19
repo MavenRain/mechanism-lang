@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_5.bend: shard 5 of the relational protocols (nattrans-units)
+/* Port of tests/relational_native_5.bend: shard 5 of the relational protocols (nattrans-units)
  * over the sibling binary `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"
 

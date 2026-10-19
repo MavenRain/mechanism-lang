@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_numeric_regressions.bend: the composite of Wide (kernel_large_addresses),
+/* Port of tests/kernel_numeric_regressions.bend: the composite of Wide (kernel_large_addresses),
  * Projection (kernel_projection_motive), Conversion (kernel_conversion_budget) and Levels (levels_protocol)
  * run in that order on one heap; IO.die in any suite ends the sequence with its code. No _bend2 oracle
  * artifact exists for this driver (W/oracle/no-oracle-drivers.txt). */

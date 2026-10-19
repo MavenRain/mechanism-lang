@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_negatives.bend (113 lines): the refusal oracle of the prelude law drivers.
+/* Port of tests/relational_negatives.bend (113 lines): the refusal oracle of the prelude law drivers.
  * Definitions in the Bend order; Task(A) is Task {ok, message} with the payload in an out parameter. */
 #include "relational_negatives.h"
 #include "relational_digest.h"

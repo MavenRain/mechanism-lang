@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_template_symbolic_reuse.bend (124 lines, oracle label surface-template-symbolic-reuse):
+/* Port of tests/surface_template_symbolic_reuse.bend (124 lines, oracle label surface-template-symbolic-reuse):
  * symbolic templates reuse families by identity (nested, dependent groups), a composed family refuses a weakened
  * certificate before it runs a member, cancellation lands before the certificate poll, the reuse refusals and
  * parsers, and the shared category chain contracts. argv[1] (optional) is the repository root (R.root). Prints

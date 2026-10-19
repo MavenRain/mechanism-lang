@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/pp.bend: the kernel term printer. */
+/* Port of kernel/pp.bend: the kernel term printer. */
 #include "kernel.h"
 
 static void push(Heap *heap, Vec *xs, void *item) {

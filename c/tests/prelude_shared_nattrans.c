@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_shared_nattrans.bend (41 lines): the shared nattrans prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_shared_nattrans.bend (41 lines): the shared nattrans prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-SHARED-NATTRANS-OK fields or PRELUDE-SHARED-NATTRANS-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -26,7 +26,7 @@ static void computation(Heap *heap, Vec *out, const char *name, const Term *expe
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_shared_nattrans.bend line 12, 591 names) */
+/* expected_entries() (tests/prelude_shared_nattrans.bend line 12, 591 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Constant", "End", "External_Functor", "External_Source_Category", "External_Source_Hom",
     "External_Source_assoc", "External_Source_comp", "External_Source_compId", "External_Source_eqCongr",
@@ -206,13 +206,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "pathTrans", "sharedNatInput", "verticalValue", "wideHorizontal"
 };
 
-/* expected_families() (bend2/tests/prelude_shared_nattrans.bend line 15, 11 names) */
+/* expected_families() (tests/prelude_shared_nattrans.bend line 15, 11 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Mixed_Middle", "Mixed_Source", "Mixed_Target", "Path", "Point", "Run_Middle", "Run_Source", "Run_Target",
     "Wide_Middle", "Wide_Source", "Wide_Target"
 };
 
-/* negatives() (bend2/tests/prelude_shared_nattrans.bend line 18, 6 names) */
+/* negatives() (tests/prelude_shared_nattrans.bend line 18, 6 names) */
 static const char *const NEGATIVES[] = {
     "horizontal-endpoint", "vertical-middle", "missing-naturality", "nominal-equality", "first-sort",
     "erased-component"

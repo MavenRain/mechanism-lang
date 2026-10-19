@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_wide_metadata.bend (oracle label driver_wasm-wide-metadata, manifest mode
+/* Port of tests/wasm_wide_metadata.bend (oracle label driver_wasm-wide-metadata, manifest mode
  * wasm-wide-metadata, marker WIDE-BACKEND 19/19): raw signed and huge collection widths and leg
  * addresses through check, eval, erase, the erase_repr leg types, the circuit depth and the wasm
  * emitter. Each of the 19 probes prints one PASS or FAIL line; any failure dies with exit 1.

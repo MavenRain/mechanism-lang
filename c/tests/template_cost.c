@@ -1,4 +1,4 @@
-/* Port of bend2/tests/template_cost.bend (wrapper _bend2/test/template_cost.exe, gate leg
+/* Port of tests/template_cost.bend (wrapper _bend2/test/template_cost.exe, gate leg
  * TEMPLATE-COST of dev/gates.sh): `SOURCE [--through MEMBER]` parses SOURCE, requires exactly one
  * family group, keeps its members up to and including MEMBER, elaborates the program from the empty
  * globals under an always-unspent poll callback, counts the polls, and prints one JSON report line;

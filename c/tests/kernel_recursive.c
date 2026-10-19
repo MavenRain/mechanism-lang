@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_recursive.bend (oracle label unit-kernel-recursive): recursive values compute,
+/* Port of tests/kernel_recursive.bend (oracle label unit-kernel-recursive): recursive values compute,
  * guarded neutrals stay neutral, opacity is honoured, and two raw kernel negatives fail with the exact text. */
 #include "driver.h"
 #include "surface.h"

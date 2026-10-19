@@ -160,7 +160,7 @@ class LeftKanControls(unittest.TestCase):
             self.check(directory, 'twin', prelude + '\n' + self.without(name + 'Quantity'))
 
     def test_nested_object_erasure_is_refused(self):
-        pattern, erased = r'\(([bx][0-9]+) : C\)', r'(0 \1 : C)'
+        pattern, erased = r'\((b[0-9]+|x[0-9]*) : C\)', r'(0 \1 : C)'
         altered, count = re.subn(pattern, erased, self.adapter)
         self.assertGreater(count, 0)
         prelude = self.replace(self.prelude, self.adapter, altered)

@@ -1,11 +1,11 @@
-/* C port of bend2/tests/wasm_protocol.bend: SUITE-WASM. For every ROOT/fixtures/<name>.kan that
+/* C port of tests/wasm_protocol.bend: SUITE-WASM. For every ROOT/fixtures/<name>.kan that
  * checks and defines main, the driver erases and emits the program to OUTDIR/<name>.wasm, validates
  * it with wasm-opt (which also writes OUTDIR/<name>.wat), compares the .wat with
  * ROOT/golden/<name>.wat, runs the module under node (dev/run-node.mjs of the repo that holds ROOT)
  * and compares the printed answer with the kernel value of main. It prints EMIT <name> OK or
  * EMIT <name> FAIL: <message> per selected fixture, then WASM-OK <passed>/<total> and SUITE-WASM OK,
  * or SUITE-WASM FAIL with exit 1 (Out.cli_exit). The foreign effect wasm_fixture_io of
- * bend2/tests/effects/wasm_fixture.c is ported here as fixture_io (operation 0 lists the fixtures,
+ * tests/effects/wasm_fixture.c is ported here as fixture_io (operation 0 lists the fixtures,
  * 1 validates a module); its answer is the Bend text protocol: '+' and the value, or '-' and the
  * message. Each fixture runs in its own arena, which is freed after its report line. */
 #include "cli.h"
@@ -55,7 +55,7 @@ static Counts pair(size_t passed, size_t total) {
 
 static Str cat(Heap *heap, Str a, Str b) { return heap_str_cat(heap, a, b); }
 
-/* ---- wasm_fixture_io (18-20): the effect of bend2/tests/effects/wasm_fixture.c ---- */
+/* ---- wasm_fixture_io (18-20): the effect of tests/effects/wasm_fixture.c ---- */
 
 static Str fixture_error(Heap *heap, const char *message) { return cat(heap, str_lit("-"), str_lit(message)); }
 

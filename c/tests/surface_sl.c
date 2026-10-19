@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_sl.bend: the SL surface sugar cases of surface_sl_data. Each case parses,
+/* Port of tests/surface_sl.bend: the SL surface sugar cases of surface_sl_data. Each case parses,
  * prints and reparses a source, refuses an invalid source in the parser or the elaborator, or checks that
  * two spellings give the same declarations or the same checked form. Prints one SL-SURFACE <name> OK (or
  * FAIL: message) line per case, then SL-SURFACE-OK <n>/36 and SL-SURFACE OK; fewer than 36 passes die

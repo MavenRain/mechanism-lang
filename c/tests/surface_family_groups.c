@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_family_groups.bend (234 lines, oracle label surface-family-groups): ordered
+/* Port of tests/surface_family_groups.bend (234 lines, oracle label surface-family-groups): ordered
  * family schema groups with members and renaming, the group refusals, companion levels, atomic target
  * collisions, closed rechecking, budgets and member callbacks, 31 cases in Bend order. Takes no argv; prints
  * FAMILY-GROUPS-OK cases=<n> or FAMILY-GROUPS-FAIL <case>: <message>. With -DMECH_DRIVER_LIBRARY the file is

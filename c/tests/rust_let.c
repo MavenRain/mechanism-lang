@@ -1,4 +1,4 @@
-/* C port of bend2/tests/rust_let.bend: direct RIR regressions of the let lowering (the E1 emitter
+/* C port of tests/rust_let.bend: direct RIR regressions of the let lowering (the E1 emitter
  * slice precedes the let lifter). Driver: `rust_let`, no arguments. Each `check` lowers one fn
  * `probe(x: bool) -> t` whose body is `let y = value; y` once without and once with the type
  * annotation `t`, prints both with syntax_print and compares the bytes; `rejected` walks one

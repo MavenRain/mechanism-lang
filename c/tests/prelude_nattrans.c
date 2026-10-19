@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_nattrans.bend (60 lines): the natural transformation prelude suite. Reads the category
+/* Port of tests/prelude_nattrans.bend (60 lines): the natural transformation prelude suite. Reads the category
  * prelude and the nattrans fixture client under argv[1] (default "."), checks the parse roundtrip, the empty symbolic
  * template, the inventory, the required instances, the computations, the negative inventory, the negatives and the
  * budget refusal, then prints PRELUDE-NATTRANS-OK fields or PRELUDE-NATTRANS-FAIL message. */

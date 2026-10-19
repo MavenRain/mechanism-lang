@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude_poly.bend (91 lines, oracle label surface-prelude-poly): the prelude
+/* Port of tests/surface_prelude_poly.bend (91 lines, oracle label surface-prelude-poly): the prelude
  * family catalog keeps its arities, prelude/init.mech checks, five closed instances of MechEq and MechSum
  * install and audit, the polymorphic fixture client checks and audits, and two negatives refuse (unequal
  * endpoints in an instantiated family, distinct instances not convertible). Prints PRELUDE-POLY-OK fields

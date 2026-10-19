@@ -1,4 +1,4 @@
-/* Port of bend2/rust/infer.bend: type inference of the Rust importer (mech-rust C3, CD8 and CD9).
+/* Port of rust/infer.bend: type inference of the Rust importer (mech-rust C3, CD8 and CD9).
  * Input: the resolved crate of resolve.c (names are known to resolve). Output: for each fn, its
  * mech telescope (an STerm) and the notes of its body. A note is the result of inference for one
  * node: NCtor gives the type arguments of an XCtor, NMatch gives the result type of an XMatch. The

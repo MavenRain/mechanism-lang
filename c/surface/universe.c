@@ -1,4 +1,4 @@
-/* Port of bend2/surface/universe.bend: surface universe expressions retain their syntax; lowering
+/* Port of surface/universe.bend: surface universe expressions retain their syntax; lowering
  * to kernel levels is separate. Same definitions in the same order. */
 #include "surface.h"
 

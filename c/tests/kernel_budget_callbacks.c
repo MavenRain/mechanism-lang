@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_budget_callbacks.bend (oracle label unit-kernel-budget-callbacks). */
+/* Port of tests/kernel_budget_callbacks.bend (oracle label unit-kernel-budget-callbacks). */
 #include "driver.h"
 
 /* scripted(answers): each poll answers the head and continues with the tail; an empty script

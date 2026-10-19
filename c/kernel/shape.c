@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/shape.bend: the shape functor T<A> over a payload type A, erased to
+/* Port of kernel/shape.bend: the shape functor T<A> over a payload type A, erased to
  * void pointers. Same definitions in the same order. */
 #include "kernel.h"
 

@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/level_var.bend: universe level expressions with variables. Levels are
+/* Port of kernel/level_var.bend: universe level expressions with variables. Levels are
  * immutable and shared by pointer; LZero is a single static value. Same definitions in the
  * same order. */
 #include "kernel.h"

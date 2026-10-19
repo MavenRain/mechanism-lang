@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_common.bend: shared helpers of the prenex drivers (surface_prenex,
+/* Port of tests/surface_prenex_common.bend: shared helpers of the prenex drivers (surface_prenex,
  * surface_prenex_exports, surface_prenex_dependency_exports, surface_prenex_families, surface_prenex_groups).
  * Library only (no main); _tcc/surface_prenex_common.o links into its importers with
  * _tcc/surface_prenex_data.o, _tcc/surface_raw_common.o, _tcc/surface_foundation_common.o and

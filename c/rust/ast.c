@@ -1,6 +1,6 @@
-/* C port of bend2/rust/ast.bend: the Rust AST of the M0 frontend. Bend 2 has no mutually recursive
+/* C port of rust/ast.bend: the Rust AST of the M0 frontend. Bend 2 has no mutually recursive
  * types, so expressions and items share the one recursive type Node, and the helper types take it
- * (or Ty, Pat) as a parameter, as bend2/surface/syntax.bend does. A failed allocation sets heap->oom
+ * (or Ty, Pat) as a parameter, as surface/syntax.bend does. A failed allocation sets heap->oom
  * and returns the placeholder of the type (a node without children). */
 #include "rust.h"
 

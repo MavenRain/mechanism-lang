@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/term.bend: kernel terms, the children walk, the name search and the
+/* Port of kernel/term.bend: kernel terms, the children walk, the name search and the
  * structural equality. Same definitions in the same order. The generic containers Addr<A>,
  * Leg<A>, Motive<A> and ElimData<A> are only ever instantiated at T, so the payload is a
  * const Term pointer; lists are Vecs of pointers in list order. */

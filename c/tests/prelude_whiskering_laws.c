@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_whiskering_laws.bend (41 lines): the whiskering laws prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_whiskering_laws.bend (41 lines): the whiskering laws prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-WHISKERING-LAWS-OK fields or PRELUDE-WHISKERING-LAWS-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -27,7 +27,7 @@ static void probe(Heap *heap, Vec *out, const char *name, uint32_t payload, uint
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_whiskering_laws.bend line 12, 1177 names) */
+/* expected_entries() (tests/prelude_whiskering_laws.bend line 12, 1177 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Constant", "Delta", "Embed", "End", "External_Functor", "External_Source_Category",
     "External_Source_Hom", "External_Source_assoc", "External_Source_comp", "External_Source_compId",
@@ -419,13 +419,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "verticalValue"
 };
 
-/* expected_families() (bend2/tests/prelude_whiskering_laws.bend line 15, 12 names) */
+/* expected_families() (tests/prelude_whiskering_laws.bend line 15, 12 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Mixed_Ops_Middle", "Mixed_Ops_Source", "Mixed_Ops_Target", "Path", "Point", "Run_Middle", "Run_Source",
     "Run_Target", "SeparateTarget", "Wide_Ops_Middle", "Wide_Ops_Source", "Wide_Ops_Target"
 };
 
-/* negatives() (bend2/tests/prelude_whiskering_laws.bend line 18, 6 names) */
+/* negatives() (tests/prelude_whiskering_laws.bend line 18, 6 names) */
 static const char *const NEGATIVES[] = {
     "false-components", "one-component", "missing-left-congruence", "missing-right-congruence", "nominal-target",
     "wrong-endpoint"

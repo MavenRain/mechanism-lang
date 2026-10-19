@@ -1,5 +1,5 @@
-/* Port of bend2/cli/output.bend: cli_exit ends the program with a code and no output (the effect
- * bend2/cli/effects/exit.c calls exit). Library code never exits, so the C port returns the exit
+/* Port of cli/output.bend: cli_exit ends the program with a code and no output (the effect
+ * cli/effects/exit.c calls exit). Library code never exits, so the C port returns the exit
  * status for the program boundary to return from its entry; stdio flushes on that return as it
  * does on exit. cli_print_parts, cli_print, cli_die and cli_host_failure are the IO.print and IO.die
  * effects of the Bend runtime at the same boundary. */

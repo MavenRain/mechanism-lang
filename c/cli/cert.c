@@ -1,4 +1,4 @@
-/* Port of bend2/cli/cert.bend (the mech_cert program): read SOURCE, check it from the initial globals
+/* Port of cli/cert.bend (the mech_cert program): read SOURCE, check it from the initial globals
  * with an unlimited budget, refuse a source that declares axioms, then print CHECKED axioms=0 and one
  * NAME<TAB>VALUE line per NAT_EXPORT whose whnf value is a natural number literal. Every failure dies
  * with exit 1 and its message; the first failing export wins and nothing is printed before it. The

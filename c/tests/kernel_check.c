@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_check.bend (oracle label unit-kernel-check). */
+/* Port of tests/kernel_check.bend (oracle label unit-kernel-check). */
 #include "driver.h"
 
 /* success(result): Done{Unit} -> True; Fail -> False */

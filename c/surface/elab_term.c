@@ -1,4 +1,4 @@
-/* elab_term.c: port of bend2/surface/elab_term.bend (surface elaboration of terms).
+/* elab_term.c: port of surface/elab_term.bend (surface elaboration of terms).
  * Chunk 1 = Bend 1-432: the record types MuRef, Point, Spine, Former and Bound and the definitions
  * no_expect .. elab_pair, in Bend order. Comp plumbing follows c/kernel/erase.c: one ElabFrame per do
  * block, each `<-` a static continuation that reads the frame from ctx. */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_4.bend: shard 4 of the relational protocols
+/* Port of tests/relational_native_4.bend: shard 4 of the relational protocols
  * (horizontal-associativity) over the sibling binary `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"
 

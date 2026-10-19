@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_iterated_whiskering.bend (41 lines): the iterated whiskering prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_iterated_whiskering.bend (41 lines): the iterated whiskering prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-ITERATED-WHISKERING-OK fields or PRELUDE-ITERATED-WHISKERING-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -27,7 +27,7 @@ static void probe(Heap *heap, Vec *out, const char *name, uint32_t payload, uint
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_iterated_whiskering.bend line 12, 902 names) */
+/* expected_entries() (tests/prelude_iterated_whiskering.bend line 12, 902 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "AlphaM1M2", "AlphaM2T", "Conjugate", "Constant", "ConstantM1M2", "ConstantM2T", "EndMiddle1",
     "EndMiddle2", "EndTarget", "IndexedMap", "IndexedMiddle1", "IndexedMiddle2", "IndexedSource", "Left",
@@ -293,13 +293,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "pairCode", "pathCongr", "pathTrans", "rightLaw", "rightLeftAt", "rightLhs", "rightRhs", "rightRightAt", "swap"
 };
 
-/* expected_families() (bend2/tests/prelude_iterated_whiskering.bend line 15, 14 names) */
+/* expected_families() (tests/prelude_iterated_whiskering.bend line 15, 14 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Middle1", "Middle2", "Mixed_Middle1", "Mixed_Middle2", "Mixed_Source", "Mixed_Target", "Path", "SeparateTarget",
     "Source", "Target", "Wide_Middle1", "Wide_Middle2", "Wide_Source", "Wide_Target"
 };
 
-/* negatives() (bend2/tests/prelude_iterated_whiskering.bend line 18, 6 names) */
+/* negatives() (tests/prelude_iterated_whiskering.bend line 18, 6 names) */
 static const char *const NEGATIVES[] = {
     "false-components", "wrong-precomposition-order", "missing-postcomposition", "missing-precomposition",
     "nominal-target", "incompatible-endpoints"

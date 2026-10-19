@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_heterogeneous_functor.bend (72 lines): the heterogeneous functor prelude suite. Reads
+/* Port of tests/prelude_heterogeneous_functor.bend (72 lines): the heterogeneous functor prelude suite. Reads
  * the category core, the heterogeneous functor prelude and the fixture clients under argv[1] (default "."), checks
  * the category-core mirror, the inventory against the initial globals, the required instances, the computations,
  * the pinned negative refusals, the universe arity refusal and the budget refusal, then prints

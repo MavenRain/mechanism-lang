@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/rules.bend: the typing rule helpers shared by the checker (arrows, finite
+/* Port of kernel/rules.bend: the typing rule helpers shared by the checker (arrows, finite
  * collections, unit and bool, mu parameter environments, mpc party sets, elimination results) and
  * the eta table. Same definitions in the same order. List<Term.T> is a Vec of Term pointers,
  * List<Value.T> a Vec of Value pointers, List<Value.VLeg<Value.T>> a Vec of VLeg pointers,

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_functor.bend (60 lines): the functor prelude suite. Reads the category prelude and
+/* Port of tests/prelude_functor.bend (60 lines): the functor prelude suite. Reads the category prelude and
  * the functor fixture client under argv[1] (default "."), checks the inventory, the required instances, the
  * computations, the negatives and the budget refusal, then prints PRELUDE-FUNCTOR-OK fields or
  * PRELUDE-FUNCTOR-FAIL message. */

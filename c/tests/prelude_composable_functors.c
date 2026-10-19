@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_composable_functors.bend (79 lines): the composable functors prelude suite. Reads
+/* Port of tests/prelude_composable_functors.bend (79 lines): the composable functors prelude suite. Reads
  * the canonical heterogeneous functor prelude and the composable functors prelude under argv[1] (default "."), checks
  * the three functor mirrors (First, Second, Composite), the parse roundtrip, the empty symbolic check, the inventory
  * against the checked program and the globals, the computations, the pinned negative refusals, the universe arity

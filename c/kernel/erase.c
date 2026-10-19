@@ -1,4 +1,4 @@
-/* bend2/kernel/erase.bend: the erasure of checked terms to kernel terms. Quarters 1-4b of 4 = Bend lines
+/* kernel/erase.bend: the erasure of checked terms to kernel terms. Quarters 1-4b of 4 = Bend lines
  * 1-1049 (the types Entry .. Signature, lookup .. tuple_jobs, tuple_finish .. ctor_indices with the law
  * bodies signature_value, remaining_signature and chain, mu_tag .. eval_terms with the law body app_jobs, mu_branch_body .. term with the law body term, tids_repr .. dedup_tids, def_finish .. program, print_decls .. print);
  * Comp values: EraseOut *, EraseOuts *, EraseChain *, EraseSignature *, const Value *, const Term *,

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_nattrans_laws.bend (41 lines): the nattrans laws prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_nattrans_laws.bend (41 lines): the nattrans laws prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-NATTRANS-LAWS-OK fields or PRELUDE-NATTRANS-LAWS-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -27,7 +27,7 @@ static void probe(Heap *heap, Vec *out, const char *name, uint32_t payload, uint
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_nattrans_laws.bend line 12, 234 names) */
+/* expected_entries() (tests/prelude_nattrans_laws.bend line 12, 234 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "AssocLeft", "AssocRight", "Beta", "BetaComponents", "Components", "CongrLeft", "CongrRight", "Constant",
     "DoubleEnd", "IndexedEnd", "Laws_NatTransEq", "Laws_Ops_Base_Functor", "Laws_Ops_Base_Source_Category",
@@ -87,13 +87,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "verticalForward", "verticalNested", "verticalReverse", "wideAssoc", "wideRelation"
 };
 
-/* expected_families() (bend2/tests/prelude_nattrans_laws.bend line 15, 10 names) */
+/* expected_families() (tests/prelude_nattrans_laws.bend line 15, 10 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Mixed_Ops_Base_Source", "Mixed_Ops_Base_Target", "Path", "Point", "Run_Base_Source", "Run_Base_Target",
     "Separate_Ops_Base_Source", "Separate_Ops_Base_Target", "Wide_Ops_Base_Source", "Wide_Ops_Base_Target"
 };
 
-/* negatives() (bend2/tests/prelude_nattrans_laws.bend line 18, 6 names) */
+/* negatives() (tests/prelude_nattrans_laws.bend line 18, 6 names) */
 static const char *const NEGATIVES[] = {
     "false-components", "one-component", "nominal-equality", "wrong-endpoint", "trans-middle", "missing-congruence"
 };

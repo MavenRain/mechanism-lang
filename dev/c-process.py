@@ -9,7 +9,7 @@ import time
 # This private candidate reserves a child-environment key for cleanup order.
 # Four helper layers get TERM grace 2, 1, .5 and .25 seconds respectively.
 # Deeper layers remain bounded but are outside the tested cleanup guarantee.
-_DEPTH = "__BEND2_PROCESS_CLEANUP_DEPTH"
+_DEPTH = "__MECH_PROCESS_CLEANUP_DEPTH"
 _DRAIN_GRACE = 0.1
 
 

@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/spec_count.bend: the specification count report of the kernel (formers,
+/* Port of kernel/spec_count.bend: the specification count report of the kernel (formers,
  * schema constructors, shapes declared and admitted, named rules, eta rows). Same definitions in
  * the same order. The List<String> values are Vecs of Str pointers, as term_formers, term_schema,
  * shape_declared and the rules_* lists build them; the eta table is a Vec of EtaEntry pointers.

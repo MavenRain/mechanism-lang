@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/common.bend plus the heap helpers every kernel file shares. */
+/* Port of kernel/common.bend plus the heap helpers every kernel file shares. */
 #include "kernel.h"
 #include <string.h>
 

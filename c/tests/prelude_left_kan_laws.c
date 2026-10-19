@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_left_kan_laws.bend (112 lines): the left Kan extension law suite. Reads the
+/* Port of tests/prelude_left_kan_laws.bend (112 lines): the left Kan extension law suite. Reads the
  * category prelude, the left Kan law layers and their fixture clients under argv[1] (default "."), checks the parse
  * roundtrip, the elaboration from G.initial(), the entry inventory, the required checked laws and symbolic pins, the
  * computations and the negatives, then prints PRELUDE-LEFT-KAN-LAWS-OK fields or PRELUDE-LEFT-KAN-LAWS-FAIL message.
@@ -596,7 +596,7 @@ static Task equality_checked(Heap *heap, Str root, const ElabChecked **checked) 
   Vec equality;
   Vec axioms;
   Vec none = vec_new(heap->arena);
-  RELATIONAL_TRY(relational_read(heap, root, str_lit("_bend2/left-kan-cocone-equality-contracts/focused-source.mech"),
+  RELATIONAL_TRY(relational_read(heap, root, str_lit("_tcc/left-kan-cocone-equality-contracts/focused-source.mech"),
                                  &source));
   RELATIONAL_TRY(relational_checked(heap, global_initial(heap), source, checked));
   equality = STRINGS(heap, EQUALITY_ENTRIES);

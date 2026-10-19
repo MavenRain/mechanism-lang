@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_pipeline.bend (oracle label import-pipeline): MODE NDJSON TARGETS.
+/* Port of tests/import_pipeline.bend (oracle label import-pipeline): MODE NDJSON TARGETS.
  * Reads the NDJSON source with Export.read_string, then dispatches on MODE: report prints the parity
  * report (summary strings and entry records) as one JSON line; mapping parses TARGETS as a JSON array
  * of [name, target] pairs and prints the inventory summary (map TSV, never TSV, declared, constants);

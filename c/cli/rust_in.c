@@ -1,4 +1,4 @@
-/* C port of bend2/cli/rust_in.bend: `mech rust-in CRATE_DIR OUT_DIR`, read src/lib.rs and the file of
+/* C port of cli/rust_in.bend: `mech rust-in CRATE_DIR OUT_DIR`, read src/lib.rs and the file of
  * each `pub mod` line, import the crate (resolve, infer, lower, kernel check) and write one `.mech`
  * file for each module, `MANIFEST` (the file names in dependency order) and a copy of
  * `mech-carrier.mech` if the crate has one. The command puts each chunk of the carrier back in its

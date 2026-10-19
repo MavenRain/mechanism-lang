@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_protocol.bend with the cases of import_protocol_data.bend folded in as
+/* Port of tests/import_protocol.bend with the cases of import_protocol_data.bend folded in as
  * static data (the CASES table is generated row for row from the Bend data file; oracle label
  * import-protocol). Runs every case through Export.read_string, prints "PASS import NAME" or
  * "FAIL import NAME: MESSAGE" per case, then "IMPORT-OK" (exit 0) or dies with 1 and
@@ -31,7 +31,7 @@ typedef struct {
 /* base() */
 static const char *const BASE = "{\"meta\":{\"exporter\":{\"name\":\"lean4export\",\"version\":\"3.1.0\"},\"format\":{\"version\":\"3.1.0\"},\"lean\":{\"githash\":\"fixture\",\"version\":\"4.31.0\"}}}\n{\"in\":1,\"str\":{\"pre\":0,\"str\":\"D\"}}\n{\"in\":2,\"str\":{\"pre\":0,\"str\":\"u\"}}\n{\"in\":3,\"str\":{\"pre\":0,\"str\":\"C\"}}\n{\"in\":4,\"str\":{\"pre\":0,\"str\":\"R\"}}\n{\"in\":5,\"str\":{\"pre\":0,\"str\":\"T\"}}\n{\"il\":1,\"succ\":0}\n{\"ie\":0,\"sort\":0}\n{\"ie\":1,\"bvar\":0}\n{\"ie\":2,\"sort\":1}\n";
 
-/* cases(): generated from bend2/tests/import_protocol_data.bend, one row per Case in order */
+/* cases(): generated from tests/import_protocol_data.bend, one row per Case in order */
 static const Case CASES[] = {
   {"empty-input", false, "", {PROBE_REJECT, 1}},
   {"newline-only-input", false, "\n", {PROBE_REJECT, 1}},

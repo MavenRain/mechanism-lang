@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_horizontal_associativity.bend (41 lines): the horizontal associativity prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_horizontal_associativity.bend (41 lines): the horizontal associativity prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-HORIZONTAL-ASSOCIATIVITY-OK fields or PRELUDE-HORIZONTAL-ASSOCIATIVITY-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -27,7 +27,7 @@ static void probe(Heap *heap, Vec *out, const char *name, uint32_t payload, uint
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_horizontal_associativity.bend line 12, 2328 names) */
+/* expected_entries() (tests/prelude_horizontal_associativity.bend line 12, 2328 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Conjugate", "Constant", "End", "FinalEnd", "Gamma", "Identity", "IndexedEnd", "Left",
     "Middle1_Category", "Middle1_Hom", "Middle1_assoc", "Middle1_comp", "Middle1_compId", "Middle1_eqCongr",
@@ -832,13 +832,13 @@ static const char *const EXPECTED_ENTRIES[] = {
     "swap"
 };
 
-/* expected_families() (bend2/tests/prelude_horizontal_associativity.bend line 15, 15 names) */
+/* expected_families() (tests/prelude_horizontal_associativity.bend line 15, 15 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "Middle1", "Middle2", "Mixed_Middle1", "Mixed_Middle2", "Mixed_Source", "Mixed_Target", "Path", "Point",
     "SeparateTarget", "Source", "Target", "Wide_Middle1", "Wide_Middle2", "Wide_Source", "Wide_Target"
 };
 
-/* negatives() (bend2/tests/prelude_horizontal_associativity.bend line 18, 7 names) */
+/* negatives() (tests/prelude_horizontal_associativity.bend line 18, 7 names) */
 static const char *const NEGATIVES[] = {
     "false-components", "missing-middle-transformation", "missing-final-transformation", "missing-postcomposition",
     "nominal-target", "incompatible-endpoints", "reflexivity-control"

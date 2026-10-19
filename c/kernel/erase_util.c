@@ -1,4 +1,4 @@
-/* bend2/kernel/erase_util.bend: the free variables of kernel and runtime terms, the capture
+/* kernel/erase_util.bend: the free variables of kernel and runtime terms, the capture
  * frames of closures and the runtime term reindexing (shift and prune). Every definition is
  * pure: a failed allocation sets heap->oom and the result is best effort, as in the other
  * kernel files. List<Nat> is a Vec of heap boxed Nat pointers (erase_util_nat_new), List<Slot>

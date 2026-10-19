@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_shape_metadata.bend (no oracle call; c-test compares the output with
+/* Port of tests/surface_shape_metadata.bend (no oracle call; c-test compares the output with
  * c/tests/surface_shape_metadata.expected): the SZk, SFhc and SMpc shape payloads of a hidden member
  * body are renamed and level-substituted by specialisation and are traversed by the universe scope
  * check. Imports surface_catalog.bend as Test (c/tests/surface_catalog.h). */

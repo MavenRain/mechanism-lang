@@ -1,4 +1,4 @@
-/* C port of bend2/tests/kernel_eval.bend: evaluator beta reduction, the natAdd primitive and the
+/* C port of tests/kernel_eval.bend: evaluator beta reduction, the natAdd primitive and the
  * read back of a closure that captured a let-bound value. */
 #include "driver.h"
 

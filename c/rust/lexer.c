@@ -1,4 +1,4 @@
-/* Port of bend2/rust/lexer.bend: the scanner from Rust source text to the token list. Keywords stay
+/* Port of rust/lexer.bend: the scanner from Rust source text to the token list. Keywords stay
  * identifiers; a non-doc comment becomes a Comment token. The definitions keep the Bend names
  * (prefix rust_lexer_, as surface.h owns lexer_) and the Bend order; the C only helpers stand just
  * before their first use.

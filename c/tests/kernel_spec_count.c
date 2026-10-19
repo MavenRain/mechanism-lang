@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_spec_count.bend (oracle label unit-kernel-spec-count):
+/* Port of tests/kernel_spec_count.bend (oracle label unit-kernel-spec-count):
  * IO.print(Spec.print()). */
 #include "driver.h"
 

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_poly.bend (oracle label unit-surface-poly): universe-polymorphic
+/* Port of tests/surface_poly.bend (oracle label unit-surface-poly): universe-polymorphic
  * definitions, families, specializations and groups through the program parser, six rejected
  * programs, and one show/parse roundtrip of a term. */
 #include "driver.h"

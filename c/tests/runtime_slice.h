@@ -1,4 +1,4 @@
-/* API of the C port of bend2/tests/runtime_slice.bend (c/tests/runtime_slice.c): the runtime slice of
+/* API of the C port of tests/runtime_slice.bend (c/tests/runtime_slice.c): the runtime slice of
  * an erased program, the erased functions reachable from one export.
  * Rows (List<Pair<String, Erase.Entry>>) is a Vec of EraseRow pointers, the shape erase_program and
  * erase_print use; Catalog (List<Pair<String, List<String>>>) is a Vec of SliceCatalogRow pointers;

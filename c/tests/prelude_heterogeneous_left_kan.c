@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_heterogeneous_left_kan.bend (47 lines): the heterogeneous left kan prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_heterogeneous_left_kan.bend (47 lines): the heterogeneous left kan prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-HETEROGENEOUS-LEFT-KAN-OK fields or PRELUDE-HETEROGENEOUS-LEFT-KAN-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -26,21 +26,21 @@ static void computation(Heap *heap, Vec *out, const char *name, const Term *expe
   vec_push(out, row);
 }
 
-/* expected_families() (bend2/tests/prelude_heterogeneous_left_kan.bend line 15, 13 names) */
+/* expected_families() (tests/prelude_heterogeneous_left_kan.bend line 15, 13 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "EqualMiddle", "EqualSource", "Mixed_Base_Base_Middle", "Mixed_Base_Base_Source", "Mixed_Base_Base_Target",
     "Path", "Point", "Run_Base_Base_Middle", "Run_Base_Base_Source", "Run_Base_Base_Target", "Wide_Base_Base_Middle",
     "Wide_Base_Base_Source", "Wide_Base_Base_Target"
 };
 
-/* negatives() (bend2/tests/prelude_heterogeneous_left_kan.bend line 18, 13 names) */
+/* negatives() (tests/prelude_heterogeneous_left_kan.bend line 18, 13 names) */
 static const char *const NEGATIVES[] = {
     "cocone-endpoint", "cocone-sort", "extension-sort", "middle-level", "missing-factor", "missing-uniqueness",
     "nominal-category", "solution-sort", "source-level", "tail-sort", "target-level", "uniqueness-endpoint",
     "wrong-factor"
 };
 
-/* expected_entries() (bend2/tests/prelude_heterogeneous_left_kan.bend line 21, 294 names) */
+/* expected_entries() (tests/prelude_heterogeneous_left_kan.bend line 21, 294 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Chosen", "Cocone", "Components", "Constant", "DoubleEnd", "EqualMiddle_Category",
     "EqualMiddle_Hom", "EqualMiddle_assoc", "EqualMiddle_comp", "EqualMiddle_compId", "EqualMiddle_eqCongr",

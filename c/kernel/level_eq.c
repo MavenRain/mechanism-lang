@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/level_eq.bend: universe level ordering by case split on the variables
+/* Port of kernel/level_eq.bend: universe level ordering by case split on the variables
  * that can be zero, exact and under a budget. Bend cons lists are NatList and ArmList cells
  * (NULL is Nil); Comp values are const NatList *, Normal *, Big * and the kernel bool box. */
 #include "kernel.h"

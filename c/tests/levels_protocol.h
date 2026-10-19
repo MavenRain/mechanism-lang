@@ -1,4 +1,4 @@
-/* Shared helpers of bend2/tests/levels_protocol.bend (imported as Test by kernel_large_addresses,
+/* Shared helpers of tests/levels_protocol.bend (imported as Test by kernel_large_addresses,
  * kernel_conversion_budget): R, require, kernel, expect, measure, completed and the poll callback.
  * The driver object keeps its main; the library object (MECH_DRIVER_LIBRARY) drops it. */
 #ifndef MECH_LEVELS_PROTOCOL_H

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_dependency_exports.bend (105 lines, oracle label
+/* Port of tests/surface_prenex_dependency_exports.bend (105 lines, oracle label
  * surface-prenex-dependency-exports): the dependency export positives roundtrip, check without symbolic
  * leaks and keep the closed instance rows; the closed instance keeps its order and its prefixed dependency
  * family; the negatives refuse with the exact text; the parser cases refuse; two budget boundaries refuse; the

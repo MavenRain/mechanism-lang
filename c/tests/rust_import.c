@@ -1,9 +1,9 @@
-/* C port of bend2/tests/rust_import.bend: the Rust import driver. Driver: `rust_import <mode>
+/* C port of tests/rust_import.bend: the Rust import driver. Driver: `rust_import <mode>
  * <source text> ...`. Mode `lift`: parse, lift to the erased IR, print with the emitter (or one
  * `REFUSED <line>:<col>: <construct>` line, or `PARSE-FAIL <message>`). Modes `resolve`, `types`,
  * `lower` and `check`: the text of src/lib.rs, then a module name and the text of its file for each
  * module. Modes `seed-check <program text>` and `rt-mech <program text> <program text>`: mech text,
- * kernel check, and the row comparison of bend2/rust/roundtrip.bend. Mode `run <crate dir> <out dir>`
+ * kernel check, and the row comparison of rust/roundtrip.bend. Mode `run <crate dir> <out dir>`
  * calls rust_in_run (the `rust-in` verb, c/cli/rust_in.c) and exits with its code; each other mode
  * writes one text on stdout and exits 0. A failed allocation sets heap->oom; the driver then exits
  * with driver_host_failure. */

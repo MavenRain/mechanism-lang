@@ -1,4 +1,4 @@
-/* Port of bend2/mech.bend: the mech program. The arguments (argv without the program name) go to
+/* Port of mech.bend: the mech program. The arguments (argv without the program name) go to
  * Mech.arguments (c/cli/mech.c), whose result is the exit code. This file holds main, so the Makefile
  * keeps it out of C_CLI_SOURCES (C_CLI_MAINS) and links it only into _tcc/bin/mech. */
 #include "cli.h"

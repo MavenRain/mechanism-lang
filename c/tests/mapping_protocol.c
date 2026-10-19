@@ -1,4 +1,4 @@
-/* Port of bend2/tests/mapping_protocol.bend (oracle label mapping-protocol: one corpus call through the JS
+/* Port of tests/mapping_protocol.bend (oracle label mapping-protocol: one corpus call through the JS
  * build, no arguments; c-test also compares the output with c/tests/mapping_protocol.expected). Reads the
  * lean4export sample with Export.read_string, runs Mapping.inventory over several target lists and prints
  * "PASS mapping NAME" or "FAIL mapping NAME" per case, then "MAPPING-OK" (exit 0) or dies with 1 and

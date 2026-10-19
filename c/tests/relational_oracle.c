@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_oracle.bend (47 lines): the refusal oracle cases of
+/* Port of tests/relational_oracle.bend (47 lines): the refusal oracle cases of
  * relational_negatives (distinct_from and oracle_valid over hand-built pins). The live oracle is
  * the relational-oracle capture (manifest checks: the seed alpha and the non-ASCII seed).
  * Usage: one oracle seed. */

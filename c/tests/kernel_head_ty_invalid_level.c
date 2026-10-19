@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_head_ty_invalid_level.bend (oracle label unit-kernel-head-ty-invalid-level). */
+/* Port of tests/kernel_head_ty_invalid_level.bend (oracle label unit-kernel-head-ty-invalid-level). */
 #include "driver.h"
 
 #include <stdio.h>

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_equality.bend (oracle label surface-equality).
+/* Port of tests/surface_equality.bend (oracle label surface-equality).
  * The named assertions and refusal prefixes mirror test/equality.ml. */
 #include "driver.h"
 

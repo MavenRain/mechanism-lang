@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_protocol.bend (oracle label prelude-protocol): `ROOT` checks
+/* Port of tests/prelude_protocol.bend (oracle label prelude-protocol): `ROOT` checks
  * prelude/init.mech with no postulates or primitives, the NAME_ONLY rows of map/prelude.map.tsv,
  * the client fixtures, the prelude families and the test/neg/prelude negatives, one PASS or FAIL line
  * per case, then PRELUDE-OK or a die with the failure count; `--audit FILE` checks one source the

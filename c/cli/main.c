@@ -1,4 +1,4 @@
-/* Port of bend2/main.bend: the mechanism-driver program. The first argument selects mech
+/* Port of main.bend: the mechanism-driver program. The first argument selects mech
  * (c/cli/mech.c), cert (c/cli/cert.c) or kanon (c/cli/kanon.c); any other argument list dies with 64
  * and the usage text. This file holds main, so the Makefile keeps it out of C_CLI_SOURCES
  * (C_CLI_MAINS) and links it only into _tcc/bin/main. */

@@ -1,4 +1,4 @@
-/* Shared view of bend2/tests/levels_regression.bend: levels_protocol.bend imports it as Algebra and
+/* Shared view of tests/levels_regression.bend: levels_protocol.bend imports it as Algebra and
  * reads only Algebra.cases(). The driver object keeps its main; the library object (compiled with
  * MECH_DRIVER_LIBRARY) exports the case table alone. */
 #ifndef MECH_LEVELS_REGRESSION_H

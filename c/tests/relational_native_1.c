@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_1.bend: shard 1 of the relational protocols
+/* Port of tests/relational_native_1.bend: shard 1 of the relational protocols
  * (heterogeneous-functor, composable-functors, heterogeneous-nattrans, heterogeneous-left-kan) over
  * the sibling binaries `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"

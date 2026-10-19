@@ -1,4 +1,4 @@
-/* Port of bend2/import/translate.bend (import "Translate"): the typed view of an export. Source
+/* Port of import/translate.bend (import "Translate"): the typed view of an export. Source
  * identities remain decimal strings, including values beyond UInt32. The Bend T is threaded linearly
  * through the visitors, so the one heap-boxed Translated is updated in place (with_* are the table_put
  * calls of commit_level, commit_expr and add_declaration). The Bend id sets are persistent values that

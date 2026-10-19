@@ -1,4 +1,4 @@
-/* Port of bend2/surface/lexer.bend: the scanner from source bytes to the token list. The Bend
+/* Port of surface/lexer.bend: the scanner from source bytes to the token list. The Bend
  * version re-encodes its codepoint String as UTF-8 bytes before scanning (utf8_four .. utf8); the C
  * host reads source as bytes already, so those five definitions are the identity here and are not
  * ported. Columns advance per byte exactly as the Bend. The Bend conses tokens, text and bytes in
@@ -170,7 +170,7 @@ static TokenKind ident_kind_from(Str name, size_t from) {
 
 static TokenKind ident_kind(Str name) { return ident_kind_from(name, 0); }
 
-/* C: ident_kind for other components (Lex.ident_kind of bend2/rust/lower.bend). */
+/* C: ident_kind for other components (Lex.ident_kind of rust/lower.bend). */
 TokenKind lexer_ident_kind(Str name) { return ident_kind(name); }
 
 /* normalize_digits(digits): drop leading zeros, the empty remainder is "0". */

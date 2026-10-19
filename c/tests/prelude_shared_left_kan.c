@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_shared_left_kan.bend (41 lines): the shared left kan prelude suite. Reads the prelude layers and the fixture
+/* Port of tests/prelude_shared_left_kan.bend (41 lines): the shared left kan prelude suite. Reads the prelude layers and the fixture
  * clients under argv[1] (default "."), runs the relational checks of suite() in the Bend order and prints
  * PRELUDE-SHARED-LEFT-KAN-OK fields or PRELUDE-SHARED-LEFT-KAN-FAIL message. Same definitions in the same order. */
 #include "driver.h"
@@ -26,7 +26,7 @@ static void computation(Heap *heap, Vec *out, const char *name, const Term *expe
   vec_push(out, row);
 }
 
-/* expected_entries() (bend2/tests/prelude_shared_left_kan.bend line 12, 944 names) */
+/* expected_entries() (tests/prelude_shared_left_kan.bend line 12, 944 names) */
 static const char *const EXPECTED_ENTRIES[] = {
     "Alpha", "Beta", "Chosen", "Cocone", "Components", "ComposedMediator", "Constant", "DoubleEnd",
     "EqualMiddle_Category", "EqualMiddle_Hom", "EqualMiddle_assoc", "EqualMiddle_comp", "EqualMiddle_compId",
@@ -353,14 +353,14 @@ static const char *const EXPECTED_ENTRIES[] = {
     "lanVerticalSecond", "otherComponentLaw", "pathTrans", "sharedLanInput", "uniqueWitness"
 };
 
-/* expected_families() (bend2/tests/prelude_shared_left_kan.bend line 15, 13 names) */
+/* expected_families() (tests/prelude_shared_left_kan.bend line 15, 13 names) */
 static const char *const EXPECTED_FAMILIES[] = {
     "EqualMiddle", "EqualSource", "Mixed_Base_Middle", "Mixed_Base_Source", "Mixed_Base_Target", "Path", "Point",
     "Run_Base_Middle", "Run_Base_Source", "Run_Base_Target", "Wide_Base_Middle", "Wide_Base_Source",
     "Wide_Base_Target"
 };
 
-/* negatives() (bend2/tests/prelude_shared_left_kan.bend line 18, 7 names) */
+/* negatives() (tests/prelude_shared_left_kan.bend line 18, 7 names) */
 static const char *const NEGATIVES[] = {
     "cocone-endpoint", "extension-sort", "missing-factor", "missing-uniqueness", "nominal-category",
     "uniqueness-endpoint", "wrong-factor"

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_program.bend (oracle label unit-surface-program): whole programs through
+/* Port of tests/surface_program.bend (oracle label unit-surface-program): whole programs through
  * Elab.check_text; declarations, templates, composition and reuse are accepted or rejected with the exact
  * text, and two programs sit exactly on their trusted-check poll boundary. */
 #include "driver.h"

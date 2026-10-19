@@ -1,4 +1,4 @@
-/* Port of bend2/tests/levels_checker.bend (oracle label unit-levels-checker). */
+/* Port of tests/levels_checker.bend (oracle label unit-levels-checker). */
 #include "driver.h"
 
 /* success(result): Done -> True. */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_conversion_budget.bend (oracle label unit-kernel-conversion-budget). */
+/* Port of tests/kernel_conversion_budget.bend (oracle label unit-kernel-conversion-budget). */
 #include "driver.h"
 #include "levels_protocol.h"
 

@@ -1,4 +1,4 @@
-/* C port of bend2/tests/runtime_slice.bend (Bend lines 1-179): the reference traversal over erased
+/* C port of tests/runtime_slice.bend (Bend lines 1-179): the reference traversal over erased
  * terms, the function catalog, the reachability visit, the declaration and row selection and the
  * self test. The Bend module has no main: c-test builds this unit as the runtime_slice check (the
  * main below prints PASS) and prelude_runtime (S5.1) links it with RUNTIME_SLICE_LIBRARY defined,

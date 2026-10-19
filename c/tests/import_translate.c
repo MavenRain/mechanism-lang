@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_translate.bend (oracle label import-translate): reads the one NDJSON
+/* Port of tests/import_translate.bend (oracle label import-translate): reads the one NDJSON
  * source argument with Export.read_string, translates it and prints Render.scoped_summary as JSON;
  * dies with 1 and "LINE:message" on an import or translation error, or with 64 and the usage text on
  * any other argument count. */

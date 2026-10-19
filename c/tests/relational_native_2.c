@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_2.bend: shard 2 of the relational protocols
+/* Port of tests/relational_native_2.bend: shard 2 of the relational protocols
  * (heterogeneous-whiskering, left-kan-laws, shared-left-kan, shared-nattrans) over the sibling
  * binaries `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"

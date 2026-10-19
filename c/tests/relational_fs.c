@@ -1,5 +1,5 @@
-/* Port of bend2/tests/relational_fs.bend: relational_list_dir(path), the directory listing effect
- * of the relational test protocol (bend2/tests/relational_fs.c is the Bend effect body). */
+/* Port of tests/relational_fs.bend: relational_list_dir(path), the directory listing effect
+ * of the relational test protocol (tests/relational_fs.c is the Bend effect body). */
 #include "relational_fs.h"
 
 #include <dirent.h>

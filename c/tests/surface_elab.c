@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_elab.bend (oracle label unit-surface-elab): parses, elaborates and infers
+/* Port of tests/surface_elab.bend (oracle label unit-surface-elab): parses, elaborates and infers
  * nine term sources against the initial globals; seven must be accepted and two rejected. */
 #include "driver.h"
 #include "surface.h"

@@ -1,4 +1,6 @@
-/* Mechanism surface: C port of the bend2/surface .bend files, one .c per .bend file and one header
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism surface: C port of the surface .bend files, one .c per .bend file and one header
  * for the component. Same allocation discipline as kernel.h: every function that allocates takes
  * the Heap, a failed allocation sets heap->oom and returns a well formed placeholder, library code
  * never aborts. Lists are Vec values of pointers to the element type named at each field. */
@@ -13,7 +15,7 @@ Str surface_cat(Heap *heap, const Str *parts, size_t count);
 #define SURFACE_NARGS(...) SURFACE_NARGS_(__VA_ARGS__, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 #define SURFACE_CAT(heap, ...) surface_cat(heap, (const Str[]){__VA_ARGS__}, SURFACE_NARGS(__VA_ARGS__))
 
-/* ---- universe (bend2/surface/universe.bend) ---- */
+/* ---- universe (surface/universe.bend) ---- */
 typedef enum {
   UNIVERSE_NAT_LEVEL,
   UNIVERSE_VAR_LEVEL,
@@ -39,7 +41,7 @@ Str universe_text(Heap *heap, const Universe *level);
 Result universe_lower_nat(Heap *heap, MaybeBig value);
 Result universe_lower(Heap *heap, const Universe *level);
 
-/* ---- syntax (bend2/surface/syntax.bend) ---- */
+/* ---- syntax (surface/syntax.bend) ---- */
 /* The generic parameter A of Binder, Motive, Field, Branch, FamCtor, Fam and RecDef is STerm. */
 typedef enum { SPRIM_ADD, SPRIM_SUB, SPRIM_MUL, SPRIM_EQ, SPRIM_LT } SPrim;
 typedef struct STerm STerm;
@@ -308,7 +310,7 @@ Str syntax_precedence_wrap(Heap *heap, bool enough, Str text);
 /* at: the signed Bignum level keeps the OCaml int domain of the original Syntax.at. */
 Str syntax_at(Heap *heap, Big level, const STerm *term);
 
-/* ---- elab_term (bend2/surface/elab_term.bend) ---- */
+/* ---- elab_term (surface/elab_term.bend) ---- */
 typedef enum { ELAB_RFAM, ELAB_RCTOR } ElabMuRefKind;
 /* MuRef: RFam{family} | RCtor{family, ctor} */
 typedef struct {
@@ -373,7 +375,7 @@ Ctx elab_term_telescope_context(const void *state);
 Comp elab_term_elab_ctor_decl(Heap *heap, SFamCtor ctor, Ctx ctx, Str name);
 
 
-/* ---- token (bend2/surface/token.bend) ---- */
+/* ---- token (surface/token.bend) ---- */
 typedef struct {
   Nat line;
   Nat col;
@@ -467,21 +469,21 @@ TokenLoc token_next_line(Heap *heap, TokenLoc l);
 Str token_describe(Heap *heap, TokenKind k);
 uint32_t token_tag(TokenKind k);
 
-/* ---- lexer (bend2/surface/lexer.bend) ---- */
+/* ---- lexer (surface/lexer.bend) ---- */
 /* lex(source): the Done value is a Vec * of Token pointers (the Eof token last); Fail carries
  * Error.Parse with the message, line and column of the offending byte. */
 Result lexer_lex(Heap *heap, Str source);
 /* ident_kind(name): a keyword kind when name is a keyword, else Ident{name}. */
 TokenKind lexer_ident_kind(Str name);
 
-/* ---- parser (bend2/surface/parser.bend) ---- */
+/* ---- parser (surface/parser.bend) ---- */
 /* term(source): the Done value is a const STerm *. program(source): the Done value is a Vec * of SDecl
  * pointers. Fail carries the lexer or parser Error.Parse; a host allocation failure during the parse
  * surfaces as Error.HostOom. */
 Result parser_term(Heap *heap, Str source);
 Result parser_program(Heap *heap, Str source);
 
-/* ---- poly (bend2/surface/poly.bend) ---- */
+/* ---- poly (surface/poly.bend) ---- */
 /* LevelAction: PreserveLevels | ScopeLevels{arity} | SubstituteLevels{levels}; levels is a Vec of
  * const LevelVar pointers. */
 typedef enum { POLY_PRESERVE_LEVELS, POLY_SCOPE_LEVELS, POLY_SUBSTITUTE_LEVELS } PolyLevelActionKind;
@@ -551,7 +553,7 @@ Result poly_map_level(Heap *heap, PolyAction action, const LevelVar *level);
 Comp poly_map_terms(Heap *heap, const Vec *terms, PolyAction action);
 Str poly_decl_name(Decl decl);
 
-/* ---- family_poly (bend2/surface/family_poly.bend) ---- */
+/* ---- family_poly (surface/family_poly.bend) ---- */
 /* Lists: Telescope and ctors as in kernel.h (TeleBinder / CtorDecl pointers), List<Decl> as Decl
  * pointers, List<String> as Str pointers, Bindings = List<Common.Pair<String, String>> as PolyRename
  * pointers. */
@@ -880,7 +882,7 @@ Comp family_compose_open_head(Heap *heap, Globals globals, FamilyCatalog catalog
 PolyAction family_scope_action(Heap *heap, FamilyCatalog catalog, Nat arity);
 Comp family_compose_open_tail(Heap *heap, const FamilyComposeState *head, const Vec *scoped);
 
-/* ---- elab (bend2/surface/elab.bend): the program pass ---- */
+/* ---- elab (surface/elab.bend): the program pass ---- */
 /* Rows = List<Common.Pair<String, Global.Entry>> is a Vec of CheckRow pointers (check.c). */
 /* Checked = Common.Pair<Global.T, Rows> */
 typedef struct {

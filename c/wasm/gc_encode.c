@@ -1,4 +1,4 @@
-/* Port of bend2/wasm/gc_encode.bend: the WasmGC binary encoder. The Bend definitions build byte
+/* Port of wasm/gc_encode.bend: the WasmGC binary encoder. The Bend definitions build byte
  * lists and concatenate them (cat); the port appends to one StrBuf in the same order, so every
  * definition keeps its name and position and the bytes are identical. A failed push sets heap->oom. */
 #include "wasm.h"

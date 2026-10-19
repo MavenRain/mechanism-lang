@@ -1,5 +1,5 @@
-/* Port of bend2/host_fs.bend: mechanism_fs and mechanism_write_bytes, the POSIX file effect of
- * bend2/effects/fs.c, over the fs_* calls of c/rt/effects.c (which follow fs.c call for call).
+/* Port of host_fs.bend: mechanism_fs and mechanism_write_bytes, the POSIX file effect of
+ * effects/fs.c, over the fs_* calls of c/rt/effects.c (which follow fs.c call for call).
  * A failure carries the errno and strerror(errno), the text the Bend effect gives a NULL message. */
 #include "cli.h"
 

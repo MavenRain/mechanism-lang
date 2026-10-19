@@ -1,4 +1,4 @@
-/* Port of bend2/import/mapping.bend: the external-constant inventory of an export. Every referenced
+/* Port of import/mapping.bend: the external-constant inventory of an export. Every referenced
  * external constant gets a NAME_ONLY (a mapping target exists), UNMAPPED or NEVER (ratified
  * Lean.Omega reflection) verdict, the NEVER rows become exception rows, and map_tsv and never_tsv
  * render the two TSV files. Every definition keeps its Bend name with the mapping_ prefix, in Bend

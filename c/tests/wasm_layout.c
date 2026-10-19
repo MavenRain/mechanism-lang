@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_layout.bend (oracle label fixture-layout): links three erased programs
+/* Port of tests/wasm_layout.bend (oracle label fixture-layout): links three erased programs
  * (basic, recursive, closure), encodes the type groups of each layout as a module and prints its
  * bytes as a decimal list in brackets, one line per program; a link failure dies with exit 1. */
 #include <stdarg.h>

@@ -1,4 +1,4 @@
-/* Port of bend2/import/lower.bend: lowering a translated Lean type DAG into a checked kernel term.
+/* Port of import/lower.bend: lowering a translated Lean type DAG into a checked kernel term.
  * Comp(A) = State -> State & Result<Error, A> is direct style here: every action takes the heap and
  * the LowerState by pointer (threaded in and out) and returns a LowerResult whose payload is the A
  * erased to a pointer (const Term *, const LevelVar *, const Value *, Vec *, LowerBoundContext *,

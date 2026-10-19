@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_linear_check_probe.bend (no live oracle call: c-test compares the
+/* Port of tests/kernel_linear_check_probe.bend (no live oracle call: c-test compares the
  * output with c/tests/kernel_linear_check_probe.expected). */
 #include "driver.h"
 

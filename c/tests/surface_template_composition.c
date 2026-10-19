@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_template_composition.bend (150 lines, oracle label surface-template-composition):
+/* Port of tests/surface_template_composition.bend (150 lines, oracle label surface-template-composition):
  * a composition template elaborates to closed families and members in order, the composition refusals and
  * parsers, parity with explicit closed declarations, current globals at compose and specialize time, the
  * mixed-universe category prefix, and the raw compose refusals and cancellations. argv[1] (optional) is the

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_common.bend, same definition order. Task(A) is Task {ok, message}
+/* Port of tests/relational_common.bend, same definition order. Task(A) is Task {ok, message}
  * plus an out parameter; lift, Task.pure, task_next and Task.bind collapse into task_pure, task_fail
  * and RELATIONAL_TRY. The file effects (io.bend read_file, relational_fs) run inline: the error text
  * is `path: message` with message = strerror(errno) (the Bend effect's text for a NULL message). */

@@ -1,4 +1,6 @@
-/* Mechanism kernel: C port of the bend2/kernel .bend files, one .c per .bend file and one header for
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism kernel: C port of the kernel .bend files, one .c per .bend file and one header for
  * the component. Every function that allocates takes the Heap it allocates from. Library code
  * never aborts: a failed allocation sets heap->oom and returns a well formed placeholder, and
  * the program boundary (test drivers, CLI) checks heap->oom before it prints any result. */
@@ -7,7 +9,7 @@
 
 #include "rt.h"
 
-/* ---- common (bend2/kernel/common.bend) ---- */
+/* ---- common (kernel/common.bend) ---- */
 #define HEAP_SMALL_CLASSES 32
 /* The sharing memo of one compact pass (host only: c/kernel/compact.c, compact_memo_open). */
 typedef struct CompactMemo CompactMemo;
@@ -60,7 +62,7 @@ typedef struct {
 /* List.get: the item at index, or out of range. */
 VecGet common_at(const Vec *xs, Nat index);
 
-/* ---- bignum (bend2/kernel/bignum.bend): signed canonical base 32768 limbs, least significant first ---- */
+/* ---- bignum (kernel/bignum.bend): signed canonical base 32768 limbs, least significant first ---- */
 typedef struct {
   const uint32_t *items;
   size_t len;
@@ -143,7 +145,7 @@ MaybeNat big_to_nat_bounded(Heap *heap, Big value, Nat upper);
 VecGet big_at_narrowed(const Vec *xs, MaybeNat index);
 VecGet big_at(Heap *heap, const Vec *xs, Big index);
 
-/* ---- error (bend2/kernel/error.bend) ---- */
+/* ---- error (kernel/error.bend) ---- */
 typedef enum {
   ERROR_PARSE,
   ERROR_NOT_YET,
@@ -177,7 +179,7 @@ Str error_termination_msg(Heap *heap, Str name);
 Str error_message(Heap *heap, Error e);
 Str error_to_string(Heap *heap, Error e);
 
-/* ---- budget (bend2/kernel/budget.bend) ---- */
+/* ---- budget (kernel/budget.bend) ---- */
 typedef enum { BUDGET_UNLIMITED, BUDGET_POLLS } BudgetKind;
 typedef struct {
   BudgetKind kind;
@@ -313,7 +315,7 @@ IOCallbackState budget_run_io_state(Heap *heap, Comp action, IOCallback callback
 Result budget_discard_io(IOCallbackState state);
 Result budget_run_io(Heap *heap, Comp action, IOCallback callback);
 
-/* ---- quantity (bend2/kernel/quantity.bend) ---- */
+/* ---- quantity (kernel/quantity.bend) ---- */
 typedef enum { QUANTITY_ZERO, QUANTITY_ONE, QUANTITY_MANY } Quantity;
 
 typedef struct {
@@ -381,7 +383,7 @@ bool quantity_at_most_once(Nat level, Usage usage);
 Vec quantity_capture_paths(Heap *heap, MaybeUsageRows paths, const Vec *reads);
 Usage quantity_captures(Heap *heap, Usage usage);
 
-/* ---- shape (bend2/kernel/shape.bend): T<A> with the payload type A erased to a pointer ---- */
+/* ---- shape (kernel/shape.bend): T<A> with the payload type A erased to a pointer ---- */
 typedef enum {
   SHAPE_PI,
   SHAPE_ARG,
@@ -435,7 +437,7 @@ Str shape_name(Shape shape);
 /* List<String> as a Vec of Str pointers. */
 Vec shape_declared(Heap *heap);
 
-/* ---- level_var (bend2/kernel/level_var.bend) ---- */
+/* ---- level_var (kernel/level_var.bend) ---- */
 typedef enum { LEVEL_VAR_ZERO, LEVEL_VAR_SUCC, LEVEL_VAR_MAX, LEVEL_VAR_IMAX, LEVEL_VAR_VAR } LevelVarKind;
 typedef struct LevelVar LevelVar;
 struct LevelVar {
@@ -471,7 +473,7 @@ MaybeLevelVar level_var_subst_valid(Heap *heap, bool valid, const Vec *args, con
 MaybeLevelVar level_var_subst(Heap *heap, const Vec *args, const LevelVar *level);
 bool level_var_structural_equal(const LevelVar *a, const LevelVar *b);
 
-/* ---- level_eq (bend2/kernel/level_eq.bend) ---- */
+/* ---- level_eq (kernel/level_eq.bend) ---- */
 /* List<Nat> as a cons list; NULL is Nil. */
 typedef struct NatList NatList;
 struct NatList {
@@ -549,7 +551,7 @@ Comp level_eq_decide_m(Heap *heap, const LevelVar *left, const LevelVar *right, 
 Result level_eq_le_budget(Heap *heap, Budget budget, const LevelVar *left, const LevelVar *right);
 Result level_eq_equal_budget(Heap *heap, Budget budget, const LevelVar *left, const LevelVar *right);
 
-/* ---- level (bend2/kernel/level.bend): T = LevelVar ---- */
+/* ---- level (kernel/level.bend): T = LevelVar ---- */
 const LevelVar *level_zero(void);
 const LevelVar *level_one(Heap *heap);
 const LevelVar *level_succ(Heap *heap, const LevelVar *level);
@@ -573,7 +575,7 @@ Str level_render(Heap *heap, const LevelVar *level);
 Str level_show_closed(Heap *heap, MaybeBig closed, const LevelVar *level);
 Str level_to_string(Heap *heap, const LevelVar *level);
 
-/* ---- literal (bend2/kernel/literal.bend) ---- */
+/* ---- literal (kernel/literal.bend) ---- */
 typedef enum { LITERAL_STRING, LITERAL_INT } LiteralKind;
 typedef struct {
   LiteralKind kind;
@@ -584,9 +586,9 @@ Literal literal_lstring(Str value);
 Literal literal_lint(Big value);
 bool literal_equal(Literal a, Literal b);
 
-/* ---- term (bend2/kernel/term.bend) ---- */
+/* ---- term (kernel/term.bend) ---- */
 /* The generic containers Addr<A>, Leg<A>, Motive<A> and ElimData<A> are only ever instantiated
- * at T across bend2/ (rg: Term.Addr<Term.T>, Term.Leg<Term.T>, Term.Motive<Term.T>), so the
+ * at T across  (rg: Term.Addr<Term.T>, Term.Leg<Term.T>, Term.Motive<Term.T>), so the
  * payload A is const Term *. Shape<T> payload pointers inside a Term are const Term * too. */
 typedef struct Term Term;
 typedef enum { ADDR_PT, ADDR_LEG, ADDR_CTOR } AddrKind;
@@ -751,9 +753,9 @@ bool term_equal(const Term *a, const Term *b);
 Vec term_formers(Heap *heap);
 Vec term_schema(Heap *heap);
 
-/* ---- value (bend2/kernel/value.bend) ---- */
+/* ---- value (kernel/value.bend) ---- */
 /* The generic containers Closure<A>, VLeg<A>, VAddr<A>, StuckElim<A> and Spine<A> are only ever
- * instantiated at T across bend2/, so the payload A is const Value *. */
+ * instantiated at T across , so the payload A is const Value *. */
 typedef struct Value Value;
 typedef enum { HEAD_LOCAL, HEAD_GLOBAL } HeadKind;
 typedef struct {
@@ -864,7 +866,7 @@ Closure value_close(Vec env, const Term *body);
 MaybeLevelVar value_as_univ(const Value *value);
 bool value_head_equal(Head a, Head b);
 
-/* ---- prim (bend2/kernel/prim.bend) ---- */
+/* ---- prim (kernel/prim.bend) ---- */
 typedef enum { PRIM_NAT_ADD, PRIM_NAT_SUB, PRIM_NAT_MUL, PRIM_NAT_EQ, PRIM_NAT_LT } Prim;
 typedef struct {
   bool some;
@@ -892,7 +894,7 @@ const Value *prim_apply_pair(Heap *heap, Prim p, Big a, Big b);
 /* args: List<Literal.T> as a Vec of Literal pointers. */
 MaybeValue prim_apply(Heap *heap, Prim p, const Vec *args);
 
-/* ---- positivity (bend2/kernel/positivity.bend) ---- */
+/* ---- positivity (kernel/positivity.bend) ---- */
 /* Binder{quantity, name, ty}: one telescope entry (the two field Binder of term.bend is another
  * type, so this one is TeleBinder). Telescope = List<Binder> as a Vec of TeleBinder pointers. */
 typedef struct {
@@ -962,7 +964,7 @@ bool positivity_same_ctors(const Vec *a, const Vec *b, bool ignore_self_rec);
 bool positivity_same_family_except(Family a, Family b, bool ignore_level, bool ignore_self_rec);
 bool positivity_same_family(Family a, Family b);
 
-/* ---- global (bend2/kernel/global.bend) ---- */
+/* ---- global (kernel/global.bend) ---- */
 /* DefEntry{ty, body, reducible, rec_arg, partial} */
 typedef struct {
   const Term *ty;
@@ -1054,7 +1056,7 @@ bool global_families_kept(const FamilyRows *families, Globals later);
 bool global_extended_by(Globals earlier, Globals later);
 
 
-/* ---- eval (bend2/kernel/eval.bend) ---- */
+/* ---- eval (kernel/eval.bend) ---- */
 /* Names: Bend <name> is eval_<name>, so the Bend `eval` is eval_eval and the Bend `eval_whnf` is
  * eval_eval_whnf. Result<Error.T, Value.T> and Result<Error.T, Term.T> are the generic Result with
  * a const Value * or const Term * payload; the other payload types get an inline result struct
@@ -1189,7 +1191,7 @@ Result eval_read_back_value(Heap *heap, Readback mode, Globals globals, Nat size
 Result eval_quote(Heap *heap, Globals globals, Nat size, const Value *value);
 Result eval_normalize(Heap *heap, Globals globals, Nat size, const Value *value);
 
-/* ---- pp (bend2/kernel/pp.bend): the kernel term printer ---- */
+/* ---- pp (kernel/pp.bend): the kernel term printer ---- */
 /* names: List<String> as a Vec of Str pointers, index 0 = the innermost binder. */
 Str pp_decimal_escape(Heap *heap, uint32_t n);
 Str pp_escape_byte(Heap *heap, uint32_t n);
@@ -1216,14 +1218,14 @@ Str pp_branches(Heap *heap, const Vec *branches, const Vec *names);
 Str pp_nth_name(Heap *heap, MaybeStr result, Nat index);
 Str pp_term(Heap *heap, const Vec *names, const Term *term);
 
-/* ---- level_scope (bend2/kernel/level_scope.bend) ---- */
+/* ---- level_scope (kernel/level_scope.bend) ---- */
 bool level_scope_valid_node(const Term *term, Nat arity);
 /* todo: List<Term.T> as Term pointers; the Bend worklist recursion run as a loop. */
 bool level_scope_valid_walk(Heap *heap, Vec todo, Nat arity);
 /* Result<Error.T, Unit>: RESULT_DONE carries kernel_unit(). */
 Result level_scope_check(Heap *heap, Nat arity, const Term *term);
 
-/* ---- context (bend2/kernel/context.bend): the typing context ---- */
+/* ---- context (kernel/context.bend): the typing context ---- */
 typedef struct {
   Str name;
   Quantity quantity;
@@ -1299,7 +1301,7 @@ Ctx context_bind(Heap *heap, Str name, Quantity q, const Value *ty, Ctx ctx);
 Ctx context_define(Heap *heap, Str name, Quantity q, const Value *ty, const Value *value, Ctx ctx);
 bool context_readable(Quantity mode, Quantity q);
 
-/* ---- rules (bend2/kernel/rules.bend): the shared typing rule helpers and the eta table ---- */
+/* ---- rules (kernel/rules.bend): the shared typing rule helpers and the eta table ---- */
 /* Result<Error.T, Positivity.Family> */
 typedef struct {
   ResultKind kind;
@@ -1378,7 +1380,7 @@ Vec rules_admitted(Heap *heap);
 Vec rules_named_declared(Heap *heap);
 Vec rules_named_present(Heap *heap);
 
-/* ---- circuit (bend2/kernel/circuit.bend): the depth certificate of a kernel term ---- */
+/* ---- circuit (kernel/circuit.bend): the depth certificate of a kernel term ---- */
 /* Result<String, Bignum.T>: a depth, or a plain message. */
 typedef struct {
   ResultKind kind;
@@ -1526,7 +1528,7 @@ CircuitBigResult circuit_depth(Heap *heap, const Vec *globals, const Term *t);
 
 
 
-/* ---- check_engine (bend2/kernel/check_engine.bend): the bidirectional type checker ---- */
+/* ---- check_engine (kernel/check_engine.bend): the bidirectional type checker ---- */
 /* Comp values: Inferred *, Former *, Point *, Usage *, Ctx *, Big *, const Value *, const Term *,
  * const LevelVar *, kernel_unit() and the kernel bool box. Ported through Bend line 600 (S1.9 hop
  * 22); the prototypes of the later definitions join this section as their hops port them. */
@@ -1921,7 +1923,7 @@ Str check_engine_pair_name(Binder pair);
 Comp check_engine_point_arg(Addr addr, Str message);
 Comp check_engine_leg_index(Heap *heap, Addr addr, Str message);
 
-/* ---- order (bend2/kernel/order.bend): the structural recursion certificate ---- */
+/* ---- order (kernel/order.bend): the structural recursion certificate ---- */
 typedef enum { ORDER_RULE_STRUCTURAL } OrderRule;
 typedef enum { ORDER_PRINCIPAL, ORDER_SMALLER, ORDER_OTHER } OrderStatus;
 typedef struct {
@@ -2080,7 +2082,7 @@ OrderUnitResult order_translate_inner(Heap *heap, OrderPeeled p, Nat k, const Ve
 OrderTermResult order_translate_used(Heap *heap, bool used, OrderCert cert, const Term *body);
 OrderTermResult order_translate(Heap *heap, OrderCert cert, const Term *body);
 
-/* ---- totality (bend2/kernel/totality.bend): the budgeted termination guard ---- */
+/* ---- totality (kernel/totality.bend): the budgeted termination guard ---- */
 Str totality_budget_msg(void);
 /* terms: Term pointers, the worklist head first; Result<Error.T, Budget.T> with the budget boxed. */
 Result totality_spend(Heap *heap, MaybeBudget state, Vec terms);
@@ -2102,7 +2104,7 @@ Comp totality_guard_group_comp(Heap *heap, Globals globals, const Vec *members);
 /* Comp(Maybe<Nat>): the ready value is a heap allocated MaybeNat. */
 Comp totality_guard_comp(Heap *heap, Globals globals, Str name, const Term *ty, const Term *body);
 
-/* ---- conv (bend2/kernel/conv.bend) ---- */
+/* ---- conv (kernel/conv.bend) ---- */
 /* Result<Error.T, Bool> */
 typedef struct {
   ResultKind kind;
@@ -2113,7 +2115,7 @@ Budget conv_budget_of(Ctx ctx);
 BoolResult conv_conv(Heap *heap, Ctx ctx, const Value *ty, const Value *a, const Value *b);
 BoolResult conv_conv_type(Heap *heap, Ctx ctx, const Value *a, const Value *b);
 
-/* ---- check (bend2/kernel/check.bend) ---- */
+/* ---- check (kernel/check.bend) ---- */
 /* Comp values: Entry *, Ctx *, Globals *, Ctor *, Vec * (List<Ctor> as Ctor pointers, List<Pair<String, Entry>> as
  * CheckRow pointers), kernel_unit() and the kernel bool box. Results carry the same payloads; Result<Error.T, Value.T>
  * a const Value *, Result<Error.T, Level.T> a const LevelVar *, Result<Error.T, Inferred> an Inferred *. */
@@ -2208,7 +2210,7 @@ Result check_check_family_scheme(Heap *heap, Globals globals, Budget budget, Nat
 Result check_infer_term(Heap *heap, Globals globals, Budget budget, const Term *term);
 Result check_check_term(Heap *heap, Globals globals, Budget budget, const Term *term, const Value *ty);
 
-/* ---- eterm (bend2/kernel/eterm.bend): the erased kernel term, its declarations and printers ---- */
+/* ---- eterm (kernel/eterm.bend): the erased kernel term, its declarations and printers ---- */
 typedef struct {
   Str name;
 } Tid;
@@ -2221,7 +2223,7 @@ typedef struct {
   Tid tid; /* REPR_STRUCT, REPR_UNION, REPR_FUNC, REPR_THUNK */
 } Repr;
 typedef struct Ktm Ktm;
-/* Branch<A> is only instantiated at A = Ktm across bend2/ and the name Branch belongs to the term
+/* Branch<A> is only instantiated at A = Ktm across  and the name Branch belongs to the term
  * eliminator branch above, so Branch<Ktm> is KtmBranch. */
 typedef struct {
   Nat tag;
@@ -2337,7 +2339,7 @@ Str eterm_repr_list(Heap *heap, const Vec *rs);
 Str eterm_tid_list(Heap *heap, const Vec *ts);
 Str eterm_print_decl(Heap *heap, Kdecl d);
 
-/* ---- erase_repr (bend2/kernel/erase_repr.bend): the erasure context and the runtime representation of a type ---- */
+/* ---- erase_repr (kernel/erase_repr.bend): the erasure context and the runtime representation of a type ---- */
 typedef enum { SLOT_DROP, SLOT_KEEP, SLOT_EXTRA } Slot;
 /* Ctx{check, slots, self}: the name Ctx belongs to the typing context above, so erase_repr's Ctx
  * (R.Ctx in erase_util and erase) is EraseCtx. slots: List<Slot> as Slot box pointers
@@ -2431,7 +2433,7 @@ Comp erase_repr_ctor_names(Heap *heap, Family family, Str name);
 Comp erase_repr_group_tids(Heap *heap, Vec names, Nat index, EraseCtx ec, Str name, Family family);
 Comp erase_repr_mu_group_tids(Heap *heap, EraseCtx ec, Str name, Family family);
 
-/* ---- erase_util (bend2/kernel/erase_util.bend): free variables, capture frames and the runtime term reindexing ---- */
+/* ---- erase_util (kernel/erase_util.bend): free variables, capture frames and the runtime term reindexing ---- */
 /* Every definition is pure (no Comp): a failed allocation sets heap->oom and the result is best
  * effort. List<Nat> is a Vec of heap boxed Nat pointers (erase_util_nat_new); List<Slot> a Vec of
  * Slot box pointers (erase_repr_slot_box); List<FreeWork> and List<RuntimeWork> Vecs of FreeWork
@@ -2501,7 +2503,7 @@ Vec erase_util_filter_live(Heap *heap, const Vec *xs, const Vec *live, Nat count
 /* ps: Repr pointers; args: Ktm pointers. */
 Pruned erase_util_prune_captures(Heap *heap, const Vec *ps, const Vec *args, Nat params, const Ktm *body);
 
-/* erase section: bend2/kernel/erase.bend (S1.12). The file's own Entry, Slot, Found, Acc, Out, Outs,
+/* erase section: kernel/erase.bend (S1.12). The file's own Entry, Slot, Found, Acc, Out, Outs,
  * Chain and Signature carry the Erase prefix (R.Slot is the erase_repr Slot above, R.Ctx is EraseCtx).
  * Comp values: EraseOut *, EraseOuts *, EraseChain *, EraseSignature *, const Value *, const Term *,
  * Vec * (Term, Ktm or Repr pointers), kernel bool boxes and kernel_unit. */
@@ -2793,7 +2795,7 @@ Str erase_print_decls(Heap *heap, const Vec *decls);
 Str erase_print_entry(Heap *heap, Str name, EraseEntry entry);
 Str erase_print(Heap *heap, const Vec *rows);
 
-/* ---- spec_count (bend2/kernel/spec_count.bend) ---- */
+/* ---- spec_count (kernel/spec_count.bend) ---- */
 /* items: a List<String> as a Vec of Str pointers. */
 Str spec_count_join(Heap *heap, const Vec *items);
 Str spec_count_pick(Nat index, const Vec *items);

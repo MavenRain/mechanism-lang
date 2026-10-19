@@ -1,3 +1,5 @@
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
 /* Shared boundary of the C test drivers: the IO.print, IO.die and IO.now effects of the Bend
  * drivers (print appends a newline on stdout, die writes the message and a newline on stderr
  * and exits with the code) and the host failure exit after an out-of-memory heap. */

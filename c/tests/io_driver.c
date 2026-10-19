@@ -1,4 +1,4 @@
-/* Port of bend2/tests/io_driver.bend: one file effect of bend2/io.bend (c/cli/io.c) per run, chosen
+/* Port of tests/io_driver.bend: one file effect of io.bend (c/cli/io.c) per run, chosen
  * by the arguments. Success prints OK or the text; a failure dies with exit 1 and the message; any
  * other argument list dies with exit 64 and the usage line. dev/c-io-check.py drives it. */
 #include "cli.h"

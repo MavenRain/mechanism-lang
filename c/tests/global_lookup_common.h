@@ -1,4 +1,4 @@
-/* The helpers of bend2/tests/kernel_global_lookup.bend, shared with kernel_global_index.c (whose Bend
+/* The helpers of tests/kernel_global_lookup.bend, shared with kernel_global_index.c (whose Bend
  * source imports kernel_global_lookup.bend as L). */
 #ifndef MECH_GLOBAL_LOOKUP_COMMON_H
 #define MECH_GLOBAL_LOOKUP_COMMON_H

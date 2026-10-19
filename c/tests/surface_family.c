@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_family.bend (oracle label unit-surface-family): Family.instance_names
+/* Port of tests/surface_family.bend (oracle label unit-surface-family): Family.instance_names
  * derives the specialised family, companion and member names, honours exports and reuse, refuses
  * incomplete or colliding exports, and map_member refuses postulate members. */
 #include "driver.h"

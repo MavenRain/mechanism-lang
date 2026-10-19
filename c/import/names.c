@@ -1,4 +1,4 @@
-/* Port of bend2/import/names.bend: the name entries of a lean4export NDJSON stream
+/* Port of import/names.bend: the name entries of a lean4export NDJSON stream
  * (Anonymous, Str{prefix, text}, Num{prefix, index}); the indices stay decimal text. */
 #include "import.h"
 

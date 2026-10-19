@@ -1,4 +1,6 @@
-/* Mechanism Rust frontend: C port of the bend2/rust .bend files, one .c per .bend file and one header
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism Rust frontend: C port of the rust .bend files, one .c per .bend file and one header
  * for the component. Every function that allocates takes the Heap it allocates from and never aborts:
  * a failed allocation sets heap->oom and returns a well formed placeholder; the program boundary
  * checks heap->oom before it prints any result. Lists are Vecs of pointers to the element type. */
@@ -7,7 +9,7 @@
 
 #include "kernel.h"
 
-/* ---- rir (bend2/rust/rir.bend): the erased program IR for `mech rust-out` ---- */
+/* ---- rir (rust/rir.bend): the erased program IR for `mech rust-out` ---- */
 
 /* Ty: TBool, TCon, TBox, TRef, TFn. */
 typedef enum { RIR_TBOOL, RIR_TCON, RIR_TBOX, RIR_TREF, RIR_TFN } RirTyKind;
@@ -140,7 +142,7 @@ const RirItem *rir_iunit(Heap *heap, Str name, Str ctor);
 const RirItem *rir_ifn(Heap *heap, Str name, Vec generics, Vec params, const RirTy *ret, const RirEx *body);
 RirModule rir_module(Str source, Vec items);
 
-/* ---- ast (bend2/rust/ast.bend): the Rust AST of the M0 frontend ---- */
+/* ---- ast (rust/ast.bend): the Rust AST of the M0 frontend ---- */
 
 /* Vis: Priv, Pub, PubCrate. */
 typedef enum { AST_PRIV, AST_PUB, AST_PUB_CRATE } AstVis;
@@ -481,10 +483,10 @@ AstPos ast_item_pos(Heap *heap, const AstNode *n);
 /* item_line: `fn name`, `struct name`, ..., `use`, `impl`; `expr` for an expression. */
 Str ast_item_line(Heap *heap, const AstNode *n);
 
-/* ---- print (bend2/rust/print.bend) ---- */
+/* ---- print (rust/print.bend) ---- */
 Str print_file(Heap *heap, const AstSrcFile *f);
 
-/* ---- emit (bend2/rust/emit.bend): rir -> Rust AST -> text ---- */
+/* ---- emit (rust/emit.bend): rir -> Rust AST -> text ---- */
 /* arm_bodies: the bodies of the arms (RirArm pointers), as RirEx pointers. */
 Vec emit_arm_bodies(Heap *heap, const Vec *arms);
 AstSrcFile emit_lower(Heap *heap, const RirModule *m);
@@ -493,7 +495,7 @@ Str emit_text(Heap *heap, const RirModule *m);
 /* derive(copy): the one derive attribute of an emitted enum or unit struct (AstAttr pointers). */
 Vec emit_derive(Heap *heap, bool copy);
 
-/* ---- erase_typed (bend2/rust/erase_typed.bend): typed erasure for `mech rust-out` ---- */
+/* ---- erase_typed (rust/erase_typed.bend): typed erasure for `mech rust-out` ---- */
 /* Bd: the erasure of one binder (defined in erase_typed.c). */
 typedef struct EtBd EtBd;
 /* Knd: the kind of a bound variable (a generic, a proposition or predicate, or a value). */
@@ -581,7 +583,7 @@ Str erase_typed_stem(Str s);
 EtModuleResult erase_typed_emit1(Heap *heap, Str name, Str source);
 EtModuleResult erase_typed_emit2(Heap *heap, Str first_name, Str first_source, Str name, Str source);
 
-/* ---- token (bend2/rust/token.bend): Rust tokens and their one-based positions ---- */
+/* ---- token (rust/token.bend): Rust tokens and their one-based positions ---- */
 /* surface.h owns token_ and lexer_ and rust_out.c includes both headers, so the Rust frontend
  * definitions take the prefixes rust_token_ and rust_lexer_. */
 
@@ -625,7 +627,7 @@ Str rust_token_show_kind(Heap *heap, RustTokKind k);
 Str rust_token_show_gap(bool g);
 Str rust_token_show(Heap *heap, const RustTok *t);
 
-/* ---- lexer (bend2/rust/lexer.bend): Rust source text to tokens ---- */
+/* ---- lexer (rust/lexer.bend): Rust source text to tokens ---- */
 /* Result<String, List<Tk.T>>: ok = Done{tokens} (RustTok pointers in source order, Eof last),
  * else Fail{message} (`line:col message`). */
 typedef struct {
@@ -635,7 +637,7 @@ typedef struct {
 } RustLexResult;
 RustLexResult rust_lexer_lex(Heap *heap, Str source);
 
-/* ---- parser (bend2/rust/parser.bend): Rust tokens to the AST ---- */
+/* ---- parser (rust/parser.bend): Rust tokens to the AST ---- */
 /* Result<String, A.SrcFile>: ok = Done{file}, else Fail{message} (`line:col expected ...`). */
 typedef struct {
   bool ok;
@@ -645,7 +647,7 @@ typedef struct {
 RustSrcFileResult rust_parser_from_tokens(Heap *heap, const Vec *raw);
 RustSrcFileResult rust_parser_file(Heap *heap, Str source);
 
-/* ---- fragment (bend2/rust/fragment.bend): the refusals of the house-convention Rust subset ---- */
+/* ---- fragment (rust/fragment.bend): the refusals of the house-convention Rust subset ---- */
 /* Refusal.Refusal: the position and the construct name. */
 typedef struct {
   RustTokLoc loc;
@@ -656,7 +658,7 @@ Str fragment_show(Heap *heap, const FragmentRefusal *r);
  * order (empty = the source is in the fragment). */
 Vec fragment_refusals(Heap *heap, const Vec *ts);
 
-/* ---- lift (bend2/rust/lift.bend): the Rust AST of the frontend back to the erased program IR ---- */
+/* ---- lift (rust/lift.bend): the Rust AST of the frontend back to the erased program IR ---- */
 /* Refusal.Refusal: the position of the nearest construct with a Meta, and the construct. */
 typedef struct {
   AstPos pos;
@@ -682,7 +684,7 @@ typedef struct {
 /* plain(m): Done{True} for a construct with no docs and no attributes, else the refusal. */
 LiftFlagResult lift_plain_result(const AstMeta *m);
 
-/* ---- resolve (bend2/rust/resolve.bend): module list, item table and name checks of the importer ---- */
+/* ---- resolve (rust/resolve.bend): module list, item table and name checks of the importer ---- */
 /* Bad.Bad: the module of the refusal (`lib`, `nat` or a module name), its position, the construct. */
 typedef struct {
   Str module;
@@ -744,7 +746,7 @@ ResolveOutResult resolve_resolve(Heap *heap, Str lib, const Vec *srcs);
  * `manifest <module> <file>` line for each module, in manifest order. */
 Str resolve_table_text(Heap *heap, const ResolveOut *o);
 
-/* ---- infer (bend2/rust/infer.bend): type inference of the Rust importer (C3, CD8 and CD9) ---- */
+/* ---- infer (rust/infer.bend): type inference of the Rust importer (C3, CD8 and CD9) ---- */
 /* STerm is the surface term of surface.h (Syntax.T). */
 struct STerm;
 /* Note: NCtor{targs} gives the type arguments of an XCtor, NMatch{ret} the result type of an XMatch. */
@@ -876,7 +878,7 @@ InferTypedResult infer_infer(Heap *heap, const ResolveOut *o);
 /* types_text(ts): `<module> <mech> : <tele> annotated <note count>` and a newline for each Typed. */
 Str infer_types_text(Heap *heap, const Vec *ts);
 
-/* ---- lower (bend2/rust/lower.bend) ---- */
+/* ---- lower (rust/lower.bend) ---- */
 /* Low.Low: the `.mech` text of one module and its file name. */
 typedef struct {
   Str file;
@@ -896,7 +898,7 @@ Str lower_files_text(Heap *heap, const Vec *ls);
 /* source(ls): mode `check`, the files joined in manifest order (CF11). */
 Str lower_source(Heap *heap, const Vec *ls);
 
-/* ---- roundtrip (bend2/rust/roundtrip.bend): RT-MECH, two checked programs equal up to bound names ---- */
+/* ---- roundtrip (rust/roundtrip.bend): RT-MECH, two checked programs equal up to bound names ---- */
 /* alpha(a, b): term_equal with the bound names ignored (the SPi and SZk names, the names of a leg,
  * the self and index names of a motive, the Let name). */
 bool roundtrip_alpha(const Term *a, const Term *b);
@@ -904,7 +906,7 @@ bool roundtrip_alpha(const Term *a, const Term *b);
  * in program order; none (some = false) if all rows agree. */
 MaybeStr roundtrip_first_diff(const Vec *a, const Vec *b);
 
-/* ---- cli/rust_in (bend2/cli/rust_in.bend; S6.13a): the exports of c/cli/rust_in.c that need the
+/* ---- cli/rust_in (cli/rust_in.bend; S6.13a): the exports of c/cli/rust_in.c that need the
  * resolve types (cli.h holds rust_in_run; D-226a) ---- */
 /* C: Result<Rs.Bad, List<Lo.Low>> of lower_if and lows_of. */
 typedef struct {

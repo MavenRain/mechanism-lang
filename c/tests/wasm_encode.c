@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_encode.bend (oracle label fixture-encode): prints the encoded fixture
+/* Port of tests/wasm_encode.bend (oracle label fixture-encode): prints the encoded fixture
  * module, the encoded effects module and three LEB128 probes, each as a decimal byte list in
  * brackets, one per line. */
 #include <stdarg.h>
@@ -46,7 +46,7 @@ static GcValtype *ref_i31(Heap *heap) { return gc_valtype_box(heap, gc_valtype_r
 /* G.I32_const{n} */
 static GcInstr *i32_const(Heap *heap, uint32_t n) { return gc_instr_index(heap, GC_I32_CONST, n); }
 
-/* fixture(): the module of bend2/tests/wasm_encode.bend */
+/* fixture(): the module of tests/wasm_encode.bend */
 static GcModule *fixture(Heap *heap) {
   static const uint32_t declared[1] = {6};
   Vec types = list(heap, 5,

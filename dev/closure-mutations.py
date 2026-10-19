@@ -20,7 +20,7 @@ BUILD_TARGET = "_tcc/bin/mech"
 
 # This control reinstates static call_ref dispatch from the former backend.
 # The production path dispatches using the closure's stored runtime arity.
-# The helper is the C form of the Bend 2 mutation_static (bend2/wasm/emit.bend
+# The helper is the C form of the Bend 2 mutation_static (wasm/emit.bend
 # steps_type); it is spliced in front of emit_steps_type in c/wasm/emit.c.
 STATIC_HELPER = """/* mutation_static(c, env, tail, head, r, args, m): the former backend's static call_ref dispatch */
 static Result emit_steps_static(Heap *heap, WasmState *st, const EmitCtx *c, const Vec *env, bool tail,
@@ -52,10 +52,10 @@ static Result emit_steps_static(Heap *heap, WasmState *st, const EmitCtx *c, con
 """
 STATIC_ANCHOR = "/* steps_type(c, env, tail, head, r, args): only a function or union head applies */"
 # Each control is the C form of the Bend 2 control of the same name:
-# M1 bend2/wasm/emit.bend steps_type (static dispatch when 0 < m <= |args|),
-# M2 bend2/wasm/link.bend nullary_closure (always False),
-# M3 bend2/wasm/link.bend steps_result at 0n (the nullary closure keeps its
-# function repr), M4 bend2/wasm/emit.bend apply_kind HValue (mutation_empty:
+# M1 wasm/emit.bend steps_type (static dispatch when 0 < m <= |args|),
+# M2 wasm/link.bend nullary_closure (always False),
+# M3 wasm/link.bend steps_result at 0n (the nullary closure keeps its
+# function repr), M4 wasm/emit.bend apply_kind HValue (mutation_empty:
 # no args returns the head without the steps call).
 CONTROLS = [
     ("C-CLOS-M1", "c/wasm/emit.c",

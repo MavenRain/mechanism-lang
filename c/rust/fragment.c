@@ -1,4 +1,4 @@
-/* Port of bend2/rust/fragment.bend: the fragment pass, a walk over the lexer tokens that runs
+/* Port of rust/fragment.bend: the fragment pass, a walk over the lexer tokens that runs
  * before the parser. It refuses each construct outside the house-convention Rust subset and gives
  * the position and the construct name (see c/rust/FRONTEND.md for the rule table). The
  * definitions keep the Bend names (prefix fragment_) and the Bend order; the C only helpers stand

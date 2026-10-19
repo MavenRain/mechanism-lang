@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_json.bend (oracle label import-json): parses the one JSON source
+/* Port of tests/import_json.bend (oracle label import-json): parses the one JSON source
  * argument and prints Json.to_string of the value; dies with 1 and the parse error text, or with
  * 64 and the usage text on any other argument count. */
 #include "driver.h"

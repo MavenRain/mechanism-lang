@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_order.bend (oracle label unit-wasm-order). */
+/* Port of tests/wasm_order.bend (oracle label unit-wasm-order). */
 #include "driver.h"
 
 /* literal() = T.Lit{L.LInt{B.of_u32(0)}} */

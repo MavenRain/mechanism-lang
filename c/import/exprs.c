@@ -1,4 +1,4 @@
-/* Port of bend2/import/exprs.bend: the expression entries of a lean4export NDJSON stream
+/* Port of import/exprs.bend: the expression entries of a lean4export NDJSON stream
  * (Bvar, Sort, Const, Apply, Lam, Forall, Let, Proj, NatLiteral, StringLiteral, Mdata); every
  * index stays decimal text. */
 #include "import.h"

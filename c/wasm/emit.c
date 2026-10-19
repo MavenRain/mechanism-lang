@@ -1,4 +1,4 @@
-/* Port of bend2/wasm/emit.bend: kernel terms (E.Ktm) to WasmGC instruction lists over a link layout.
+/* Port of wasm/emit.bend: kernel terms (E.Ktm) to WasmGC instruction lists over a link layout.
  * An S.Comp(A) def runs in direct state-passing form (WasmState *st updated in place, the Result
  * returned), which is the Bend T -> C.Pair<T, Result> threading with the pair split into the pointer
  * and the return value; a Fail keeps the state at the failure point, as bind_result does. Lists are

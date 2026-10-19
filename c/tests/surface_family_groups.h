@@ -1,4 +1,4 @@
-/* Port of the library half of bend2/tests/surface_family_groups.bend: the marker family, constructor, type,
+/* Port of the library half of tests/surface_family_groups.bend: the marker family, constructor, type,
  * value, definition, single declaration and one-entry globals that surface_family_members imports as
  * Groups.marker, Groups.ctor, Groups.ty, Groups.value, Groups.definition, Groups.single and
  * Groups.with_entry. _tcc/surface_family_groups_lib.o is built from c/tests/surface_family_groups.c with

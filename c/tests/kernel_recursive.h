@@ -1,5 +1,5 @@
 /* The kernel_recursive driver as a library (MECH_DRIVER_LIBRARY drops its main): kernel_protocol imports
- * bend2/tests/kernel_recursive.bend as Recursive and calls Recursive.source() and Recursive.validate(checked). */
+ * tests/kernel_recursive.bend as Recursive and calls Recursive.source() and Recursive.validate(checked). */
 #ifndef MECH_KERNEL_RECURSIVE_H
 #define MECH_KERNEL_RECURSIVE_H
 

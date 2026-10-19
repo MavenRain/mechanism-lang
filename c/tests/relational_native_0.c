@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_native_0.bend: shard 0 of the relational protocols (category,
+/* Port of tests/relational_native_0.bend: shard 0 of the relational protocols (category,
  * functor, nattrans, left-kan) over the sibling binaries `<dir of argv[0]>/<module>`. */
 #include "dispatch.h"
 

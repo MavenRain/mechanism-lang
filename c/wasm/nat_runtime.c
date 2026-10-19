@@ -1,4 +1,4 @@
-/* Port of bend2/wasm/nat_runtime.bend: the WasmGC bodies of the Nat runtime helpers (length, digit,
+/* Port of wasm/nat_runtime.bend: the WasmGC bodies of the Nat runtime helpers (length, digit,
  * copy, normal, compareDigits, compare, the add, sub and mul loops, the slow paths) and of the five
  * primitives natAdd, natSub, natMul, natEq and natLt. A Nat is an i31 when it fits in 30 bits and a
  * nat-big struct over a nat-limbs array of 15-bit limbs otherwise. Lists are Vecs of pointers; a

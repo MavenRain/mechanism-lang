@@ -51,7 +51,7 @@ def main():
     positive = extract(ROOT)
     if positive.returncode:
         raise RuntimeError(positive.stderr)
-    metadata = json.loads((ROOT / '_bend2/left-kan-roundtrip/focused-extraction.json').read_text())
+    metadata = json.loads((ROOT / '_tcc/left-kan-roundtrip/focused-extraction.json').read_text())
     with tempfile.TemporaryDirectory(prefix='mechanism-roundtrip-focus-') as directory:
         mutant = Path(directory)
         for relative in [*metadata['source_files'], SCRIPT, 'c/tests/prelude_left_kan_laws.c']:

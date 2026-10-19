@@ -1,4 +1,6 @@
-/* Mechanism CLI component: C port of bend2/host_fs.bend, bend2/io.bend and the bend2/cli .bend
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism CLI component: C port of host_fs.bend, io.bend and the cli .bend
  * files, one .c per .bend file and one header for the component. A Bend Result<String, String> of
  * the file protocol is an IoResult: the text on Done, the error message on Fail; a
  * Result<String, Unit> is an IoResult whose Done value is empty. A Bend byte list
@@ -11,9 +13,9 @@
 
 #include "kernel.h"
 
-/* ---- host_fs (bend2/host_fs.bend): the POSIX file effect of bend2/effects/fs.c ---- */
+/* ---- host_fs (host_fs.bend): the POSIX file effect of effects/fs.c ---- */
 typedef enum { IO_DONE, IO_FAIL } IoStatus;
-/* The operation numbers of bend2/effects/fs.c (mech_fs_call). */
+/* The operation numbers of effects/fs.c (mech_fs_call). */
 typedef enum {
   HOST_FS_READ = 0,
   HOST_FS_STAGE = 1,
@@ -36,7 +38,7 @@ typedef struct {
 HostFsResult mechanism_fs(Heap *heap, HostFsOp operation, Str path, Str other);
 HostFsResult mechanism_write_bytes(Heap *heap, Str path, Str bytes);
 
-/* ---- io (bend2/io.bend) ---- */
+/* ---- io (io.bend) ---- */
 typedef struct {
   IoStatus status;
   Str value;
@@ -81,7 +83,7 @@ IoResult io_publish_staged(Heap *heap, IoResult result, const Vec *files, Str ta
 IoResult io_publish_exists(Heap *heap, bool present, Str target, Str original, const Vec *files);
 IoResult io_publish(Heap *heap, Str directory, const Vec *files);
 
-/* ---- output (bend2/cli/output.bend) ---- */
+/* ---- output (cli/output.bend) ---- */
 /* cli_exit(code): the exit status (code modulo 256, as the process status keeps it) with no output. */
 int cli_exit(uint32_t code);
 /* The IO.print and IO.die effects of the program boundary (C only; the Bend runtime provides them):
@@ -93,7 +95,7 @@ int cli_print(Str text);
 int cli_die(uint32_t code, Str message);
 int cli_host_failure(void);
 
-/* ---- cert (bend2/cli/cert.bend) ---- */
+/* ---- cert (cli/cert.bend) ---- */
 /* Binding{name, value} */
 typedef struct {
   Str name;
@@ -127,7 +129,7 @@ int cert_read_result(Heap *heap, IoResult result, const Vec *exports, size_t ind
 /* arguments(args): args = IO.args() as a Vec of boxed Str (argv without the program name). */
 int cert_arguments(Heap *heap, const Vec *args);
 
-/* ---- host (bend2/cli/host.bend) ---- */
+/* ---- host (cli/host.bend) ---- */
 /* T: Node{} | Wasmtime{} | Kernel{} */
 typedef enum { HOST_NODE, HOST_WASMTIME, HOST_KERNEL } HostKind;
 /* Outcome: Value{number} | Trap{message} | Invalid{message} */
@@ -196,7 +198,7 @@ HostOutcome host_kernel_value(Heap *heap, Result result);
 HostOutcome host_kernel_outcome(Heap *heap, Globals globals, Str export_name);
 HostOutcome host_run_module(Heap *heap, Str root, Globals globals, HostKind h, Str wasm, Str export_name);
 
-/* ---- kanon (bend2/cli/kanon.bend): kanon.c links c/wasm, so only the kanon drivers link it ---- */
+/* ---- kanon (cli/kanon.bend): kanon.c links c/wasm, so only the kanon drivers link it ---- */
 Str kanon_usage_text(void);
 /* usage(): the usage text on stderr, exit 64. */
 int kanon_usage(Heap *heap);
@@ -204,7 +206,7 @@ int kanon_usage(Heap *heap);
  * the process exit code (0 when the command ran to the end). */
 int kanon_dispatch(Heap *heap, Str cmd, const Vec *args, size_t index);
 
-/* ---- mech (bend2/cli/mech.bend; S6.13): mech.c needs c/import, c/wasm and c/rust, so only
+/* ---- mech (cli/mech.bend; S6.13): mech.c needs c/import, c/wasm and c/rust, so only
  * _tcc/bin/mech and _tcc/bin/main link it ---- */
 /* usage(): the usage text on stderr, exit 64. */
 int mech_usage(void);
@@ -212,7 +214,7 @@ int mech_usage(void);
  * process exit code. */
 int mech_arguments(Heap *heap, const Vec *args);
 
-/* ---- rust_out (bend2/cli/rust_out.bend; S6.12) ---- */
+/* ---- rust_out (cli/rust_out.bend; S6.12) ---- */
 /* Ro.run(args): the `mech rust-out` command over `args` (Str pointers, in order); writes its
  * output and returns the exit code. */
 int rust_out_run(Heap *heap, const Vec *args);
@@ -255,7 +257,7 @@ int rust_out_wrote(Heap *heap, IoResult result);
 /* absent(present, out): Fail "output already exists: OUT" when present, else Done. */
 IoResult rust_out_absent(Heap *heap, bool present, Str out);
 
-/* ---- rust_in (bend2/cli/rust_in.bend; S6.13a) ---- */
+/* ---- rust_in (cli/rust_in.bend; S6.13a) ---- */
 /* RustIn.run(args): the `mech rust-in CRATE_DIR OUT_DIR` command over `args` (Str pointers, in
  * order); writes its output and returns the exit code. lows_of is declared in rust.h (D-226a). */
 int rust_in_run(Heap *heap, const Vec *args);

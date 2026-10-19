@@ -1,4 +1,4 @@
-/* C port of bend2/tests/kernel_global_lookup.bend: first-match lookup boundaries of the global entry
+/* C port of tests/kernel_global_lookup.bend: first-match lookup boundaries of the global entry
  * list, the family list and a constructor list. */
 #include "global_lookup_common.h"
 

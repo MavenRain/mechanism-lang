@@ -67,7 +67,7 @@ controls = [('C-CAT-M1',
   'current = term_elim(heap, term_elim_data(s.value, current, data.scrut_q, mo.value, bs.value));',
   'current = term_elim(heap, term_elim_data(s.value, current, data.scrut_q, data.motive, bs.value));',
   'PRELUDE-CATEGORY-FAIL universe:'),
- # C-CAT-M4: the Bend anchor put the raw Value branches into the quoted Term.Elim (bend2/kernel/eval.bend
+ # C-CAT-M4: the Bend anchor put the raw Value branches into the quoted Term.Elim (kernel/eval.bend
  # quote_frames, `+branches` ownership flip); the typed C port cannot express that confusion, so the C
  # control drops the read-back branches of the stuck eliminator instead (same rule: the quoted eliminator
  # must carry its read-back branches); the diagnostic follows the C port (hop 312, decision 279).
@@ -102,7 +102,7 @@ controls = [('C-CAT-M1',
   'check_engine_conv_project(heap, f->ctx, f->shape, f->q, QUANTITY_ONE, conv_self_motive(heap, value),',
   'check_engine_conv_project(heap, f->ctx, f->shape, f->q, QUANTITY_ONE, term_motive_none(),',
   'PRELUDE-CATEGORY-FAIL mismatch: the constructor categoryRefl of Up gives the index c'),
- # C-CAT-M10: the Bend anchor reversed the fresh variables of quote_motive (bend2/kernel/eval.bend); the
+ # C-CAT-M10: the Bend anchor reversed the fresh variables of quote_motive (kernel/eval.bend); the
  # motive quoted by this driver has arity 1 on C, where the reverse is the identity, so the C control
  # reverses the fresh variables at the leg site (eval_quote_leg; same rule: fresh variables are opened in
  # binder order during read-back); the diagnostic follows the C port (hop 312, decision 279).

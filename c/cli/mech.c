@@ -1,4 +1,4 @@
-/* Port of bend2/cli/mech.bend: the `mech` command line. arguments(args) dispatches on the first
+/* Port of cli/mech.bend: the `mech` command line. arguments(args) dispatches on the first
  * argument: import, diff-parity and map-inventory run the Lean export importer (c/import), rust-out
  * and rust-in run the Rust emitter and importer (rust_out.c, rust_in.c), and every other command goes
  * to Kanon.dispatch (kanon.c). Every function returns the process exit code; IO.die is cli_die. This

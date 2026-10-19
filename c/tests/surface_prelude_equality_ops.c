@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prelude_equality_ops.bend (54 lines, oracle label surface-prelude-equality-ops): ten
+/* Port of tests/surface_prelude_equality_ops.bend (54 lines, oracle label surface-prelude-equality-ops): ten
  * instances of MechEq and MechTypeEq from the equality catalog install against their frozen contracts on
  * prelude/init.mech, the equality-ops fixture client checks and audits, eleven computations normalize and
  * eight negatives refuse. Prints PRELUDE-EQUALITY-OPS-OK fields or PRELUDE-EQUALITY-OPS-FAIL message. */

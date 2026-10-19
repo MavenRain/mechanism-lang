@@ -1,4 +1,4 @@
-/* bend2/prelude/congruence.bend: the MechCongr and Result equality families declared as one
+/* prelude/congruence.bend: the MechCongr and Result equality families declared as one
  * elaborated group with the congr member. */
 #include "prelude.h"
 

@@ -1,4 +1,4 @@
-/* conv (bend2/kernel/conv.bend): the budgeted conversion entry points. */
+/* conv (kernel/conv.bend): the budgeted conversion entry points. */
 #include "kernel.h"
 
 Budget conv_budget_of(Ctx ctx) { return ctx.budget; }

@@ -1,4 +1,4 @@
-/* C port of bend2/tests/rust_emit_oracle.bend, the DIFF-EXEC oracle of the rust_emit driver (a
+/* C port of tests/rust_emit_oracle.bend, the DIFF-EXEC oracle of the rust_emit driver (a
  * library module of that driver: the Bend file has no main). A probe is a closed definition of the
  * last input file. `values`: the kernel value of each probe, in the Rust `{:?}` form. `probes`: the
  * generated probes of each first-order runtime function. `bin`: the text of

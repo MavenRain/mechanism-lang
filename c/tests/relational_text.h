@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_text.bend: the text helpers of the relational test drivers
+/* Port of tests/relational_text.bend: the text helpers of the relational test drivers
  * (word renaming, core renaming, line slicing, identifier and whitespace normalisation).
  * A library module (no main). String lists are Vec of Str * (boxed with relational_str). */
 #ifndef MECH_RELATIONAL_TEXT_H

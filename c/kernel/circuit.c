@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/circuit.bend: the depth certificate of a kernel term. Same definitions in
+/* Port of kernel/circuit.bend: the depth certificate of a kernel term. Same definitions in
  * the same order. Lists are Vecs with the Bend head at index 0: globals hold CircuitGlobal
  * pointers, memo rows CircuitMemoRow pointers, envs CircuitValue pointers, seen lists Str
  * pointers, term lists Term pointers. The worklists of reads_fields and names_family are stacks

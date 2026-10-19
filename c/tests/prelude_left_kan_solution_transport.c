@@ -1,5 +1,5 @@
-/* Port of bend2/tests/prelude_left_kan_solution_transport.bend (69 lines): the left Kan solution congruence
- * transport contracts. Reads `_bend2/left-kan-solution-transport-contracts/focused-source.mech` under argv[1] (default "."), checks it
+/* Port of tests/prelude_left_kan_solution_transport.bend (69 lines): the left Kan solution congruence
+ * transport contracts. Reads `_tcc/left-kan-solution-transport-contracts/focused-source.mech` under argv[1] (default "."), checks it
  * from G.initial(), the required solution transport contracts, that no axiom was introduced, the computations and the
  * negatives in test/neg/left-kan-solution-transport (digest policy), then prints PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-OK fields or
  * PRELUDE-LEFT-KAN-SOLUTION-TRANSPORT-FAIL message. With exactly ROOT --record-oracles it prints the refusal text of each
@@ -72,7 +72,7 @@ static Task checked_contracts(Heap *heap, Str root, const ElabChecked **checked)
   Vec required;
   Vec axioms;
   Vec none = vec_new(heap->arena);
-  RELATIONAL_TRY(relational_read(heap, root, str_lit("_bend2/left-kan-solution-transport-contracts/focused-source.mech"),
+  RELATIONAL_TRY(relational_read(heap, root, str_lit("_tcc/left-kan-solution-transport-contracts/focused-source.mech"),
                                  &source));
   RELATIONAL_TRY(relational_checked(heap, global_initial(heap), source, checked));
   required = STRINGS(heap, REQUIRED);

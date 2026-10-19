@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/prim.bend: the primitive operations on naturals, their names, types and
+/* Port of kernel/prim.bend: the primitive operations on naturals, their names, types and
  * evaluation on literal arguments. Same definitions in the same order. List<T> is a Vec of boxed
  * Prim pointers; List<Literal.T> is a Vec of Literal pointers. */
 #include "kernel.h"

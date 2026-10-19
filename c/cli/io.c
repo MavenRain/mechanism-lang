@@ -1,4 +1,4 @@
-/* Port of bend2/io.bend: the file protocol of the compiler (read, write, remove, exists, temporary
+/* Port of io.bend: the file protocol of the compiler (read, write, remove, exists, temporary
  * files, byte output and the atomic publication of a report directory) over host_fs. Definitions
  * keep the Bend names (io_ prefix) and order; the laws cleanup_files and write_files are the
  * declarations in cli.h. */

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/import_export.bend (oracle label import-export): reads the one NDJSON source
+/* Port of tests/import_export.bend (oracle label import-export): reads the one NDJSON source
  * argument with Export.read_string and prints the JSON summary [metadata, counts, names,
  * declarations, expressions, group count]; dies with 1 and "LINE:message" on an import error, or
  * with 64 and the usage text on any other argument count. */

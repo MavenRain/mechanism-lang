@@ -3,250 +3,250 @@
   "units": [
     {
       "mode": "kernel-numbers",
-      "source": "bend2/tests/kernel_numbers.bend",
+      "source": "c/tests/kernel_numbers.c",
       "kind": "io"
     },
     {
       "mode": "kernel-eval",
-      "source": "bend2/tests/kernel_eval.bend",
+      "source": "c/tests/kernel_eval.c",
       "kind": "io"
     },
     {
       "mode": "kernel-quantity",
-      "source": "bend2/tests/kernel_quantity.bend",
+      "source": "c/tests/kernel_quantity.c",
       "kind": "io"
     },
     {
       "mode": "kernel-check",
-      "source": "bend2/tests/kernel_check.bend",
+      "source": "c/tests/kernel_check.c",
       "kind": "io"
     },
     {
       "mode": "kernel-declarations",
-      "source": "bend2/tests/kernel_declarations.bend",
+      "source": "c/tests/kernel_declarations.c",
       "kind": "io"
     },
     {
       "mode": "kernel-conversion",
-      "source": "bend2/tests/kernel_conversion.bend",
+      "source": "c/tests/kernel_conversion.c",
       "kind": "io"
     },
     {
       "mode": "kernel-recursive",
-      "source": "bend2/tests/kernel_recursive.bend",
+      "source": "c/tests/kernel_recursive.c",
       "kind": "io"
     },
     {
       "mode": "kernel-budget-dag",
-      "source": "bend2/tests/kernel_budget_dag.bend",
+      "source": "c/tests/kernel_budget_dag.c",
       "kind": "io"
     },
     {
       "mode": "kernel-spec-count",
-      "source": "bend2/tests/kernel_spec_count.bend",
+      "source": "c/tests/kernel_spec_count.c",
       "kind": "io"
     },
     {
       "mode": "levels-exact",
-      "source": "bend2/tests/levels_exact.bend",
+      "source": "c/tests/levels_exact.c",
       "kind": "io"
     },
     {
       "mode": "levels-budget",
-      "source": "bend2/tests/levels_budget.bend",
+      "source": "c/tests/levels_budget.c",
       "kind": "io"
     },
     {
       "mode": "levels-checker",
-      "source": "bend2/tests/levels_checker.bend",
+      "source": "c/tests/levels_checker.c",
       "kind": "io"
     },
     {
       "mode": "levels-regression",
-      "source": "bend2/tests/levels_regression.bend",
+      "source": "c/tests/levels_regression.c",
       "kind": "io"
     },
     {
       "mode": "surface-lexer",
-      "source": "bend2/tests/surface_lexer.bend",
+      "source": "c/tests/surface_lexer.c",
       "kind": "bool"
     },
     {
       "mode": "surface-parser",
-      "source": "bend2/tests/surface_parser.bend",
+      "source": "c/tests/surface_parser.c",
       "kind": "bool"
     },
     {
       "mode": "surface-transform",
-      "source": "bend2/tests/surface_transform.bend",
+      "source": "c/tests/surface_transform.c",
       "kind": "bool"
     },
     {
       "mode": "surface-poly",
-      "source": "bend2/tests/surface_poly.bend",
+      "source": "c/tests/surface_poly.c",
       "kind": "bool"
     },
     {
       "mode": "surface-family",
-      "source": "bend2/tests/surface_family.bend",
+      "source": "c/tests/surface_family.c",
       "kind": "bool"
     },
     {
       "mode": "surface-elab",
-      "source": "bend2/tests/surface_elab.bend",
+      "source": "c/tests/surface_elab.c",
       "kind": "io"
     },
     {
       "mode": "surface-catalog",
-      "source": "bend2/tests/surface_catalog.bend",
+      "source": "c/tests/surface_catalog.c",
       "kind": "io"
     },
     {
       "mode": "surface-program",
-      "source": "bend2/tests/surface_program.bend",
+      "source": "c/tests/surface_program.c",
       "kind": "io"
     },
     {
       "mode": "surface-prelude",
-      "source": "bend2/tests/surface_prelude.bend",
+      "source": "c/tests/surface_prelude.c",
       "kind": "io"
     },
     {
       "mode": "surface-crypto",
-      "source": "bend2/tests/surface_crypto.bend",
+      "source": "c/tests/surface_crypto.c",
       "kind": "io"
     },
     {
       "mode": "surface-trust",
-      "source": "bend2/tests/surface_trust.bend",
+      "source": "c/tests/surface_trust.c",
       "kind": "io"
     },
     {
       "mode": "surface-boundary",
-      "source": "bend2/tests/surface_boundary.bend",
+      "source": "c/tests/surface_boundary.c",
       "kind": "io"
     },
     {
       "mode": "surface-universes",
-      "source": "bend2/tests/surface_universes.bend",
+      "source": "c/tests/surface_universes.c",
       "kind": "io"
     },
     {
       "mode": "wasm-circuit",
-      "source": "bend2/tests/wasm_circuit.bend",
+      "source": "c/tests/wasm_circuit.c",
       "kind": "io"
     },
     {
       "mode": "wasm-order",
-      "source": "bend2/tests/wasm_order.bend",
+      "source": "c/tests/wasm_order.c",
       "kind": "io"
     },
     {
       "mode": "wasm-link",
-      "source": "bend2/tests/wasm_link.bend",
+      "source": "c/tests/wasm_link.c",
       "kind": "io"
     },
     {
       "mode": "wasm-host",
-      "source": "bend2/tests/wasm_host.bend",
+      "source": "c/tests/wasm_host.c",
       "kind": "io"
     },
     {
       "mode": "kernel-budget-callbacks",
-      "source": "bend2/tests/kernel_budget_callbacks.bend",
+      "source": "c/tests/kernel_budget_callbacks.c",
       "kind": "io"
     },
     {
       "mode": "kernel-budget-callback-check",
-      "source": "bend2/tests/kernel_budget_callback_check.bend",
+      "source": "c/tests/kernel_budget_callback_check.c",
       "kind": "io"
     },
     {
       "mode": "surface-diagnostics",
-      "source": "bend2/tests/surface_diagnostics.bend",
+      "source": "c/tests/surface_diagnostics.c",
       "kind": "bool"
     },
     {
       "mode": "kernel-global-lookup",
-      "source": "bend2/tests/kernel_global_lookup.bend",
+      "source": "c/tests/kernel_global_lookup.c",
       "kind": "io"
     },
     {
       "mode": "kernel-projection-motive",
-      "source": "bend2/tests/kernel_projection_motive.bend",
+      "source": "c/tests/kernel_projection_motive.c",
       "kind": "io"
     },
     {
       "mode": "kernel-conversion-budget",
-      "source": "bend2/tests/kernel_conversion_budget.bend",
+      "source": "c/tests/kernel_conversion_budget.c",
       "kind": "io"
     },
     {
       "mode": "kernel-large-addresses",
-      "source": "bend2/tests/kernel_large_addresses.bend",
+      "source": "c/tests/kernel_large_addresses.c",
       "kind": "io"
     },
     {
       "mode": "kernel-head-ty-invalid-level",
-      "source": "bend2/tests/kernel_head_ty_invalid_level.bend",
+      "source": "c/tests/kernel_head_ty_invalid_level.c",
       "kind": "io"
     }
   ],
   "fixtures": [
     {
       "mode": "encode",
-      "source": "bend2/tests/wasm_encode.bend"
+      "source": "c/tests/wasm_encode.c"
     },
     {
       "mode": "emit",
-      "source": "bend2/tests/wasm_emit.bend"
+      "source": "c/tests/wasm_emit.c"
     },
     {
       "mode": "nat",
-      "source": "bend2/tests/wasm_nat_runtime.bend"
+      "source": "c/tests/wasm_nat_runtime.c"
     },
     {
       "mode": "reactor",
-      "source": "bend2/tests/wasm_reactor.bend"
+      "source": "c/tests/wasm_reactor.c"
     },
     {
       "mode": "layout",
-      "source": "bend2/tests/wasm_layout.bend"
+      "source": "c/tests/wasm_layout.c"
     },
     {
       "mode": "oracle",
-      "source": "bend2/tests/wasm_oracle.bend"
+      "source": "c/tests/wasm_oracle.c"
     }
   ],
   "drivers": [
     {
       "mode": "import-json",
-      "source": "bend2/tests/import_json.bend",
+      "source": "c/tests/import_json.c",
       "entry": "arguments"
     },
     {
       "mode": "import-export",
-      "source": "bend2/tests/import_export.bend",
+      "source": "c/tests/import_export.c",
       "entry": "arguments"
     },
     {
       "mode": "import-translate",
-      "source": "bend2/tests/import_translate.bend",
+      "source": "c/tests/import_translate.c",
       "entry": "arguments"
     },
     {
       "mode": "import-pipeline",
-      "source": "bend2/tests/import_pipeline.bend",
+      "source": "c/tests/import_pipeline.c",
       "entry": "arguments"
     },
     {
       "mode": "surface-parser",
-      "source": "bend2/tests/surface_driver.bend",
+      "source": "c/tests/surface_driver.c",
       "entry": "run"
     },
     {
       "mode": "surface-check",
-      "source": "bend2/tests/surface_check_driver.bend",
+      "source": "c/tests/surface_check_driver.c",
       "entry": "run",
       "shard": "surface-check",
       "aliases": [
@@ -255,17 +255,17 @@
     },
     {
       "mode": "erase",
-      "source": "bend2/tests/kernel_erase_driver.bend",
+      "source": "c/tests/kernel_erase_driver.c",
       "entry": "run"
     },
     {
       "mode": "io",
-      "source": "bend2/tests/io_driver.bend",
+      "source": "c/tests/io_driver.c",
       "entry": "arguments"
     },
     {
       "mode": "prelude-runtime",
-      "source": "bend2/tests/prelude_runtime.bend",
+      "source": "c/tests/prelude_runtime.c",
       "entry": "arguments",
       "shard": "prelude-runtime",
       "aliases": [
@@ -274,22 +274,22 @@
     },
     {
       "mode": "wasm-protocol",
-      "source": "bend2/tests/wasm_protocol.bend",
+      "source": "c/tests/wasm_protocol.c",
       "entry": "arguments"
     },
     {
       "mode": "prelude-protocol",
-      "source": "bend2/tests/prelude_protocol.bend",
+      "source": "c/tests/prelude_protocol.c",
       "entry": "arguments"
     },
     {
       "mode": "mapping-protocol",
-      "source": "bend2/tests/mapping_protocol.bend",
+      "source": "c/tests/mapping_protocol.c",
       "entry": "arguments"
     },
     {
       "mode": "prelude-category",
-      "source": "bend2/tests/prelude_category.bend",
+      "source": "c/tests/prelude_category.c",
       "entry": "arguments",
       "shard": "prelude-category",
       "aliases": [
@@ -307,7 +307,7 @@
     },
     {
       "mode": "template-cost",
-      "source": "bend2/tests/template_cost.bend",
+      "source": "c/tests/template_cost.c",
       "entry": "arguments",
       "shard": "template-cost",
       "aliases": [
@@ -316,7 +316,7 @@
     },
     {
       "mode": "surface-shape-metadata",
-      "source": "bend2/tests/surface_shape_metadata.bend",
+      "source": "c/tests/surface_shape_metadata.c",
       "entry": "arguments",
       "shard": "surface",
       "aliases": [
@@ -332,7 +332,7 @@
     },
     {
       "mode": "surface-equality",
-      "source": "bend2/tests/surface_equality.bend",
+      "source": "c/tests/surface_equality.c",
       "entry": "main",
       "forward_args": false,
       "shard": "surface",
@@ -349,7 +349,7 @@
     },
     {
       "mode": "surface-prelude-poly",
-      "source": "bend2/tests/surface_prelude_poly.bend",
+      "source": "c/tests/surface_prelude_poly.c",
       "entry": "arguments",
       "shard": "surface-prelude-poly",
       "aliases": [
@@ -367,7 +367,7 @@
     },
     {
       "mode": "circuit-bounds",
-      "source": "bend2/tests/wasm_circuit_bounds.bend",
+      "source": "c/tests/wasm_circuit_bounds.c",
       "entry": "arguments",
       "shard": "wasm",
       "aliases": [
@@ -383,7 +383,7 @@
     },
     {
       "mode": "surface-prelude-dependent",
-      "source": "bend2/tests/surface_prelude_dependent.bend",
+      "source": "c/tests/surface_prelude_dependent.c",
       "entry": "arguments",
       "shard": "surface-prelude-dependent",
       "aliases": [
@@ -401,7 +401,7 @@
     },
     {
       "mode": "surface-prelude-congruence",
-      "source": "bend2/tests/surface_prelude_congruence.bend",
+      "source": "c/tests/surface_prelude_congruence.c",
       "entry": "arguments",
       "shard": "surface-prelude-congruence",
       "aliases": [
@@ -419,7 +419,7 @@
     },
     {
       "mode": "surface-sl",
-      "source": "bend2/tests/surface_sl.bend",
+      "source": "c/tests/surface_sl.c",
       "entry": "arguments",
       "shard": "surface-sl",
       "aliases": [
@@ -435,7 +435,7 @@
     },
     {
       "mode": "prelude-composable-functors",
-      "source": "bend2/tests/prelude_composable_functors.bend",
+      "source": "c/tests/prelude_composable_functors.c",
       "entry": "arguments",
       "shard": "prelude-composable-functors",
       "aliases": [
@@ -453,7 +453,7 @@
     },
     {
       "mode": "prelude-functor",
-      "source": "bend2/tests/prelude_functor.bend",
+      "source": "c/tests/prelude_functor.c",
       "entry": "arguments",
       "shard": "prelude-functor",
       "aliases": [
@@ -471,7 +471,7 @@
     },
     {
       "mode": "prelude-heterogeneous-functor",
-      "source": "bend2/tests/prelude_heterogeneous_functor.bend",
+      "source": "c/tests/prelude_heterogeneous_functor.c",
       "entry": "arguments",
       "shard": "prelude-heterogeneous-functor",
       "aliases": [
@@ -489,7 +489,7 @@
     },
     {
       "mode": "prelude-heterogeneous-left-kan",
-      "source": "bend2/tests/prelude_heterogeneous_left_kan.bend",
+      "source": "c/tests/prelude_heterogeneous_left_kan.c",
       "entry": "arguments",
       "shard": "prelude-heterogeneous-left-kan",
       "aliases": [
@@ -507,7 +507,7 @@
     },
     {
       "mode": "prelude-heterogeneous-nattrans",
-      "source": "bend2/tests/prelude_heterogeneous_nattrans.bend",
+      "source": "c/tests/prelude_heterogeneous_nattrans.c",
       "entry": "arguments",
       "shard": "prelude-heterogeneous-nattrans",
       "aliases": [
@@ -525,7 +525,7 @@
     },
     {
       "mode": "prelude-heterogeneous-whiskering",
-      "source": "bend2/tests/prelude_heterogeneous_whiskering.bend",
+      "source": "c/tests/prelude_heterogeneous_whiskering.c",
       "entry": "arguments",
       "shard": "prelude-heterogeneous-whiskering",
       "aliases": [
@@ -543,7 +543,7 @@
     },
     {
       "mode": "prelude-horizontal-associativity",
-      "source": "bend2/tests/prelude_horizontal_associativity.bend",
+      "source": "c/tests/prelude_horizontal_associativity.c",
       "entry": "arguments",
       "shard": "prelude-horizontal-associativity",
       "aliases": [
@@ -561,7 +561,7 @@
     },
     {
       "mode": "prelude-horizontal-laws",
-      "source": "bend2/tests/prelude_horizontal_laws.bend",
+      "source": "c/tests/prelude_horizontal_laws.c",
       "entry": "arguments",
       "shard": "prelude-horizontal-laws",
       "aliases": [
@@ -579,7 +579,7 @@
     },
     {
       "mode": "prelude-iterated-whiskering",
-      "source": "bend2/tests/prelude_iterated_whiskering.bend",
+      "source": "c/tests/prelude_iterated_whiskering.c",
       "entry": "arguments",
       "shard": "prelude-iterated-whiskering",
       "aliases": [
@@ -597,7 +597,7 @@
     },
     {
       "mode": "prelude-left-kan",
-      "source": "bend2/tests/prelude_left_kan.bend",
+      "source": "c/tests/prelude_left_kan.c",
       "entry": "arguments",
       "shard": "prelude-left-kan",
       "aliases": [
@@ -615,7 +615,7 @@
     },
     {
       "mode": "prelude-left-kan-laws",
-      "source": "bend2/tests/prelude_left_kan_laws.bend",
+      "source": "c/tests/prelude_left_kan_laws.c",
       "entry": "arguments",
       "shard": "prelude-left-kan-laws",
       "aliases": [
@@ -633,7 +633,7 @@
     },
     {
       "mode": "prelude-nattrans",
-      "source": "bend2/tests/prelude_nattrans.bend",
+      "source": "c/tests/prelude_nattrans.c",
       "entry": "arguments",
       "shard": "prelude-nattrans",
       "aliases": [
@@ -651,7 +651,7 @@
     },
     {
       "mode": "prelude-nattrans-laws",
-      "source": "bend2/tests/prelude_nattrans_laws.bend",
+      "source": "c/tests/prelude_nattrans_laws.c",
       "entry": "arguments",
       "shard": "prelude-nattrans-laws",
       "aliases": [
@@ -669,7 +669,7 @@
     },
     {
       "mode": "prelude-nattrans-units",
-      "source": "bend2/tests/prelude_nattrans_units.bend",
+      "source": "c/tests/prelude_nattrans_units.c",
       "entry": "arguments",
       "shard": "prelude-nattrans-units",
       "aliases": [
@@ -687,7 +687,7 @@
     },
     {
       "mode": "prelude-shared-left-kan",
-      "source": "bend2/tests/prelude_shared_left_kan.bend",
+      "source": "c/tests/prelude_shared_left_kan.c",
       "entry": "arguments",
       "shard": "prelude-shared-left-kan",
       "aliases": [
@@ -705,7 +705,7 @@
     },
     {
       "mode": "prelude-shared-nattrans",
-      "source": "bend2/tests/prelude_shared_nattrans.bend",
+      "source": "c/tests/prelude_shared_nattrans.c",
       "entry": "arguments",
       "shard": "prelude-shared-nattrans",
       "aliases": [
@@ -723,7 +723,7 @@
     },
     {
       "mode": "prelude-whiskering-laws",
-      "source": "bend2/tests/prelude_whiskering_laws.bend",
+      "source": "c/tests/prelude_whiskering_laws.c",
       "entry": "arguments",
       "shard": "prelude-whiskering-laws",
       "aliases": [
@@ -741,7 +741,7 @@
     },
     {
       "mode": "kernel-protocol",
-      "source": "bend2/tests/kernel_protocol.bend",
+      "source": "c/tests/kernel_protocol.c",
       "entry": "arguments",
       "shard": "kernel-protocol",
       "aliases": [
@@ -759,7 +759,7 @@
     },
     {
       "mode": "surface-prelude-transport",
-      "source": "bend2/tests/surface_prelude_transport.bend",
+      "source": "c/tests/surface_prelude_transport.c",
       "entry": "arguments",
       "shard": "surface-prelude-transport",
       "aliases": [
@@ -777,7 +777,7 @@
     },
     {
       "mode": "surface-family-groups",
-      "source": "bend2/tests/surface_family_groups.bend",
+      "source": "c/tests/surface_family_groups.c",
       "entry": "arguments",
       "shard": "surface-family-groups",
       "aliases": [
@@ -793,7 +793,7 @@
     },
     {
       "mode": "surface-prelude-equality-ops",
-      "source": "bend2/tests/surface_prelude_equality_ops.bend",
+      "source": "c/tests/surface_prelude_equality_ops.c",
       "entry": "arguments",
       "shard": "surface-prelude-equality-ops",
       "aliases": [
@@ -811,7 +811,7 @@
     },
     {
       "mode": "surface-family-members",
-      "source": "bend2/tests/surface_family_members.bend",
+      "source": "c/tests/surface_family_members.c",
       "entry": "arguments",
       "shard": "surface-family-members",
       "aliases": [
@@ -827,7 +827,7 @@
     },
     {
       "mode": "surface-prenex-families",
-      "source": "bend2/tests/surface_prenex_families.bend",
+      "source": "c/tests/surface_prenex_families.c",
       "entry": "arguments",
       "shard": "surface-prenex-families",
       "aliases": [
@@ -845,7 +845,7 @@
     },
     {
       "mode": "levels-protocol",
-      "source": "bend2/tests/levels_protocol.bend",
+      "source": "c/tests/levels_protocol.c",
       "entry": "arguments",
       "shard": "levels-protocol",
       "aliases": [
@@ -861,7 +861,7 @@
     },
     {
       "mode": "surface-prenex-groups",
-      "source": "bend2/tests/surface_prenex_groups.bend",
+      "source": "c/tests/surface_prenex_groups.c",
       "entry": "arguments",
       "shard": "surface-prenex-groups",
       "aliases": [
@@ -879,7 +879,7 @@
     },
     {
       "mode": "surface-prenex-exports",
-      "source": "bend2/tests/surface_prenex_exports.bend",
+      "source": "c/tests/surface_prenex_exports.c",
       "entry": "arguments",
       "shard": "surface-prenex-exports",
       "aliases": [
@@ -897,7 +897,7 @@
     },
     {
       "mode": "surface-prenex-dependency-exports",
-      "source": "bend2/tests/surface_prenex_dependency_exports.bend",
+      "source": "c/tests/surface_prenex_dependency_exports.c",
       "entry": "arguments",
       "shard": "surface-prenex-dependency-exports",
       "aliases": [
@@ -915,7 +915,7 @@
     },
     {
       "mode": "surface-template-reuse",
-      "source": "bend2/tests/surface_template_reuse.bend",
+      "source": "c/tests/surface_template_reuse.c",
       "entry": "arguments",
       "shard": "surface-template-reuse",
       "aliases": [
@@ -933,7 +933,7 @@
     },
     {
       "mode": "surface-template-symbolic-reuse",
-      "source": "bend2/tests/surface_template_symbolic_reuse.bend",
+      "source": "c/tests/surface_template_symbolic_reuse.c",
       "entry": "arguments",
       "shard": "surface-template-symbolic-reuse",
       "aliases": [
@@ -951,7 +951,7 @@
     },
     {
       "mode": "surface-template-composition",
-      "source": "bend2/tests/surface_template_composition.bend",
+      "source": "c/tests/surface_template_composition.c",
       "entry": "arguments",
       "shard": "surface-template-composition",
       "aliases": [
@@ -969,7 +969,7 @@
     },
     {
       "mode": "import-protocol",
-      "source": "bend2/tests/import_protocol.bend",
+      "source": "c/tests/import_protocol.c",
       "entry": "arguments",
       "shard": "import",
       "aliases": [
@@ -989,7 +989,7 @@
     },
     {
       "mode": "import-types-protocol",
-      "source": "bend2/tests/import_types_protocol.bend",
+      "source": "c/tests/import_types_protocol.c",
       "entry": "arguments",
       "shard": "import",
       "aliases": [
@@ -1009,7 +1009,7 @@
     },
     {
       "mode": "surface-prenex",
-      "source": "bend2/tests/surface_prenex.bend",
+      "source": "c/tests/surface_prenex.c",
       "entry": "arguments",
       "shard": "surface-prenex",
       "aliases": [
@@ -1027,7 +1027,7 @@
     },
     {
       "mode": "surface-family-poly",
-      "source": "bend2/tests/surface_family_poly.bend",
+      "source": "c/tests/surface_family_poly.c",
       "entry": "arguments",
       "shard": "surface-family-poly",
       "aliases": [
@@ -1043,7 +1043,7 @@
     },
     {
       "mode": "surface-numbers",
-      "source": "bend2/tests/surface_numbers.bend",
+      "source": "c/tests/surface_numbers.c",
       "entry": "arguments",
       "shard": "surface",
       "suites": [
@@ -1060,7 +1060,7 @@
     },
     {
       "mode": "wasm-wide-metadata",
-      "source": "bend2/tests/wasm_wide_metadata.bend",
+      "source": "c/tests/wasm_wide_metadata.c",
       "entry": "arguments",
       "shard": "wasm",
       "suites": [
@@ -1077,7 +1077,7 @@
     },
     {
       "mode": "surface-expectations",
-      "source": "bend2/tests/surface_expectations.bend",
+      "source": "c/tests/surface_expectations.c",
       "entry": "arguments",
       "shard": "surface",
       "suites": [
@@ -1094,7 +1094,7 @@
     },
     {
       "mode": "kernel-usage-native",
-      "source": "bend2/tests/kernel_usage_native.bend",
+      "source": "c/tests/kernel_usage_native.c",
       "entry": "arguments",
       "shard": "kernel",
       "suites": [
@@ -1120,7 +1120,7 @@
     },
     {
       "mode": "relational-oracle",
-      "source": "bend2/tests/relational_oracle.bend",
+      "source": "c/tests/relational_oracle.c",
       "entry": "arguments",
       "shard": "kernel",
       "suites": [
@@ -1144,7 +1144,7 @@
     },
     {
       "mode": "kernel-global-index",
-      "source": "bend2/tests/kernel_global_index.bend",
+      "source": "c/tests/kernel_global_index.c",
       "entry": "arguments",
       "shard": "kernel",
       "suites": [
@@ -1173,7 +1173,7 @@
         ],
         "timeout": 30
       },
-      "source": "bend2/tests/prelude_left_kan_cocone_action.bend",
+      "source": "c/tests/prelude_left_kan_cocone_action.c",
       "entry": "arguments",
       "shard": "prelude-left-kan-cocone-action",
       "aliases": [
@@ -1199,7 +1199,7 @@
         ],
         "timeout": 30
       },
-      "source": "bend2/tests/prelude_left_kan_roundtrip.bend",
+      "source": "c/tests/prelude_left_kan_roundtrip.c",
       "entry": "arguments",
       "shard": "prelude-left-kan-roundtrip",
       "aliases": [
@@ -1225,7 +1225,7 @@
         ],
         "timeout": 30
       },
-      "source": "bend2/tests/prelude_left_kan_mediator_equality.bend",
+      "source": "c/tests/prelude_left_kan_mediator_equality.c",
       "entry": "arguments",
       "shard": "prelude-left-kan-mediator-equality",
       "aliases": [
@@ -1251,7 +1251,7 @@
         ],
         "timeout": 30
       },
-      "source": "bend2/tests/prelude_left_kan_solution_transport.bend",
+      "source": "c/tests/prelude_left_kan_solution_transport.c",
       "entry": "arguments",
       "shard": "prelude-left-kan-solution-transport",
       "aliases": [

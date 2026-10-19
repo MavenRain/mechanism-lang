@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_reactor.bend (oracle label fixture-reactor): emits one erased program
+/* Port of tests/wasm_reactor.bend (oracle label fixture-reactor): emits one erased program
  * as a reactor module with the six exports add, pair, sum, bool, unbool and big, and prints its
  * bytes as a decimal list in brackets; an emit failure dies with exit 1. */
 #include <stdarg.h>

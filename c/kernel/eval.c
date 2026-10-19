@@ -1,4 +1,4 @@
-/* bend2/kernel/eval.bend: evaluation, weak head normalisation and read back of kernel terms.
+/* kernel/eval.bend: evaluation, weak head normalisation and read back of kernel terms.
  * Bend lists are Vecs of pointers in the Bend order (index 0 = the list head); every allocation
  * goes through the arena and a failed one sets heap->oom while the code carries on with the
  * placeholders the constructors return. */

@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/totality.bend: the budgeted termination guard. Same definitions in the
+/* Port of kernel/totality.bend: the budgeted termination guard. Same definitions in the
  * same order. The term worklists are Vecs of Term pointers (head first); the member list is a
  * Vec of OrderMember pointers; the Budget.T result of spend and the Maybe values of the Comp
  * results are heap boxed. The globals argument is carried unused, as in the Bend. */

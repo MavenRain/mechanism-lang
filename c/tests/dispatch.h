@@ -1,4 +1,4 @@
-/* Shared boundary of the C dispatcher drivers (bend2/tests/runner.bend, surface_foundation_runner.bend,
+/* Shared boundary of the C dispatcher drivers (tests/runner.bend, surface_foundation_runner.bend,
  * relational_native*.bend and relational_protocols.bend). A Bend dispatcher imports every driver
  * module and calls its main(), arguments(rest) or run(rest); the C port execs the sibling binary
  * `<dir of argv[0]>/<target>` with the same remaining arguments, so stdout, stderr and the exit code

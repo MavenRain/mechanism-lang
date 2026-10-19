@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_negatives.bend: the refusal oracle shared by the prelude law drivers.
+/* Port of tests/relational_negatives.bend: the refusal oracle shared by the prelude law drivers.
  * Each negative pin is test/neg/<directory>/<name>.mech (the source), .err (the expected refusal prefix)
  * and, under a Digest policy, .digest (the MD5 of the refusal text). A library module (no main). */
 #ifndef MECH_RELATIONAL_NEGATIVES_H

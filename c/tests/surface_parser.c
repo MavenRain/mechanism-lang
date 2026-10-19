@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_parser.bend (oracle label unit-surface-parser): the term parser over
+/* Port of tests/surface_parser.bend (oracle label unit-surface-parser): the term parser over
  * an arrow, a projection, a big number, nine accepted and four rejected sources, and the program
  * parser over a two-declaration source. */
 #include "driver.h"

@@ -1,4 +1,4 @@
-/* bend2/prelude/families.bend: the MechEq equality family (one universe) and the MechSum family
+/* prelude/families.bend: the MechEq equality family (one universe) and the MechSum family
  * (two universes) as a Family catalog. */
 #include "prelude.h"
 

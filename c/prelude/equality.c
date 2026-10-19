@@ -1,4 +1,4 @@
-/* bend2/prelude/equality.bend: the MechEq family with refl, transport, j, symm, trans and congr,
+/* prelude/equality.bend: the MechEq family with refl, transport, j, symm, trans and congr,
  * and the MechTypeEq family with refl, cast, symm and trans, as one Family catalog. */
 #include "prelude.h"
 

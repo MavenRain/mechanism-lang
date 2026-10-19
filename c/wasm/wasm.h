@@ -1,4 +1,6 @@
-/* Mechanism wasm component: C port of the bend2/wasm .bend files, one .c per .bend file and one
+/* A <dir>/<file>.bend path in a comment names bend2/<dir>/<file>.bend in commit 8c90b64,
+ * the last tree with the Bend sources. */
+/* Mechanism wasm component: C port of the wasm .bend files, one .c per .bend file and one
  * header for the component. A Bend byte list (List<&2, U32> whose items are bytes) is a Str: an
  * immutable byte slice built on the heap arena. Every function that allocates takes the Heap it
  * allocates from and never aborts: a failed allocation sets heap->oom and returns a well formed
@@ -8,7 +10,7 @@
 
 #include "kernel.h"
 
-/* ---- gc_encode (bend2/wasm/gc_encode.bend): the WasmGC module model and its binary encoder ---- */
+/* ---- gc_encode (wasm/gc_encode.bend): the WasmGC module model and its binary encoder ---- */
 
 /* Heaptype: HEq, HI31, HFunc, HType{index}. */
 typedef enum { GC_HEAP_EQ, GC_HEAP_I31, GC_HEAP_FUNC, GC_HEAP_TYPE } GcHeaptypeKind;
@@ -165,7 +167,7 @@ Str gc_sleb(Heap *heap, uint32_t n);
 /* encode(m): the binary module (magic, type, import, function, export, element and code sections) */
 Str gc_encode(Heap *heap, const GcModule *m);
 
-/* ---- link (bend2/wasm/link.bend): the program table and the layout of the runtime type ids ---- */
+/* ---- link (wasm/link.bend): the program table and the layout of the runtime type ids ---- */
 
 /* LinkLeg: LUnit, LRepr{repr}, LMu{tid, fields}. */
 typedef enum { LINK_LEG_UNIT, LINK_LEG_REPR, LINK_LEG_MU } LinkLegKind;
@@ -567,7 +569,7 @@ Result link_comptypes(Heap *heap, const Vec *xs, const Linked *l);
 Result link_comptypes_groups(Heap *heap, const Vec *gs, const Linked *l);
 Result link_comptype_groups(Heap *heap, const Linked *l);
 
-/* ---- state (bend2/wasm/state.bend): the local allocation state of one emitted function ---- */
+/* ---- state (wasm/state.bend): the local allocation state of one emitted function ---- */
 
 /* T = State{base, extra}: base is the first free local index, extra the allocated locals
  * (GcValtype *) in order. Wasm prefix because kernel.h already defines Comp. */
@@ -603,7 +605,7 @@ WasmComp state_pure(Heap *heap, void *value);
 /* finish(ft, step): Done{GcFunc *} of the code (Vec * of GcInstr *) and the extra locals */
 Result state_finish(Heap *heap, uint32_t ft, WasmStep step);
 
-/* ---- nat_runtime (bend2/wasm/nat_runtime.bend): the WasmGC bodies of the Nat runtime helpers ---- */
+/* ---- nat_runtime (wasm/nat_runtime.bend): the WasmGC bodies of the Nat runtime helpers ---- */
 
 /* Runtime{array, big, length, digit, copy, normal, cmp_digits, cmp, add_loop, sub_loop, mul_loop,
  * slow_add, slow_sub, slow_mul}: the type and function indices the helper bodies refer to. */
@@ -689,7 +691,7 @@ GcFunc *nat_runtime_finish(Heap *heap, uint32_t ft, NatBody b);
 Result nat_runtime_emit_kind(Heap *heap, MaybeNatHelperKind k, Str name, const Linked *l);
 Result nat_runtime_runtime_func(Heap *heap, const Linked *l, Str name);
 
-/* ---- emit (bend2/wasm/emit.bend): kernel terms to WasmGC functions ----
+/* ---- emit (wasm/emit.bend): kernel terms to WasmGC functions ----
  * An S.Comp(A) def is ported in direct state-passing form: it takes WasmState *st, updates it in
  * place and returns the Result (Done value boxed). Instruction lists are Vec * of GcInstr *. */
 typedef struct {

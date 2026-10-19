@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_usage_native.bend (oracle label kernel-usage-native). */
+/* Port of tests/kernel_usage_native.bend (oracle label kernel-usage-native). */
 #include "driver.h"
 
 /* Regression: Bend 2.0.25 native C miscomputed the former nested Bool.or/pick

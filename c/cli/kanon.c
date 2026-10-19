@@ -1,4 +1,4 @@
-/* Port of bend2/cli/kanon.bend (the kanon command line): check, erase, list axioms, emit WasmGC, build a
+/* Port of cli/kanon.bend (the kanon command line): check, erase, list axioms, emit WasmGC, build a
  * multi-file module, run an export on the node, wasmtime and kernel hosts, count circuit bounds and
  * print the spec count. Every IO(A) of the Bend program is a KanonIo here: live with the value, or the
  * program has already exited with code (IO.die, Out.cli_exit or a host failure after an out-of-memory

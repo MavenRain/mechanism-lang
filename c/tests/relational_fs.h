@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_fs.bend (and its effect body relational_fs.c): list a directory
+/* Port of tests/relational_fs.bend (and its effect body relational_fs.c): list a directory
  * and keep the filenames as separate strings. A library module (no main): the relational drivers
  * link it through relational_common. */
 #ifndef MECH_RELATIONAL_FS_H

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_raw_common.bend: the shared refusal, inventory and case-runner helpers of the
+/* Port of tests/surface_raw_common.bend: the shared refusal, inventory and case-runner helpers of the
  * raw surface drivers. Library only (no main); _tcc/surface_raw_common.o links into its importers. */
 #ifndef MECH_SURFACE_RAW_COMMON_H
 #define MECH_SURFACE_RAW_COMMON_H

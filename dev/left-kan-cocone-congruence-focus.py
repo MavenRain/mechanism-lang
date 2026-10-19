@@ -148,12 +148,12 @@ pieces.extend(body for name,body in global_blocks
               and (args.contracts or not re.match(
                   r'specialize\s+MechLeftKanLaws\s+[^\n]*\bas\s+Wide\b', body)))
 text='\n'.join(pieces)
-directory=root/('_bend2/left-kan-mediator-equality' if args.mediator_equality else ('_bend2/left-kan-roundtrip' if args.roundtrip else ('_bend2/left-kan-cocone-action' if args.cocone_action else ('_bend2/left-kan-cocone-equality' if args.cocone_equality else '_bend2/left-kan-cocone-congruence'))))
+directory=root/('_tcc/left-kan-mediator-equality' if args.mediator_equality else ('_tcc/left-kan-roundtrip' if args.roundtrip else ('_tcc/left-kan-cocone-action' if args.cocone_action else ('_tcc/left-kan-cocone-equality' if args.cocone_equality else '_tcc/left-kan-cocone-congruence'))))
 if args.contracts:
     directory = directory.with_name(directory.name + '-contracts')
 if args.solution_transport:
-    directory = root / ('_bend2/left-kan-solution-transport-contracts' if args.contracts
-                        else '_bend2/left-kan-solution-transport')
+    directory = root / ('_tcc/left-kan-solution-transport-contracts' if args.contracts
+                        else '_tcc/left-kan-solution-transport')
 directory.mkdir(parents=True, exist_ok=True)
 with tempfile.NamedTemporaryFile(mode='w', dir=directory, delete=False) as output:
     output.write(text)

@@ -1,4 +1,4 @@
-/* Port of bend2/surface/elab.bend: the program pass. Chunk 1 (Bend lines 1-194): the run wrappers,
+/* Port of surface/elab.bend: the program pass. Chunk 1 (Bend lines 1-194): the run wrappers,
  * the name traversals, the mu group (declare headers, define families) and the rec group (types,
  * postulates, bodies, totality certificate, guarded or plain checking).
  * Lists: families are Vecs of SFam pointers, definitions Vecs of SRecDef pointers, names Vecs of

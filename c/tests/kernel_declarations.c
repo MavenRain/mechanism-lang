@@ -1,4 +1,4 @@
-/* Port of bend2/tests/kernel_declarations.bend (oracle label unit-kernel-declarations). */
+/* Port of tests/kernel_declarations.bend (oracle label unit-kernel-declarations). */
 #include "driver.h"
 
 /* success(result): Done -> True; Fail -> False */

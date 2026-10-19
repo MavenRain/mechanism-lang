@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_exports.bend (81 lines, oracle label surface-prenex-exports): the export
+/* Port of tests/surface_prenex_exports.bend (81 lines, oracle label surface-prenex-exports): the export
  * runtime fixture parses, prints and checks on the initial globals with the exported row names in order, no
  * leaked default member names, no fresh family for a reuse and no axiom; two payloads normalize, the composed
  * exports keep their rows, the export positives check, the negatives and parser cases refuse, and three budget

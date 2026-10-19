@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_trust.bend (oracle label unit-surface-trust): family declaration error
+/* Port of tests/surface_trust.bend (oracle label unit-surface-trust): family declaration error
  * precedence, constructor parameter permutation, reuse metadata mutations, ambient global rechecking on
  * instantiation and composition, and the mutual group reuse refusal text. */
 #include <string.h>

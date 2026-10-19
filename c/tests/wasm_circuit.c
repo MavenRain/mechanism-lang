@@ -1,4 +1,4 @@
-/* C port of bend2/tests/wasm_circuit.bend: the circuit depth analysis over kernel terms
+/* C port of tests/wasm_circuit.bend: the circuit depth analysis over kernel terms
  * (primitive, nested and closure applications, folds, cycles, shapes, fields and the literal
  * bound). Each check prints PASS <name> or dies with the expected and observed strings. */
 #include "driver.h"

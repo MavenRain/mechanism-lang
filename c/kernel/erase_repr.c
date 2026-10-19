@@ -1,4 +1,4 @@
-/* bend2/kernel/erase_repr.bend: the erasure context and the runtime representation (Repr) of a
+/* kernel/erase_repr.bend: the erasure context and the runtime representation (Repr) of a
  * type. Comp values: EraseCtx *, const Value *, Nat *, Vec * (Str, Value, MaybeRepr or Tid pointers,
  * or kernel bool boxes), Str *, Repr *, Tid *, MaybeRepr *, Pair * (first = EraseCtx *, second =
  * const Value *) and the kernel bool box. */

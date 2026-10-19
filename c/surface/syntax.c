@@ -1,4 +1,4 @@
-/* Port of bend2/surface/syntax.bend: the surface syntax tree and its two printers (raw with explicit
+/* Port of surface/syntax.bend: the surface syntax tree and its two printers (raw with explicit
  * parentheses, precedence with the grammar levels). Same definitions in the same order; the type
  * family comes first as its constructors. Lists are Vec values of pointers to the element type; a
  * NULL item prints as "" (totality only, no constructor produces one). */

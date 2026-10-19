@@ -1,4 +1,4 @@
-/* Port of bend2/rust/token.bend: the one-based source positions of the Rust frontend, its token
+/* Port of rust/token.bend: the one-based source positions of the Rust frontend, its token
  * kinds and their one-line descriptions. surface.h already owns the token_ names and rust_out.c
  * includes both headers, so the definitions take the prefix rust_token_; they keep the Bend order.
  * A column counts code points, as the Bend Loc counts Chars. A failed allocation sets heap->oom;

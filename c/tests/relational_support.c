@@ -1,4 +1,4 @@
-/* Port of bend2/tests/relational_support.bend (52 lines): the MD5 vectors of relational_digest
+/* Port of tests/relational_support.bend (52 lines): the MD5 vectors of relational_digest
  * and the directory listing of relational_fs. The Bend driver has no JS build, no _bend2 wrapper
  * and no harness call, so there is no oracle record: c-test makes the fixture directory
  * _tcc/relational_support_fixture (the files "plain" and "line\nbreak"), runs the driver on it and

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_prenex_common.bend (108 lines): kind names the refusal class of an error,
+/* Port of tests/surface_prenex_common.bend (108 lines): kind names the refusal class of an error,
  * refusal and parse_refusal expect a refusal with a given class and text, control checks an optional control
  * source, negatives, parsers and positives run the frozen tables of surface_prenex_data, absent_entries,
  * family_count and family_names inspect a global context, action/polls/exhausted measure and starve the

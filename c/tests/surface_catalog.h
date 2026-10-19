@@ -1,4 +1,4 @@
-/* Shared view of bend2/tests/surface_catalog.bend: surface_boundary.bend and surface_shape_metadata.bend
+/* Shared view of tests/surface_catalog.bend: surface_boundary.bend and surface_shape_metadata.bend
  * import it as Test and read ensure, marker, ctors, marker_ty, witness, alias, scope_refused,
  * budget_refused and second_callback. The driver object keeps its main; the library object (compiled
  * with MECH_DRIVER_LIBRARY) exports these definitions alone, under the catalog_ prefix. */

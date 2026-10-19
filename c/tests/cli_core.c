@@ -1,4 +1,4 @@
-/* Port of bend2/tests/cli_core.bend: the kanon command line (c/cli/kanon.c) as a program.
+/* Port of tests/cli_core.bend: the kanon command line (c/cli/kanon.c) as a program.
  * No arguments prints the usage; otherwise the first argument is the command and the rest its
  * arguments. */
 #include "cli.h"

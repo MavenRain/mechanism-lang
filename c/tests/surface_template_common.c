@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_template_common.bend (69 lines): exact expects a refusal with a given rendered
+/* Port of tests/surface_template_common.bend (69 lines): exact expects a refusal with a given rendered
  * text, negatives runs a frozen Data.Negative table through Elab.check_in, required_family/family look up a
  * family, family_rows/entries project a global context, run runs Raw.Case rows and counts them,
  * same_families/new_family_names/no_axioms compare contexts and disclosures, altered damages a family in one

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_nat_runtime.bend (oracle label fixture-nat): links the Nat runtime keys
+/* Port of tests/wasm_nat_runtime.bend (oracle label fixture-nat): links the Nat runtime keys
  * over an empty program, emits every runtime helper, adds one wrapper per primitive (natAdd, natSub,
  * natMul, natEq, natLt) that takes two i32 digits and a digit index, encodes the module and prints its
  * bytes as a decimal list in brackets; a link failure dies with exit 1. */

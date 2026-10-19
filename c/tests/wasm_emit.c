@@ -1,4 +1,4 @@
-/* Port of bend2/tests/wasm_emit.bend (oracle label fixture-emit): emits five erased programs
+/* Port of tests/wasm_emit.bend (oracle label fixture-emit): emits five erased programs
  * (basic, closure, partial, tag_case, big_arithmetic) as complete wasm modules with the export
  * "main" and prints the bytes of each as a decimal list in brackets, one line per program; an emit
  * failure dies with exit 1. recursive() is defined but not run, as in the Bend driver. */

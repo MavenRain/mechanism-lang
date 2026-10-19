@@ -1,4 +1,4 @@
-/* Port of bend2/import/render.bend: the JSON rendering of a translated export (Translate.T) for the
+/* Port of import/render.bend: the JSON rendering of a translated export (Translate.T) for the
  * import drivers and the report. Bend lists are Vec items rendered in order by recursive index
  * walkers; a NULL value (a failed allocation, heap->oom set) is not stored, like the other import
  * renderers. Every definition keeps its Bend name with the render_ prefix, in Bend order. */

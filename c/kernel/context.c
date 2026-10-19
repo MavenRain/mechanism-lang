@@ -1,4 +1,4 @@
-/* Port of bend2/kernel/context.bend: the typing context with its skew-binary local list. */
+/* Port of kernel/context.bend: the typing context with its skew-binary local list. */
 #include "kernel.h"
 
 static void push(Heap *heap, Vec *xs, void *item) {

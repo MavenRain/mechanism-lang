@@ -1,4 +1,4 @@
-/* Port of bend2/tests/prelude_category.bend (60 lines): the category prelude suite. Reads the prelude and the
+/* Port of tests/prelude_category.bend (60 lines): the category prelude suite. Reads the prelude and the
  * fixture client under argv[1] (default "."), checks the inventory, the computations, the quotations, the
  * negatives and the budget refusal, then prints PRELUDE-CATEGORY-OK fields or PRELUDE-CATEGORY-FAIL message. */
 #include "driver.h"

@@ -1,4 +1,4 @@
-/* Port of bend2/tests/surface_lexer.bend (oracle label unit-surface-lexer): the token stream text of
+/* Port of tests/surface_lexer.bend (oracle label unit-surface-lexer): the token stream text of
  * nine sources covers keywords, byte literals and escapes, a long comment and dotted numbers. */
 #include "driver.h"
 #include "surface.h"
