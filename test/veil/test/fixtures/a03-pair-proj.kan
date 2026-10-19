@@ -1,7 +1,5 @@
 -- a03: a pair and its two projections.
 
-axiom Nat : Type 0
-
 def p : (a : Nat) * Nat := (1, 2)
 def firstOfP : Nat := p.1
 def secondOfP : Nat := p.2

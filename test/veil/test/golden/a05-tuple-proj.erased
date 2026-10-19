@@ -1,4 +1,3 @@
-erased Nat
 erased Triple
 rec [tuple<union nat,union nat,union nat>]
 fun t () : struct tuple<union nat,union nat,union nat> := KStruct tuple<union nat,union nat,union nat> [KLit 1; KLit 2; KLit 3]

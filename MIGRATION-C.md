@@ -8,7 +8,7 @@ with its pinned fixture snapshot. The external OCaml checkout remains the
 validation oracle until the completion checks pass.
 
 The compiler is pinned to Bend 2.0.27. The `.mech` language and existing
-acceptance requirements are preserved. Build outputs live in `_bend2/`.
+acceptance requirements are preserved. Build outputs live in `_tcc/`.
 `make build` prepares the native production CLI and JavaScript test shards;
 `make test` also prepares the native acceptance drivers. Live OCaml checks
 require an explicit external checkout, for example

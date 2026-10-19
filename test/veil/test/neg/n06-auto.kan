@@ -2,6 +2,4 @@
 -- has no checked form and the checker says which milestone brings
 -- one.
 
-axiom Nat : Type 0
-
 def bad : Nat := auto

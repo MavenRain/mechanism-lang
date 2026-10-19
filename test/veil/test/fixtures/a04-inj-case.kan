@@ -2,8 +2,6 @@
 -- SB-D1 gives the two-leg type a production, so the sum that Stage A
 -- had to postulate is now written out.
 
-axiom Nat : Type 0
-
 def Two : Type 0 := sum (Nat, Nat)
 
 def left : Two := inj 0 of 2 1

@@ -1,4 +1,3 @@
-erased Nat
 axiom zero : union nat
 axiom Eq : func fn<2>
 rec [nat]

@@ -3,8 +3,6 @@
 -- way (SA-D16).
 -- SB-D1 writes the three-leg type out, which Stage A postulated.
 
-axiom Nat : Type 0
-
 def Triple : Type 0 := prod (Nat, Nat, Nat)
 
 def t : Triple := tuple (1, 2, 3)

@@ -1,4 +1,3 @@
-erased Nat
 erased Bool
 rec [nat]
 fun total () : union nat := KTail (KGlobal natAdd) [KLit 2; KLit 3]

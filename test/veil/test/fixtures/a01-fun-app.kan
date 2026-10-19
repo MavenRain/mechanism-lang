@@ -1,7 +1,5 @@
 -- a01: fun and application.  Application by juxtaposition is SA-D1.
 
-axiom Nat : Type 0
-
 def id : (0 A : Type 0) -> (x : A) -> A :=
   fun (0 A : Type 0) (x : A) => x
 

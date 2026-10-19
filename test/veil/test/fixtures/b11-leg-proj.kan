@@ -2,8 +2,6 @@
 -- two pair projections ".1" and ".2" on a point shape.  The two rows
 -- of the sugar table differ by the type of the scrutinee (SA-D16).
 
-axiom Nat : Type 0
-
 def Triple : Type 0 := prod (Nat, Nat, Nat)
 
 def t : Triple := tuple (1, 2, 3)

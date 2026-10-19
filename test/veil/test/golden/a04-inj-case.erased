@@ -1,4 +1,3 @@
-erased Nat
 erased Two
 rec [sum<union nat|union nat>]
 fun left () : union sum<union nat|union nat> := KTag sum<union nat|union nat> 0 [KLit 1]

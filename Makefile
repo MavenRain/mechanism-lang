@@ -706,5 +706,10 @@ MEMCAP_SECS_prelude_nattrans_units := 600
 MEMCAP_SECS_prelude_left_kan_cocone_action := 600
 MEMCAP_SECS_prelude_left_kan_mediator_equality := 600
 MEMCAP_SECS_prelude_left_kan_solution_transport := 600
-c-test-prelude: $(C_PRELUDE_BINARIES) $(C_MEMCAP_BINARY)
+# The contract drivers read the producer output, so c-test-prelude runs the 4 producers first.
+.PHONY: c-left-kan-contracts
+C_LEFT_KAN_CONTRACT_MODES := roundtrip cocone-action mediator-equality solution-transport
+c-left-kan-contracts:
+	$(foreach m,$(C_LEFT_KAN_CONTRACT_MODES),$(PYTHON) -P dev/left-kan-cocone-congruence-focus.py --$(m) --contracts &&) true
+c-test-prelude: $(C_PRELUDE_BINARIES) $(C_MEMCAP_BINARY) c-left-kan-contracts
 	$(foreach d,$(C_PRELUDE_CHECKS),$(call capped,$(or $(MEMCAP_SECS_$(d)),$(MEMCAP_SECS))) ./_tcc/$(d) $(CURDIR) &&) true

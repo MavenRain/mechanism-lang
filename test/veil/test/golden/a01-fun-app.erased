@@ -1,4 +1,3 @@
-erased Nat
 rec [any]
 fun id (union any) : union any := KVar 0
 rec [fn<1>; any]

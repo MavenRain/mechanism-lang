@@ -1,4 +1,3 @@
-axiom Nat : Type 1
 def p : (Lan SPi w a Nat Nat) := (In SPi w a Nat (APt w 1) [2])
 def firstOfP : Nat := (Elim SPi w a Nat p as self return Nat with | (ALeg 0) x y => x)
 def secondOfP : Nat := (Elim SPi w a Nat p as self return Nat with | (ALeg 0) x y => y)

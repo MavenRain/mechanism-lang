@@ -1,4 +1,3 @@
-erased Nat
 rec [nat]
 fun five () : union nat := KLet x (KLit 2) (KTail (KGlobal natAdd) [KVar 0; KLit 3])
 rec [nat]

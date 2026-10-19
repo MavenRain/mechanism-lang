@@ -1,4 +1,3 @@
-axiom Nat : Type 1
 def arrowNamed : Type 1 := (Ran SPi w x Nat Nat)
 def arrowPlain : Type 1 := (Ran SPi w _ Nat Nat)
 def arrowCurried : Type 1 := (Ran SPi w _ Nat (Ran SPi w _ Nat Nat))

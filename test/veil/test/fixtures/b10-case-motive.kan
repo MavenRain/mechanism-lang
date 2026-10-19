@@ -2,8 +2,6 @@
 -- binder takes its type from the leg of the diagram, never from the
 -- annotation the branch writes (SB-D32).
 
-axiom Nat : Type 0
-
 def Two : Type 0 := sum (Nat, Nat)
 
 def plain : (x : Two) -> Nat :=

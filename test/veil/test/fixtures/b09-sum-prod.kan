@@ -3,8 +3,6 @@
 -- the diagram of the items, and neither is a former of the kernel:
 -- both are sugar rows of SPEC.md section 7.
 
-axiom Nat : Type 0
-
 def Two : Type 0 := sum (Nat, Nat)
 def Pair : Type 0 := prod (Nat, Nat)
 def Triple : Type 0 := prod (Nat, Nat, Nat)

@@ -134,12 +134,13 @@ Combined and production-only builds publish that manifest after successful
 builds and a final source-inventory consistency check. Check-only, tests-only,
 failed and source-drifting builds preserve the previous manifest.
 
-TRUSTED-LINES counts every active `bend2/kernel/**/*.bend` file and the native
-`bend2/wasm/gc_encode.bend` encoder. On 2026-09-26 the user approved a
-9000-line Bend kernel limit; the encoder limit remains 900.
-The current production inventory measures 8668 kernel lines and 289 encoder lines.
-This ruling raises the permitted trust footprint and excludes no kernel modules.
-Historical runs that failed the earlier 3000-line limit retain their recorded results.
+TRUSTED-LINES counts every active `c/kernel/**/*.{c,h}` file, including
+`c/kernel/kernel.h`, and the native `c/wasm/gc_encode.c` encoder. The existing
+9000-line kernel limit and 900-line encoder limit remain in force.
+The current production inventory measures 26080 kernel lines and 681 encoder lines.
+The C kernel exceeds its limit, so TRUSTED-LINES remains failing.
+No kernel modules are excluded from this count.
+Historical runs that failed the earlier 3000-line and 9000-line limits retain their recorded results.
 
 R3 remains **unmeasured**. The frozen denominator files are unchanged.
 `dev/bench.sh` includes shell and child process startup in each measurement,
